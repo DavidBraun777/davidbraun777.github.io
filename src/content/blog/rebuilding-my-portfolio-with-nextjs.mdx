@@ -1,0 +1,97 @@
+---
+title: "Rebuilding My Portfolio with Next.js"
+description: "A deep dive into modernizing my portfolio website using Next.js 14, TypeScript, Tailwind CSS, and Framer Motion."
+date: "2025-01-09"
+author: "David Braun"
+tags: ["Next.js", "React", "Web Development"]
+---
+
+After years of using a traditional HTML/CSS/JavaScript portfolio, I decided it was time for a complete rebuild. Here's why I chose Next.js and what I learned along the way.
+
+## Why Rebuild?
+
+My previous portfolio was built with Bootstrap and vanilla JavaScript. While it served me well, it had several limitations:
+
+- **Performance**: Multiple third-party libraries (AOS, Isotope, Typed.js) added unnecessary weight
+- **Maintainability**: HTML files became difficult to update as content grew
+- **Modern Stack**: I wanted to showcase my React and TypeScript skills
+- **Dark Mode**: Adding dark mode to the old site would have been a nightmare
+
+## Tech Stack Choices
+
+### Next.js 14 with App Router
+
+Next.js was an obvious choice for several reasons:
+
+- **React Server Components** for optimal performance
+- **Built-in API routes** for the contact form
+- **Image optimization** out of the box
+- **Static generation** for fast page loads
+
+### TypeScript
+
+Type safety isn't just about catching bugs—it's about documentation. When I look at my code months later, TypeScript tells me exactly what each function expects and returns.
+
+### Tailwind CSS
+
+I was initially skeptical of utility-first CSS, but Tailwind has won me over:
+
+```css
+/* Before: Multiple CSS files */
+.button-primary {
+  background-color: #3b82f6;
+  color: white;
+  padding: 0.75rem 1.5rem;
+  border-radius: 0.5rem;
+}
+
+/* After: Inline with Tailwind */
+<button className="bg-blue-500 text-white px-6 py-3 rounded-lg">
+```
+
+The dark mode support is fantastic—just prefix classes with `dark:` and you're done.
+
+### Framer Motion
+
+Animations can make or break a portfolio. Framer Motion provides:
+
+- Declarative animations that are easy to understand
+- Scroll-triggered animations with `whileInView`
+- Exit animations for page transitions
+- Physics-based springs for natural movement
+
+## Key Features
+
+### Dynamic Dark Mode
+
+Using `next-themes`, implementing dark mode was straightforward:
+
+```typescript
+const { theme, setTheme } = useTheme()
+```
+
+The theme persists across sessions and respects system preferences.
+
+### MDX Blog
+
+I wanted a blog without the overhead of a CMS. MDX lets me write posts in Markdown while embedding React components when needed.
+
+### API-Powered Contact Form
+
+The contact form uses Next.js API routes with Resend for email delivery—no external form services needed.
+
+## Lessons Learned
+
+1. **Start with the data**: Defining TypeScript interfaces for experiences, projects, and skills before building components saved time
+2. **Component composition**: Breaking the site into small, reusable pieces made styling consistent
+3. **Animation restraint**: It's tempting to animate everything, but subtle animations are more professional
+
+## What's Next?
+
+I'm planning to add:
+
+- More blog posts on cybersecurity and AI
+- Interactive project demos
+- A dark mode toggle with system preference detection
+
+Feel free to explore the source code on [GitHub](https://github.com/DavidBraun777/davidbraun777.github.io).
