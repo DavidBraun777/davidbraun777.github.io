@@ -19,27 +19,22 @@ export function Contact() {
     message: '',
   })
 
-  const handleSubmit = async (e: React.FormEvent) => {
+  const handleSubmit = (e: React.FormEvent) => {
     e.preventDefault()
     setFormStatus('loading')
 
-    try {
-      const response = await fetch('/api/contact', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify(formData),
-      })
+    // Build mailto link with form data
+    const email = 'davidjbraun777@gmail.com'
+    const subject = encodeURIComponent(formData.subject)
+    const body = encodeURIComponent(
+      `Name: ${formData.name}\nEmail: ${formData.email}\n\nMessage:\n${formData.message}`
+    )
 
-      if (response.ok) {
-        setFormStatus('success')
-        setFormData({ name: '', email: '', subject: '', message: '' })
-      } else {
-        setFormStatus('error')
-      }
-    } catch {
-      setFormStatus('error')
-    }
+    // Open email client
+    window.location.href = `mailto:${email}?subject=${subject}&body=${body}`
 
+    setFormStatus('success')
+    setFormData({ name: '', email: '', subject: '', message: '' })
     setTimeout(() => setFormStatus('idle'), 5000)
   }
 
