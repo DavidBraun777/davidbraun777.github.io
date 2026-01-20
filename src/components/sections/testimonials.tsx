@@ -2,6 +2,7 @@
 
 import { motion } from 'framer-motion'
 import { Quote } from 'lucide-react'
+import Image from 'next/image'
 import { testimonials } from '@/data/testimonials'
 import { SectionHeader } from '@/components/ui/section-header'
 
@@ -38,9 +39,11 @@ export function Testimonials() {
 
               <div className="flex items-center gap-3">
                 {testimonial.image ? (
-                  <img
+                  <Image
                     src={testimonial.image}
                     alt={testimonial.name}
+                    width={48}
+                    height={48}
                     className="w-12 h-12 rounded-full object-cover"
                   />
                 ) : (
