@@ -1,8 +1,9 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { useEffect, useRef } from 'react'
 import { Target, Users, Zap, Server } from 'lucide-react'
 import { SectionHeader } from '@/components/ui/section-header'
+import { gsap, ScrollTrigger } from '@/hooks/useGSAP'
 
 const competencies = [
   {
@@ -31,24 +32,56 @@ const competencies = [
   },
 ]
 
-const containerVariants = {
-  hidden: { opacity: 0 },
-  visible: {
-    opacity: 1,
-    transition: {
-      staggerChildren: 0.1,
-    },
-  },
-}
-
-const itemVariants = {
-  hidden: { opacity: 0, y: 20 },
-  visible: { opacity: 1, y: 0 },
-}
-
 export function About() {
+  const sectionRef = useRef<HTMLElement>(null)
+
+  useEffect(() => {
+    if (!sectionRef.current) return
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+
+    const ctx = gsap.context(() => {
+      if (prefersReducedMotion) {
+        gsap.set(['.about-bio', '.competency-card'], { opacity: 1, y: 0, x: 0 })
+        return
+      }
+
+      // Bio paragraphs animation
+      gsap.set('.about-bio', { opacity: 0, x: -20 })
+      gsap.to('.about-bio', {
+        opacity: 1,
+        x: 0,
+        duration: 0.6,
+        ease: 'power2.out',
+        scrollTrigger: {
+          trigger: '.about-bio',
+          start: 'top 80%',
+          once: true,
+        },
+      })
+
+      // Competency cards batch animation
+      gsap.set('.competency-card', { opacity: 0, y: 20 })
+      ScrollTrigger.batch('.competency-card', {
+        onEnter: (batch) => {
+          gsap.to(batch, {
+            opacity: 1,
+            y: 0,
+            duration: 0.5,
+            ease: 'power2.out',
+            stagger: 0.1,
+          })
+        },
+        start: 'top 85%',
+        once: true,
+      })
+    }, sectionRef)
+
+    return () => ctx.revert()
+  }, [])
+
   return (
-    <section id="about" className="section bg-slate-50 dark:bg-slate-900/50">
+    <section id="about" className="section bg-slate-50 dark:bg-slate-900/50" ref={sectionRef}>
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeader
           title="About Me"
@@ -57,13 +90,7 @@ export function About() {
 
         <div className="grid lg:grid-cols-2 gap-12 items-start">
           {/* Bio */}
-          <motion.div
-            initial={{ opacity: 0, x: -30 }}
-            whileInView={{ opacity: 1, x: 0 }}
-            viewport={{ once: true }}
-            transition={{ duration: 0.6 }}
-            className="space-y-6"
-          >
+          <div className="about-bio space-y-6">
             <p className="text-lg text-slate-600 dark:text-slate-300 leading-relaxed">
               Experienced <span className="font-semibold text-primary-600 dark:text-primary-400">Software Engineer</span> with expertise in
               full-stack development, cybersecurity, and DevOps. Proficient in building and automating scalable infrastructure using
@@ -84,24 +111,16 @@ export function About() {
               <span className="font-semibold text-accent-rose"> Target Corporation</span>.
               I also founded <span className="font-semibold">People&apos;s Connection LLC</span>, building accessible web applications for non-profits.
             </p>
-          </motion.div>
+          </div>
 
           {/* Competencies */}
-          <motion.div
-            variants={containerVariants}
-            initial="hidden"
-            whileInView="visible"
-            viewport={{ once: true }}
-            className="grid sm:grid-cols-2 gap-4"
-          >
+          <div className="grid sm:grid-cols-2 gap-4">
             {competencies.map((item) => {
               const Icon = item.icon
               return (
-                <motion.div
+                <div
                   key={item.title}
-                  variants={itemVariants}
-                  whileHover={{ scale: 1.02, y: -4 }}
-                  className="p-6 bg-white dark:bg-slate-800 rounded-2xl shadow-lg hover:shadow-xl transition-shadow"
+                  className="competency-card p-6 bg-white dark:bg-slate-800 rounded-2xl shadow-lg hover:shadow-xl hover:-translate-y-1 hover:scale-[1.01] transition-all duration-200"
                 >
                   <div className={`inline-flex p-3 rounded-xl bg-gradient-to-br ${item.color} mb-4`}>
                     <Icon className="w-6 h-6 text-white" />
@@ -112,10 +131,10 @@ export function About() {
                   <p className="text-sm text-slate-600 dark:text-slate-400">
                     {item.description}
                   </p>
-                </motion.div>
+                </div>
               )
             })}
-          </motion.div>
+          </div>
         </div>
       </div>
     </section>
