@@ -30,4 +30,4 @@ export const socialLinks: SocialLink[] = [
   },
 ]
 
-export const resumeUrl = 'https://drive.google.com/file/d/1Cr45XZBQ3j-a_Ffo_g1eYDlB3q_8-6E0/view?usp=sharing'
+export const resumeUrl = '/Resume.pdf'
