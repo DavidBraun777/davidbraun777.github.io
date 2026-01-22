@@ -37,7 +37,19 @@ export function Education() {
                       <div className="flex-1">
                         <div className="flex flex-wrap items-center gap-2 mb-1">
                           <h3 className="text-xl font-bold text-slate-900 dark:text-white">
-                            {edu.degree} in {edu.field}
+                            {edu.programUrl ? (
+                              <a
+                                href={edu.programUrl}
+                                target="_blank"
+                                rel="noopener noreferrer"
+                                className="inline-flex items-center gap-1 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+                              >
+                                {edu.degree} in {edu.field}
+                                <ExternalLink className="w-4 h-4" />
+                              </a>
+                            ) : (
+                              <>{edu.degree} in {edu.field}</>
+                            )}
                           </h3>
                           {edu.inProgress && (
                             <Badge variant="secondary">In Progress</Badge>
