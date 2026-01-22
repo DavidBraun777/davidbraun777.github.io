@@ -107,35 +107,36 @@ export function Education() {
               </div>
 
               {certifications.map((cert) => (
-                <Card key={cert.id}>
-                  <CardContent className="p-6 text-center">
-                    <div className="relative w-32 h-32 mx-auto mb-4">
-                      <Image
-                        src={cert.badgeImage}
-                        alt={cert.name}
-                        fill
-                        className="object-contain"
-                      />
-                    </div>
-                    <h4 className="font-semibold text-slate-900 dark:text-white mb-1">
-                      {cert.name}
-                    </h4>
-                    <p className="text-sm text-slate-500 dark:text-slate-400 mb-3">
-                      {cert.issuer} • {cert.issueDate}
-                    </p>
-                    {cert.credentialUrl && (
-                      <a
-                        href={cert.credentialUrl}
-                        target="_blank"
-                        rel="noopener noreferrer"
-                        className="inline-flex items-center gap-1 text-sm text-primary-600 dark:text-primary-400 hover:underline"
-                      >
+                <a
+                  key={cert.id}
+                  href={cert.credentialUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="block"
+                >
+                  <Card className="transition-all duration-200 hover:scale-[1.02] hover:shadow-lg cursor-pointer">
+                    <CardContent className="p-6 text-center">
+                      <div className="relative w-32 h-32 mx-auto mb-4">
+                        <Image
+                          src={cert.badgeImage}
+                          alt={cert.name}
+                          fill
+                          className="object-contain"
+                        />
+                      </div>
+                      <h4 className="font-semibold text-slate-900 dark:text-white mb-1">
+                        {cert.name}
+                      </h4>
+                      <p className="text-sm text-slate-500 dark:text-slate-400 mb-3">
+                        {cert.issuer} • {cert.issueDate}
+                      </p>
+                      <span className="inline-flex items-center gap-1 text-sm text-primary-600 dark:text-primary-400">
                         View Credential
                         <ExternalLink className="w-3 h-3" />
-                      </a>
-                    )}
-                  </CardContent>
-                </Card>
+                      </span>
+                    </CardContent>
+                  </Card>
+                </a>
               ))}
             </motion.div>
           </div>
