@@ -56,7 +56,7 @@ export const certifications: Certification[] = [
     name: 'AWS Certified Cloud Practitioner',
     issuer: 'Pearson VUE',
     issueDate: 'March 2024',
-    credentialUrl: 'https://www.credly.com/badges/6c3c2efd-e61c-439d-b4b5-67ca98e64e4a/public_url',
+    credentialUrl: 'https://cp.certmetrics.com/amazon/en/public/verify/credential/da3147d6ca7f4f2e8dc37ab632224a3f',
     badgeImage: '/images/certifications/aws-certified-cloud-practitioner.png',
   },
 ]
