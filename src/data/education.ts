@@ -2,6 +2,7 @@ export interface Education {
   id: string
   institution: string
   institutionUrl?: string
+  programUrl?: string
   degree: string
   field: string
   startDate: string
@@ -16,6 +17,7 @@ export const education: Education[] = [
     id: 'ust',
     institution: 'University of St. Thomas',
     institutionUrl: 'https://www.stthomas.edu/',
+    programUrl: 'https://software.stthomas.edu/degree/masters/artificial-intelligence/',
     degree: "Master's",
     field: 'Artificial Intelligence',
     startDate: 'September 2024',
