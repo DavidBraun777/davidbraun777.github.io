@@ -18,7 +18,7 @@ export function Footer() {
               David Braun
             </Link>
             <p className="mt-2 text-slate-600 dark:text-slate-400">
-              Software Engineer & AI Enthusiast
+              Making complex things feel simple.
             </p>
           </div>
 
