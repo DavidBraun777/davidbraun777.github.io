@@ -50,7 +50,11 @@ export function getAllPosts(): BlogPostMeta[] {
     .filter((fileName) => {
       if (!fileName.endsWith('.mdx')) return false
       const slug = fileName.replace(/\.mdx$/, '')
-      return isValidSlug(slug)
+      if (!isValidSlug(slug)) {
+        console.warn(`Skipping blog file with invalid slug: ${fileName}`)
+        return false
+      }
+      return true
     })
     .map((fileName) => {
       const slug = fileName.replace(/\.mdx$/, '')
@@ -105,6 +109,13 @@ export function getAllPostSlugs(): string[] {
   const fileNames = fs.readdirSync(postsDirectory)
   return fileNames
     .filter((fileName) => fileName.endsWith('.mdx'))
-    .filter((fileName) => isValidSlug(fileName.replace(/\.mdx$/, '')))
+    .filter((fileName) => {
+      const slug = fileName.replace(/\.mdx$/, '')
+      if (!isValidSlug(slug)) {
+        console.warn(`Skipping blog file with invalid slug: ${fileName}`)
+        return false
+      }
+      return true
+    })
     .map((fileName) => fileName.replace(/\.mdx$/, ''))
 }
