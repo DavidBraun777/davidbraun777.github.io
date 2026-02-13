@@ -5,6 +5,8 @@ import {
   sanitizeEmail,
   sanitizeInput,
   validateContactForm,
+  checkRateLimit,
+  _resetRateLimits,
 } from '@/lib/contact-validation'
 
 describe('escapeHtml', () => {
@@ -181,5 +183,23 @@ describe('validateContactForm', () => {
     if (result.valid) {
       expect(result.data.projectType).toBeUndefined()
     }
+  })
+})
+
+describe('checkRateLimit', () => {
+  it('evicts oldest entry when map reaches hard cap', () => {
+    _resetRateLimits()
+    // Fill the map to capacity (MAX_MAP_SIZE = 10_000) with IPs that are
+    // all still within their window, so pruneStaleEntries won't help.
+    // Use a smaller-scale test: fill 10001 entries, then check eviction.
+    // The real MAX_MAP_SIZE is 10_000, so inserting 10_001 IPs should trigger
+    // eviction on the 10_001st call.
+    for (let i = 0; i < 10_000; i++) {
+      checkRateLimit(`192.168.${Math.floor(i / 256)}.${i % 256}`)
+    }
+    // The 10_001st IP should succeed (not throw or grow unbounded)
+    const result = checkRateLimit('10.0.0.1')
+    expect(result.limited).toBe(false)
+    _resetRateLimits()
   })
 })

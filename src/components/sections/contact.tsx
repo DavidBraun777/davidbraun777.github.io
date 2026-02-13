@@ -35,6 +35,7 @@ const urgencyOptions = [
 
 export function Contact() {
   const [formStatus, setFormStatus] = useState<FormStatus>('idle')
+  const [resetTimer, setResetTimer] = useState<ReturnType<typeof setTimeout>>()
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -76,7 +77,8 @@ export function Contact() {
       setFormStatus('error')
     }
 
-    setTimeout(() => setFormStatus('idle'), 5000)
+    clearTimeout(resetTimer)
+    setResetTimer(setTimeout(() => setFormStatus('idle'), 5000))
   }
 
   return (
