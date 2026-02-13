@@ -35,7 +35,7 @@ const urgencyOptions = [
 
 export function Contact() {
   const [formStatus, setFormStatus] = useState<FormStatus>('idle')
-  const resetTimerRef = useRef<ReturnType<typeof setTimeout>>()
+  const resetTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined)
   const [formData, setFormData] = useState({
     name: '',
     email: '',
