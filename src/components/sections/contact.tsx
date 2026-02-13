@@ -194,6 +194,7 @@ export function Contact() {
                 <Input
                   type="text"
                   placeholder="Your name"
+                  aria-label="Your name"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   maxLength={100}
@@ -202,6 +203,7 @@ export function Contact() {
                 <Input
                   type="email"
                   placeholder="Your email"
+                  aria-label="Your email"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   maxLength={254}
@@ -211,6 +213,7 @@ export function Contact() {
               <Input
                 type="text"
                 placeholder="Subject"
+                aria-label="Subject"
                 value={formData.subject}
                 onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
                 maxLength={200}
@@ -221,18 +224,21 @@ export function Contact() {
               <div className="grid sm:grid-cols-3 gap-4">
                 <Select
                   placeholder="What are you building?"
+                  aria-label="Project type"
                   options={projectTypeOptions}
                   value={formData.projectType}
                   onChange={(e) => setFormData({ ...formData, projectType: e.target.value })}
                 />
                 <Select
                   placeholder="What do you need?"
+                  aria-label="Service needed"
                   options={serviceOptions}
                   value={formData.serviceNeeded}
                   onChange={(e) => setFormData({ ...formData, serviceNeeded: e.target.value })}
                 />
                 <Select
                   placeholder="Urgency"
+                  aria-label="Urgency"
                   options={urgencyOptions}
                   value={formData.urgency}
                   onChange={(e) => setFormData({ ...formData, urgency: e.target.value })}
@@ -241,6 +247,7 @@ export function Contact() {
 
               <Textarea
                 placeholder="Your message"
+                aria-label="Your message"
                 rows={6}
                 value={formData.message}
                 onChange={(e) => setFormData({ ...formData, message: e.target.value })}

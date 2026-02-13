@@ -8,6 +8,7 @@ interface SectionHeaderProps {
   title: string
   subtitle?: string
   align?: 'left' | 'center'
+  as?: 'h1' | 'h2'
   className?: string
 }
 
@@ -15,6 +16,7 @@ export function SectionHeader({
   title,
   subtitle,
   align = 'center',
+  as: Heading = 'h2',
   className,
 }: SectionHeaderProps) {
   const containerRef = useRef<HTMLDivElement>(null)
@@ -87,9 +89,9 @@ export function SectionHeader({
         className
       )}
     >
-      <h2 className="section-title text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-4">
+      <Heading className="section-title text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-4">
         {title}
-      </h2>
+      </Heading>
       <div
         className={cn(
           'section-divider h-1 w-20 bg-gradient-to-r from-primary-500 to-accent-violet rounded-full',
