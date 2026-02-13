@@ -27,9 +27,10 @@ export interface BlogPostMeta {
   readingTime: string
 }
 
-/** Strip characters that are not URL-safe alphanumerics, hyphens, or underscores */
-function sanitizeSlug(raw: string): string {
-  return raw.replace(/[^a-zA-Z0-9_-]/g, '')
+/** Only allow slugs that are alphanumeric with hyphens/underscores (no mutation) */
+const VALID_SLUG_REGEX = /^[a-zA-Z0-9][a-zA-Z0-9_-]*$/
+function isValidSlug(slug: string): boolean {
+  return VALID_SLUG_REGEX.test(slug)
 }
 
 function calculateReadingTime(content: string): string {
@@ -46,9 +47,13 @@ export function getAllPosts(): BlogPostMeta[] {
 
   const fileNames = fs.readdirSync(postsDirectory)
   const posts = fileNames
-    .filter((fileName) => fileName.endsWith('.mdx'))
+    .filter((fileName) => {
+      if (!fileName.endsWith('.mdx')) return false
+      const slug = fileName.replace(/\.mdx$/, '')
+      return isValidSlug(slug)
+    })
     .map((fileName) => {
-      const slug = sanitizeSlug(fileName.replace(/\.mdx$/, ''))
+      const slug = fileName.replace(/\.mdx$/, '')
       const fullPath = path.join(postsDirectory, fileName)
       const fileContents = fs.readFileSync(fullPath, 'utf8')
       const { data, content } = matter(fileContents)
@@ -71,14 +76,13 @@ export function getAllPosts(): BlogPostMeta[] {
 
 export function getPostBySlug(slug: string): BlogPost | null {
   try {
-    const safeSlug = sanitizeSlug(slug)
-    if (!safeSlug) return null
-    const fullPath = path.join(postsDirectory, `${safeSlug}.mdx`)
+    if (!isValidSlug(slug)) return null
+    const fullPath = path.join(postsDirectory, `${slug}.mdx`)
     const fileContents = fs.readFileSync(fullPath, 'utf8')
     const { data, content } = matter(fileContents)
 
     return {
-      slug: safeSlug,
+      slug,
       title: data.title || 'Untitled',
       description: data.description || '',
       date: data.date || new Date().toISOString(),
@@ -101,5 +105,6 @@ export function getAllPostSlugs(): string[] {
   const fileNames = fs.readdirSync(postsDirectory)
   return fileNames
     .filter((fileName) => fileName.endsWith('.mdx'))
-    .map((fileName) => sanitizeSlug(fileName.replace(/\.mdx$/, '')))
+    .filter((fileName) => isValidSlug(fileName.replace(/\.mdx$/, '')))
+    .map((fileName) => fileName.replace(/\.mdx$/, ''))
 }
