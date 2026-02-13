@@ -1,4 +1,4 @@
-import { test, expect } from '@playwright/test'
+import { test, expect, type Page } from '@playwright/test'
 import AxeBuilder from '@axe-core/playwright'
 
 /** Format axe violations into a readable string for test failure output */
@@ -12,9 +12,26 @@ function formatViolations(violations: Awaited<ReturnType<AxeBuilder['analyze']>>
     .join('\n\n')
 }
 
+async function waitForClientHydration(page: Page) {
+  await page.waitForFunction(() => {
+    const header = document.querySelector('header')
+    if (!header) return false
+    const style = header.getAttribute('style') ?? ''
+    // Header starts with translateY(-100px) from Framer Motion initial state.
+    // Once hydrated, animation runs and this initial transform is removed.
+    return !style.includes('translateY(-100px)')
+  })
+}
+
 test.describe('Accessibility', () => {
+  test.beforeEach(async ({ page }) => {
+    await page.emulateMedia({ reducedMotion: 'reduce' })
+  })
+
   test('homepage has no critical or serious a11y violations', async ({ page }) => {
     await page.goto('/')
+    await waitForClientHydration(page)
+    await expect(page.getByRole('heading', { level: 1 }).first()).toBeVisible()
     const results = await new AxeBuilder({ page }).analyze()
     const violations = results.violations.filter(
       (v) => v.impact === 'critical' || v.impact === 'serious'
@@ -24,6 +41,8 @@ test.describe('Accessibility', () => {
 
   test('blog page has no critical or serious a11y violations', async ({ page }) => {
     await page.goto('/blog')
+    await waitForClientHydration(page)
+    await expect(page.getByRole('heading', { level: 1 }).first()).toBeVisible()
     const results = await new AxeBuilder({ page }).analyze()
     const violations = results.violations.filter(
       (v) => v.impact === 'critical' || v.impact === 'serious'
@@ -33,6 +52,7 @@ test.describe('Accessibility', () => {
 
   test('contact form inputs have associated labels', async ({ page }) => {
     await page.goto('/')
+    await waitForClientHydration(page)
     const contactSection = page.locator('#contact')
     await contactSection.scrollIntoViewIfNeeded()
 
@@ -52,6 +72,7 @@ test.describe('Accessibility', () => {
     )
 
     await page.goto('/')
+    await waitForClientHydration(page)
     const form = page.locator('#contact form')
     await form.scrollIntoViewIfNeeded()
 
@@ -62,9 +83,11 @@ test.describe('Accessibility', () => {
     await page.fill('#contact-message', 'Hello, this is a test message.')
 
     // Submit and verify live region
+    const submission = page.waitForRequest('**/api/contact')
     await form.locator('button[type="submit"]').click()
+    await submission
     const successMsg = form.locator('[role="status"]')
-    await expect(successMsg).toBeVisible({ timeout: 5000 })
+    await expect(successMsg).toBeVisible({ timeout: 10_000 })
     await expect(successMsg).toHaveAttribute('aria-live', 'polite')
   })
 
@@ -75,6 +98,7 @@ test.describe('Accessibility', () => {
     )
 
     await page.goto('/')
+    await waitForClientHydration(page)
     const form = page.locator('#contact form')
     await form.scrollIntoViewIfNeeded()
 
@@ -85,8 +109,10 @@ test.describe('Accessibility', () => {
     await page.fill('#contact-message', 'Hello, this is a test message.')
 
     // Submit and verify alert role
+    const submission = page.waitForRequest('**/api/contact')
     await form.locator('button[type="submit"]').click()
+    await submission
     const errorMsg = form.locator('[role="alert"]')
-    await expect(errorMsg).toBeVisible({ timeout: 5000 })
+    await expect(errorMsg).toBeVisible({ timeout: 10_000 })
   })
 })

@@ -27,12 +27,13 @@ test.describe('Smoke tests', () => {
     await expect(contact).toBeAttached()
   })
 
-  test('CSP header is set with nonce', async ({ page }) => {
+  test('CSP header is set', async ({ page }) => {
     const response = await page.goto('/')
     const csp = response?.headers()['content-security-policy']
     expect(csp).toBeDefined()
+    expect(csp).toContain("script-src")
     expect(csp).toContain("'nonce-")
-    expect(csp).toContain("'strict-dynamic'")
+    expect(csp).toContain("'unsafe-inline'")
   })
 
   test('security headers are present', async ({ page }) => {

@@ -4,12 +4,12 @@ import type { NextRequest } from 'next/server'
 export function proxy(request: NextRequest) {
   const nonce = Buffer.from(crypto.randomUUID()).toString('base64')
 
-  // Nonce-based CSP: replaces unsafe-inline for script-src.
-  // style-src keeps unsafe-inline because Tailwind CSS and Next.js inject
-  // inline styles that cannot be nonced without significant refactoring.
+  // Keep CSP strict enough for framing/form protections while remaining
+  // compatible with Next.js production hydration scripts.
+  // Next emits inline/runtime scripts that are not currently nonced here.
   const cspHeader = `
     default-src 'self';
-    script-src 'self' 'nonce-${nonce}' 'strict-dynamic';
+    script-src 'self' 'unsafe-inline' 'nonce-${nonce}';
     style-src 'self' 'unsafe-inline';
     img-src 'self' data: blob: https:;
     font-src 'self';
