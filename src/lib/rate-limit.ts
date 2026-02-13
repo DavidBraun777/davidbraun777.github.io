@@ -12,7 +12,15 @@ let upstashLimiter: {
 } | null = null
 let upstashInitAttempted = false
 
+// Circuit breaker: after a runtime failure, disable Upstash for a cooldown
+// period to avoid adding latency to every request during an outage.
+let upstashDisabledUntil = 0
+const UPSTASH_COOLDOWN_MS = 60_000 // 1 minute
+
 async function getUpstashLimiter() {
+  // Circuit breaker: skip Upstash while in cooldown
+  if (Date.now() < upstashDisabledUntil) return null
+
   if (upstashInitAttempted) return upstashLimiter
   upstashInitAttempted = true
 
@@ -41,6 +49,9 @@ async function getUpstashLimiter() {
  *
  * Uses Upstash Redis when UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN
  * are set; otherwise falls back to the in-memory rate limiter.
+ *
+ * On Upstash failure, engages a circuit breaker (1 min cooldown) so subsequent
+ * requests fall back to in-memory immediately without retrying the failing call.
  */
 export async function checkRateLimit(ip: string): Promise<RateLimitResult> {
   const limiter = await getUpstashLimiter()
@@ -55,6 +66,7 @@ export async function checkRateLimit(ip: string): Promise<RateLimitResult> {
       return { limited: false, remaining }
     } catch (error) {
       console.error('Upstash rate limit error, falling back to in-memory:', error)
+      upstashDisabledUntil = Date.now() + UPSTASH_COOLDOWN_MS
     }
   }
 
@@ -65,4 +77,5 @@ export async function checkRateLimit(ip: string): Promise<RateLimitResult> {
 export function _resetUpstash(): void {
   upstashLimiter = null
   upstashInitAttempted = false
+  upstashDisabledUntil = 0
 }
