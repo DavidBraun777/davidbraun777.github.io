@@ -62,3 +62,45 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
 )
 
 Textarea.displayName = 'Textarea'
+
+interface SelectProps extends React.SelectHTMLAttributes<HTMLSelectElement> {
+  error?: string
+  options: { value: string; label: string }[]
+  placeholder?: string
+}
+
+export const Select = forwardRef<HTMLSelectElement, SelectProps>(
+  ({ className, error, options, placeholder, ...props }, ref) => {
+    return (
+      <div className="w-full">
+        <select
+          ref={ref}
+          className={cn(
+            'w-full px-4 py-3 rounded-lg border bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 transition-colors appearance-none',
+            'focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent',
+            error
+              ? 'border-red-500 focus:ring-red-500'
+              : 'border-slate-300 dark:border-slate-700',
+            !props.value && 'text-slate-400 dark:text-slate-500',
+            className
+          )}
+          {...props}
+        >
+          {placeholder && (
+            <option value="">{placeholder}</option>
+          )}
+          {options.map((opt) => (
+            <option key={opt.value} value={opt.value}>
+              {opt.label}
+            </option>
+          ))}
+        </select>
+        {error && (
+          <p className="mt-1 text-sm text-red-500">{error}</p>
+        )}
+      </div>
+    )
+  }
+)
+
+Select.displayName = 'Select'

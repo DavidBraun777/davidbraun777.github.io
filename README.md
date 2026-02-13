@@ -7,7 +7,7 @@ A modern, responsive portfolio website built with Next.js 14+, TypeScript, Tailw
 ## Features
 
 - **Modern Stack** — Next.js 14+ with App Router, TypeScript, Tailwind CSS v4
-- **Dark Mode** — System preference detection with manual toggle
+- **Dark Mode** — Dark theme by design for optimal readability
 - **Animations** — Smooth scroll-reveal and hover effects with Framer Motion
 - **MDX Blog** — Write blog posts in Markdown with React component support
 - **Contact Form** — Server-side email handling with Resend
@@ -133,6 +133,7 @@ Your content here...
 | `npm run build` | Build for production |
 | `npm run start` | Start production server |
 | `npm run lint` | Run ESLint |
+| `npm test` | Run unit & integration tests |
 
 ## Deployment
 

@@ -2,13 +2,36 @@
 
 import { useState } from 'react'
 import { motion } from 'framer-motion'
-import { Send, Mail, MapPin, CheckCircle, AlertCircle } from 'lucide-react'
+import { Send, Mail, MapPin, CheckCircle, AlertCircle, Calendar, Clock } from 'lucide-react'
 import { socialLinks } from '@/data/social-links'
 import { SectionHeader } from '@/components/ui/section-header'
 import { Button } from '@/components/ui/button'
-import { Input, Textarea } from '@/components/ui/input'
+import { Input, Textarea, Select } from '@/components/ui/input'
 
 type FormStatus = 'idle' | 'loading' | 'success' | 'error'
+
+const projectTypeOptions = [
+  { value: 'home', label: 'Personal / Home' },
+  { value: 'business', label: 'Business' },
+  { value: 'school', label: 'School / Academic' },
+  { value: 'fun', label: 'Side Project / Fun' },
+  { value: 'other', label: 'Other' },
+]
+
+const serviceOptions = [
+  { value: 'bugfix', label: 'Bug Fix' },
+  { value: 'feature', label: 'New Feature' },
+  { value: 'infra', label: 'Infrastructure' },
+  { value: 'security', label: 'Security' },
+  { value: 'ai', label: 'AI / ML' },
+  { value: 'other', label: 'Other' },
+]
+
+const urgencyOptions = [
+  { value: 'today', label: 'ASAP' },
+  { value: 'this-week', label: 'This Week' },
+  { value: 'this-month', label: 'This Month' },
+]
 
 export function Contact() {
   const [formStatus, setFormStatus] = useState<FormStatus>('idle')
@@ -17,6 +40,9 @@ export function Contact() {
     email: '',
     subject: '',
     message: '',
+    projectType: '',
+    serviceNeeded: '',
+    urgency: '',
   })
 
   const handleSubmit = async (e: React.FormEvent) => {
@@ -32,7 +58,15 @@ export function Contact() {
 
       if (response.ok) {
         setFormStatus('success')
-        setFormData({ name: '', email: '', subject: '', message: '' })
+        setFormData({
+          name: '',
+          email: '',
+          subject: '',
+          message: '',
+          projectType: '',
+          serviceNeeded: '',
+          urgency: '',
+        })
       } else {
         const data = await response.json()
         console.error('Contact form error:', data.error)
@@ -97,6 +131,21 @@ export function Contact() {
                   </p>
                 </div>
               </div>
+
+              <div className="flex items-center gap-4">
+                <div className="p-3 bg-accent-emerald/10 rounded-xl">
+                  <Calendar className="w-6 h-6 text-accent-emerald" />
+                </div>
+                <div>
+                  <p className="text-sm text-slate-500 dark:text-slate-400">Quick chat</p>
+                  <a
+                    href="mailto:davidjbraun777@gmail.com?subject=Let's%20Chat%20-%2015min%20Call"
+                    className="text-lg font-medium text-slate-900 dark:text-white hover:text-accent-emerald transition-colors"
+                  >
+                    Book a 15-min call
+                  </a>
+                </div>
+              </div>
             </div>
 
             {/* Social links */}
@@ -139,6 +188,7 @@ export function Contact() {
                   placeholder="Your name"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  maxLength={100}
                   required
                 />
                 <Input
@@ -146,6 +196,7 @@ export function Contact() {
                   placeholder="Your email"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  maxLength={254}
                   required
                 />
               </div>
@@ -154,25 +205,57 @@ export function Contact() {
                 placeholder="Subject"
                 value={formData.subject}
                 onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
+                maxLength={200}
                 required
               />
+
+              {/* Optional structured dropdowns */}
+              <div className="grid sm:grid-cols-3 gap-4">
+                <Select
+                  placeholder="What are you building?"
+                  options={projectTypeOptions}
+                  value={formData.projectType}
+                  onChange={(e) => setFormData({ ...formData, projectType: e.target.value })}
+                />
+                <Select
+                  placeholder="What do you need?"
+                  options={serviceOptions}
+                  value={formData.serviceNeeded}
+                  onChange={(e) => setFormData({ ...formData, serviceNeeded: e.target.value })}
+                />
+                <Select
+                  placeholder="Urgency"
+                  options={urgencyOptions}
+                  value={formData.urgency}
+                  onChange={(e) => setFormData({ ...formData, urgency: e.target.value })}
+                />
+              </div>
+
               <Textarea
                 placeholder="Your message"
                 rows={6}
                 value={formData.message}
                 onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                maxLength={2000}
                 required
               />
 
-              <Button
-                type="submit"
-                size="lg"
-                className="w-full sm:w-auto"
-                isLoading={formStatus === 'loading'}
-              >
-                <Send className="w-4 h-4 mr-2" />
-                Send Message
-              </Button>
+              <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+                <Button
+                  type="submit"
+                  size="lg"
+                  className="w-full sm:w-auto"
+                  isLoading={formStatus === 'loading'}
+                >
+                  <Send className="w-4 h-4 mr-2" />
+                  Send Message
+                </Button>
+
+                <p className="flex items-center gap-1.5 text-sm text-slate-500 dark:text-slate-400">
+                  <Clock className="w-4 h-4" />
+                  I typically reply within 24 hours
+                </p>
+              </div>
 
               {/* Status messages */}
               {formStatus === 'success' && (
@@ -189,10 +272,18 @@ export function Contact() {
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
-                  className="flex items-center gap-2 text-red-600 dark:text-red-400"
+                  className="flex flex-col gap-2 text-red-600 dark:text-red-400"
                 >
-                  <AlertCircle className="w-5 h-5" />
-                  Something went wrong. Please try again or email me directly.
+                  <div className="flex items-center gap-2">
+                    <AlertCircle className="w-5 h-5" />
+                    Something went wrong. Please try again or email me directly.
+                  </div>
+                  <a
+                    href="mailto:davidjbraun777@gmail.com"
+                    className="text-sm text-primary-600 dark:text-primary-400 hover:underline ml-7"
+                  >
+                    davidjbraun777@gmail.com
+                  </a>
                 </motion.div>
               )}
             </form>
