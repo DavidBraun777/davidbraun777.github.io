@@ -7,13 +7,27 @@ import {
 } from '@/lib/contact-validation'
 import { checkRateLimit, getClientIp } from '@/lib/rate-limit'
 
+function logRequest(status: number, start: number, errorType?: string) {
+  console.log(
+    JSON.stringify({
+      event: 'contact_submission',
+      status,
+      duration_ms: Math.round(performance.now() - start),
+      ...(errorType && { error: errorType }),
+    })
+  )
+}
+
 export async function POST(request: Request) {
+  const start = performance.now()
+
   try {
     // Rate limiting (Upstash Redis when configured, in-memory fallback)
     const ip = getClientIp(request.headers)
     const rateLimit = await checkRateLimit(ip)
 
     if (rateLimit.limited) {
+      logRequest(429, start, 'rate_limited')
       return NextResponse.json(
         { success: false, error: 'Too many requests. Please try again later.' },
         {
@@ -27,6 +41,7 @@ export async function POST(request: Request) {
     try {
       body = await request.json()
     } catch {
+      logRequest(400, start, 'invalid_json')
       return NextResponse.json(
         { success: false, error: 'Invalid JSON in request body' },
         { status: 400 }
@@ -35,6 +50,7 @@ export async function POST(request: Request) {
     const result = validateContactForm(body)
 
     if (!result.valid) {
+      logRequest(400, start, 'validation_failed')
       return NextResponse.json(
         { success: false, error: result.error },
         { status: 400 }
@@ -68,6 +84,7 @@ export async function POST(request: Request) {
     // Require RESEND_API_KEY — missing key means misconfigured mail service
     if (!process.env.RESEND_API_KEY) {
       console.error('RESEND_API_KEY is not configured')
+      logRequest(500, start, 'missing_api_key')
       return NextResponse.json(
         { success: false, error: 'Mail service misconfigured' },
         { status: 500 }
@@ -95,18 +112,21 @@ export async function POST(request: Request) {
 
     if (error) {
       console.error('Resend error:', error.message)
+      logRequest(500, start, 'resend_error')
       return NextResponse.json(
         { success: false, error: 'Failed to send message' },
         { status: 500 }
       )
     }
 
+    logRequest(200, start)
     return NextResponse.json({ success: true })
   } catch (error) {
     console.error(
       'Contact form error:',
       error instanceof Error ? error.message : 'Unknown error'
     )
+    logRequest(500, start, 'unhandled_error')
     return NextResponse.json(
       { success: false, error: 'Failed to send message' },
       { status: 500 }
