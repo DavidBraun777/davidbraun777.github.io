@@ -26,6 +26,12 @@ export default tseslint.config(
     },
   },
   {
+    files: ["scripts/**/*.mjs"],
+    languageOptions: {
+      globals: { process: "readonly", console: "readonly" },
+    },
+  },
+  {
     ignores: [".next/*", "node_modules/*", "out/*"],
   }
 );
