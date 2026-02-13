@@ -32,7 +32,7 @@ A modern, responsive portfolio website built with Next.js 14+, TypeScript, Tailw
 
 ### Prerequisites
 
-- Node.js 18.17 or later
+- Node.js 20.9 or later
 - npm, yarn, or pnpm
 
 ### Installation
