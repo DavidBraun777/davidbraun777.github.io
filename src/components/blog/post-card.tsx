@@ -28,7 +28,7 @@ export function PostCard({ post, index = 0 }: PostCardProps) {
       whileHover={{ y: -4 }}
       className="group"
     >
-      <Link href={`/blog/${post.slug}`}>
+      <Link href={`/blog/${encodeURIComponent(post.slug)}`}>
         <div className="bg-white dark:bg-slate-900 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 border border-slate-200 dark:border-slate-800">
           {/* Image */}
           {post.image && (

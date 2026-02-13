@@ -27,6 +27,11 @@ export interface BlogPostMeta {
   readingTime: string
 }
 
+/** Strip characters that are not URL-safe alphanumerics, hyphens, or underscores */
+function sanitizeSlug(raw: string): string {
+  return raw.replace(/[^a-zA-Z0-9_-]/g, '')
+}
+
 function calculateReadingTime(content: string): string {
   const wordsPerMinute = 200
   const words = content.trim().split(/\s+/).length
@@ -43,7 +48,7 @@ export function getAllPosts(): BlogPostMeta[] {
   const posts = fileNames
     .filter((fileName) => fileName.endsWith('.mdx'))
     .map((fileName) => {
-      const slug = fileName.replace(/\.mdx$/, '')
+      const slug = sanitizeSlug(fileName.replace(/\.mdx$/, ''))
       const fullPath = path.join(postsDirectory, fileName)
       const fileContents = fs.readFileSync(fullPath, 'utf8')
       const { data, content } = matter(fileContents)
@@ -66,12 +71,14 @@ export function getAllPosts(): BlogPostMeta[] {
 
 export function getPostBySlug(slug: string): BlogPost | null {
   try {
-    const fullPath = path.join(postsDirectory, `${slug}.mdx`)
+    const safeSlug = sanitizeSlug(slug)
+    if (!safeSlug) return null
+    const fullPath = path.join(postsDirectory, `${safeSlug}.mdx`)
     const fileContents = fs.readFileSync(fullPath, 'utf8')
     const { data, content } = matter(fileContents)
 
     return {
-      slug,
+      slug: safeSlug,
       title: data.title || 'Untitled',
       description: data.description || '',
       date: data.date || new Date().toISOString(),
@@ -94,5 +101,5 @@ export function getAllPostSlugs(): string[] {
   const fileNames = fs.readdirSync(postsDirectory)
   return fileNames
     .filter((fileName) => fileName.endsWith('.mdx'))
-    .map((fileName) => fileName.replace(/\.mdx$/, ''))
+    .map((fileName) => sanitizeSlug(fileName.replace(/\.mdx$/, '')))
 }
