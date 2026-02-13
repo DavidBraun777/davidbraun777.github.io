@@ -144,7 +144,8 @@ Your content here...
 | `npm run lint` | Run ESLint |
 | `npm test` | Run unit & integration tests |
 | `npm run test:watch` | Run tests in watch mode |
-| `npx playwright test` | Run E2E smoke tests |
+| `npm run size-check` | Check bundle size budget |
+| `npx playwright test` | Run E2E smoke & accessibility tests |
 
 ## Deployment
 

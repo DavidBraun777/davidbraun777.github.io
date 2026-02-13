@@ -192,18 +192,20 @@ export function Contact() {
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid sm:grid-cols-2 gap-6">
                 <Input
+                  id="contact-name"
+                  label="Your name"
                   type="text"
                   placeholder="Your name"
-                  aria-label="Your name"
                   value={formData.name}
                   onChange={(e) => setFormData({ ...formData, name: e.target.value })}
                   maxLength={100}
                   required
                 />
                 <Input
+                  id="contact-email"
+                  label="Your email"
                   type="email"
                   placeholder="Your email"
-                  aria-label="Your email"
                   value={formData.email}
                   onChange={(e) => setFormData({ ...formData, email: e.target.value })}
                   maxLength={254}
@@ -211,9 +213,10 @@ export function Contact() {
                 />
               </div>
               <Input
+                id="contact-subject"
+                label="Subject"
                 type="text"
                 placeholder="Subject"
-                aria-label="Subject"
                 value={formData.subject}
                 onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
                 maxLength={200}
@@ -223,22 +226,25 @@ export function Contact() {
               {/* Optional structured dropdowns */}
               <div className="grid sm:grid-cols-3 gap-4">
                 <Select
+                  id="contact-project-type"
+                  label="Project type"
                   placeholder="What are you building?"
-                  aria-label="Project type"
                   options={projectTypeOptions}
                   value={formData.projectType}
                   onChange={(e) => setFormData({ ...formData, projectType: e.target.value })}
                 />
                 <Select
+                  id="contact-service"
+                  label="Service needed"
                   placeholder="What do you need?"
-                  aria-label="Service needed"
                   options={serviceOptions}
                   value={formData.serviceNeeded}
                   onChange={(e) => setFormData({ ...formData, serviceNeeded: e.target.value })}
                 />
                 <Select
+                  id="contact-urgency"
+                  label="Urgency"
                   placeholder="Urgency"
-                  aria-label="Urgency"
                   options={urgencyOptions}
                   value={formData.urgency}
                   onChange={(e) => setFormData({ ...formData, urgency: e.target.value })}
@@ -246,8 +252,9 @@ export function Contact() {
               </div>
 
               <Textarea
+                id="contact-message"
+                label="Your message"
                 placeholder="Your message"
-                aria-label="Your message"
                 rows={6}
                 value={formData.message}
                 onChange={(e) => setFormData({ ...formData, message: e.target.value })}
@@ -272,11 +279,13 @@ export function Contact() {
                 </p>
               </div>
 
-              {/* Status messages */}
+              {/* Status messages — live regions for screen readers */}
               {formStatus === 'success' && (
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
+                  role="status"
+                  aria-live="polite"
                   className="flex items-center gap-2 text-green-600 dark:text-green-400"
                 >
                   <CheckCircle className="w-5 h-5" />
@@ -287,6 +296,7 @@ export function Contact() {
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
+                  role="alert"
                   className="flex flex-col gap-2 text-red-600 dark:text-red-400"
                 >
                   <div className="flex items-center gap-2">
