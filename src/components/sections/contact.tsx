@@ -1,6 +1,6 @@
 'use client'
 
-import { useState } from 'react'
+import { useState, useRef, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import { Send, Mail, MapPin, CheckCircle, AlertCircle, Calendar, Clock } from 'lucide-react'
 import { socialLinks } from '@/data/social-links'
@@ -35,7 +35,7 @@ const urgencyOptions = [
 
 export function Contact() {
   const [formStatus, setFormStatus] = useState<FormStatus>('idle')
-  const [resetTimer, setResetTimer] = useState<ReturnType<typeof setTimeout>>()
+  const resetTimerRef = useRef<ReturnType<typeof setTimeout>>()
   const [formData, setFormData] = useState({
     name: '',
     email: '',
@@ -77,9 +77,14 @@ export function Contact() {
       setFormStatus('error')
     }
 
-    clearTimeout(resetTimer)
-    setResetTimer(setTimeout(() => setFormStatus('idle'), 5000))
+    clearTimeout(resetTimerRef.current)
+    resetTimerRef.current = setTimeout(() => setFormStatus('idle'), 5000)
   }
+
+  // Clean up pending timer on unmount
+  useEffect(() => {
+    return () => clearTimeout(resetTimerRef.current)
+  }, [])
 
   return (
     <section id="contact" className="section">

@@ -179,23 +179,25 @@ export function checkRateLimit(ip: string): RateLimitResult {
     pruneStaleEntries()
   }
 
-  // Hard cap: if map is still at capacity after pruning, evict the oldest entry
-  // to prevent unbounded memory growth under high-cardinality traffic
-  if (rateLimitMap.size >= MAX_MAP_SIZE) {
+  // Look up existing record first, before any eviction
+  const record = rateLimitMap.get(ip)
+
+  // Only evict when we need to insert a brand-new key and capacity is reached.
+  // This prevents evicting the current IP's own record and resetting its count.
+  const isNewKey = !record || now > record.resetAt
+  if (isNewKey && rateLimitMap.size >= MAX_MAP_SIZE) {
     let oldestKey: string | undefined
     let oldestSeen = Infinity
-    for (const [key, record] of rateLimitMap) {
-      if (record.lastSeen < oldestSeen) {
-        oldestSeen = record.lastSeen
+    for (const [key, rec] of rateLimitMap) {
+      if (rec.lastSeen < oldestSeen) {
+        oldestSeen = rec.lastSeen
         oldestKey = key
       }
     }
     if (oldestKey) rateLimitMap.delete(oldestKey)
   }
 
-  const record = rateLimitMap.get(ip)
-
-  if (!record || now > record.resetAt) {
+  if (isNewKey) {
     rateLimitMap.set(ip, {
       count: 1,
       resetAt: now + RATE_LIMIT_WINDOW_MS,
