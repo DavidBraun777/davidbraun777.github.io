@@ -1,18 +1,20 @@
 import type { Metadata } from 'next'
-import { Inter, JetBrains_Mono } from 'next/font/google'
+import localFont from 'next/font/local'
 import { ThemeProvider } from '@/providers/theme-provider'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
 import './globals.css'
 
-const inter = Inter({
-  subsets: ['latin'],
+const inter = localFont({
+  src: '../fonts/inter-latin-var.woff2',
   variable: '--font-sans',
+  display: 'swap',
 })
 
-const jetbrainsMono = JetBrains_Mono({
-  subsets: ['latin'],
+const jetbrainsMono = localFont({
+  src: '../fonts/jetbrains-mono-latin-var.woff2',
   variable: '--font-mono',
+  display: 'swap',
 })
 
 export const metadata: Metadata = {

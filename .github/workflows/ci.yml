@@ -20,7 +20,7 @@ jobs:
       - name: Setup Node.js
         uses: actions/setup-node@v6
         with:
-          node-version: '20'
+          node-version-file: '.nvmrc'
           cache: 'npm'
 
       - name: Install dependencies
@@ -31,6 +31,22 @@ jobs:
 
       - name: Type check
         run: npx tsc --noEmit
+
+      - name: Unit & integration tests
+        run: npm test
+
+      - name: Validate blog slugs
+        run: |
+          bad=0
+          shopt -s nullglob
+          for f in src/content/blog/*.mdx; do
+            slug=$(basename "$f" .mdx)
+            if ! echo "$slug" | grep -qE '^[a-zA-Z0-9][a-zA-Z0-9_-]*$'; then
+              echo "::error file=$f::Invalid blog slug: $slug (must match ^[a-zA-Z0-9][a-zA-Z0-9_-]*$)"
+              bad=1
+            fi
+          done
+          exit $bad
 
       - name: Security audit
         run: npm audit --audit-level=high

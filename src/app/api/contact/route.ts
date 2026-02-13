@@ -4,15 +4,14 @@ import {
   sanitizeInput,
   sanitizeEmail,
   escapeHtml,
-  checkRateLimit,
-  getClientIp,
 } from '@/lib/contact-validation'
+import { checkRateLimit, getClientIp } from '@/lib/rate-limit'
 
 export async function POST(request: Request) {
   try {
-    // Rate limiting
+    // Rate limiting (Upstash Redis when configured, in-memory fallback)
     const ip = getClientIp(request.headers)
-    const rateLimit = checkRateLimit(ip)
+    const rateLimit = await checkRateLimit(ip)
 
     if (rateLimit.limited) {
       return NextResponse.json(

@@ -1,19 +1,5 @@
 import type { NextConfig } from 'next'
 
-// Content Security Policy
-const cspHeader = `
-  default-src 'self';
-  script-src 'self' 'unsafe-inline';
-  style-src 'self' 'unsafe-inline';
-  img-src 'self' data: blob: https:;
-  font-src 'self';
-  connect-src 'self';
-  frame-ancestors 'none';
-  form-action 'self';
-  base-uri 'self';
-  upgrade-insecure-requests;
-`.replace(/\n/g, ' ').trim()
-
 const nextConfig: NextConfig = {
   images: {
     formats: ['image/avif', 'image/webp'],
@@ -23,10 +9,7 @@ const nextConfig: NextConfig = {
       {
         source: '/(.*)',
         headers: [
-          {
-            key: 'Content-Security-Policy',
-            value: cspHeader,
-          },
+          // CSP is set per-request by middleware (nonce-based)
           {
             key: 'X-Frame-Options',
             value: 'DENY',
