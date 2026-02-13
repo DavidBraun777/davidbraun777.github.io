@@ -9,7 +9,7 @@ const nextConfig: NextConfig = {
       {
         source: '/(.*)',
         headers: [
-          // CSP is set per-request by middleware (nonce-based)
+          // CSP is set per-request by proxy.ts
           {
             key: 'X-Frame-Options',
             value: 'DENY',
