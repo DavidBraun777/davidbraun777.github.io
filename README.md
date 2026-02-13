@@ -1,31 +1,34 @@
 # David Braun | Portfolio
 
-A modern, responsive portfolio website built with Next.js 14+, TypeScript, Tailwind CSS, and Framer Motion.
+A modern, responsive portfolio website built with Next.js 16, React 19, TypeScript, Tailwind CSS, and Framer Motion.
 
 **Live Site:** [dbraun.io](https://dbraun.io)
 
 ## Features
 
-- **Modern Stack** — Next.js 14+ with App Router, TypeScript, Tailwind CSS v4
+- **Modern Stack** — Next.js 16 with App Router, TypeScript, Tailwind CSS v4
 - **Dark Mode** — Dark theme by design for optimal readability
-- **Animations** — Smooth scroll-reveal and hover effects with Framer Motion
+- **Animations** — Smooth scroll-reveal and hover effects with Framer Motion and GSAP
 - **MDX Blog** — Write blog posts in Markdown with React component support
-- **Contact Form** — Server-side email handling with Resend
+- **Contact Form** — Server-side email handling with Resend, input validation, and rate limiting
 - **Responsive** — Mobile-first design with collapsible navigation
 - **SEO Optimized** — Metadata, Open Graph, and structured data
 - **Accessible** — Semantic HTML, keyboard navigation, reduced motion support
+- **Tested** — Unit and integration tests with Vitest
 
 ## Tech Stack
 
 | Category | Technology |
 |----------|------------|
-| Framework | [Next.js 14+](https://nextjs.org/) |
+| Framework | [Next.js 16](https://nextjs.org/) |
 | Language | [TypeScript](https://www.typescriptlang.org/) |
+| UI | [React 19](https://react.dev/) |
 | Styling | [Tailwind CSS v4](https://tailwindcss.com/) |
-| Animations | [Framer Motion](https://www.framer.com/motion/) |
+| Animations | [Framer Motion](https://www.framer.com/motion/), [GSAP](https://gsap.com/) |
 | Icons | [Lucide React](https://lucide.dev/) |
 | Blog | [MDX](https://mdxjs.com/) via next-mdx-remote |
 | Email | [Resend](https://resend.com/) |
+| Testing | [Vitest](https://vitest.dev/) |
 | Deployment | [Vercel](https://vercel.com/) |
 
 ## Getting Started
@@ -56,15 +59,16 @@ Open [http://localhost:3000](http://localhost:3000) to view the site.
 Create a `.env.local` file in the root directory:
 
 ```env
-# Email configuration (Resend)
+# Email configuration (Resend) — required in production
 RESEND_API_KEY=re_xxxxxxxxxxxxx
-CONTACT_EMAIL=your-email@example.com
 
-# Optional: Google Tag Manager
-NEXT_PUBLIC_GTM_ID=GTM-XXXXXXX
+# Optional: override recipient (defaults to davidjbraun777@gmail.com)
+CONTACT_EMAIL=your-email@example.com
 ```
 
 Get your Resend API key at [resend.com](https://resend.com).
+
+**Note:** The contact form returns a 500 error if `RESEND_API_KEY` is not set.
 
 ## Project Structure
 
@@ -78,13 +82,13 @@ src/
 │   └── blog/               # Blog listing and post pages
 ├── components/
 │   ├── ui/                 # Reusable UI components
-│   ├── layout/             # Header, Footer, ThemeToggle
+│   ├── layout/             # Header, Footer, CurrentStatus
 │   ├── sections/           # Page sections (Hero, About, etc.)
 │   └── blog/               # Blog-specific components
 ├── content/blog/           # MDX blog posts
 ├── data/                   # Static data (experience, skills, etc.)
 ├── hooks/                  # Custom React hooks
-├── lib/                    # Utility functions
+├── lib/                    # Utility functions and validation
 └── providers/              # React context providers
 ```
 
@@ -134,6 +138,7 @@ Your content here...
 | `npm run start` | Start production server |
 | `npm run lint` | Run ESLint |
 | `npm test` | Run unit & integration tests |
+| `npm run test:watch` | Run tests in watch mode |
 
 ## Deployment
 
@@ -144,7 +149,7 @@ Your content here...
 3. Add environment variables in Project Settings
 4. Deploy
 
-Vercel will automatically deploy on every push to `main`.
+Vercel will automatically deploy on every push to `master`.
 
 ### Custom Domain
 
