@@ -48,6 +48,7 @@ export function Contact() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
+    clearTimeout(resetTimerRef.current)
     setFormStatus('loading')
 
     try {
