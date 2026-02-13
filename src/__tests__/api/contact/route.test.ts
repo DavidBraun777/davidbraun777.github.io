@@ -186,4 +186,21 @@ describe('POST /api/contact', () => {
     )
     expect(res2.status).toBe(200)
   })
+
+  it('returns 400 for invalid JSON body', async () => {
+    vi.stubEnv('RESEND_API_KEY', 'test-key')
+    const req = new Request('http://localhost:3000/api/contact', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-real-ip': '127.0.0.1',
+      },
+      body: '{not valid json',
+    })
+    const res = await POST(req)
+    expect(res.status).toBe(400)
+    const json = await res.json()
+    expect(json.success).toBe(false)
+    expect(json.error).toContain('Invalid JSON')
+  })
 })

@@ -174,9 +174,23 @@ export interface RateLimitResult {
 export function checkRateLimit(ip: string): RateLimitResult {
   const now = Date.now()
 
-  // Prune if map grows too large to prevent unbounded memory growth
+  // Prune expired entries when map is large
   if (rateLimitMap.size > MAX_MAP_SIZE) {
     pruneStaleEntries()
+  }
+
+  // Hard cap: if map is still at capacity after pruning, evict the oldest entry
+  // to prevent unbounded memory growth under high-cardinality traffic
+  if (rateLimitMap.size >= MAX_MAP_SIZE) {
+    let oldestKey: string | undefined
+    let oldestSeen = Infinity
+    for (const [key, record] of rateLimitMap) {
+      if (record.lastSeen < oldestSeen) {
+        oldestSeen = record.lastSeen
+        oldestKey = key
+      }
+    }
+    if (oldestKey) rateLimitMap.delete(oldestKey)
   }
 
   const record = rateLimitMap.get(ip)
