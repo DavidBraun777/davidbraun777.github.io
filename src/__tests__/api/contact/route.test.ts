@@ -1,6 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { POST } from '@/app/api/contact/route'
 import { _resetRateLimits } from '@/lib/contact-validation'
+import { _resetUpstash } from '@/lib/rate-limit'
 
 // Mock resend — vi.hoisted ensures mockSend is available when vi.mock factory runs
 const { mockSend } = vi.hoisted(() => ({
@@ -37,8 +38,12 @@ const validBody = {
 describe('POST /api/contact', () => {
   beforeEach(() => {
     _resetRateLimits()
+    _resetUpstash()
     mockSend.mockReset()
     mockSend.mockResolvedValue({ data: { id: 'test-id' }, error: null })
+    // Ensure Upstash is never used in unit tests, regardless of env
+    vi.stubEnv('UPSTASH_REDIS_REST_URL', '')
+    vi.stubEnv('UPSTASH_REDIS_REST_TOKEN', '')
   })
 
   afterEach(() => {
