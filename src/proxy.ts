@@ -1,15 +1,13 @@
 import { NextResponse } from 'next/server'
 import type { NextRequest } from 'next/server'
 
-export function proxy(request: NextRequest) {
-  const nonce = Buffer.from(crypto.randomUUID()).toString('base64')
-
-  // Keep CSP strict enough for framing/form protections while remaining
-  // compatible with Next.js production hydration scripts.
-  // Next emits inline/runtime scripts that are not currently nonced here.
+export function proxy(_request: NextRequest) {
+  // Keep CSP compatible with static pages and Next.js hydration scripts.
+  // A nonce-based script policy can block inline runtime scripts unless every
+  // script tag is explicitly nonced at render time.
   const cspHeader = `
     default-src 'self';
-    script-src 'self' 'unsafe-inline' 'nonce-${nonce}';
+    script-src 'self' 'unsafe-inline';
     style-src 'self' 'unsafe-inline';
     img-src 'self' data: blob: https:;
     font-src 'self';
@@ -22,12 +20,7 @@ export function proxy(request: NextRequest) {
     .replace(/\s{2,}/g, ' ')
     .trim()
 
-  const requestHeaders = new Headers(request.headers)
-  requestHeaders.set('x-nonce', nonce)
-
-  const response = NextResponse.next({
-    request: { headers: requestHeaders },
-  })
+  const response = NextResponse.next()
 
   response.headers.set('Content-Security-Policy', cspHeader)
 

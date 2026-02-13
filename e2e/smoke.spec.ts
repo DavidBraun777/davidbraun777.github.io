@@ -32,7 +32,6 @@ test.describe('Smoke tests', () => {
     const csp = response?.headers()['content-security-policy']
     expect(csp).toBeDefined()
     expect(csp).toContain("script-src")
-    expect(csp).toContain("'nonce-")
     expect(csp).toContain("'unsafe-inline'")
   })
 
