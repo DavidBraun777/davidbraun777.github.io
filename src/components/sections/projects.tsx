@@ -2,11 +2,47 @@
 
 import { useEffect, useRef } from 'react'
 import Image from 'next/image'
-import { Github, ExternalLink } from 'lucide-react'
+import {
+  ExternalLink,
+  Github,
+  Globe,
+  HardDrive,
+  Server,
+  Shield,
+  Sparkles,
+} from 'lucide-react'
 import { projects } from '@/data/projects'
 import { SectionHeader } from '@/components/ui/section-header'
 import { Badge } from '@/components/ui/badge'
 import { gsap, ScrollTrigger } from '@/hooks/useGSAP'
+
+const projectPlaceholderVisuals = {
+  web: {
+    icon: Globe,
+    eyebrow: 'Web Platform',
+    gradient: 'from-primary-600 via-accent-violet to-accent-cyan',
+  },
+  infrastructure: {
+    icon: Server,
+    eyebrow: 'Infrastructure',
+    gradient: 'from-accent-cyan via-primary-600 to-slate-900',
+  },
+  security: {
+    icon: Shield,
+    eyebrow: 'Security Lab',
+    gradient: 'from-accent-emerald via-primary-700 to-slate-950',
+  },
+  hardware: {
+    icon: HardDrive,
+    eyebrow: 'Hardware Systems',
+    gradient: 'from-accent-amber via-accent-violet to-slate-900',
+  },
+  other: {
+    icon: Sparkles,
+    eyebrow: 'Applied Build',
+    gradient: 'from-primary-500 via-accent-violet to-accent-rose',
+  },
+} as const
 
 export function Projects() {
   const sectionRef = useRef<HTMLElement>(null)
@@ -69,12 +105,16 @@ export function Projects() {
             >
               {/* Image */}
               <div className="relative h-56 overflow-hidden">
-                <Image
-                  src={project.image}
-                  alt={project.title}
-                  fill
-                  className="object-cover transition-transform duration-500 group-hover:scale-105"
-                />
+                {project.image === '/images/profile/Smolder.png' ? (
+                  <ProjectPlaceholder project={project} />
+                ) : (
+                  <Image
+                    src={project.image}
+                    alt={project.title}
+                    fill
+                    className="object-cover transition-transform duration-500 group-hover:scale-105"
+                  />
+                )}
                 <div className="absolute inset-0 bg-gradient-to-t from-black/60 via-black/20 to-transparent opacity-0 group-hover:opacity-100 transition-opacity duration-300" />
 
                 {/* Overlay buttons */}
@@ -165,5 +205,30 @@ export function Projects() {
         </div>
       </div>
     </section>
+  )
+}
+
+function ProjectPlaceholder({ project }: { project: (typeof projects)[number] }) {
+  const visual = projectPlaceholderVisuals[project.category]
+  const Icon = visual.icon
+
+  return (
+    <div
+      className={`absolute inset-0 bg-gradient-to-br ${visual.gradient} p-6 flex flex-col justify-end`}
+      aria-hidden="true"
+    >
+      <div className="inline-flex w-fit p-3 rounded-2xl bg-white/15 backdrop-blur-sm border border-white/20 mb-5">
+        <Icon className="w-6 h-6 text-white" />
+      </div>
+      <p className="text-[11px] uppercase tracking-[0.24em] text-white/70 mb-2">
+        {visual.eyebrow}
+      </p>
+      <h4 className="text-xl font-semibold text-white">
+        {project.title}
+      </h4>
+      <p className="text-sm text-white/75 mt-3 line-clamp-2">
+        {project.technologies.slice(0, 3).join(' • ')}
+      </p>
+    </div>
   )
 }

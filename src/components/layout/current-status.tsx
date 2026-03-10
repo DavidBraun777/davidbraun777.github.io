@@ -5,10 +5,10 @@ import { motion, AnimatePresence } from 'framer-motion'
 import { Sparkles, Code, BookOpen, Rocket } from 'lucide-react'
 
 const statuses = [
-  { icon: BookOpen, label: 'Learning', value: 'Machine Learning' },
-  { icon: Code, label: 'Building', value: 'AI-Powered Apps' },
-  { icon: Rocket, label: 'Exploring', value: 'Kubernetes & DevOps' },
-  { icon: Sparkles, label: 'Studying', value: 'Cloud Architecture' },
+  { icon: BookOpen, label: 'Studying', value: 'AI Master\'s @ St. Thomas' },
+  { icon: Code, label: 'Building', value: 'Applied AI Systems' },
+  { icon: Rocket, label: 'Running', value: 'Proxmox Security Lab' },
+  { icon: Sparkles, label: 'Exploring', value: 'ML Infrastructure' },
 ]
 
 export function CurrentStatus() {
@@ -26,7 +26,7 @@ export function CurrentStatus() {
 
   return (
     <motion.div
-      className="flex items-center gap-2 px-3 py-1.5 bg-primary-500/10 border border-primary-500/20 rounded-full"
+      className="flex items-center gap-2 px-3 py-1.5 rounded-full border border-slate-200/80 bg-white/70 backdrop-blur-sm whitespace-nowrap dark:border-slate-800/80 dark:bg-slate-900/60"
     >
       <AnimatePresence mode="wait">
         <motion.div
@@ -35,13 +35,13 @@ export function CurrentStatus() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
           transition={{ duration: 0.3 }}
-          className="flex items-center gap-2"
+          className="flex items-center gap-1.5"
         >
-          <Icon className="w-3.5 h-3.5 text-primary-400" />
-          <span className="text-sm text-slate-400">
+          <Icon className="w-3 h-3 text-primary-500/80 dark:text-primary-400/80" />
+          <span className="text-[13px] text-slate-500 dark:text-slate-400">
             {current.label}:
           </span>
-          <span className="text-sm font-medium text-primary-400">
+          <span className="text-[13px] font-medium text-slate-800 dark:text-slate-200">
             {current.value}
           </span>
         </motion.div>

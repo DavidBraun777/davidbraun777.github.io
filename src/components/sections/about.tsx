@@ -1,33 +1,33 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
-import { Target, Users, Zap, Server } from 'lucide-react'
+import { Brain, Users, Zap, Server } from 'lucide-react'
 import { SectionHeader } from '@/components/ui/section-header'
 import { gsap, ScrollTrigger } from '@/hooks/useGSAP'
 
 const competencies = [
   {
-    icon: Server,
-    title: 'DevOps & Infrastructure',
-    description: 'Building and automating scalable infrastructure with Docker, Kubernetes, and Terraform',
+    icon: Brain,
+    title: 'AI & Machine Learning',
+    description: 'Pursuing a Master\'s in AI — applying ML to real-world infrastructure and systems problems',
     color: 'from-primary-500 to-primary-600',
   },
   {
-    icon: Users,
-    title: 'Team Collaboration',
-    description: 'Fosters strong teamwork and knowledge sharing across global teams',
+    icon: Server,
+    title: 'Infrastructure & DevOps',
+    description: 'Building and automating scalable infrastructure with Docker, Kubernetes, AWS, and Terraform',
     color: 'from-accent-violet to-purple-600',
   },
   {
     icon: Zap,
-    title: 'CI/CD Automation',
-    description: 'Implementing pipelines with GitHub Actions for secure, efficient deployments',
+    title: 'Systems Engineering',
+    description: 'Designing reliable systems — from CI/CD pipelines to GPU-accelerated security labs',
     color: 'from-accent-amber to-orange-500',
   },
   {
-    icon: Target,
-    title: 'Security Focus',
-    description: 'Ensuring secure integration and deployment practices across all systems',
+    icon: Users,
+    title: 'Security & Collaboration',
+    description: 'Secure coding practices, vulnerability remediation, and cross-functional team leadership',
     color: 'from-accent-emerald to-green-600',
   },
 ]
@@ -85,31 +85,34 @@ export function About() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeader
           title="About Me"
-          subtitle="Building scalable, secure, and high-performing applications"
+          subtitle="AI engineer building intelligent, scalable, and secure systems"
         />
 
         <div className="grid lg:grid-cols-2 gap-12 items-start">
           {/* Bio */}
           <div className="about-bio space-y-6">
             <p className="text-lg text-slate-600 dark:text-slate-300 leading-relaxed">
-              Experienced <span className="font-semibold text-primary-600 dark:text-primary-400">Software Engineer</span> with expertise in
-              full-stack development, cybersecurity, and DevOps. Proficient in building and automating scalable infrastructure using
-              <span className="font-semibold"> Docker, Kubernetes, AWS, and Terraform</span>.
+              <span className="font-semibold text-primary-600 dark:text-primary-400">AI and systems engineer</span> with a background spanning
+              infrastructure, cybersecurity, and full-stack development. Currently pursuing a
+              <span className="font-semibold"> Master&apos;s in Artificial Intelligence</span> at the University of St. Thomas while building
+              applied AI systems and scalable infrastructure.
             </p>
             <p className="text-lg text-slate-600 dark:text-slate-300 leading-relaxed">
-              Extensive experience implementing <span className="font-semibold">CI/CD pipelines with GitHub Actions</span>, ensuring
-              secure and efficient deployments. Passionate about applying DevOps practices to deliver high-performing, reliable applications.
+              Experienced in automating infrastructure with <span className="font-semibold">Docker, Kubernetes, AWS, and Terraform</span>,
+              implementing <span className="font-semibold">CI/CD pipelines with GitHub Actions</span>,
+              and building GPU-accelerated environments for security research and ML workloads.
             </p>
             <p className="text-lg text-slate-600 dark:text-slate-300 leading-relaxed">
-              Currently pursuing a <span className="font-semibold">Master&apos;s in Artificial Intelligence</span> at the University of St. Thomas,
-              with coursework in Cloud Computing and Machine Learning. I hold a Bachelor&apos;s in Computer Science, Mathematics, and Physics from Augsburg University.
-            </p>
-            <p className="text-lg text-slate-600 dark:text-slate-300 leading-relaxed">
-              I&apos;ve contributed to industry-leading companies including <span className="font-semibold text-primary-600 dark:text-primary-400">U.S. Bank</span>,
+              My background combines a <span className="font-semibold">Bachelor&apos;s in Computer Science, Mathematics, and Physics</span> from
+              Augsburg University with hands-on engineering at companies including
+              <span className="font-semibold text-primary-600 dark:text-primary-400"> U.S. Bank</span>,
               <span className="font-semibold text-accent-violet"> Securian Financial</span>,
               <span className="font-semibold text-accent-cyan"> GE Aviation</span>, and
               <span className="font-semibold text-accent-rose"> Target Corporation</span>.
-              I also founded <span className="font-semibold">People&apos;s Connection LLC</span>, building accessible web applications for non-profits.
+            </p>
+            <p className="text-lg text-slate-600 dark:text-slate-300 leading-relaxed">
+              I also founded <span className="font-semibold">People&apos;s Connection LLC</span>, building accessible web applications
+              for non-profit organizations — blending engineering with impact.
             </p>
           </div>
 
