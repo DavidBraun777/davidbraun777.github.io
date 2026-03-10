@@ -70,9 +70,9 @@ export function Header() {
             : 'bg-transparent'
         )}
       >
-        <nav className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16 md:h-20 gap-4">
-            <div className="flex items-center gap-4 xl:gap-5 min-w-0">
+        <nav className="mx-auto max-w-[88rem] px-4 sm:px-6 lg:px-8">
+          <div className="flex h-16 items-center justify-between gap-5 md:h-20 xl:gap-6">
+            <div className="flex min-w-0 items-center gap-4 xl:gap-6">
               {/* Logo */}
               <Link href="/#top" className="flex items-center gap-2 group shrink-0">
                 <motion.span
@@ -83,9 +83,9 @@ export function Header() {
                 </motion.span>
               </Link>
 
-              <div className="hidden lg:flex items-center gap-2.5 min-w-0">
+              <div className="hidden min-w-0 lg:flex items-center gap-3">
                 {/* Desktop Navigation */}
-                <div className="flex items-center gap-1.5 rounded-full border border-slate-200/70 dark:border-slate-800/70 bg-white/65 dark:bg-slate-900/55 px-2 py-1 backdrop-blur-md">
+                <div className="flex items-center gap-1.5 rounded-full border border-slate-200/70 bg-white/65 px-2.5 py-1 backdrop-blur-md dark:border-slate-800/70 dark:bg-slate-900/55">
                   {navItems.map((item) => {
                     const isActive = activeNavItem === item.name
                     return (
@@ -93,7 +93,7 @@ export function Header() {
                         key={item.name}
                         href={item.href}
                         className={cn(
-                          'px-3 py-1.5 text-[13px] font-medium tracking-[0.01em] transition-colors rounded-full whitespace-nowrap',
+                          'rounded-full px-2.5 py-1.5 text-[13px] font-medium tracking-[0.01em] whitespace-nowrap transition-colors xl:px-3',
                           isActive
                             ? 'text-slate-900 dark:text-white bg-slate-100/95 dark:bg-white/8 ring-1 ring-slate-200/80 dark:ring-white/10 shadow-sm'
                             : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100/80 dark:hover:bg-white/5'
@@ -108,7 +108,7 @@ export function Header() {
             </div>
 
             {/* Right side */}
-            <div className="flex items-center gap-3 shrink-0">
+            <div className="flex shrink-0 items-center gap-3 xl:gap-4">
               <div className="hidden 2xl:block">
                 <CurrentStatus />
               </div>
