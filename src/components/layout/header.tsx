@@ -13,6 +13,7 @@ import { useScrollSpy } from '@/hooks/useScrollSpy'
 const navItems = [
   { name: 'About', href: '/#about', sectionId: 'about' },
   { name: 'Building', href: '/#building', sectionId: 'building' },
+  { name: 'Process', href: '/#process', sectionId: 'process' },
   { name: 'Experience', href: '/#experience', sectionId: 'experience' },
   { name: 'Education', href: '/#education', sectionId: 'education' },
   { name: 'Projects', href: '/#projects', sectionId: 'projects' },
