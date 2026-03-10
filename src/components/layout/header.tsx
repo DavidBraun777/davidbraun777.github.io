@@ -104,23 +104,23 @@ export function Header() {
                     )
                   })}
                 </div>
-
-                <div className="hidden min-[1750px]:block">
-                  <CurrentStatus />
-                </div>
               </div>
             </div>
 
             {/* Right side */}
             <div className="flex items-center gap-3 shrink-0">
+              <div className="hidden 2xl:block">
+                <CurrentStatus />
+              </div>
+
               <Link
                 href={resumeUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hidden sm:flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-full border border-slate-200/80 bg-white/70 text-slate-700 hover:bg-slate-100/90 dark:border-slate-800/80 dark:bg-slate-900/60 dark:text-slate-300 dark:hover:bg-slate-800/90 transition-colors shrink-0"
+                className="hidden sm:flex items-center gap-2 rounded-full border border-slate-200/80 bg-white/70 px-3 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100/90 dark:border-slate-800/80 dark:bg-slate-900/60 dark:text-slate-300 dark:hover:bg-slate-800/90 shrink-0 xl:px-3 2xl:px-4"
               >
                 <FileText className="w-4 h-4" />
-                Resume
+                <span className="hidden 2xl:inline">Resume</span>
               </Link>
 
               {/* Mobile menu button */}
