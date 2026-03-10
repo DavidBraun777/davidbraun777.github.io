@@ -26,7 +26,7 @@ export function CurrentStatus() {
 
   return (
     <motion.div
-      className="flex max-w-[240px] items-center gap-2 overflow-hidden rounded-full border border-slate-200/80 bg-white/70 px-3 py-1.5 backdrop-blur-sm whitespace-nowrap dark:border-slate-800/80 dark:bg-slate-900/60"
+      className="flex h-[38px] w-[248px] items-center justify-center overflow-hidden rounded-full border border-slate-200/80 bg-white/70 px-3 py-1.5 whitespace-nowrap backdrop-blur-sm dark:border-slate-800/80 dark:bg-slate-900/60"
     >
       <AnimatePresence mode="wait">
         <motion.div
@@ -35,13 +35,13 @@ export function CurrentStatus() {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
           transition={{ duration: 0.3 }}
-          className="flex items-center gap-1.5"
+          className="flex w-full items-center justify-center gap-1.5 text-center"
         >
-          <Icon className="w-3 h-3 text-primary-500/80 dark:text-primary-400/80" />
+          <Icon className="h-3 w-3 shrink-0 text-primary-500/80 dark:text-primary-400/80" />
           <span className="shrink-0 text-[13px] text-slate-500 dark:text-slate-400">
             {current.label}:
           </span>
-          <span className="truncate text-[13px] font-medium text-slate-800 dark:text-slate-200">
+          <span className="max-w-[150px] truncate text-[13px] font-medium text-slate-800 dark:text-slate-200">
             {current.value}
           </span>
         </motion.div>
