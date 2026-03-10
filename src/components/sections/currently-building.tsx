@@ -1,34 +1,43 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { Rocket, ArrowRight } from 'lucide-react'
+import { GraduationCap, Mic, ShieldCheck } from 'lucide-react'
 import { SectionHeader } from '@/components/ui/section-header'
 
-// TODO: David — replace these placeholder items with your actual current projects/experiments.
-// Each item should have a title, description, status, and optional link.
 const currentProjects = [
   {
-    title: 'AI Master\'s Coursework',
-    description: 'Pursuing a Master\'s in Artificial Intelligence at the University of St. Thomas — coursework in ML, cloud computing, and applied AI.',
-    status: 'In Progress',
-    tags: ['Machine Learning', 'Cloud Computing', 'AI'],
+    icon: Mic,
+    title: 'StormIQ',
+    summary: 'Building an AI voice and workflow platform for lead qualification, conversational routing, and vertical-specific automation.',
+    focus: 'Voice pipeline architecture, backend service integration, and infrastructure decisions for scalable deployment.',
+    nextMilestone: 'Ship an end-to-end demo across call handling, response generation, and CRM handoff.',
+    status: 'Platform Build',
+    tags: ['AI Voice', 'Automation', 'Backend Services'],
   },
   {
-    title: 'Security Lab Expansion',
-    description: 'Expanding the Proxmox-based security lab with additional VMs for ML training workloads and Kubernetes experimentation.',
-    status: 'In Progress',
-    tags: ['Proxmox', 'Kubernetes', 'GPU', 'ML'],
+    icon: GraduationCap,
+    title: 'Edcalibur',
+    summary: 'Designing a gamified classroom mastery platform focused on stronger learning loops, student motivation, and practical teacher workflows.',
+    focus: 'Product architecture, progress modeling, and building a usable experience for both classroom execution and long-term iteration.',
+    nextMilestone: 'Validate the first classroom-ready workflow from assignment flow to mastery tracking and feedback.',
+    status: 'Product Build',
+    tags: ['EdTech', 'Product Design', 'Full-Stack'],
   },
-  // TODO: David — add 1-2 more current projects here. Examples:
-  // - A specific AI/ML project from your Master's program
-  // - An open-source contribution you're working on
-  // - A side project or experiment
+  {
+    icon: ShieldCheck,
+    title: 'AI & Security Lab',
+    summary: 'Expanding a hands-on lab environment for isolated infrastructure testing, ML workloads, and system hardening experiments.',
+    focus: 'Proxmox-based lab growth, Kubernetes experimentation, GPU-capable workloads, and cleaner operational patterns for repeatable testing.',
+    nextMilestone: 'Finalize the next round of lab architecture updates and document the environment as a reusable proof asset.',
+    status: 'Lab Expansion',
+    tags: ['Proxmox', 'Kubernetes', 'Infrastructure'],
+  },
 ]
 
 const statusColors: Record<string, string> = {
-  'In Progress': 'bg-accent-amber/10 text-accent-amber border-accent-amber/20',
-  'Research': 'bg-accent-violet/10 text-accent-violet border-accent-violet/20',
-  'Launching Soon': 'bg-accent-emerald/10 text-accent-emerald border-accent-emerald/20',
+  'Platform Build': 'bg-accent-violet/10 text-accent-violet border-accent-violet/20',
+  'Product Build': 'bg-accent-amber/10 text-accent-amber border-accent-amber/20',
+  'Lab Expansion': 'bg-accent-emerald/10 text-accent-emerald border-accent-emerald/20',
 }
 
 export function CurrentlyBuilding() {
@@ -37,10 +46,10 @@ export function CurrentlyBuilding() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeader
           title="Currently Building"
-          subtitle="What I'm working on right now"
+          subtitle="The systems I am actively designing, shipping, and refining right now"
         />
 
-        <div className="grid md:grid-cols-2 gap-6">
+        <div className="grid gap-6 lg:grid-cols-3">
           {currentProjects.map((project, index) => (
             <motion.div
               key={project.title}
@@ -48,11 +57,11 @@ export function CurrentlyBuilding() {
               whileInView={{ opacity: 1, y: 0 }}
               viewport={{ once: true }}
               transition={{ delay: index * 0.1, duration: 0.5 }}
-              className="group relative p-6 bg-white dark:bg-slate-800 rounded-2xl shadow-lg hover:shadow-xl hover:-translate-y-1 transition-all duration-200 border border-slate-200 dark:border-slate-700"
+              className="rounded-2xl border border-slate-200 bg-white p-6 shadow-lg transition-all duration-200 hover:-translate-y-1 hover:shadow-xl dark:border-slate-700 dark:bg-slate-800"
             >
               <div className="flex items-start justify-between mb-4">
-                <div className="inline-flex p-2.5 rounded-xl bg-gradient-to-br from-primary-500 to-accent-violet">
-                  <Rocket className="w-5 h-5 text-white" />
+                <div className="inline-flex rounded-xl bg-gradient-to-br from-primary-500 to-accent-violet p-2.5">
+                  <project.icon className="h-5 w-5 text-white" />
                 </div>
                 <span className={`text-xs font-medium px-3 py-1 rounded-full border ${statusColors[project.status] || statusColors['In Progress']}`}>
                   {project.status}
@@ -63,9 +72,28 @@ export function CurrentlyBuilding() {
                 {project.title}
               </h3>
 
-              <p className="text-sm text-slate-600 dark:text-slate-400 mb-4 leading-relaxed">
-                {project.description}
+              <p className="mb-5 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+                {project.summary}
               </p>
+
+              <div className="mb-5 space-y-4">
+                <div>
+                  <p className="mb-1 text-xs font-semibold uppercase tracking-[0.08em] text-slate-500 dark:text-slate-500">
+                    Current focus
+                  </p>
+                  <p className="text-sm leading-relaxed text-slate-700 dark:text-slate-300">
+                    {project.focus}
+                  </p>
+                </div>
+                <div>
+                  <p className="mb-1 text-xs font-semibold uppercase tracking-[0.08em] text-slate-500 dark:text-slate-500">
+                    Next milestone
+                  </p>
+                  <p className="text-sm leading-relaxed text-slate-700 dark:text-slate-300">
+                    {project.nextMilestone}
+                  </p>
+                </div>
+              </div>
 
               <div className="flex flex-wrap gap-2">
                 {project.tags.map((tag) => (
@@ -76,10 +104,6 @@ export function CurrentlyBuilding() {
                     {tag}
                   </span>
                 ))}
-              </div>
-
-              <div className="absolute bottom-6 right-6 opacity-0 group-hover:opacity-100 transition-opacity">
-                <ArrowRight className="w-5 h-5 text-primary-500" />
               </div>
             </motion.div>
           ))}

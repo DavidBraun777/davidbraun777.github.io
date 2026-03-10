@@ -1,33 +1,33 @@
 'use client'
 
 import { useEffect, useRef } from 'react'
-import { Brain, Users, Zap, Server } from 'lucide-react'
+import { Brain, Server, ShieldCheck, Users } from 'lucide-react'
 import { SectionHeader } from '@/components/ui/section-header'
 import { gsap, ScrollTrigger } from '@/hooks/useGSAP'
 
 const competencies = [
   {
     icon: Brain,
-    title: 'AI & Machine Learning',
-    description: 'Pursuing a Master\'s in AI — applying ML to real-world infrastructure and systems problems',
+    title: 'Applied AI & Automation',
+    description: 'Building AI-enabled workflows, backend services, and product features that solve real operational problems.',
     color: 'from-primary-500 to-primary-600',
   },
   {
     icon: Server,
-    title: 'Infrastructure & DevOps',
-    description: 'Building and automating scalable infrastructure with Docker, Kubernetes, AWS, and Terraform',
+    title: 'Platform & Cloud Infrastructure',
+    description: 'Designing dependable infrastructure with containers, cloud services, CI/CD, and automation-first delivery practices.',
     color: 'from-accent-violet to-purple-600',
   },
   {
-    icon: Zap,
-    title: 'Systems Engineering',
-    description: 'Designing reliable systems — from CI/CD pipelines to GPU-accelerated security labs',
+    icon: Users,
+    title: 'Accessibility-Minded Delivery',
+    description: 'Shipping usable systems for real people, including mission-driven and accessibility-first product work.',
     color: 'from-accent-amber to-orange-500',
   },
   {
-    icon: Users,
-    title: 'Security & Collaboration',
-    description: 'Secure coding practices, vulnerability remediation, and cross-functional team leadership',
+    icon: ShieldCheck,
+    title: 'Security & Systems Thinking',
+    description: 'Approaching delivery with operational rigor, secure defaults, and clear tradeoffs across architecture, risk, and maintenance.',
     color: 'from-accent-emerald to-green-600',
   },
 ]
@@ -85,34 +85,29 @@ export function About() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeader
           title="About Me"
-          subtitle="AI engineer building intelligent, scalable, and secure systems"
+          subtitle="Systems-minded engineering across AI, infrastructure, and accessibility"
         />
 
         <div className="grid lg:grid-cols-2 gap-12 items-start">
           {/* Bio */}
           <div className="about-bio space-y-6">
             <p className="text-lg text-slate-600 dark:text-slate-300 leading-relaxed">
-              <span className="font-semibold text-primary-600 dark:text-primary-400">AI and systems engineer</span> with a background spanning
-              infrastructure, cybersecurity, and full-stack development. Currently pursuing a
-              <span className="font-semibold"> Master&apos;s in Artificial Intelligence</span> at the University of St. Thomas while building
-              applied AI systems and scalable infrastructure.
+              I&apos;m an <span className="font-semibold text-primary-600 dark:text-primary-400">Applied AI &amp; Infrastructure Engineer</span> with a background spanning
+              platform engineering, cybersecurity, and full-stack delivery. I&apos;m currently pursuing a
+              <span className="font-semibold"> Master&apos;s in Artificial Intelligence</span> at the University of St. Thomas while building products and internal systems that connect technical depth to real operational outcomes.
             </p>
             <p className="text-lg text-slate-600 dark:text-slate-300 leading-relaxed">
-              Experienced in automating infrastructure with <span className="font-semibold">Docker, Kubernetes, AWS, and Terraform</span>,
-              implementing <span className="font-semibold">CI/CD pipelines with GitHub Actions</span>,
-              and building GPU-accelerated environments for security research and ML workloads.
+              My work sits at the intersection of <span className="font-semibold">AI systems, automation, and infrastructure</span>. I&apos;ve built CI/CD pipelines, automated cloud workflows, managed containerized environments, and designed developer tooling with <span className="font-semibold">Docker, Kubernetes, AWS, Terraform, and GitHub Actions</span>.
             </p>
             <p className="text-lg text-slate-600 dark:text-slate-300 leading-relaxed">
-              My background combines a <span className="font-semibold">Bachelor&apos;s in Computer Science, Mathematics, and Physics</span> from
-              Augsburg University with hands-on engineering at companies including
+              I&apos;ve contributed across enterprise teams at
               <span className="font-semibold text-primary-600 dark:text-primary-400"> U.S. Bank</span>,
               <span className="font-semibold text-violet-700 dark:text-violet-300"> Securian Financial</span>,
               <span className="font-semibold text-cyan-700 dark:text-cyan-300"> GE Aviation</span>, and
-              <span className="font-semibold text-rose-700 dark:text-rose-300"> Target Corporation</span>.
+              <span className="font-semibold text-rose-700 dark:text-rose-300"> Target Corporation</span>, and through <span className="font-semibold">People&apos;s Connection LLC</span> I&apos;ve built accessibility-minded software for nonprofit and mission-driven organizations.
             </p>
             <p className="text-lg text-slate-600 dark:text-slate-300 leading-relaxed">
-              I also founded <span className="font-semibold">People&apos;s Connection LLC</span>, building accessible web applications
-              for non-profit organizations — blending engineering with impact.
+              The common thread in my work is straightforward: translate ambiguous problems into clear architectures, ship in milestones, and leave systems more reliable, maintainable, and useful than I found them.
             </p>
           </div>
 
