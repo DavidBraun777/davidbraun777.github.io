@@ -117,9 +117,10 @@ export function Header() {
                 href={resumeUrl}
                 target="_blank"
                 rel="noopener noreferrer"
+                aria-label="Open resume PDF in a new tab"
                 className="hidden sm:flex items-center gap-2 rounded-full border border-slate-200/80 bg-white/70 px-3 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100/90 dark:border-slate-800/80 dark:bg-slate-900/60 dark:text-slate-300 dark:hover:bg-slate-800/90 shrink-0 xl:px-3 2xl:px-4"
               >
-                <FileText className="w-4 h-4" />
+                <FileText aria-hidden="true" className="w-4 h-4" />
                 <span className="hidden 2xl:inline">Resume</span>
               </Link>
 
@@ -197,7 +198,7 @@ export function Header() {
                     onClick={() => setIsMobileMenuOpen(false)}
                     className="flex items-center gap-2 py-3 text-lg font-medium text-primary-600 dark:text-primary-400"
                   >
-                    <FileText className="w-5 h-5" />
+                    <FileText aria-hidden="true" className="w-5 h-5" />
                     Resume
                   </Link>
                 </motion.div>

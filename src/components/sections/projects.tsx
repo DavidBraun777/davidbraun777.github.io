@@ -127,7 +127,7 @@ export function Projects() {
                       className="p-3 bg-white/90 rounded-full text-slate-900 hover:bg-white hover:scale-110 transition-all duration-200"
                       aria-label="View on GitHub"
                     >
-                      <Github className="w-5 h-5" />
+                      <Github aria-hidden="true" className="w-5 h-5" />
                     </a>
                   )}
                   {project.liveUrl && (
@@ -138,7 +138,7 @@ export function Projects() {
                       className="p-3 bg-white/90 rounded-full text-slate-900 hover:bg-white hover:scale-110 transition-all duration-200"
                       aria-label="View live site"
                     >
-                      <ExternalLink className="w-5 h-5" />
+                      <ExternalLink aria-hidden="true" className="w-5 h-5" />
                     </a>
                   )}
                 </div>
@@ -183,7 +183,7 @@ export function Projects() {
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
                     >
-                      <Github className="w-4 h-4" />
+                      <Github aria-hidden="true" className="w-4 h-4" />
                       Code
                     </a>
                   )}
@@ -194,7 +194,7 @@ export function Projects() {
                       rel="noopener noreferrer"
                       className="inline-flex items-center gap-2 px-3 py-1.5 text-sm font-medium text-slate-700 dark:text-slate-300 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg transition-colors"
                     >
-                      <ExternalLink className="w-4 h-4" />
+                      <ExternalLink aria-hidden="true" className="w-4 h-4" />
                       Live Demo
                     </a>
                   )}

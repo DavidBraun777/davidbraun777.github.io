@@ -175,7 +175,7 @@ export function Contact() {
                       className="p-3 bg-slate-100 dark:bg-slate-800 rounded-xl text-slate-600 dark:text-slate-400 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
                       aria-label={link.name}
                     >
-                      <Icon className="w-5 h-5" />
+                      <Icon aria-hidden="true" className="w-5 h-5" />
                     </motion.a>
                   )
                 })}
