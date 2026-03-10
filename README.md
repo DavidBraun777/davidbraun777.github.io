@@ -134,6 +134,83 @@ Strategic documentation for the two-site expansion plan lives under `docs/`:
 - `docs/niches/README.md` — Niche project playbooks for building sellable proof
 - `docs/architecture/README.md` — Architecture diagrams (placeholder for future diagrams)
 
+## Dependency Maintenance Notes
+
+### Blocked Dependabot PRs: ESLint 10 Migration
+
+Two Dependabot PRs are intentionally **not safe to merge yet**:
+
+- `#27` — `deps: bump @eslint/js from 9.39.2 to 10.0.1`
+- `#19` — `deps: bump the linting group with 2 updates`
+
+These are blocked by the current lint stack, not by application code.
+
+#### Why `#27` is blocked
+
+The repo uses a flat ESLint config in `eslint.config.mjs` and imports the top-level `@eslint/js` package directly:
+
+```js
+import eslint from "@eslint/js";
+```
+
+That means the root `@eslint/js` version must stay aligned with the root `eslint` version.
+
+When `@eslint/js` is upgraded to `10.x` while `eslint` remains on `9.x`, package installation fails during deploys with an `ERESOLVE` peer dependency conflict:
+
+- `@eslint/js@10` expects `eslint@^10`
+- this repo currently uses `eslint@^9.39.2`
+
+This failure was reproduced on Vercel during `npm install`, so `@eslint/js` must remain on the ESLint 9 line until the full lint stack moves together.
+
+#### Why `#19` is blocked
+
+The linting group PR attempts to move the repo onto ESLint 10, but the current plugin stack is not ready for that jump.
+
+The immediate blocker is:
+
+- `eslint-plugin-react@7.37.5`
+
+That plugin currently supports ESLint 9 but not ESLint 10 in this repository's dependency graph, so `npm ci` fails before linting even runs.
+
+In other words:
+
+- `#27` fails because `@eslint/js` was upgraded **without** upgrading `eslint`
+- `#19` fails because upgrading `eslint` to `10.x` requires additional plugin/config upgrades that are not yet in place
+
+#### Current safe state
+
+The safe, deployable state is:
+
+- `eslint` on `^9.39.2`
+- `@eslint/js` on `^9.39.2`
+
+This alignment was restored after Vercel failed with a dependency resolution error.
+
+#### Future upgrade path
+
+Do **not** merge piecemeal ESLint 10 PRs into `master`.
+
+When revisiting ESLint 10, upgrade and validate the lint stack together:
+
+1. `eslint`
+2. `@eslint/js`
+3. `typescript-eslint`
+4. `eslint-plugin-react`
+5. `eslint-config-next` and related Next lint packages
+
+Then re-run:
+
+1. `npm ci`
+2. `npm run lint`
+3. `npx tsc --noEmit`
+4. `npm test`
+5. `npm run build`
+
+Also note:
+
+- ESLint 10 requires a newer Node baseline than ESLint 9
+- if the repo adopts ESLint 10 later, confirm local, CI, and Vercel Node versions are all compatible before merging
+
 ## Features
 
 - **Modern Stack** — Next.js 16 with App Router, TypeScript, Tailwind CSS v4
