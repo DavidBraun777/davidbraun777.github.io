@@ -17,7 +17,7 @@ export function Footer() {
             <Link href="/" className="text-2xl font-bold bg-gradient-to-r from-primary-500 to-accent-violet bg-clip-text text-transparent">
               David Braun
             </Link>
-            <p className="mt-2 text-slate-600 dark:text-slate-400">
+            <p className="mt-2 text-slate-700 dark:text-slate-300">
               Simplifying hard problems. Zero shortcuts.
             </p>
           </div>
@@ -34,7 +34,7 @@ export function Footer() {
                   rel="noopener noreferrer"
                   whileHover={{ scale: 1.1, y: -2 }}
                   whileTap={{ scale: 0.95 }}
-                  className="p-2 text-slate-500 dark:text-slate-400 hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
+                  className="p-2 text-slate-600 dark:text-slate-400 hover:text-primary-600 dark:hover:text-primary-300 transition-colors"
                   aria-label={link.name}
                 >
                   <Icon className="w-5 h-5" />
@@ -46,10 +46,10 @@ export function Footer() {
 
         {/* Copyright */}
         <div className="mt-8 pt-8 border-t border-slate-200 dark:border-slate-800 text-center">
-          <p className="text-sm text-slate-500 dark:text-slate-400 flex items-center justify-center gap-1">
+          <p className="text-sm text-slate-600 dark:text-slate-300 flex items-center justify-center gap-1">
             Built with <Heart className="w-4 h-4 text-red-500 fill-red-500" /> using Next.js & Tailwind
           </p>
-          <p className="mt-2 text-sm text-slate-400 dark:text-slate-500">
+          <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
             &copy; {currentYear} David Braun. All rights reserved.
           </p>
         </div>

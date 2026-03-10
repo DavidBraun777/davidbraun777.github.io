@@ -106,9 +106,9 @@ export function About() {
               My background combines a <span className="font-semibold">Bachelor&apos;s in Computer Science, Mathematics, and Physics</span> from
               Augsburg University with hands-on engineering at companies including
               <span className="font-semibold text-primary-600 dark:text-primary-400"> U.S. Bank</span>,
-              <span className="font-semibold text-accent-violet"> Securian Financial</span>,
-              <span className="font-semibold text-accent-cyan"> GE Aviation</span>, and
-              <span className="font-semibold text-accent-rose"> Target Corporation</span>.
+              <span className="font-semibold text-violet-700 dark:text-violet-300"> Securian Financial</span>,
+              <span className="font-semibold text-cyan-700 dark:text-cyan-300"> GE Aviation</span>, and
+              <span className="font-semibold text-rose-700 dark:text-rose-300"> Target Corporation</span>.
             </p>
             <p className="text-lg text-slate-600 dark:text-slate-300 leading-relaxed">
               I also founded <span className="font-semibold">People&apos;s Connection LLC</span>, building accessible web applications
