@@ -105,7 +105,7 @@ export function Header() {
                   })}
                 </div>
 
-                <div className="hidden 2xl:block">
+                <div className="hidden min-[1750px]:block">
                   <CurrentStatus />
                 </div>
               </div>
