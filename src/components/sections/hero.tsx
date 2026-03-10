@@ -138,7 +138,7 @@ export function Hero() {
                     className="rounded-full bg-white p-3 text-slate-600 shadow-lg transition-shadow hover:text-primary-600 hover:shadow-xl dark:bg-slate-800 dark:text-slate-400 dark:hover:text-primary-400"
                     aria-label={link.name}
                   >
-                    <Icon className="h-5 w-5" />
+                    <Icon aria-hidden="true" className="h-5 w-5" />
                   </motion.a>
                 )
               })}

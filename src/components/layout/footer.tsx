@@ -37,7 +37,7 @@ export function Footer() {
                   className="p-2 text-slate-600 dark:text-slate-400 hover:text-primary-600 dark:hover:text-primary-300 transition-colors"
                   aria-label={link.name}
                 >
-                  <Icon className="w-5 h-5" />
+                  <Icon aria-hidden="true" className="w-5 h-5" />
                 </motion.a>
               )
             })}
@@ -47,7 +47,7 @@ export function Footer() {
         {/* Copyright */}
         <div className="mt-8 pt-8 border-t border-slate-200 dark:border-slate-800 text-center">
           <p className="text-sm text-slate-600 dark:text-slate-300 flex items-center justify-center gap-1">
-            Built with <Heart className="w-4 h-4 text-red-500 fill-red-500" /> using Next.js & Tailwind
+            Built with <Heart aria-hidden="true" className="w-4 h-4 text-red-500 fill-red-500" /> using Next.js & Tailwind
           </p>
           <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
             &copy; {currentYear} David Braun. All rights reserved.
