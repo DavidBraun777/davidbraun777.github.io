@@ -57,12 +57,12 @@ export function PostCard({ post, index = 0 }: PostCardProps) {
               {post.title}
             </h3>
 
-            <p className="text-slate-600 dark:text-slate-400 mb-4 line-clamp-2">
+            <p className="text-slate-600 dark:text-slate-300 mb-4 line-clamp-2">
               {post.description}
             </p>
 
             {/* Meta */}
-            <div className="flex items-center justify-between text-sm text-slate-500 dark:text-slate-400">
+            <div className="flex items-center justify-between text-sm text-slate-500 dark:text-slate-300">
               <div className="flex items-center gap-4">
                 <span className="flex items-center gap-1">
                   <Calendar className="w-4 h-4" />
@@ -73,7 +73,7 @@ export function PostCard({ post, index = 0 }: PostCardProps) {
                   {post.readingTime}
                 </span>
               </div>
-              <span className="flex items-center gap-1 text-primary-600 dark:text-primary-400 group-hover:gap-2 transition-all">
+              <span className="flex items-center gap-1 text-primary-600 dark:text-primary-300 group-hover:gap-2 transition-all">
                 Read more
                 <ArrowRight className="w-4 h-4" />
               </span>
