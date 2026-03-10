@@ -92,7 +92,7 @@ export function Contact() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeader
           title="Get In Touch"
-          subtitle="Have a question or want to work together?"
+          subtitle="Discuss a full-time role, consulting engagement, or selected build."
         />
 
         <div className="grid lg:grid-cols-2 gap-12">
@@ -108,7 +108,7 @@ export function Contact() {
                 Let&apos;s connect
               </h3>
               <p className="text-lg text-slate-600 dark:text-slate-400">
-                I&apos;m always open to discussing new opportunities, interesting projects, or just having a conversation about technology and innovation.
+                I&apos;m open to conversations about AI systems, infrastructure-heavy product work, consulting engagements, and mission-driven builds that need practical execution.
               </p>
             </div>
 
@@ -150,7 +150,7 @@ export function Contact() {
                     href="mailto:davidjbraun777@gmail.com?subject=Let's%20Chat%20-%2015min%20Call"
                     className="text-lg font-medium text-slate-900 dark:text-white hover:text-accent-emerald transition-colors"
                   >
-                    Book a 15-min call
+                    Request a 15-min call
                   </a>
                 </div>
               </div>
