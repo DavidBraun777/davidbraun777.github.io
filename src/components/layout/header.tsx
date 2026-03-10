@@ -12,6 +12,7 @@ import { useScrollSpy } from '@/hooks/useScrollSpy'
 
 const navItems = [
   { name: 'About', href: '/#about', sectionId: 'about' },
+  { name: 'Building', href: '/#building', sectionId: 'building' },
   { name: 'Experience', href: '/#experience', sectionId: 'experience' },
   { name: 'Education', href: '/#education', sectionId: 'education' },
   { name: 'Projects', href: '/#projects', sectionId: 'projects' },
@@ -64,53 +65,58 @@ export function Header() {
         className={cn(
           'fixed top-0 left-0 right-0 z-50 transition-all duration-300',
           isScrolled
-            ? 'bg-white/80 dark:bg-slate-950/80 backdrop-blur-lg shadow-lg shadow-slate-200/20 dark:shadow-slate-900/20'
+            ? 'bg-white/72 dark:bg-slate-950/72 backdrop-blur-xl shadow-lg shadow-slate-200/10 dark:shadow-slate-900/10'
             : 'bg-transparent'
         )}
       >
         <nav className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-          <div className="flex items-center justify-between h-16 md:h-20">
-            {/* Logo */}
-            <Link href="/#top" className="flex items-center gap-2 group">
-              <motion.span
-                whileHover={{ scale: 1.05 }}
-                className="text-xl md:text-2xl font-bold bg-gradient-to-r from-primary-500 to-accent-violet bg-clip-text text-transparent"
-              >
-                DB
-              </motion.span>
-            </Link>
+          <div className="flex items-center justify-between h-16 md:h-20 gap-4">
+            <div className="flex items-center gap-4 xl:gap-5 min-w-0">
+              {/* Logo */}
+              <Link href="/#top" className="flex items-center gap-2 group shrink-0">
+                <motion.span
+                  whileHover={{ scale: 1.05 }}
+                  className="text-xl md:text-2xl font-bold bg-gradient-to-r from-primary-500 to-accent-violet bg-clip-text text-transparent"
+                >
+                  DB
+                </motion.span>
+              </Link>
 
-            {/* Desktop Navigation */}
-            <div className="hidden md:flex items-center gap-1">
-              {navItems.map((item) => {
-                const isActive = activeNavItem === item.name
-                return (
-                  <Link
-                    key={item.name}
-                    href={item.href}
-                    className={cn(
-                      'px-4 py-2 text-sm font-medium transition-colors rounded-lg',
-                      isActive
-                        ? 'text-primary-600 dark:text-primary-400 bg-primary-50 dark:bg-primary-950/50'
-                        : 'text-slate-600 dark:text-slate-400 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-slate-100 dark:hover:bg-slate-800'
-                    )}
-                  >
-                    {item.name}
-                  </Link>
-                )
-              })}
+              <div className="hidden lg:flex items-center gap-2.5 min-w-0">
+                {/* Desktop Navigation */}
+                <div className="flex items-center gap-1.5 rounded-full border border-slate-200/70 dark:border-slate-800/70 bg-white/65 dark:bg-slate-900/55 px-2 py-1 backdrop-blur-md">
+                  {navItems.map((item) => {
+                    const isActive = activeNavItem === item.name
+                    return (
+                      <Link
+                        key={item.name}
+                        href={item.href}
+                        className={cn(
+                          'px-3 py-1.5 text-[13px] font-medium tracking-[0.01em] transition-colors rounded-full whitespace-nowrap',
+                          isActive
+                            ? 'text-slate-900 dark:text-white bg-slate-100/95 dark:bg-white/8 ring-1 ring-slate-200/80 dark:ring-white/10 shadow-sm'
+                            : 'text-slate-600 dark:text-slate-400 hover:text-slate-900 dark:hover:text-white hover:bg-slate-100/80 dark:hover:bg-white/5'
+                        )}
+                      >
+                        {item.name}
+                      </Link>
+                    )
+                  })}
+                </div>
+
+                <div className="hidden 2xl:block">
+                  <CurrentStatus />
+                </div>
+              </div>
             </div>
 
             {/* Right side */}
-            <div className="flex items-center gap-3">
-              <div className="hidden md:block">
-                <CurrentStatus />
-              </div>
+            <div className="flex items-center gap-3 shrink-0">
               <Link
                 href={resumeUrl}
                 target="_blank"
                 rel="noopener noreferrer"
-                className="hidden sm:flex items-center gap-2 px-4 py-2 text-sm font-medium text-primary-400 hover:bg-primary-950 rounded-lg transition-colors"
+                className="hidden sm:flex items-center gap-2 px-4 py-2 text-sm font-medium rounded-full border border-slate-200/80 bg-white/70 text-slate-700 hover:bg-slate-100/90 dark:border-slate-800/80 dark:bg-slate-900/60 dark:text-slate-300 dark:hover:bg-slate-800/90 transition-colors shrink-0"
               >
                 <FileText className="w-4 h-4" />
                 Resume
@@ -119,7 +125,7 @@ export function Header() {
               {/* Mobile menu button */}
               <button
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
-                className="md:hidden p-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg"
+                className="lg:hidden p-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg"
                 aria-label="Toggle menu"
               >
                 {isMobileMenuOpen ? (
@@ -140,7 +146,7 @@ export function Header() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="fixed inset-0 z-40 md:hidden"
+            className="fixed inset-0 z-40 lg:hidden"
           >
             <div
               className="absolute inset-0 bg-black/50 backdrop-blur-sm"

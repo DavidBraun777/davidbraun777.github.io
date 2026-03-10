@@ -1,17 +1,20 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
 import { ArrowDown, MapPin } from 'lucide-react'
 import Image from 'next/image'
 import { socialLinks } from '@/data/social-links'
 import { Button } from '@/components/ui/button'
 
+// TODO: David — pick your preferred positioning title or refine these.
+// Options: "AI Infrastructure Engineer", "Applied AI Systems Engineer",
+// "AI & Infrastructure Engineer", "AI Engineer & Systems Architect"
 const roles = [
-  'Software Engineer',
-  'DevOps Engineer',
-  'Full-Stack Developer',
-  'Cybersecurity Enthusiast',
+  'AI Systems Engineer',
+  'Infrastructure & DevOps Engineer',
+  'Applied AI Developer',
+  'Cybersecurity Engineer',
   'AI Master\'s Candidate.\nBuilding real-world systems.',
 ]
 
@@ -19,6 +22,7 @@ export function Hero() {
   const [roleIndex, setRoleIndex] = useState(0)
   const [displayText, setDisplayText] = useState('')
   const [isDeleting, setIsDeleting] = useState(false)
+  const deleteDelayRef = useRef<ReturnType<typeof setTimeout>>(undefined)
 
   useEffect(() => {
     const currentRole = roles[roleIndex]
@@ -28,7 +32,7 @@ export function Hero() {
           if (displayText.length < currentRole.length) {
             setDisplayText(currentRole.slice(0, displayText.length + 1))
           } else {
-            setTimeout(() => setIsDeleting(true), 2000)
+            deleteDelayRef.current = setTimeout(() => setIsDeleting(true), 2000)
           }
         } else {
           if (displayText.length > 0) {
@@ -41,7 +45,10 @@ export function Hero() {
       },
       isDeleting ? 50 : 100
     )
-    return () => clearTimeout(timeout)
+    return () => {
+      clearTimeout(timeout)
+      clearTimeout(deleteDelayRef.current)
+    }
   }, [displayText, isDeleting, roleIndex])
 
   return (
