@@ -89,7 +89,7 @@ export function SectionHeader({
         className
       )}
     >
-      <Heading className="section-title text-3xl md:text-4xl font-bold text-slate-900 dark:text-white mb-4">
+      <Heading className="section-title text-3xl md:text-4xl font-bold text-slate-900 dark:text-slate-100 mb-4">
         {title}
       </Heading>
       <div
@@ -99,7 +99,7 @@ export function SectionHeader({
         )}
       />
       {subtitle && (
-        <p className="section-subtitle mt-4 text-lg text-slate-600 dark:text-slate-400 max-w-2xl mx-auto">
+        <p className="section-subtitle mt-4 text-lg text-slate-700 dark:text-slate-300 max-w-2xl mx-auto">
           {subtitle}
         </p>
       )}
