@@ -8,36 +8,36 @@ const currentProjects = [
   {
     icon: Mic,
     title: 'StormIQ',
-    summary: 'Building an AI voice and workflow platform for lead qualification, conversational routing, and vertical-specific automation.',
-    focus: 'Voice pipeline architecture, backend service integration, and infrastructure decisions for scalable deployment.',
-    nextMilestone: 'Ship an end-to-end demo across call handling, response generation, and CRM handoff.',
-    status: 'Platform Build',
-    tags: ['AI Voice', 'Automation', 'Backend Services'],
+    summary: 'Designing an AI voice and workflow platform for lead qualification, conversational routing, and vertical-specific operating workflows.',
+    focus: 'Telephony orchestration, backend services, context handling, and deployment patterns for reliable end-to-end execution.',
+    nextMilestone: 'Validate an end-to-end path from conversation to structured follow-up and CRM handoff.',
+    status: 'Applied AI Platform',
+    tags: ['AI Voice', 'Workflow Design', 'Backend Services'],
   },
   {
     icon: GraduationCap,
     title: 'Edcalibur',
-    summary: 'Designing a gamified classroom mastery platform focused on stronger learning loops, student motivation, and practical teacher workflows.',
-    focus: 'Product architecture, progress modeling, and building a usable experience for both classroom execution and long-term iteration.',
-    nextMilestone: 'Validate the first classroom-ready workflow from assignment flow to mastery tracking and feedback.',
-    status: 'Product Build',
-    tags: ['EdTech', 'Product Design', 'Full-Stack'],
+    summary: 'Building an education platform around mastery tracking, stronger learning loops, and teacher-friendly classroom workflows.',
+    focus: 'System architecture, progression models, and the workflow details that make the product useful for both teachers and students.',
+    nextMilestone: 'Ship the first classroom-ready flow covering assignment setup, mastery tracking, and actionable feedback.',
+    status: 'Domain Software',
+    tags: ['EdTech', 'Operational Software', 'Full-Stack'],
   },
   {
     icon: ShieldCheck,
     title: 'AI & Security Lab',
-    summary: 'Expanding a hands-on lab environment for isolated infrastructure testing, ML workloads, and system hardening experiments.',
-    focus: 'Proxmox-based lab growth, Kubernetes experimentation, GPU-capable workloads, and cleaner operational patterns for repeatable testing.',
-    nextMilestone: 'Finalize the next round of lab architecture updates and document the environment as a reusable proof asset.',
-    status: 'Lab Expansion',
-    tags: ['Proxmox', 'Kubernetes', 'Infrastructure'],
+    summary: 'Maintaining a private lab for infrastructure testing, GPU workloads, and controlled experimentation across AI and security tooling.',
+    focus: 'Proxmox-based orchestration, Kubernetes experiments, repeatable environments, and hardware decisions that support deeper systems work.',
+    nextMilestone: 'Document the next lab architecture iteration and turn it into a reusable proof asset for future platform work.',
+    status: 'Infrastructure Lab',
+    tags: ['Proxmox', 'Kubernetes', 'Systems Lab'],
   },
 ]
 
 const statusColors: Record<string, string> = {
-  'Platform Build': 'bg-accent-violet/10 text-accent-violet border-accent-violet/20',
-  'Product Build': 'bg-accent-amber/10 text-accent-amber border-accent-amber/20',
-  'Lab Expansion': 'bg-accent-emerald/10 text-accent-emerald border-accent-emerald/20',
+  'Applied AI Platform': 'bg-accent-violet/10 text-accent-violet border-accent-violet/20',
+  'Domain Software': 'bg-accent-amber/10 text-accent-amber border-accent-amber/20',
+  'Infrastructure Lab': 'bg-accent-emerald/10 text-accent-emerald border-accent-emerald/20',
 }
 
 export function CurrentlyBuilding() {
@@ -46,7 +46,7 @@ export function CurrentlyBuilding() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeader
           title="Currently Building"
-          subtitle="The systems I am actively designing, shipping, and refining right now"
+          subtitle="Three adjacent builds that help me test where applied AI, operational workflows, and infrastructure create durable leverage."
         />
 
         <div className="grid gap-6 lg:grid-cols-3">
@@ -63,7 +63,7 @@ export function CurrentlyBuilding() {
                 <div className="inline-flex rounded-xl bg-gradient-to-br from-primary-500 to-accent-violet p-2.5">
                   <project.icon className="h-5 w-5 text-white" />
                 </div>
-                <span className={`text-xs font-medium px-3 py-1 rounded-full border ${statusColors[project.status] || statusColors['In Progress']}`}>
+                <span className={`text-xs font-medium px-3 py-1 rounded-full border ${statusColors[project.status]}`}>
                   {project.status}
                 </span>
               </div>
