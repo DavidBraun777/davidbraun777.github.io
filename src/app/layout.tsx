@@ -24,7 +24,7 @@ export const metadata: Metadata = {
     template: '%s | David Braun',
   },
   description:
-    'AI systems engineer building automation platforms, workflow software, and infrastructure-backed operational systems.',
+    'AI systems engineer building automation platforms, AI workflow systems, and infrastructure-backed operational software.',
   keywords: [
     'AI Systems Engineer',
     'Workflow Automation',
@@ -41,25 +41,25 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_US',
     url: 'https://dbraun.io',
-    title: 'David Braun | AI Systems Engineer',
+    title: 'AI Systems Engineer building automation platforms',
     description:
-      'AI systems engineer building automation platforms, workflow software, and infrastructure-backed applications.',
+      'Systems that combine AI, workflow automation, and infrastructure to solve real operational problems.',
     siteName: 'David Braun Portfolio',
     images: [
       {
-        url: '/images/profile/Smolder.png',
-        width: 400,
-        height: 400,
-        alt: 'David Braun',
+        url: '/opengraph-image',
+        width: 1200,
+        height: 630,
+        alt: 'AI Systems Engineer building automation platforms and AI workflow systems',
       },
     ],
   },
   twitter: {
-    card: 'summary',
-    title: 'David Braun | AI Systems Engineer',
+    card: 'summary_large_image',
+    title: 'AI Systems Engineer building automation platforms',
     description:
-      'AI systems engineer building automation platforms, workflow software, and infrastructure-backed applications.',
-    images: ['/images/profile/Smolder.png'],
+      'Systems that combine AI, workflow automation, and infrastructure to solve real operational problems.',
+    images: ['/twitter-image'],
   },
   robots: {
     index: true,

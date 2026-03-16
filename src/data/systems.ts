@@ -12,11 +12,12 @@ export interface SystemCaseStudy {
   systemHighlights: string[]
   stack: string[]
   currentState: string
+  evidenceSummary: string
+  evidence: string[]
   image: string
   imageAlt: string
   visualSurface: 'dark' | 'light'
   visualAspect: 'landscape' | 'portrait'
-  artifacts: string[]
 }
 
 export interface SystemTheme {
@@ -24,6 +25,10 @@ export interface SystemTheme {
   title: string
   intro: string
   systems: SystemCaseStudy[]
+}
+
+export interface FeaturedSystemCaseStudy extends SystemCaseStudy {
+  themeTitle: string
 }
 
 export interface BuildStep {
@@ -45,22 +50,22 @@ export const buildPatterns: BuildPattern[] = [
   {
     title: 'Applied AI',
     description:
-      'LLMs, retrieval, classification, or summarization are used inside a system with clear boundaries and operational rules.',
+      'Use models for retrieval, classification, generation, or guidance only when they fit inside a controlled system boundary.',
   },
   {
     title: 'Workflow Automation',
     description:
-      'The core value is reducing manual routing, triage, follow-up, and decision friction across real work.',
+      'Reduce manual routing, triage, follow-up, and review work by giving the system an explicit operational path.',
   },
   {
     title: 'Infrastructure',
     description:
-      'Queues, state stores, deployment surfaces, and reliability constraints are part of the product, not afterthoughts.',
+      'Treat queues, persistence, deployment, observability, and failure handling as part of the product surface.',
   },
   {
     title: 'Operational Software',
     description:
-      'The end result is software people can actually run, review, and extend in a working environment.',
+      'Build software that people can operate, inspect, and trust in real environments rather than demo-only interfaces.',
   },
 ]
 
@@ -69,73 +74,95 @@ export const systemThemes: SystemTheme[] = [
     id: 'applied-ai-automation',
     title: 'Applied AI & Automation Systems',
     intro:
-      'These systems use AI inside workflow-heavy architectures where routing, validation, and human handoff matter as much as the model itself.',
+      'Systems where AI is one layer inside a workflow architecture that still needs routing, validation, state, and human handoff.',
     systems: [
       {
         id: 'stormiq',
         name: 'StormIQ',
         summary:
-          'AI-powered lead generation platform for automating prospect engagement, qualification, and downstream sales workflows.',
+          'AI-powered lead generation platform designed to automate prospect engagement workflows and move structured outcomes into sales operations.',
         problem:
-          'Lead generation teams lose momentum when call handling, qualification, and follow-up depend on manual scripts, disconnected tools, and inconsistent operator decisions.',
+          'Lead generation teams lose momentum when telephony, qualification, and follow-up depend on scripts, disconnected tools, and inconsistent operator decisions.',
         system:
-          'Built as a layered voice workflow platform: telephony and transcript intake feed queue-backed services, policy and decision layers evaluate the conversation, CRM-facing APIs move structured lead outcomes forward, and operator dashboards keep the system reviewable instead of opaque.',
+          'Built as a layered voice workflow platform. Telephony and transcript intake feed queue-backed orchestration services, decision layers evaluate conversations, CRM-facing APIs move structured lead outcomes forward, and dashboards keep the system reviewable instead of opaque.',
         systemHighlights: [
           'Voice gateway handles inbound and outbound call flow events.',
           'Queue-based orchestration separates telephony from decision logic.',
-          'Agent and CRM layers translate transcripts into actionable lead records.',
+          'Agent and CRM layers turn transcripts into actionable lead records.',
         ],
         stack: ['Twilio', 'RabbitMQ', 'FastAPI', 'Python', 'Redis', 'Dashboard Web'],
         currentState: 'Active Build',
+        evidenceSummary:
+          'The architecture is documented as a real voice workflow system with clear boundaries between intake, orchestration, decisioning, and delivery.',
+        evidence: ['Architecture diagram', 'Workflow diagram', 'Lead routing artifacts'],
         image: '/images/projects/stormiq-architecture.png',
-        imageAlt: 'StormIQ architecture diagram showing voice, orchestration, backend, and data layers.',
+        imageAlt:
+          'StormIQ architecture diagram showing voice, orchestration, backend, and data layers.',
         visualSurface: 'dark',
         visualAspect: 'landscape',
-        artifacts: ['Architecture diagram', 'Call lifecycle', 'Lead export path'],
       },
       {
         id: 'roboreceptionist',
         name: 'RoboReceptionist',
         summary:
-          'AI-assisted legal intake system that guides non-experts through complex situations with structured workflows and safety controls.',
+          'AI-assisted legal intake system that guides non-experts through complex legal situations with structured workflows and knowledge retrieval.',
         problem:
           'Legal intake is high-friction for callers and high-risk for firms when urgency, jurisdiction, conflict checks, and advice boundaries are handled inconsistently.',
         system:
-          'Built as a two-layer intake architecture. A deterministic policy engine enforces jurisdiction, emergency, conflict, and legal-advice constraints before an AI layer can respond. Validated outputs are persisted with transcripts and routed to intake specialists through notification workflows.',
+          'Built as a guarded intake architecture. A deterministic policy engine enforces jurisdiction, emergency, conflict, and legal-advice constraints before an AI layer can respond. Validated outputs are persisted with transcripts and routed to intake specialists through notification workflows.',
         systemHighlights: [
           'Policy engine gates every interaction before LLM output can be returned.',
           'State-driven intake flow keeps conflict checks and urgency triage early.',
           'Transcript persistence and notifications keep the system auditable.',
         ],
-        stack: ['FastAPI', 'Policy Engine', 'LLM Validation', 'SQLite / Postgres', 'Email Notifications'],
+        stack: [
+          'FastAPI',
+          'Policy Engine',
+          'LLM Validation',
+          'SQLite / Postgres',
+          'Email Notifications',
+        ],
         currentState: 'Prototype',
+        evidenceSummary:
+          'The system work is visible in the intake flow design, safety boundaries, and validation-first response architecture.',
+        evidence: ['Architecture diagram', 'Intake state flow', 'Validation boundary'],
         image: '/images/projects/roboreceptionist-architecture.svg',
-        imageAlt: 'RoboReceptionist architecture diagram showing policy engine, validated AI layer, storage, and notifications.',
+        imageAlt:
+          'RoboReceptionist architecture diagram showing policy engine, validated AI layer, storage, and notifications.',
         visualSurface: 'dark',
         visualAspect: 'landscape',
-        artifacts: ['Safety diagram', 'Intake state flow', 'Validation boundary'],
       },
       {
         id: 'lecture-stream-platform',
         name: 'Lecture Stream Platform',
         summary:
-          'AI transcription and summarization pipeline that turns recorded lectures into structured knowledge artifacts.',
+          'AI transcription and summarization pipeline that converts spoken lectures into structured knowledge artifacts.',
         problem:
-          'Lecture capture usually stops at raw recordings, leaving the real work of transcription, summarization, storage, and retrieval fragmented across separate tools.',
+          'Lecture capture often stops at raw recordings, leaving transcription, summarization, storage, and retrieval fragmented across separate tools.',
         system:
-          'Built as an event-driven processing pipeline. Producer nodes upload audio into ingest services, Kafka fans work across transcription and summarization workers, archive services persist artifacts, and API/export layers make transcripts and summaries available as reusable outputs.',
+          'Built as an event-driven processing pipeline. Producer nodes upload audio into ingest services, Kafka fans work across transcription and summarization workers, archive services persist artifacts, and API/export layers expose transcripts and summaries as reusable outputs.',
         systemHighlights: [
           'Producer and consumer modes separate capture from heavy compute.',
           'Kafka events keep transcription, summarization, and archive stages decoupled.',
-          'API and export services turn pipeline output into usable artifacts.',
+          'API and export services turn pipeline output into reusable artifacts.',
         ],
-        stack: ['Kafka', 'faster-whisper', 'Ollama', 'Python Services', 'Consumer API', 'File Exporter'],
+        stack: [
+          'Kafka',
+          'faster-whisper',
+          'Ollama',
+          'Python Services',
+          'Consumer API',
+          'File Exporter',
+        ],
         currentState: 'Research System',
+        evidenceSummary:
+          'The system evidence is in the pipeline boundary diagram and the multi-stage processing model rather than a one-screen app demo.',
+        evidence: ['Pipeline architecture', 'Workflow boundary diagram', 'Terminal processing trace'],
         image: '/images/projects/lecture-stream-boundary.png',
-        imageAlt: 'Lecture Stream Platform boundary diagram showing producer, processing cluster, API, and dashboard.',
+        imageAlt:
+          'Lecture Stream Platform boundary diagram showing producer, processing cluster, API, and dashboard.',
         visualSurface: 'dark',
         visualAspect: 'portrait',
-        artifacts: ['System boundary diagram', 'Kafka pipeline', 'Archive and export flow'],
       },
     ],
   },
@@ -143,17 +170,17 @@ export const systemThemes: SystemTheme[] = [
     id: 'operational-workflow-software',
     title: 'Operational Workflow Software',
     intro:
-      'These products structure messy, real-world workflows into repeatable systems with clear rules, generated artifacts, and operator visibility.',
+      'Products that turn messy, real-world work into explicit systems with rules, explainability, and repeatable outputs.',
     systems: [
       {
         id: 'naics-startup-planning-system',
         name: 'NAICS Startup Planning System',
         summary:
-          'Planning software that guides founders through structured startup workflows instead of vague brainstorming.',
+          'Software that guides founders through structured startup planning workflows instead of vague brainstorming.',
         problem:
-          'Founders often start with broad ideas but no repeatable way to turn an industry choice into a realistic plan, team model, income assumptions, or startup sequence.',
+          'Founders often start with broad ideas but no repeatable way to turn an industry choice into a realistic plan, staffing model, income assumptions, or startup sequence.',
         system:
-          'Built as an offline-first planning engine backed by the full NAICS hierarchy. The system combines rules-based role generation, income modeling, dependency-ordered startup procedures, and explainability views so users can see why the software produced each recommendation.',
+          'Built as an offline-first planning engine backed by the full NAICS hierarchy. The system combines rules-based role generation, income modeling, dependency-ordered startup procedures, and explainability views so users can inspect why each recommendation was produced.',
         systemHighlights: [
           'Rules engine converts industry data into launch-plan structure.',
           'Explainability layers make the output inspectable rather than magical.',
@@ -161,11 +188,14 @@ export const systemThemes: SystemTheme[] = [
         ],
         stack: ['Next.js', 'Prisma', 'SQLite', 'Zod', 'Rules Engine', 'Snapshot Tests'],
         currentState: 'Prototype',
+        evidenceSummary:
+          'The planning engine is supported by a documented rules architecture and outputs that show the provenance of each recommendation.',
+        evidence: ['Planning engine diagram', 'Rules trace', 'Generated plan artifacts'],
         image: '/images/projects/naics-planning-engine.svg',
-        imageAlt: 'NAICS planning engine diagram showing dataset, rules engine, plan generation, and exports.',
+        imageAlt:
+          'NAICS planning engine diagram showing dataset, rules engine, plan generation, and exports.',
         visualSurface: 'dark',
         visualAspect: 'landscape',
-        artifacts: ['Planning engine diagram', 'Rule explainability', 'Dataset provenance'],
       },
       {
         id: 'dealerflow',
@@ -183,11 +213,14 @@ export const systemThemes: SystemTheme[] = [
         ],
         stack: ['NestJS', 'BullMQ', 'PostgreSQL', 'Prisma', 'Expo React Native', 'Redis'],
         currentState: 'Beta Pilot',
+        evidenceSummary:
+          'The strongest proof is the mobile workflow itself paired with the notification and inventory lifecycle model behind it.',
+        evidence: ['Mobile screenshot', 'Notification pipeline', 'Inventory lifecycle model'],
         image: '/images/projects/dealerflow-feed.png',
-        imageAlt: 'DealerFlow mobile feed showing newly published wholesale inventory.',
+        imageAlt:
+          'DealerFlow mobile feed showing newly published wholesale inventory.',
         visualSurface: 'light',
         visualAspect: 'portrait',
-        artifacts: ['Mobile screenshot', 'Notification pipeline', 'Inventory lifecycle model'],
       },
     ],
   },
@@ -195,7 +228,7 @@ export const systemThemes: SystemTheme[] = [
     id: 'production-systems-infrastructure',
     title: 'Production Systems & Infrastructure',
     intro:
-      'This work reflects the deployment side of engineering: production surfaces, maintenance paths, secure defaults, and long-term operational ownership.',
+      'Systems where deployment, maintenance, accessibility, and release discipline are part of the engineering story.',
     systems: [
       {
         id: 'vifg-nonprofit-platform',
@@ -205,34 +238,61 @@ export const systemThemes: SystemTheme[] = [
         problem:
           'Mission-driven organizations need dependable public systems, but production reliability and accessibility often get treated as separate concerns instead of one delivery problem.',
         system:
-          'Built as an accessibility-first web platform deployed on AWS Lightsail with host-level Nginx, Dockerized frontend delivery, SSL automation, scheduled maintenance, and CI-driven image publishing. The system architecture supports real nonprofit operations instead of a static brochure site.',
+          'Built as an accessibility-first web platform deployed on AWS Lightsail with host-level Nginx, Dockerized frontend delivery, SSL automation, scheduled maintenance, and CI-driven image publishing. The system supports real nonprofit operations instead of acting like a brochure site.',
         systemHighlights: [
           'Production deployment runs behind Nginx with TLS termination.',
           'Dockerized delivery and GitHub Actions keep releases repeatable.',
-          'Accessibility work is treated as a core system constraint.',
+          'Accessibility is treated as a system constraint, not a post-launch fix.',
         ],
         stack: ['React', 'TypeScript', 'Vite', 'Docker', 'AWS Lightsail', 'Nginx'],
         currentState: 'Production',
+        evidenceSummary:
+          'This project shows production ownership through deployment topology, release flow, and the public-facing system that is actually running.',
+        evidence: ['Deployment diagram', 'Production site view', 'Release artifact'],
         image: '/images/projects/vifg-deployment.svg',
-        imageAlt: 'VIFG deployment diagram showing client traffic, Lightsail host, Nginx, Docker, and CI delivery.',
+        imageAlt:
+          'VIFG deployment diagram showing client traffic, Lightsail host, Nginx, Docker, and CI delivery.',
         visualSurface: 'dark',
         visualAspect: 'landscape',
-        artifacts: ['Deployment diagram', 'Infrastructure topology', 'Accessibility-first delivery'],
       },
     ],
   },
 ]
 
+const featuredSystemIds = [
+  'stormiq',
+  'roboreceptionist',
+  'lecture-stream-platform',
+  'naics-startup-planning-system',
+  'vifg-nonprofit-platform',
+]
+
+const systemById = new Map<string, FeaturedSystemCaseStudy>(
+  systemThemes.flatMap((theme) =>
+    theme.systems.map((system) => [system.id, { ...system, themeTitle: theme.title }])
+  )
+)
+
+export const featuredSystems: FeaturedSystemCaseStudy[] = featuredSystemIds.map((id) => {
+  const system = systemById.get(id)
+
+  if (!system) {
+    throw new Error(`Missing featured system for id: ${id}`)
+  }
+
+  return system
+})
+
 export const buildSteps: BuildStep[] = [
   {
     title: 'Architecture-first design',
     description:
-      'Start with the workflow, the failure points, and the system boundaries before choosing implementation details.',
+      'Start with the workflow, failure points, and system boundaries before optimizing implementation details.',
   },
   {
     title: 'AI-assisted scaffolding',
     description:
-      'Use AI to accelerate initial system structure, interface definitions, and implementation drafts without confusing speed for finished engineering.',
+      'Use AI to accelerate exploration, interface drafts, and early system structure without confusing speed for finished engineering.',
   },
   {
     title: 'Engineering refinement',
@@ -250,22 +310,22 @@ export const engineeringPrinciples: EngineeringPrinciple[] = [
   {
     title: 'Solve real problems',
     description:
-      'The goal is not novelty for its own sake. I optimize for systems that improve how work actually gets done.',
+      'The goal is not novelty. I optimize for systems that improve how work actually gets done.',
   },
   {
     title: 'Build systems, not features',
     description:
-      'Individual features matter less than the architecture that makes them dependable, inspectable, and extensible.',
+      'Features matter less than the architecture that makes them dependable, inspectable, and extensible.',
   },
   {
     title: 'Use AI as leverage',
     description:
-      'AI is most valuable when it speeds up architecture, implementation, and workflows inside a well-structured system.',
+      'AI is most useful when it speeds up architecture, implementation, and workflows inside a well-structured system.',
   },
   {
     title: 'Simplify complex systems',
     description:
-      'I prefer explicit boundaries, readable flows, and controlled operational surfaces over unnecessary complexity.',
+      'Prefer explicit boundaries, readable flows, and controlled operational surfaces over unnecessary complexity.',
   },
 ]
 
