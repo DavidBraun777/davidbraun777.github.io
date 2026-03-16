@@ -48,7 +48,7 @@ export function SelectedSystems() {
                       {theme.intro}
                     </p>
                   </div>
-                  <p className="font-mono text-xs uppercase tracking-[0.22em] text-slate-400 dark:text-slate-500">
+                  <p className="font-mono text-xs uppercase tracking-[0.22em] text-slate-400 dark:text-slate-400">
                     Problem - System - Outcome
                   </p>
                 </div>
