@@ -5,11 +5,11 @@ import { ArrowDown, ArrowRight, Binary, Braces, MapPin, Network, Workflow } from
 import { socialLinks } from '@/data/social-links'
 import { Button } from '@/components/ui/button'
 
-const focusAreas = [
-  'applied AI systems',
-  'workflow automation',
-  'platform infrastructure',
-  'domain-specific software',
+const exampleSystems = [
+  'AI-powered automation platforms',
+  'retrieval and knowledge systems',
+  'workflow automation tools',
+  'production AI infrastructure',
 ]
 
 const systemSignals = [
@@ -62,8 +62,7 @@ export function Hero() {
               transition={{ delay: 0.12, duration: 0.7 }}
               className="mt-7 text-4xl font-semibold tracking-tight text-white sm:text-5xl lg:text-6xl"
             >
-              AI Systems Engineer building automation platforms and real-world AI
-              workflows
+              AI Systems Engineer building automation platforms
             </motion.h1>
 
             <motion.p
@@ -72,8 +71,8 @@ export function Hero() {
               transition={{ delay: 0.22, duration: 0.7 }}
               className="mt-6 max-w-2xl text-xl leading-relaxed text-slate-200"
             >
-              I design complex systems quickly using AI-assisted development and refine
-              them through rigorous engineering and algorithmic implementation.
+              I design and build systems that combine AI, workflow automation, and
+              infrastructure to solve real operational problems.
             </motion.p>
 
             <motion.p
@@ -82,14 +81,35 @@ export function Hero() {
               transition={{ delay: 0.3, duration: 0.7 }}
               className="mt-4 max-w-2xl text-lg leading-relaxed text-slate-300"
             >
-              My work focuses on workflow automation, applied AI systems, and
-              infrastructure-backed operational software.
+              The work is systems-first: architecture, orchestration, validation, state,
+              and delivery paths that turn AI capability into usable software.
             </motion.p>
 
             <motion.div
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.38, duration: 0.6 }}
+              className="mt-8 rounded-[1.75rem] border border-white/10 bg-white/6 p-5 backdrop-blur"
+            >
+              <p className="font-mono text-xs uppercase tracking-[0.22em] text-primary-200">
+                Examples of systems I build
+              </p>
+              <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                {exampleSystems.map((item) => (
+                  <div
+                    key={item}
+                    className="rounded-2xl border border-white/10 bg-slate-950/40 px-4 py-3 text-sm font-medium text-slate-100"
+                  >
+                    {item}
+                  </div>
+                ))}
+              </div>
+            </motion.div>
+
+            <motion.div
+              initial={{ opacity: 0, y: 20 }}
+              animate={{ opacity: 1, y: 0 }}
+              transition={{ delay: 0.46, duration: 0.6 }}
               className="mt-8 flex flex-wrap items-center gap-3 text-sm text-slate-300"
             >
               <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/6 px-3 py-1.5 backdrop-blur">
@@ -99,22 +119,6 @@ export function Hero() {
               <span className="rounded-full border border-slate-200/70 bg-white/70 px-3 py-1 dark:border-slate-800 dark:bg-slate-900/70">
                 Open to full-time roles, consulting, and selected systems work
               </span>
-            </motion.div>
-
-            <motion.div
-              initial={{ opacity: 0, y: 20 }}
-              animate={{ opacity: 1, y: 0 }}
-              transition={{ delay: 0.46, duration: 0.6 }}
-              className="mt-8 flex flex-wrap gap-3"
-            >
-              {focusAreas.map((item) => (
-                <span
-                  key={item}
-                  className="rounded-full border border-primary-400/20 bg-primary-500/10 px-3 py-1.5 text-sm font-medium text-primary-100"
-                >
-                  {item}
-                </span>
-              ))}
             </motion.div>
 
             <motion.div
@@ -234,16 +238,16 @@ export function Hero() {
                 </div>
                 <div className="mt-4 grid gap-3 font-mono text-sm text-slate-300 sm:grid-cols-2">
                   <div className="rounded-2xl border border-white/8 bg-white/5 px-4 py-3">
-                    + voice workflows
+                    + automation platforms
                   </div>
                   <div className="rounded-2xl border border-white/8 bg-white/5 px-4 py-3">
-                    + retrieval and validation
+                    + retrieval systems
                   </div>
                   <div className="rounded-2xl border border-white/8 bg-white/5 px-4 py-3">
-                    + queues and state
+                    + workflow tooling
                   </div>
                   <div className="rounded-2xl border border-white/8 bg-white/5 px-4 py-3">
-                    + delivery and review
+                    + production infrastructure
                   </div>
                 </div>
               </div>
