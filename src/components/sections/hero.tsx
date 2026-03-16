@@ -12,6 +12,27 @@ const focusAreas = [
   'domain-specific software',
 ]
 
+const systemSignals = [
+  {
+    title: 'Workflow Design',
+    detail:
+      'Start with the operational path: how requests enter the system, how tasks are routed, and where humans or downstream services need clean handoffs.',
+    icon: Workflow,
+  },
+  {
+    title: 'AI Application Layer',
+    detail:
+      'Use models inside structured pipelines for retrieval, classification, generation, or guidance, with validation around the output instead of trust by default.',
+    icon: Braces,
+  },
+  {
+    title: 'Infrastructure and State',
+    detail:
+      'Back the workflow with queues, persistence, observability, and service boundaries so the system can be operated like software instead of a demo.',
+    icon: Network,
+  },
+]
+
 export function Hero() {
   return (
     <section
@@ -51,7 +72,8 @@ export function Hero() {
               transition={{ delay: 0.22, duration: 0.7 }}
               className="mt-6 max-w-2xl text-xl leading-relaxed text-slate-200"
             >
-              I build applied AI systems, operational software, and infrastructure that turn ambiguous ideas into durable working systems.
+              I design complex systems quickly using AI-assisted development and refine
+              them through rigorous engineering and algorithmic implementation.
             </motion.p>
 
             <motion.p
@@ -60,8 +82,8 @@ export function Hero() {
               transition={{ delay: 0.3, duration: 0.7 }}
               className="mt-4 max-w-2xl text-lg leading-relaxed text-slate-300"
             >
-              I work across adjacent domains on purpose: AI workflows, backend services, internal tooling, and domain-specific platforms.
-              That breadth helps me identify where technical capability, operational usefulness, and market demand actually meet, then go deeper where the leverage is real.
+              My work focuses on workflow automation, applied AI systems, and
+              infrastructure-backed operational software.
             </motion.p>
 
             <motion.div
@@ -113,8 +135,14 @@ export function Hero() {
                 View Systems
                 <ArrowRight className="h-4 w-4" />
               </Button>
-              <Button variant="outline" size="lg" onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}>
-                View Selected Systems
+              <Button
+                variant="outline"
+                size="lg"
+                onClick={() =>
+                  document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })
+                }
+              >
+                Start a Conversation
               </Button>
             </motion.div>
 
