@@ -7,10 +7,10 @@ import { socialLinks } from '@/data/social-links'
 import { Button } from '@/components/ui/button'
 
 const focusAreas = [
-  'AI systems',
-  'automation',
-  'cloud & DevOps',
-  'accessibility-minded engineering',
+  'applied AI systems',
+  'workflow automation',
+  'platform infrastructure',
+  'domain-specific software',
 ]
 
 export function Hero() {
@@ -61,7 +61,7 @@ export function Hero() {
               transition={{ delay: 0.4 }}
               className="mb-5 text-2xl leading-tight text-slate-800 dark:text-slate-100 md:text-3xl"
             >
-              I build AI-powered products, automation systems, and production infrastructure that move from concept to working delivery.
+              I build applied AI systems, operational software, and infrastructure that turn ambiguous ideas into durable working systems.
             </motion.p>
 
             <motion.p
@@ -70,8 +70,8 @@ export function Hero() {
               transition={{ delay: 0.5 }}
               className="mx-auto mb-6 max-w-2xl text-lg leading-relaxed text-slate-600 dark:text-slate-300 lg:mx-0"
             >
-              My work sits at the intersection of AI systems, backend services, developer infrastructure, and accessibility-minded product engineering.
-              I&apos;m most useful when a team needs clear architecture, fast iteration, and someone willing to make the future happen instead of just describing it.
+              I work across adjacent domains on purpose: AI workflows, backend services, internal tooling, and domain-specific platforms.
+              That breadth helps me identify where technical capability, operational usefulness, and market demand actually meet, then go deeper where the leverage is real.
             </motion.p>
 
             <motion.div
@@ -85,7 +85,7 @@ export function Hero() {
                 Maple Grove, Minnesota
               </span>
               <span className="rounded-full border border-slate-200/70 bg-white/70 px-3 py-1 dark:border-slate-800 dark:bg-slate-900/70">
-                Open to full-time roles, consulting, and selected builds
+                Open to full-time roles, consulting, and selected systems work
               </span>
             </motion.div>
 
@@ -115,7 +115,7 @@ export function Hero() {
                 Discuss a Role or Build
               </Button>
               <Button variant="outline" size="lg" onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}>
-                View Projects
+                View Selected Systems
               </Button>
             </motion.div>
 

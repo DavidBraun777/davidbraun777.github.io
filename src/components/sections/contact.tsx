@@ -10,27 +10,28 @@ import { Input, Textarea, Select } from '@/components/ui/input'
 
 type FormStatus = 'idle' | 'loading' | 'success' | 'error'
 
-const projectTypeOptions = [
-  { value: 'home', label: 'Personal / Home' },
-  { value: 'business', label: 'Business' },
-  { value: 'school', label: 'School / Academic' },
-  { value: 'fun', label: 'Side Project / Fun' },
+const conversationTypeOptions = [
+  { value: 'full-time', label: 'Full-time role' },
+  { value: 'consulting', label: 'Consulting engagement' },
+  { value: 'build', label: 'Product or platform build' },
+  { value: 'architecture', label: 'Architecture / technical review' },
   { value: 'other', label: 'Other' },
 ]
 
 const serviceOptions = [
-  { value: 'bugfix', label: 'Bug Fix' },
-  { value: 'feature', label: 'New Feature' },
-  { value: 'infra', label: 'Infrastructure' },
-  { value: 'security', label: 'Security' },
-  { value: 'ai', label: 'AI / ML' },
+  { value: 'applied-ai', label: 'Applied AI systems' },
+  { value: 'workflow-automation', label: 'Workflow automation' },
+  { value: 'platform-infra', label: 'Platform / infrastructure' },
+  { value: 'product-delivery', label: 'Domain-specific software' },
+  { value: 'accessibility', label: 'Accessibility-minded product work' },
   { value: 'other', label: 'Other' },
 ]
 
 const urgencyOptions = [
-  { value: 'today', label: 'ASAP' },
-  { value: 'this-week', label: 'This Week' },
-  { value: 'this-month', label: 'This Month' },
+  { value: 'exploring', label: 'Exploring' },
+  { value: 'this-quarter', label: 'This quarter' },
+  { value: 'this-month', label: 'This month' },
+  { value: 'urgent', label: 'Urgent' },
 ]
 
 export function Contact() {
@@ -92,7 +93,7 @@ export function Contact() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeader
           title="Get In Touch"
-          subtitle="Discuss a full-time role, consulting engagement, or selected build."
+          subtitle="For roles and projects where architecture, implementation, and product judgment all matter."
         />
 
         <div className="grid lg:grid-cols-2 gap-12">
@@ -108,7 +109,7 @@ export function Contact() {
                 Let&apos;s connect
               </h3>
               <p className="text-lg text-slate-600 dark:text-slate-400">
-                I&apos;m open to conversations about AI systems, infrastructure-heavy product work, consulting engagements, and mission-driven builds that need practical execution.
+                If you need someone who can move from system design to working delivery across applied AI, workflow software, and infrastructure, let&apos;s talk. I&apos;m open to full-time roles, consulting engagements, and selected builds.
               </p>
             </div>
 
@@ -147,7 +148,7 @@ export function Contact() {
                 <div>
                   <p className="text-sm text-slate-500 dark:text-slate-400">Quick chat</p>
                   <a
-                    href="mailto:davidjbraun777@gmail.com?subject=Let's%20Chat%20-%2015min%20Call"
+                    href="mailto:davidjbraun777@gmail.com?subject=Request%20a%2015-minute%20intro%20call"
                     className="text-lg font-medium text-slate-900 dark:text-white hover:text-accent-emerald transition-colors"
                   >
                     Request a 15-min call
@@ -227,24 +228,24 @@ export function Contact() {
               <div className="grid sm:grid-cols-3 gap-4">
                 <Select
                   id="contact-project-type"
-                  label="Project type"
-                  placeholder="What are you building?"
-                  options={projectTypeOptions}
+                  label="Conversation type"
+                  placeholder="What is this about?"
+                  options={conversationTypeOptions}
                   value={formData.projectType}
                   onChange={(e) => setFormData({ ...formData, projectType: e.target.value })}
                 />
                 <Select
                   id="contact-service"
-                  label="Service needed"
-                  placeholder="What do you need?"
+                  label="Focus area"
+                  placeholder="What kind of work?"
                   options={serviceOptions}
                   value={formData.serviceNeeded}
                   onChange={(e) => setFormData({ ...formData, serviceNeeded: e.target.value })}
                 />
                 <Select
                   id="contact-urgency"
-                  label="Urgency"
-                  placeholder="Urgency"
+                  label="Timeline"
+                  placeholder="Timeline"
                   options={urgencyOptions}
                   value={formData.urgency}
                   onChange={(e) => setFormData({ ...formData, urgency: e.target.value })}

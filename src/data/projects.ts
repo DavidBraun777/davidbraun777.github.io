@@ -9,13 +9,14 @@ export interface Project {
   githubUrl?: string
   featured: boolean
   category: 'web' | 'infrastructure' | 'security' | 'hardware' | 'other'
+  theme: 'applied-ai-systems' | 'workflow-automation' | 'infrastructure-platform'
 }
 
 export const projects: Project[] = [
   {
     id: 'vifg',
     title: 'Vision Inspired Fellowship Group',
-    description: 'Accessible web platform for a non-profit serving the visually impaired — built for real users with real accessibility needs.',
+    description: 'Accessibility-first nonprofit platform built for real users, dependable content delivery, and day-to-day organizational workflows.',
     longDescription: 'Challenge: A non-profit supporting the visually impaired community needed a web presence that was genuinely accessible, not just compliant. Approach: Built a responsive, accessibility-first website with React and Vite, prioritizing screen reader compatibility, keyboard navigation, and high-contrast design. Deployed on AWS Lightsail with Docker containers and GitHub Actions CI/CD for zero-downtime updates. Configured Nginx as a reverse proxy with SSL/TLS via Route 53. Outcome: Delivered a production platform with donation integration and event management that serves users with visual impairments.',
     // TODO: David — add real metrics here: monthly visitors, donation conversion rate, uptime %, accessibility audit score
     image: '/images/projects/heart_hand.jpg',
@@ -24,11 +25,12 @@ export const projects: Project[] = [
     liveUrl: 'https://www.vifg.org/',
     featured: true,
     category: 'web',
+    theme: 'workflow-automation',
   },
   {
     id: 'portfolio',
     title: 'Personal Portfolio — dbraun.io',
-    description: 'High-performance Next.js 16 portfolio with 100 Lighthouse scores, GSAP animations, and MDX blog engine.',
+    description: 'Production-grade portfolio platform with MDX publishing, contact workflows, and testing-first delivery on Next.js.',
     longDescription: 'Challenge: Needed a portfolio that demonstrates engineering depth, not just design. Approach: Built with Next.js 16, React 19, TypeScript, and Tailwind CSS v4. Implemented GSAP scroll-triggered animations, Framer Motion micro-interactions, MDX-powered blog, server-side contact form with rate limiting, and comprehensive accessibility (semantic HTML, ARIA, reduced motion support). Includes CI/CD with GitHub Actions, Vitest unit tests, and Playwright E2E/a11y tests. Outcome: Production site at dbraun.io with fast load times and full accessibility compliance.',
     // TODO: David — add Lighthouse scores, page load time, build size
     image: '/images/profile/Smolder.png',
@@ -37,17 +39,19 @@ export const projects: Project[] = [
     liveUrl: 'https://dbraun.io',
     featured: true,
     category: 'web',
+    theme: 'workflow-automation',
   },
   {
     id: 'security-lab',
     title: 'GPU-Accelerated Security Lab',
-    description: 'Custom workstation running 12 isolated VMs on Proxmox for malware analysis, CVE reproduction, and ML workloads.',
+    description: 'Private Proxmox-based lab for isolated testing, CVE reproduction, GPU workloads, and repeatable systems experiments.',
     longDescription: 'Challenge: Needed an isolated, high-performance environment for GPU-accelerated malware analysis, vulnerability research, and ML experimentation. Approach: Selected and integrated enterprise-grade components — Intel i9-10980XE, 256 GB RAM, dual RTX 3090 GPUs, four NVMe drives. Configured Proxmox to host 12 isolated VMs and Kubernetes micro-clusters for safe CVE reproduction and blue-team remediation testing. Implemented disk-level encryption and Secure Boot. Outcome: A versatile lab environment supporting security research, ML training workloads, and infrastructure experimentation.',
     // TODO: David — add specs you want public, VM count, workload types, any benchmark numbers
     image: '/images/profile/Smolder.png',
     technologies: ['Proxmox', 'Kubernetes', 'Burp Suite', 'VMs', 'Encryption', 'Secure Boot'],
     featured: true,
     category: 'security',
+    theme: 'applied-ai-systems',
   },
   {
     id: 'pihole',
@@ -60,6 +64,7 @@ export const projects: Project[] = [
     liveUrl: 'https://pi-hole.net/',
     featured: false,
     category: 'infrastructure',
+    theme: 'infrastructure-platform',
   },
   {
     id: 'synology-nas',
@@ -71,6 +76,7 @@ export const projects: Project[] = [
     technologies: ['Synology', 'RAID 60', 'NAS', 'Data Storage', 'Networking'],
     featured: false,
     category: 'infrastructure',
+    theme: 'infrastructure-platform',
   },
   {
     id: 'hackintosh',
@@ -82,16 +88,18 @@ export const projects: Project[] = [
     liveUrl: 'https://hackintosh.com/',
     featured: false,
     category: 'hardware',
+    theme: 'infrastructure-platform',
   },
   {
     id: 'pdf-audiobook',
     title: 'PDF to Audiobook Converter',
-    description: 'Serverless AWS pipeline converting PDFs to audiobooks using S3 and Amazon Polly.',
+    description: 'Document-to-audio pipeline using AWS services to turn PDFs into accessible spoken output.',
     longDescription: 'Challenge: Wanted to make long-form PDF content accessible as audio without manual narration. Approach: Built a serverless pipeline using AWS S3 for document storage and Amazon Polly for neural text-to-speech conversion. Python handles PDF parsing, text extraction, and chunking for Polly\'s input limits. Outcome: Automated conversion pipeline that transforms PDFs into natural-sounding audiobooks.',
     // TODO: David — add conversion time, supported formats, cost per conversion
     image: '/images/profile/Smolder.png',
     technologies: ['AWS S3', 'Amazon Polly', 'Serverless', 'Python'],
     featured: false,
     category: 'other',
+    theme: 'applied-ai-systems',
   },
 ]
