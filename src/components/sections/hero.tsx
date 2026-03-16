@@ -6,28 +6,10 @@ import { socialLinks } from '@/data/social-links'
 import { Button } from '@/components/ui/button'
 
 const focusAreas = [
-  'Workflow automation',
-  'Applied AI systems',
-  'Operational software',
-  'Infrastructure-backed platforms',
-]
-
-const systemSignals = [
-  {
-    title: 'Workflow Shape',
-    detail: 'Ingest -> validate -> route -> persist -> deliver',
-    icon: Workflow,
-  },
-  {
-    title: 'Architecture Bias',
-    detail: 'Queues, policy layers, operator review, and clean handoff paths',
-    icon: Network,
-  },
-  {
-    title: 'Implementation Mode',
-    detail: 'AI-assisted scaffolding, then manual refinement of algorithms and reliability',
-    icon: Braces,
-  },
+  'applied AI systems',
+  'workflow automation',
+  'platform infrastructure',
+  'domain-specific software',
 ]
 
 export function Hero() {
@@ -69,8 +51,7 @@ export function Hero() {
               transition={{ delay: 0.22, duration: 0.7 }}
               className="mt-6 max-w-2xl text-xl leading-relaxed text-slate-200"
             >
-              I design complex systems quickly using AI-assisted development and refine
-              them through rigorous engineering and algorithmic implementation.
+              I build applied AI systems, operational software, and infrastructure that turn ambiguous ideas into durable working systems.
             </motion.p>
 
             <motion.p
@@ -79,8 +60,8 @@ export function Hero() {
               transition={{ delay: 0.3, duration: 0.7 }}
               className="mt-4 max-w-2xl text-lg leading-relaxed text-slate-300"
             >
-              My work focuses on workflow automation, applied AI systems, and
-              infrastructure-backed operational software.
+              I work across adjacent domains on purpose: AI workflows, backend services, internal tooling, and domain-specific platforms.
+              That breadth helps me identify where technical capability, operational usefulness, and market demand actually meet, then go deeper where the leverage is real.
             </motion.p>
 
             <motion.div
@@ -93,8 +74,8 @@ export function Hero() {
                 <MapPin className="h-4 w-4 text-primary-300" />
                 Maple Grove, Minnesota
               </span>
-              <span className="rounded-full border border-white/10 bg-white/6 px-3 py-1.5 backdrop-blur">
-                Open to technical roles, collaborations, and systems builds
+              <span className="rounded-full border border-slate-200/70 bg-white/70 px-3 py-1 dark:border-slate-800 dark:bg-slate-900/70">
+                Open to full-time roles, consulting, and selected systems work
               </span>
             </motion.div>
 
@@ -132,15 +113,8 @@ export function Hero() {
                 View Systems
                 <ArrowRight className="h-4 w-4" />
               </Button>
-              <Button
-                variant="outline"
-                size="lg"
-                className="min-w-[220px] border-slate-500/40 bg-transparent text-white hover:bg-white/6 dark:hover:bg-white/6"
-                onClick={() =>
-                  document.getElementById('contact')?.scrollIntoView({ behavior: 'smooth' })
-                }
-              >
-                Start a Conversation
+              <Button variant="outline" size="lg" onClick={() => document.getElementById('projects')?.scrollIntoView({ behavior: 'smooth' })}>
+                View Selected Systems
               </Button>
             </motion.div>
 
