@@ -6,9 +6,9 @@ import { Sparkles, Code, BookOpen, Rocket } from 'lucide-react'
 
 const statuses = [
   { icon: BookOpen, label: 'Studying', value: 'AI Master\'s @ St. Thomas' },
-  { icon: Code, label: 'Building', value: 'Applied AI Systems' },
-  { icon: Rocket, label: 'Running', value: 'Proxmox Security Lab' },
-  { icon: Sparkles, label: 'Exploring', value: 'ML Infrastructure' },
+  { icon: Code, label: 'Building', value: 'Automation Platforms' },
+  { icon: Rocket, label: 'Shipping', value: 'Operational Software' },
+  { icon: Sparkles, label: 'Exploring', value: 'Applied AI Workflows' },
 ]
 
 export function CurrentStatus() {

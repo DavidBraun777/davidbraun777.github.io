@@ -1,26 +1,20 @@
 import { Hero } from '@/components/sections/hero'
-import { About } from '@/components/sections/about'
-import { CurrentlyBuilding } from '@/components/sections/currently-building'
-import { WorkingWithMe } from '@/components/sections/working-with-me'
-import { Experience } from '@/components/sections/experience'
-import { Education } from '@/components/sections/education'
-import { Projects } from '@/components/sections/projects'
-import { Skills } from '@/components/sections/skills'
-import { Testimonials } from '@/components/sections/testimonials'
+import { WhatIBuild } from '@/components/sections/what-i-build'
+import { SelectedSystems } from '@/components/sections/selected-systems'
+import { HowIBuild } from '@/components/sections/how-i-build'
+import { EngineeringPrinciples } from '@/components/sections/engineering-principles'
+import { CurrentInterests } from '@/components/sections/current-interests'
 import { Contact } from '@/components/sections/contact'
 
 export default function Home() {
   return (
     <>
       <Hero />
-      <About />
-      <CurrentlyBuilding />
-      <WorkingWithMe />
-      <Experience />
-      <Education />
-      <Projects />
-      <Skills />
-      <Testimonials />
+      <WhatIBuild />
+      <SelectedSystems />
+      <HowIBuild />
+      <EngineeringPrinciples />
+      <CurrentInterests />
       <Contact />
     </>
   )
