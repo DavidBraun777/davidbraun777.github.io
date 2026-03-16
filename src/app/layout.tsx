@@ -20,21 +20,20 @@ const jetbrainsMono = localFont({
 export const metadata: Metadata = {
   metadataBase: new URL('https://dbraun.io'),
   title: {
-    default: 'David Braun | Software Engineer',
+    default: 'David Braun | AI Systems Engineer',
     template: '%s | David Braun',
   },
   description:
-    'Software Engineer specializing in full-stack development, cybersecurity, and artificial intelligence. 5+ years of experience building impactful software solutions.',
+    'AI systems engineer building automation platforms, workflow software, and infrastructure-backed operational systems.',
   keywords: [
-    'Software Engineer',
-    'Full Stack Developer',
-    'Cybersecurity',
-    'Artificial Intelligence',
-    'React',
-    'Next.js',
-    'Java',
-    'Python',
-    'Minneapolis',
+    'AI Systems Engineer',
+    'Workflow Automation',
+    'Operational Software',
+    'Applied AI Systems',
+    'Automation Platforms',
+    'Infrastructure-backed Applications',
+    'System Architecture',
+    'Minnesota',
   ],
   authors: [{ name: 'David Braun' }],
   creator: 'David Braun',
@@ -42,9 +41,9 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_US',
     url: 'https://dbraun.io',
-    title: 'David Braun | Software Engineer',
+    title: 'David Braun | AI Systems Engineer',
     description:
-      'Software Engineer specializing in full-stack development, cybersecurity, and artificial intelligence.',
+      'AI systems engineer building automation platforms, workflow software, and infrastructure-backed applications.',
     siteName: 'David Braun Portfolio',
     images: [
       {
@@ -57,9 +56,9 @@ export const metadata: Metadata = {
   },
   twitter: {
     card: 'summary',
-    title: 'David Braun | Software Engineer',
+    title: 'David Braun | AI Systems Engineer',
     description:
-      'Software Engineer specializing in full-stack development, cybersecurity, and AI.',
+      'AI systems engineer building automation platforms, workflow software, and infrastructure-backed applications.',
     images: ['/images/profile/Smolder.png'],
   },
   robots: {

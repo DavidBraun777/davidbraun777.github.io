@@ -1,0 +1,147 @@
+---
+title: "AI-Assisted Development: From Idea to System Architecture"
+description: "How I use AI to compress architecture discovery without confusing speed for finished engineering."
+date: "2026-03-16"
+author: "David Braun"
+tags: ["AI Systems", "Architecture", "Workflow Automation"]
+---
+
+AI-assisted development is most valuable before the codebase looks impressive.
+
+The biggest leverage is not "AI writes more code." It is "AI helps me get to a
+workable system shape faster."
+
+That distinction matters because most engineering work is not blocked on raw code
+production. It is blocked on:
+
+- identifying the right workflow boundary
+- deciding where state should live
+- choosing which parts of the system need deterministic rules
+- defining what should happen automatically versus what needs human review
+
+If those decisions are wrong, generating code faster just means generating the
+wrong system faster.
+
+## Start with workflow, not implementation
+
+When I begin a new system, I want a clear answer to five questions:
+
+1. What is the unit of work?
+2. Where does it enter the system?
+3. What rules can be deterministic?
+4. Where does AI actually add leverage?
+5. What artifact or action leaves the system?
+
+That turns a vague idea into a workflow.
+
+For example, "build an AI intake assistant" is not a system definition.
+
+A better starting point is:
+
+- input: user message or transcript event
+- deterministic gates: jurisdiction, urgency, compliance, conflicts
+- AI layer: classification, summarization, or conversational step
+- state: session record plus audit trail
+- output: human-review summary, callback request, or routed task
+
+Once the workflow is visible, the architecture starts to emerge.
+
+## Where AI helps most early
+
+I use AI heavily in the architecture-discovery phase for:
+
+- draft service boundaries
+- sequence diagrams
+- data contracts
+- backlog decomposition
+- interface scaffolding
+- alternative architecture comparisons
+
+That is useful because the first version of an architecture usually needs
+pressure-testing, not polish.
+
+AI is good at helping me ask:
+
+- What happens if this stage fails?
+- Does this need a queue or can it stay synchronous?
+- What has to be persisted for retryability?
+- Which layer should own the business rule?
+
+The result is not a final design. It is a faster path to a design I can inspect.
+
+## Scaffolding is the beginning, not the finish
+
+After the architecture is visible, AI helps generate the boring but necessary
+first pass:
+
+- API skeletons
+- schema definitions
+- queue consumers
+- validation helpers
+- typed interfaces
+- tests for obvious success and failure paths
+
+That initial structure creates momentum, but it is still just scaffolding.
+
+The real engineering work is what happens next:
+
+- removing accidental complexity
+- tightening validation
+- clarifying responsibility boundaries
+- making state transitions explicit
+- replacing implicit behavior with readable contracts
+
+This is the phase where a demo becomes software.
+
+## The refinement loop
+
+My refinement loop usually looks like this:
+
+1. Generate or sketch the first architecture quickly.
+2. Trace the real workflow end to end.
+3. Identify where rules should be deterministic instead of model-driven.
+4. Add state, retries, or handoff seams where operations will need them.
+5. Simplify the system until the behavior is understandable without heroics.
+
+This is why I think of AI as leverage, not replacement.
+
+The architecture still has to survive contact with:
+
+- unexpected input
+- incomplete data
+- operator review
+- failure recovery
+- future extension
+
+AI helps me move faster through the early design space. Engineering decides which
+shape is worth keeping.
+
+## What this changes in practice
+
+A lot of teams use AI to accelerate coding inside an architecture that is still
+poorly defined.
+
+I prefer the opposite approach:
+
+- accelerate architecture discovery first
+- scaffold implementation second
+- refine reliability and behavior third
+
+That sequence is what keeps "AI-assisted development" from becoming "AI-assisted
+rework."
+
+The real win is not that the system was created quickly.
+
+The real win is that the system becomes legible early enough to make better
+engineering decisions while the cost of changing direction is still low.
+
+## Closing thought
+
+I do not think the future belongs to teams that merely know how to call models.
+
+It belongs to teams that can turn vague problem statements into working systems
+with clear boundaries, explicit workflows, and useful outputs.
+
+AI shortens the path from idea to architecture.
+
+Engineering is what turns that architecture into something worth shipping.
