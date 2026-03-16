@@ -5,7 +5,8 @@ import { PostCard } from '@/components/blog/post-card'
 
 export const metadata: Metadata = {
   title: 'Blog',
-  description: 'Technical articles about AI systems, workflow automation, and operational software.',
+  description:
+    'Engineering notes on AI systems, workflow automation, operational software, and the tradeoffs involved in building them for real use.',
 }
 
 export default function BlogPage() {
@@ -17,8 +18,19 @@ export default function BlogPage() {
         <SectionHeader
           as="h1"
           title="Blog"
-          subtitle="Technical notes on AI systems, workflow automation, and operational software"
+          subtitle="Engineering notes on AI systems, automation platforms, and the tradeoffs that appear once the software has to operate in practice."
         />
+
+        <div className="mb-10 rounded-[1.75rem] border border-slate-200 bg-slate-50 p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/45">
+          <p className="font-mono text-xs uppercase tracking-[0.22em] text-primary-600 dark:text-primary-300">
+            Systems Thesis
+          </p>
+          <p className="mt-3 max-w-3xl text-base leading-relaxed text-slate-600 dark:text-slate-400">
+            This writing is about building systems that use AI, not collecting AI demos.
+            The focus is on workflow architecture, automation design, production
+            constraints, and the engineering choices that make a system reliable.
+          </p>
+        </div>
 
         {posts.length > 0 ? (
           <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">

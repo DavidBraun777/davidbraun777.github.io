@@ -11,14 +11,16 @@ import { resumeUrl } from '@/data/social-links'
 import { useScrollSpy } from '@/hooks/useScrollSpy'
 
 const navItems = [
-  { name: 'About', href: '/#about', sectionId: 'about' },
-  { name: 'Building', href: '/#building', sectionId: 'building' },
-  { name: 'Projects', href: '/#projects', sectionId: 'projects' },
-  { name: 'Process', href: '/#process', sectionId: 'process' },
-  { name: 'Experience', href: '/#experience', sectionId: 'experience' },
-  { name: 'Education', href: '/#education', sectionId: 'education' },
-  { name: 'Skills', href: '/#skills', sectionId: 'skills' },
-  { name: 'Blog', href: '/blog', sectionId: null },
+  { name: 'Build', href: '/#what-i-build', sectionId: 'what-i-build' },
+  { name: 'Systems', href: '/#selected-systems', sectionId: 'selected-systems' },
+  { name: 'Process', href: '/#how-i-build', sectionId: 'how-i-build' },
+  {
+    name: 'Principles',
+    href: '/#engineering-principles',
+    sectionId: 'engineering-principles',
+  },
+  { name: 'Interests', href: '/#current-interests', sectionId: 'current-interests' },
+  { name: 'Blog', href: '/#blog', sectionId: 'blog' },
   { name: 'Contact', href: '/#contact', sectionId: 'contact' },
 ]
 
