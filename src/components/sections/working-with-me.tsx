@@ -8,35 +8,36 @@ import { Button } from '@/components/ui/button'
 const steps = [
   {
     icon: Search,
-    title: 'Discovery',
-    description: 'Start by clarifying the problem, constraints, users, and what success should actually look like.',
+    title: 'Problem Framing',
+    description: 'Clarify the system goal, operating constraints, stakeholders, and what success should look like in practice.',
   },
   {
     icon: Workflow,
-    title: 'Architecture & Scoping',
-    description: 'Define the solution shape, key technical risks, and the smallest useful path to delivery.',
+    title: 'System Design',
+    description: 'Shape the architecture, failure points, and delivery plan so the build has a clear technical direction.',
   },
   {
     icon: Wrench,
-    title: 'Build & Iterate',
-    description: 'Ship in testable milestones with fast feedback loops instead of waiting for a perfect first release.',
+    title: 'Build in Milestones',
+    description: 'Implement the smallest useful slice first, then iterate with real feedback instead of building in the dark.',
   },
   {
     icon: Rocket,
-    title: 'Deploy & Harden',
-    description: 'Move from working prototype to dependable delivery with infrastructure, monitoring, and cleanup where it matters.',
+    title: 'Deployment & Hardening',
+    description: 'Move from a working build to an operable system with infrastructure, observability, and cleanup where it matters.',
   },
   {
     icon: Handshake,
-    title: 'Support & Next Steps',
-    description: 'Extend, optimize, or hand off the system cleanly so the work stays useful after the first launch.',
+    title: 'Handoff or Expansion',
+    description: 'Either extend the system or hand it off cleanly with enough structure for the next phase.',
   },
 ]
 
 const fitPoints = [
-  'Full-time roles in AI systems, platform engineering, or infrastructure-heavy product teams',
-  'Consulting and selected builds that need architecture, delivery, and technical judgment',
-  'Mission-driven or accessibility-minded work where usability matters as much as implementation',
+  'Hiring managers looking for an engineer who can build across applied AI, backend systems, and infrastructure',
+  'Founders needing early architecture, rapid implementation, and honest technical tradeoffs',
+  'Technical clients who need operational software, automation, or domain-specific platform work',
+  'Teams that care about usability, accessibility, and maintainability alongside speed',
 ]
 
 export function WorkingWithMe() {
@@ -45,7 +46,7 @@ export function WorkingWithMe() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeader
           title="How Working With Me Works"
-          subtitle="A practical process for founders, teams, and hiring managers who need real progress, not vague roadmaps."
+          subtitle="Best when the work requires architecture, implementation, and product judgment to move together."
         />
 
         <div className="grid gap-8 lg:grid-cols-[1.45fr_1fr]">
@@ -93,10 +94,10 @@ export function WorkingWithMe() {
               Best Fit
             </p>
             <h3 className="mb-4 text-2xl font-bold text-slate-900 dark:text-white">
-              Strongest when the work spans product thinking, AI systems, and real delivery.
+              Strongest where product pressure and technical depth meet.
             </h3>
             <p className="mb-6 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
-              I am most valuable in environments that need someone to understand the system, make the tradeoffs explicit, and keep execution moving.
+              I work well with teams that need someone who can reason across architecture, infrastructure, and delivery without losing sight of the actual workflow the system is meant to improve.
             </p>
 
             <div className="mb-8 space-y-3">
