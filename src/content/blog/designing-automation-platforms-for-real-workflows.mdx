@@ -1,0 +1,173 @@
+---
+title: "Designing Automation Platforms for Real Workflows"
+description: "Patterns I use when building automation platforms that need to reduce coordination cost, not just generate output."
+date: "2026-03-14"
+author: "David Braun"
+tags: ["Workflow Automation", "Systems Design", "Operational Software"]
+---
+
+Good automation platforms do not start with "what can we automate?"
+
+They start with "where is coordination breaking down?"
+
+That matters because the best automation work is not about replacing a single task.
+It is about reducing the cost of moving work from one stage to the next.
+
+In practice, that usually means improving one or more of these transitions:
+
+- intake -> qualification
+- publish -> notify
+- capture -> summarize
+- request -> review
+- signal -> action
+
+If the platform makes those transitions cleaner, it becomes useful fast.
+
+## Start from the workflow map
+
+The first artifact I want is a workflow map, not a feature list.
+
+I want to see:
+
+- actors
+- inputs
+- decisions
+- state transitions
+- outputs
+- failure points
+
+Once that is visible, I can usually tell which pieces belong in the platform.
+
+For example:
+
+- Does the system need a queue because work arrives unevenly?
+- Does the system need a policy layer because certain steps must stay deterministic?
+- Does the system need operator review because false positives are expensive?
+- Does the system need lifecycle state because the same work item changes meaning over time?
+
+Those answers do more to shape the platform than a list of UI features ever will.
+
+## Define the unit of work
+
+Automation platforms get messy when they do not have a clear unit of work.
+
+Examples:
+
+- a call transcript event
+- a legal intake session
+- a published vehicle
+- a lecture recording
+- a startup planning request
+
+The unit of work should have:
+
+- an entry point
+- a lifecycle
+- state
+- ownership
+- a final destination
+
+Once the unit of work is clear, system responsibilities get easier to separate.
+
+## Keep deterministic rules visible
+
+One of the easiest ways to make an automation platform brittle is to hide policy
+inside a black box.
+
+Even when AI is involved, many rules should stay explicit:
+
+- safety checks
+- jurisdiction boundaries
+- lifecycle constraints
+- auth rules
+- publish conditions
+- escalation triggers
+
+This is not an anti-AI position.
+
+It is a systems position.
+
+The more expensive a mistake is, the more likely I want the rule to be visible and
+testable.
+
+## Separate processing from delivery
+
+Another recurring pattern is separating:
+
+- processing layers
+- delivery layers
+
+Processing turns input into structure.
+Delivery turns structure into action.
+
+Those are not the same concern.
+
+A transcription worker should not need to know how a dashboard renders results.
+A matching worker should not need to know how a push notification gets displayed.
+A planning engine should not need to know how a PDF export is styled.
+
+Keeping those seams clean makes the platform easier to evolve.
+
+## Build for operator trust
+
+If a system affects real workflows, operators need to trust it.
+
+Trust usually comes from:
+
+- readable states
+- clear failure behavior
+- explicit reasons behind outputs
+- auditability
+- good handoff paths
+
+That is why I like systems with visible artifacts:
+
+- event traces
+- review queues
+- summaries
+- exportable records
+- notification logs
+
+Trust is rarely created by the model alone.
+It is created by the system around the model.
+
+## The platform should remove coordination, not add it
+
+Bad automation adds one more interface while leaving the original coordination cost
+in place.
+
+Good automation reduces:
+
+- waiting
+- manual routing
+- duplicate data entry
+- hidden status
+- repeated explanation
+
+If a platform generates output but still requires people to manually bridge every
+step between services, it has not really automated the workflow.
+
+## A practical design checklist
+
+When I am shaping an automation platform, I keep returning to this checklist:
+
+1. What is the unit of work?
+2. Which rules must stay deterministic?
+3. What needs to be persisted for retries or review?
+4. Where should AI operate, and where should it not?
+5. What artifact leaves the system?
+6. Who trusts or reviews that artifact?
+7. What happens when a stage fails?
+
+If those questions have good answers, the platform is usually on the right track.
+
+## Closing thought
+
+The strongest automation platforms are not just collections of automations.
+
+They are systems with explicit workflow ownership.
+
+That means clear boundaries, visible state, deterministic rules where they matter,
+and delivery paths that connect output to real work.
+
+That is the difference between a clever demo and a platform people can actually run.

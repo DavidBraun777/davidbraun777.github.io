@@ -5,7 +5,7 @@ import { PostCard } from '@/components/blog/post-card'
 
 export const metadata: Metadata = {
   title: 'Blog',
-  description: 'Technical articles about software engineering, cybersecurity, and AI.',
+  description: 'Technical articles about AI systems, workflow automation, and operational software.',
 }
 
 export default function BlogPage() {
@@ -17,7 +17,7 @@ export default function BlogPage() {
         <SectionHeader
           as="h1"
           title="Blog"
-          subtitle="Thoughts on software engineering, cybersecurity, and AI"
+          subtitle="Technical notes on AI systems, workflow automation, and operational software"
         />
 
         {posts.length > 0 ? (
@@ -32,7 +32,8 @@ export default function BlogPage() {
               Blog posts coming soon!
             </p>
             <p className="text-slate-500 dark:text-slate-500">
-              I&apos;m working on some exciting content about software engineering, AI, and cybersecurity.
+              I&apos;m publishing essays on architecture, automation, and building systems
+              that use AI in real operational workflows.
             </p>
           </div>
         )}

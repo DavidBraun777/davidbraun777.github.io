@@ -1,0 +1,180 @@
+---
+title: "Why Most AI Prototypes Never Become Real Systems"
+description: "The missing layers between an impressive AI demo and software that can survive real operational workflows."
+date: "2026-03-15"
+author: "David Braun"
+tags: ["AI Systems", "Operational Software", "Architecture"]
+---
+
+Most AI prototypes fail for a boring reason:
+
+they are not actually systems yet.
+
+They are often a prompt, a UI, and a response box with just enough code around
+them to look finished in a demo.
+
+That can be useful for learning, but it is not the same thing as operational
+software.
+
+Real systems have to answer harder questions:
+
+- Where does data come from?
+- What gets validated before AI sees it?
+- What state must be preserved between steps?
+- What happens when the model is wrong?
+- Who reviews, overrides, or approves the output?
+- How does the result enter a real workflow?
+
+Without those layers, the prototype is doing something interesting, but it is not
+yet dependable.
+
+## The model is rarely the whole product
+
+In most useful AI systems, the model is just one component in a larger
+architecture.
+
+That architecture usually needs:
+
+- ingestion
+- validation
+- routing
+- persistence
+- retry and recovery behavior
+- output shaping
+- delivery into a human or downstream system
+
+If those pieces are weak, the system will feel fragile even if the model itself is
+strong.
+
+That is why so many prototypes stall after the first wave of excitement. The demo
+was showing the easiest layer.
+
+## Six missing layers
+
+When I look at AI projects that fail to mature, they are usually missing some mix
+of these six layers.
+
+### 1. Deterministic rules
+
+Not every decision should be delegated to an LLM.
+
+Jurisdiction checks, conflict rules, lifecycle constraints, authentication, and
+safety gates are often better handled deterministically.
+
+If a system has no clear policy boundary, the model ends up carrying product logic
+it should never own.
+
+### 2. State management
+
+A lot of prototypes behave as if every interaction is stateless.
+
+Real workflows are not.
+
+Systems usually need to remember:
+
+- prior user actions
+- pending tasks
+- review status
+- lifecycle stage
+- retry context
+
+Without state, the system cannot behave consistently over time.
+
+### 3. Human handoff
+
+Many AI demos assume the model is the endpoint.
+
+Operational systems usually need the opposite.
+
+They need AI to prepare, summarize, classify, or route work so a human can make a
+better decision faster.
+
+If the handoff path is unclear, the system becomes a dead end instead of a force
+multiplier.
+
+### 4. Delivery path
+
+What artifact actually leaves the system?
+
+Common answers are:
+
+- a qualified lead in a CRM
+- a callback request
+- a generated launch plan
+- a structured transcript and summary
+- a push notification
+
+If the output never reaches a useful destination, the system has no operational
+gravity.
+
+### 5. Observability
+
+Teams often discover too late that they cannot answer simple questions like:
+
+- Which step is failing?
+- What inputs triggered this output?
+- Which jobs are stuck?
+- How often are humans overriding the AI?
+
+Observability is not "enterprise polish." It is part of whether the system can be
+maintained at all.
+
+### 6. Workflow ownership
+
+The final failure mode is building around the model instead of around the actual
+work.
+
+A system should be shaped by the workflow it is supposed to improve:
+
+- intake
+- qualification
+- planning
+- notification
+- summarization
+- delivery
+
+When the workflow is clear, AI can slot into the architecture naturally.
+When the workflow is fuzzy, AI becomes decorative.
+
+## A better question to ask
+
+Instead of asking:
+
+"How can we put AI into this product?"
+
+I think the better question is:
+
+"Where does automation help this workflow close faster, safer, or with less
+coordination cost?"
+
+That reframes the system around operational usefulness.
+
+Sometimes the answer involves an LLM.
+Sometimes it involves rules, queues, lifecycle guards, and human review.
+Usually it involves all of them.
+
+## What technical hiring managers and founders actually care about
+
+The people evaluating serious systems work are usually looking for signals like:
+
+- Can this person design boundaries, not just prompts?
+- Do they understand state, reliability, and delivery paths?
+- Can they use AI without letting it destabilize the system?
+- Can they turn a rough concept into software that operates under constraints?
+
+That is why a portfolio full of isolated experiments usually feels weaker than a
+portfolio full of systems.
+
+Experiments show curiosity.
+Systems show judgment.
+
+## Closing thought
+
+Most AI prototypes do not fail because the model was not advanced enough.
+
+They fail because the surrounding architecture never matured.
+
+The job is not to make AI look clever in isolation.
+
+The job is to build systems where AI contributes to a workflow that can actually be
+trusted, operated, and extended.

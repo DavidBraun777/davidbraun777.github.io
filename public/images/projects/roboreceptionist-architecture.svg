@@ -1,0 +1,53 @@
+<svg width="1400" height="820" viewBox="0 0 1400 820" fill="none" xmlns="http://www.w3.org/2000/svg">
+  <rect width="1400" height="820" rx="32" fill="#020617"/>
+  <rect x="56" y="56" width="1288" height="708" rx="28" fill="#0F172A" stroke="#1E293B" stroke-width="2"/>
+  <text x="88" y="118" fill="#BFDBFE" font-family="monospace" font-size="24" letter-spacing="3">ROBORECEPTIONIST / SAFE LEGAL INTAKE</text>
+  <text x="88" y="154" fill="#94A3B8" font-family="monospace" font-size="15">Policy before response. Validation before delivery.</text>
+
+  <rect x="88" y="212" width="244" height="132" rx="20" fill="#111827" stroke="#334155"/>
+  <text x="118" y="258" fill="#F8FAFC" font-family="monospace" font-size="22">Caller Session</text>
+  <text x="118" y="292" fill="#94A3B8" font-family="monospace" font-size="15">chat input</text>
+  <text x="118" y="320" fill="#94A3B8" font-family="monospace" font-size="15">conflict details</text>
+
+  <rect x="420" y="188" width="300" height="178" rx="24" fill="#1E293B" stroke="#60A5FA" stroke-width="2"/>
+  <text x="454" y="238" fill="#DBEAFE" font-family="monospace" font-size="24">Layer 1 Policy Engine</text>
+  <text x="454" y="278" fill="#BFDBFE" font-family="monospace" font-size="16">- jurisdiction gate</text>
+  <text x="454" y="308" fill="#BFDBFE" font-family="monospace" font-size="16">- emergency / urgency checks</text>
+  <text x="454" y="338" fill="#BFDBFE" font-family="monospace" font-size="16">- conflict check ordering</text>
+
+  <rect x="808" y="188" width="288" height="178" rx="24" fill="#1E1B4B" stroke="#8B5CF6" stroke-width="2"/>
+  <text x="844" y="238" fill="#EDE9FE" font-family="monospace" font-size="24">Layer 2 AI Flow</text>
+  <text x="844" y="278" fill="#DDD6FE" font-family="monospace" font-size="16">- conversational response</text>
+  <text x="844" y="308" fill="#DDD6FE" font-family="monospace" font-size="16">- validated output only</text>
+  <text x="844" y="338" fill="#DDD6FE" font-family="monospace" font-size="16">- no legal advice boundary</text>
+
+  <rect x="230" y="482" width="324" height="178" rx="24" fill="#111827" stroke="#334155"/>
+  <text x="266" y="532" fill="#F8FAFC" font-family="monospace" font-size="24">Transcript Storage</text>
+  <text x="266" y="572" fill="#94A3B8" font-family="monospace" font-size="16">session state</text>
+  <text x="266" y="602" fill="#94A3B8" font-family="monospace" font-size="16">turn-by-turn transcript</text>
+  <text x="266" y="632" fill="#94A3B8" font-family="monospace" font-size="16">audit trail</text>
+
+  <rect x="660" y="482" width="286" height="178" rx="24" fill="#052E16" stroke="#10B981" stroke-width="2"/>
+  <text x="696" y="532" fill="#D1FAE5" font-family="monospace" font-size="24">Notification Layer</text>
+  <text x="696" y="572" fill="#A7F3D0" font-family="monospace" font-size="16">same-day callback flag</text>
+  <text x="696" y="602" fill="#A7F3D0" font-family="monospace" font-size="16">intake summary email</text>
+  <text x="696" y="632" fill="#A7F3D0" font-family="monospace" font-size="16">specialist handoff</text>
+
+  <rect x="1034" y="482" width="216" height="178" rx="24" fill="#172554" stroke="#38BDF8" stroke-width="2"/>
+  <text x="1070" y="532" fill="#E0F2FE" font-family="monospace" font-size="24">Human Review</text>
+  <text x="1070" y="572" fill="#BAE6FD" font-family="monospace" font-size="16">triage</text>
+  <text x="1070" y="602" fill="#BAE6FD" font-family="monospace" font-size="16">callback</text>
+  <text x="1070" y="632" fill="#BAE6FD" font-family="monospace" font-size="16">matter routing</text>
+
+  <path d="M332 278H420" stroke="#64748B" stroke-width="3"/>
+  <path d="M720 278H808" stroke="#64748B" stroke-width="3"/>
+  <path d="M952 366V430H820V482" stroke="#64748B" stroke-width="3"/>
+  <path d="M570 366V430H392V482" stroke="#64748B" stroke-width="3"/>
+  <path d="M946 572H1034" stroke="#64748B" stroke-width="3"/>
+
+  <path d="M404 272L420 278L404 284" fill="#64748B"/>
+  <path d="M792 272L808 278L792 284" fill="#64748B"/>
+  <path d="M814 466L820 482L826 466" fill="#64748B"/>
+  <path d="M386 466L392 482L398 466" fill="#64748B"/>
+  <path d="M1018 566L1034 572L1018 578" fill="#64748B"/>
+</svg>

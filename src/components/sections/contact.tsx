@@ -11,20 +11,19 @@ import { Input, Textarea, Select } from '@/components/ui/input'
 type FormStatus = 'idle' | 'loading' | 'success' | 'error'
 
 const projectTypeOptions = [
-  { value: 'home', label: 'Personal / Home' },
-  { value: 'business', label: 'Business' },
-  { value: 'school', label: 'School / Academic' },
-  { value: 'fun', label: 'Side Project / Fun' },
-  { value: 'other', label: 'Other' },
+  { value: 'ai-workflow', label: 'AI Workflow' },
+  { value: 'automation-platform', label: 'Automation Platform' },
+  { value: 'operational-software', label: 'Operational Software' },
+  { value: 'internal-tool', label: 'Internal Tool' },
+  { value: 'production-system', label: 'Production System' },
 ]
 
 const serviceOptions = [
-  { value: 'bugfix', label: 'Bug Fix' },
-  { value: 'feature', label: 'New Feature' },
-  { value: 'infra', label: 'Infrastructure' },
-  { value: 'security', label: 'Security' },
-  { value: 'ai', label: 'AI / ML' },
-  { value: 'other', label: 'Other' },
+  { value: 'architecture', label: 'Architecture' },
+  { value: 'prototype-to-system', label: 'Prototype to System' },
+  { value: 'automation', label: 'Workflow Automation' },
+  { value: 'infrastructure', label: 'Infrastructure' },
+  { value: 'advisory', label: 'Technical Advisory' },
 ]
 
 const urgencyOptions = [
@@ -91,8 +90,8 @@ export function Contact() {
     <section id="contact" className="section">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeader
-          title="Get In Touch"
-          subtitle="Discuss a full-time role, consulting engagement, or selected build."
+          title="Contact"
+          subtitle="If you need someone who can design systems, automate workflows, and turn complex ideas into working software, I am always open to discussing new projects."
         />
 
         <div className="grid lg:grid-cols-2 gap-12">
@@ -105,10 +104,12 @@ export function Contact() {
           >
             <div>
               <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">
-                Let&apos;s connect
+                Start a conversation
               </h3>
               <p className="text-lg text-slate-600 dark:text-slate-400">
-                I&apos;m open to conversations about AI systems, infrastructure-heavy product work, consulting engagements, and mission-driven builds that need practical execution.
+                I&apos;m most useful when a team needs architecture, workflow automation,
+                system design, and the engineering discipline to turn an early idea into a
+                working operational system.
               </p>
             </div>
 
@@ -227,15 +228,15 @@ export function Contact() {
               <div className="grid sm:grid-cols-3 gap-4">
                 <Select
                   id="contact-project-type"
-                  label="Project type"
-                  placeholder="What are you building?"
+                  label="System type"
+                  placeholder="What kind of system?"
                   options={projectTypeOptions}
                   value={formData.projectType}
                   onChange={(e) => setFormData({ ...formData, projectType: e.target.value })}
                 />
                 <Select
                   id="contact-service"
-                  label="Service needed"
+                  label="Need"
                   placeholder="What do you need?"
                   options={serviceOptions}
                   value={formData.serviceNeeded}
@@ -254,7 +255,7 @@ export function Contact() {
               <Textarea
                 id="contact-message"
                 label="Your message"
-                placeholder="Your message"
+                placeholder="What workflow, product, or system are you trying to build?"
                 rows={6}
                 value={formData.message}
                 onChange={(e) => setFormData({ ...formData, message: e.target.value })}
