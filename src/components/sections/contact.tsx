@@ -93,7 +93,7 @@ export function Contact() {
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
         <SectionHeader
           title="Get In Touch"
-          subtitle="For roles and projects where architecture, implementation, and product judgment all matter."
+          subtitle="For systems work where architecture, implementation, and product judgment all need to show up in the same project."
         />
 
         <div className="grid lg:grid-cols-2 gap-12">
@@ -109,7 +109,10 @@ export function Contact() {
                 Start a conversation
               </h3>
               <p className="text-lg text-slate-600 dark:text-slate-400">
-                If you need someone who can move from system design to working delivery across applied AI, workflow software, and infrastructure, let&apos;s talk. I&apos;m open to full-time roles, consulting engagements, and selected builds.
+                If you need someone who can turn complex ideas into working systems,
+                automate real workflows, and build with both speed and engineering rigor,
+                let&apos;s talk. I&apos;m open to full-time roles, consulting engagements,
+                and selected builds.
               </p>
             </div>
 
