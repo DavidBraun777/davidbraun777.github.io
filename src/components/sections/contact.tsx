@@ -106,7 +106,7 @@ export function Contact() {
           >
             <div>
               <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">
-                Let&apos;s connect
+                Start a conversation
               </h3>
               <p className="text-lg text-slate-600 dark:text-slate-400">
                 If you need someone who can move from system design to working delivery across applied AI, workflow software, and infrastructure, let&apos;s talk. I&apos;m open to full-time roles, consulting engagements, and selected builds.
@@ -255,7 +255,7 @@ export function Contact() {
               <Textarea
                 id="contact-message"
                 label="Your message"
-                placeholder="Your message"
+                placeholder="What workflow, product, or system are you trying to build?"
                 rows={6}
                 value={formData.message}
                 onChange={(e) => setFormData({ ...formData, message: e.target.value })}

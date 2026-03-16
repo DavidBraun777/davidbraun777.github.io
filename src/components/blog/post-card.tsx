@@ -1,6 +1,6 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Calendar, Clock, ArrowRight } from 'lucide-react'
@@ -13,6 +13,7 @@ interface PostCardProps {
 }
 
 export function PostCard({ post, index = 0 }: PostCardProps) {
+  const prefersReducedMotion = useReducedMotion()
   const formattedDate = new Date(post.date).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
@@ -21,11 +22,11 @@ export function PostCard({ post, index = 0 }: PostCardProps) {
 
   return (
     <motion.article
-      initial={{ opacity: 0, y: 30 }}
-      whileInView={{ opacity: 1, y: 0 }}
+      initial={prefersReducedMotion ? false : { opacity: 0, y: 30 }}
+      whileInView={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
       viewport={{ once: true }}
-      transition={{ delay: index * 0.1 }}
-      whileHover={{ y: -4 }}
+      transition={prefersReducedMotion ? undefined : { delay: index * 0.1 }}
+      whileHover={prefersReducedMotion ? undefined : { y: -4 }}
       className="group"
     >
       <Link href={`/blog/${encodeURIComponent(post.slug)}`}>
