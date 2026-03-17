@@ -13,15 +13,20 @@ export default function BlogPage() {
   const posts = getAllPosts()
 
   return (
-    <div className="min-h-screen pt-24 pb-16">
+    <div className="min-h-screen pt-28 pb-16 md:pt-32 lg:pt-36">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <SectionHeader
-          as="h1"
-          title="Blog"
-          subtitle="Engineering notes on AI systems, automation platforms, and the tradeoffs that appear once the software has to operate in practice."
-        />
+        <section id="blog-overview">
+          <SectionHeader
+            as="h1"
+            title="Blog"
+            subtitle="Engineering notes on AI systems, automation platforms, and the tradeoffs that appear once the software has to operate in practice."
+          />
+        </section>
 
-        <div className="mb-10 rounded-[1.75rem] border border-slate-200 bg-slate-50 p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/45">
+        <div
+          id="systems-thesis"
+          className="mb-10 rounded-[1.75rem] border border-slate-200 bg-slate-50 p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/45"
+        >
           <p className="font-mono text-xs uppercase tracking-[0.22em] text-primary-600 dark:text-primary-300">
             Systems Thesis
           </p>
@@ -33,7 +38,7 @@ export default function BlogPage() {
         </div>
 
         {posts.length > 0 ? (
-          <div className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
+          <div id="blog-posts" className="grid md:grid-cols-2 lg:grid-cols-3 gap-8">
             {posts.map((post, index) => (
               <PostCard key={post.slug} post={post} index={index} />
             ))}
