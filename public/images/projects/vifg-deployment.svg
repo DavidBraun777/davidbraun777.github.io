@@ -4,30 +4,39 @@
   <text x="88" y="118" fill="#BFDBFE" font-family="monospace" font-size="24" letter-spacing="3">VIFG PRODUCTION DEPLOYMENT</text>
   <text x="88" y="154" fill="#94A3B8" font-family="monospace" font-size="15">Accessibility-focused delivery with deployment, TLS, and maintenance ownership.</text>
 
-  <rect x="94" y="280" width="206" height="136" rx="22" fill="#111827" stroke="#334155"/>
-  <text x="126" y="330" fill="#F8FAFC" font-family="monospace" font-size="24">Public Users</text>
-  <text x="126" y="366" fill="#94A3B8" font-family="monospace" font-size="16">keyboard + screen reader</text>
-  <text x="126" y="396" fill="#94A3B8" font-family="monospace" font-size="16">HTTPS traffic</text>
+  <rect x="94" y="280" width="206" height="150" rx="22" fill="#111827" stroke="#334155"/>
+  <text x="126" y="324" fill="#F8FAFC" font-family="monospace" font-size="20">
+    <tspan x="126" dy="0">Public</tspan>
+    <tspan x="126" dy="26">Users</tspan>
+  </text>
+  <text x="126" y="380" fill="#94A3B8" font-family="monospace" font-size="14">
+    <tspan x="126" dy="0">keyboard +</tspan>
+    <tspan x="126" dy="18">screen reader</tspan>
+  </text>
+  <text x="126" y="416" fill="#94A3B8" font-family="monospace" font-size="14">HTTPS traffic</text>
 
   <rect x="402" y="198" width="364" height="300" rx="24" fill="#172554" stroke="#38BDF8" stroke-width="2"/>
   <text x="438" y="248" fill="#E0F2FE" font-family="monospace" font-size="24">AWS Lightsail Host</text>
   <rect x="438" y="284" width="290" height="68" rx="16" fill="#0F172A" stroke="#334155"/>
-  <text x="470" y="327" fill="#F8FAFC" font-family="monospace" font-size="20">Nginx reverse proxy + TLS</text>
+  <text x="470" y="325" fill="#F8FAFC" font-family="monospace" font-size="18">Nginx reverse proxy + TLS</text>
   <rect x="438" y="378" width="290" height="82" rx="16" fill="#0F172A" stroke="#334155"/>
-  <text x="470" y="422" fill="#F8FAFC" font-family="monospace" font-size="20">Dockerized React/Vite app</text>
-  <text x="470" y="450" fill="#94A3B8" font-family="monospace" font-size="15">served behind localhost Nginx</text>
+  <text x="470" y="420" fill="#F8FAFC" font-family="monospace" font-size="18">Dockerized React/Vite app</text>
+  <text x="470" y="448" fill="#94A3B8" font-family="monospace" font-size="14">served behind localhost Nginx</text>
 
   <rect x="862" y="178" width="418" height="190" rx="24" fill="#1E1B4B" stroke="#8B5CF6" stroke-width="2"/>
   <text x="898" y="228" fill="#EDE9FE" font-family="monospace" font-size="24">Delivery and Security</text>
-  <text x="898" y="272" fill="#DDD6FE" font-family="monospace" font-size="16">- GitHub Actions builds image</text>
-  <text x="898" y="304" fill="#DDD6FE" font-family="monospace" font-size="16">- AWS ECR stores deploy artifact</text>
-  <text x="898" y="336" fill="#DDD6FE" font-family="monospace" font-size="16">- Let's Encrypt / Certbot renews TLS</text>
+  <text x="898" y="272" fill="#DDD6FE" font-family="monospace" font-size="15">- GitHub Actions builds image</text>
+  <text x="898" y="302" fill="#DDD6FE" font-family="monospace" font-size="15">- AWS ECR stores deploy artifact</text>
+  <text x="898" y="332" fill="#DDD6FE" font-family="monospace" font-size="15">- Let's Encrypt / Certbot renews TLS</text>
 
   <rect x="862" y="442" width="418" height="190" rx="24" fill="#052E16" stroke="#10B981" stroke-width="2"/>
   <text x="898" y="492" fill="#D1FAE5" font-family="monospace" font-size="24">Operations Layer</text>
-  <text x="898" y="536" fill="#A7F3D0" font-family="monospace" font-size="16">- systemd maintenance timer</text>
-  <text x="898" y="568" fill="#A7F3D0" font-family="monospace" font-size="16">- unattended security patches</text>
-  <text x="898" y="600" fill="#A7F3D0" font-family="monospace" font-size="16">- accessible content and compliance checks</text>
+  <text x="898" y="536" fill="#A7F3D0" font-family="monospace" font-size="15">- systemd maintenance timer</text>
+  <text x="898" y="566" fill="#A7F3D0" font-family="monospace" font-size="15">- unattended security patches</text>
+  <text x="898" y="594" fill="#A7F3D0" font-family="monospace" font-size="14">
+    <tspan x="898" dy="0">- accessible content and</tspan>
+    <tspan x="898" dy="18">  compliance checks</tspan>
+  </text>
 
   <path d="M300 348H402" stroke="#64748B" stroke-width="3"/>
   <path d="M766 316H862" stroke="#64748B" stroke-width="3"/>
