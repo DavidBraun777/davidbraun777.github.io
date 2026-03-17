@@ -22,7 +22,7 @@ export const projects: Project[] = [
     image: '/images/projects/heart_hand.jpg',
     technologies: ['React', 'Vite', 'AWS Lightsail', 'Docker', 'GitHub Actions', 'Nginx'],
     githubUrl: 'https://github.com/DavidBraun777/vifg',
-    liveUrl: 'https://www.vifg.org/',
+    liveUrl: 'https://www.vifg.org/home',
     featured: true,
     category: 'web',
     theme: 'workflow-automation',

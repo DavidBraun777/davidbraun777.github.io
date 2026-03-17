@@ -1,7 +1,7 @@
 'use client'
 
 import { motion } from 'framer-motion'
-import { ArrowDown, ArrowRight, Binary, Braces, MapPin, Network, Workflow } from 'lucide-react'
+import { ArrowRight, Binary, Braces, MapPin, Network, Workflow } from 'lucide-react'
 import { socialLinks } from '@/data/social-links'
 import { Button } from '@/components/ui/button'
 
@@ -254,25 +254,6 @@ export function Hero() {
             </div>
           </motion.div>
         </div>
-
-        <motion.div
-          initial={{ opacity: 0 }}
-          animate={{ opacity: 1 }}
-          transition={{ delay: 1.2 }}
-          className="mt-12 flex justify-center"
-        >
-          <motion.button
-            animate={{ y: [0, 8, 0] }}
-            transition={{ duration: 2, repeat: Infinity }}
-            onClick={() =>
-              document.getElementById('what-i-build')?.scrollIntoView({ behavior: 'smooth' })
-            }
-            className="rounded-full border border-white/10 bg-white/6 p-3 text-slate-300 transition-colors hover:text-white"
-            aria-label="Scroll down"
-          >
-            <ArrowDown className="h-5 w-5" />
-          </motion.button>
-        </motion.div>
       </div>
     </section>
   )
