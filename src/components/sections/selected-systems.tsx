@@ -39,6 +39,7 @@ const statePanelClasses: Record<string, string> = {
 export function SelectedSystems() {
   const [activeIndex, setActiveIndex] = useState(0)
   const [detailsOpen, setDetailsOpen] = useState(false)
+  const [isLightboxOpen, setIsLightboxOpen] = useState(false)
   const touchStartRef = useRef<{ x: number; y: number } | null>(null)
   const tabRefs = useRef<Array<HTMLButtonElement | null>>([])
   const activeSystem = featuredSystems[activeIndex]
@@ -52,6 +53,7 @@ export function SelectedSystems() {
   }, [activeIndex])
 
   const focusSystem = (nextIndex: number) => {
+    if (isLightboxOpen) return
     setActiveIndex((nextIndex + featuredSystems.length) % featuredSystems.length)
     setDetailsOpen(false)
   }
@@ -70,6 +72,8 @@ export function SelectedSystems() {
   }
 
   const handleTouchEnd = (event: TouchEvent<HTMLDivElement>) => {
+    if (isLightboxOpen) return
+
     if (!touchStartRef.current) return
 
     const touch = event.changedTouches[0]
@@ -96,30 +100,33 @@ export function SelectedSystems() {
           subtitle="Five systems that best represent how I combine applied AI, workflow software, and production-minded engineering."
         />
 
-        <div className="mt-4 flex gap-2 overflow-x-auto pb-1">
-          {featuredSystems.map((system, index) => {
-            const isActive = index === activeIndex
+        <div className="mt-4 overflow-x-auto pb-1">
+          <div className="mx-auto flex min-w-max justify-center gap-2 px-1 sm:min-w-full">
+            {featuredSystems.map((system, index) => {
+              const isActive = index === activeIndex
 
-            return (
-              <button
-                key={system.id}
-                type="button"
-                onClick={() => focusSystem(index)}
-                ref={(element) => {
-                  tabRefs.current[index] = element
-                }}
-                className={cn(
-                  'shrink-0 rounded-full border px-4 py-2 text-sm font-medium transition-colors',
-                  isActive
-                    ? 'border-slate-900 bg-slate-900 text-white dark:border-white dark:bg-white dark:text-slate-950'
-                    : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-300 dark:hover:bg-slate-900 dark:hover:text-white'
-                )}
-                aria-pressed={isActive}
-              >
-                {system.name}
-              </button>
-            )
-          })}
+              return (
+                <button
+                  key={system.id}
+                  type="button"
+                  onClick={() => focusSystem(index)}
+                  ref={(element) => {
+                    tabRefs.current[index] = element
+                  }}
+                  disabled={isLightboxOpen}
+                  className={cn(
+                    'shrink-0 rounded-full border px-4 py-2 text-sm font-medium transition-colors disabled:cursor-default disabled:opacity-70',
+                    isActive
+                      ? 'border-slate-900 bg-slate-900 text-white dark:border-white dark:bg-white dark:text-slate-950'
+                      : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-300 dark:hover:bg-slate-900 dark:hover:text-white'
+                  )}
+                  aria-pressed={isActive}
+                >
+                  {system.name}
+                </button>
+              )
+            })}
+          </div>
         </div>
 
         <div
@@ -128,19 +135,21 @@ export function SelectedSystems() {
           onTouchEnd={handleTouchEnd}
           style={{ touchAction: 'pan-y' }}
         >
-          <button
-            type="button"
-            onClick={showPrevious}
-            className="absolute left-3 top-3 z-10 hidden h-12 w-12 items-center justify-center rounded-full border border-primary-200 bg-white/96 text-primary-700 shadow-[0_22px_45px_-24px_rgba(37,99,235,0.55)] backdrop-blur transition-all hover:scale-[1.05] hover:bg-primary-50 dark:border-primary-700/70 dark:bg-slate-950/96 dark:text-primary-200 dark:shadow-[0_22px_45px_-24px_rgba(59,130,246,0.7)] dark:hover:bg-slate-900 lg:inline-flex lg:-left-6 lg:top-1/2 lg:h-14 lg:w-14 lg:-translate-y-1/2"
+                  <button
+                    type="button"
+                    onClick={showPrevious}
+                    disabled={isLightboxOpen}
+                    className="absolute left-3 top-3 z-10 hidden h-12 w-12 items-center justify-center rounded-full border border-primary-200 bg-white/96 text-primary-700 shadow-[0_22px_45px_-24px_rgba(37,99,235,0.55)] backdrop-blur transition-all hover:scale-[1.05] hover:bg-primary-50 disabled:cursor-default disabled:opacity-55 dark:border-primary-700/70 dark:bg-slate-950/96 dark:text-primary-200 dark:shadow-[0_22px_45px_-24px_rgba(59,130,246,0.7)] dark:hover:bg-slate-900 lg:inline-flex lg:-left-6 lg:top-1/2 lg:h-14 lg:w-14 lg:-translate-y-1/2"
             aria-label="Show previous system"
           >
             <ArrowLeft className="h-5 w-5" />
           </button>
 
-          <button
-            type="button"
-            onClick={showNext}
-            className="absolute right-3 top-3 z-10 hidden h-12 w-12 items-center justify-center rounded-full border border-primary-200 bg-white/96 text-primary-700 shadow-[0_22px_45px_-24px_rgba(37,99,235,0.55)] backdrop-blur transition-all hover:scale-[1.05] hover:bg-primary-50 dark:border-primary-700/70 dark:bg-slate-950/96 dark:text-primary-200 dark:shadow-[0_22px_45px_-24px_rgba(59,130,246,0.7)] dark:hover:bg-slate-900 lg:inline-flex lg:-right-6 lg:top-1/2 lg:h-14 lg:w-14 lg:-translate-y-1/2"
+                  <button
+                    type="button"
+                    onClick={showNext}
+                    disabled={isLightboxOpen}
+                    className="absolute right-3 top-3 z-10 hidden h-12 w-12 items-center justify-center rounded-full border border-primary-200 bg-white/96 text-primary-700 shadow-[0_22px_45px_-24px_rgba(37,99,235,0.55)] backdrop-blur transition-all hover:scale-[1.05] hover:bg-primary-50 disabled:cursor-default disabled:opacity-55 dark:border-primary-700/70 dark:bg-slate-950/96 dark:text-primary-200 dark:shadow-[0_22px_45px_-24px_rgba(59,130,246,0.7)] dark:hover:bg-slate-900 lg:inline-flex lg:-right-6 lg:top-1/2 lg:h-14 lg:w-14 lg:-translate-y-1/2"
             aria-label="Show next system"
           >
             <ArrowLeft className="h-5 w-5 rotate-180" />
@@ -183,6 +192,14 @@ export function SelectedSystems() {
                   <p className="mt-3 max-w-3xl text-base leading-relaxed text-slate-600 sm:text-lg dark:text-slate-300">
                     {activeSystem.summary}
                   </p>
+                  <div className="mt-5 hidden rounded-2xl border border-slate-200 bg-slate-50 p-4 lg:block dark:border-slate-800 dark:bg-slate-900/60">
+                    <p className="font-mono text-xs uppercase tracking-[0.18em] text-slate-500 dark:text-slate-300">
+                      Problem
+                    </p>
+                    <p className="mt-3 text-sm leading-relaxed text-slate-700 dark:text-slate-300">
+                      {activeSystem.problem}
+                    </p>
+                  </div>
                   <button
                     type="button"
                     onClick={() => setDetailsOpen((current) => !current)}
@@ -222,7 +239,7 @@ export function SelectedSystems() {
                         className="overflow-hidden"
                       >
                         <div className="mt-6 grid gap-4">
-                          <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-900/60">
+                          <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 lg:hidden dark:border-slate-800 dark:bg-slate-900/60">
                             <p className="font-mono text-xs uppercase tracking-[0.18em] text-slate-500 dark:text-slate-300">
                               Problem
                             </p>
@@ -301,6 +318,7 @@ export function SelectedSystems() {
                     visualAspect={activeSystem.visualAspect}
                     visualSurface={activeSystem.visualSurface}
                     sizes="(min-width: 1280px) 70vw, 92vw"
+                    onOpenChange={setIsLightboxOpen}
                     thumb={
                       <div
                         className={cn(
