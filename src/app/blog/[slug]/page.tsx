@@ -55,7 +55,7 @@ export default async function BlogPost({ params }: Props) {
   })
 
   return (
-    <article className="min-h-screen pt-24 pb-16">
+    <article className="min-h-screen pt-28 pb-16 md:pt-32 lg:pt-36">
       <div className="max-w-3xl mx-auto px-4 sm:px-6 lg:px-8">
         {/* Back link */}
         <Link

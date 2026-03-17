@@ -2,7 +2,8 @@
 
 import { useState, useRef, useEffect } from 'react'
 import { motion } from 'framer-motion'
-import { Send, Mail, MapPin, CheckCircle, AlertCircle, Calendar, Clock } from 'lucide-react'
+import Link from 'next/link'
+import { Send, Mail, MapPin, CheckCircle, AlertCircle, Calendar, Clock, ArrowRight } from 'lucide-react'
 import { socialLinks } from '@/data/social-links'
 import { SectionHeader } from '@/components/ui/section-header'
 import { Button } from '@/components/ui/button'
@@ -114,6 +115,13 @@ export function Contact() {
                 let&apos;s talk. I&apos;m open to full-time roles, consulting engagements,
                 and selected builds.
               </p>
+              <Link
+                href="/background"
+                className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-primary-700 transition-colors hover:text-primary-600 dark:text-primary-300 dark:hover:text-primary-200"
+              >
+                View experience, skills, and credentials
+                <ArrowRight className="h-4 w-4" />
+              </Link>
             </div>
 
             <div className="space-y-4">
@@ -162,9 +170,7 @@ export function Contact() {
 
             {/* Social links */}
             <div>
-              <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">
-                Find me on social media
-              </p>
+              <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">Profiles</p>
               <div className="flex gap-4">
                 {socialLinks.map((link) => {
                   const Icon = link.icon
