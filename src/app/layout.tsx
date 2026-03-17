@@ -3,6 +3,7 @@ import localFont from 'next/font/local'
 import { ThemeProvider } from '@/providers/theme-provider'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
+import { ScrollToTop } from '@/components/layout/scroll-to-top'
 import './globals.css'
 
 const inter = localFont({
@@ -84,6 +85,7 @@ export default function RootLayout({
     <html lang="en" className="dark" suppressHydrationWarning>
       <body className={`${inter.variable} ${jetbrainsMono.variable} font-sans`}>
         <ThemeProvider>
+          <ScrollToTop />
           <Header />
           <main>{children}</main>
           <Footer />

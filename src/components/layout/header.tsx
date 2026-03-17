@@ -354,7 +354,7 @@ export function Header() {
                       className={cn(
                         'rounded-[1.5rem] border p-4',
                         isActive
-                          ? 'border-primary-300 bg-primary-50 dark:border-primary-800 dark:bg-primary-950/40'
+                          ? 'border-slate-900 bg-slate-900 shadow-xl shadow-slate-950/15 dark:border-primary-700 dark:bg-primary-950/75'
                           : 'border-slate-200 bg-slate-50 dark:border-slate-800 dark:bg-slate-950'
                       )}
                     >
@@ -363,11 +363,23 @@ export function Header() {
                         onClick={() => setIsMobileMenuOpen(false)}
                         className="block"
                       >
-                        <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">
+                        <p
+                          className={cn(
+                            'font-mono text-[10px] uppercase tracking-[0.22em]',
+                            isActive
+                              ? 'text-slate-300 dark:text-primary-200'
+                              : 'text-slate-500 dark:text-slate-400'
+                          )}
+                        >
                           {isActive ? 'Current page' : 'Page'}
                         </p>
                         <div className="mt-2 flex items-center justify-between gap-3">
-                          <h2 className="text-lg font-semibold text-slate-900 dark:text-white">
+                          <h2
+                            className={cn(
+                              'text-lg font-semibold',
+                              isActive ? 'text-white' : 'text-slate-900 dark:text-white'
+                            )}
+                          >
                             {page.name}
                           </h2>
                           {!isActive ? (
@@ -377,7 +389,7 @@ export function Header() {
                           ) : null}
                         </div>
                         {isActive ? (
-                          <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+                          <p className="mt-2 text-sm leading-relaxed text-slate-200 dark:text-primary-100/90">
                             {page.description}
                           </p>
                         ) : null}
@@ -390,7 +402,12 @@ export function Header() {
                               key={shortcut.name}
                               href={shortcut.href}
                               onClick={() => setIsMobileMenuOpen(false)}
-                              className="rounded-full bg-white px-3 py-1.5 text-xs font-medium text-slate-700 shadow-sm transition-colors hover:bg-slate-100 dark:bg-white/6 dark:text-slate-200 dark:hover:bg-white/10"
+                              className={cn(
+                                'rounded-full px-3 py-1.5 text-xs font-medium transition-colors',
+                                activeShortcut === shortcut.name
+                                  ? 'bg-white text-slate-950 dark:bg-white dark:text-slate-950'
+                                  : 'bg-white/12 text-white hover:bg-white/18 dark:bg-white/10 dark:text-white dark:hover:bg-white/16'
+                              )}
                             >
                               {shortcut.name}
                             </Link>
