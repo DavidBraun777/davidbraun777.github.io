@@ -119,6 +119,35 @@ export function Header() {
     return () => window.removeEventListener('scroll', handleScroll)
   }, [])
 
+  useEffect(() => {
+    setIsMobileMenuOpen(false)
+  }, [pathname])
+
+  useEffect(() => {
+    const originalOverflow = document.body.style.overflow
+
+    if (isMobileMenuOpen) {
+      document.body.style.overflow = 'hidden'
+    }
+
+    return () => {
+      document.body.style.overflow = originalOverflow
+    }
+  }, [isMobileMenuOpen])
+
+  useEffect(() => {
+    if (!isMobileMenuOpen) return
+
+    const handleKeyDown = (event: KeyboardEvent) => {
+      if (event.key === 'Escape') {
+        setIsMobileMenuOpen(false)
+      }
+    }
+
+    window.addEventListener('keydown', handleKeyDown)
+    return () => window.removeEventListener('keydown', handleKeyDown)
+  }, [isMobileMenuOpen])
+
   return (
     <>
       <motion.header
@@ -250,6 +279,8 @@ export function Header() {
                 onClick={() => setIsMobileMenuOpen(!isMobileMenuOpen)}
                 className="lg:hidden p-2 text-slate-600 dark:text-slate-400 hover:bg-slate-100 dark:hover:bg-slate-800 rounded-lg"
                 aria-label="Toggle menu"
+                aria-expanded={isMobileMenuOpen}
+                aria-controls="mobile-site-navigation"
               >
                 {isMobileMenuOpen ? (
                   <X className="w-6 h-6" />
@@ -268,7 +299,7 @@ export function Header() {
             initial={{ opacity: 0, y: -20 }}
             animate={{ opacity: 1, y: 0 }}
             exit={{ opacity: 0, y: -20 }}
-            className="fixed inset-0 z-40 lg:hidden"
+            className="fixed inset-0 z-[60] lg:hidden"
           >
             <div
               className="absolute inset-0 bg-black/50 backdrop-blur-sm"
@@ -279,9 +310,31 @@ export function Header() {
               animate={{ x: 0 }}
               exit={{ x: '100%' }}
               transition={{ type: 'spring', damping: 25 }}
-              className="absolute right-0 top-0 h-full w-80 bg-white dark:bg-slate-900 shadow-xl"
+              id="mobile-site-navigation"
+              className="absolute right-0 top-0 h-full w-full max-w-sm overflow-y-auto bg-white dark:bg-slate-900 shadow-xl"
             >
-              <div className="flex flex-col gap-4 p-6 pt-20">
+              <div className="border-b border-slate-200 px-5 py-4 dark:border-slate-800">
+                <div className="flex items-center justify-between gap-4">
+                  <div>
+                    <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">
+                      Navigation
+                    </p>
+                    <h2 className="mt-2 text-xl font-semibold text-slate-900 dark:text-white">
+                      Explore the site
+                    </h2>
+                  </div>
+                  <button
+                    type="button"
+                    onClick={() => setIsMobileMenuOpen(false)}
+                    className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-slate-50 text-slate-600 transition-colors hover:bg-slate-100 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-300 dark:hover:bg-slate-900"
+                    aria-label="Close navigation menu"
+                  >
+                    <X className="h-5 w-5" />
+                  </button>
+                </div>
+              </div>
+
+              <div className="flex flex-col gap-4 p-5">
                 <div className="rounded-[1.5rem] border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-950">
                   <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">
                     Current Status
@@ -313,12 +366,21 @@ export function Header() {
                         <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">
                           {isActive ? 'Current page' : 'Page'}
                         </p>
-                        <h2 className="mt-2 text-lg font-semibold text-slate-900 dark:text-white">
-                          {page.name}
-                        </h2>
-                        <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
-                          {page.description}
-                        </p>
+                        <div className="mt-2 flex items-center justify-between gap-3">
+                          <h2 className="text-lg font-semibold text-slate-900 dark:text-white">
+                            {page.name}
+                          </h2>
+                          {!isActive ? (
+                            <span className="rounded-full border border-slate-200 px-2.5 py-1 text-[11px] font-medium text-slate-500 dark:border-slate-700 dark:text-slate-400">
+                              Open
+                            </span>
+                          ) : null}
+                        </div>
+                        {isActive ? (
+                          <p className="mt-2 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+                            {page.description}
+                          </p>
+                        ) : null}
                       </Link>
 
                       {isActive ? (
@@ -349,10 +411,10 @@ export function Header() {
                     target="_blank"
                     rel="noopener noreferrer"
                     onClick={() => setIsMobileMenuOpen(false)}
-                    className="flex items-center gap-2 py-3 text-lg font-medium text-primary-600 dark:text-primary-400"
+                    className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-slate-50 px-4 py-3 text-sm font-medium text-primary-700 transition-colors hover:bg-slate-100 dark:border-slate-800 dark:bg-slate-950 dark:text-primary-300 dark:hover:bg-slate-900"
                   >
-                    <FileText aria-hidden="true" className="w-5 h-5" />
-                    Resume
+                    <FileText aria-hidden="true" className="w-4 h-4" />
+                    Open resume
                   </Link>
                 </motion.div>
               </div>
