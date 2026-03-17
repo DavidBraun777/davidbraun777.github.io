@@ -2,8 +2,14 @@
 
 import Link from 'next/link'
 import { motion } from 'framer-motion'
-import { socialLinks } from '@/data/social-links'
-import { Heart } from 'lucide-react'
+import { resumeUrl, socialLinks } from '@/data/social-links'
+
+const footerLinks = [
+  { label: 'Home', href: '/' },
+  { label: 'Blog', href: '/blog' },
+  { label: 'Experience', href: '/background' },
+  { label: 'Resume', href: resumeUrl, external: true },
+]
 
 export function Footer() {
   const currentYear = new Date().getFullYear()
@@ -18,8 +24,32 @@ export function Footer() {
               David Braun
             </Link>
             <p className="mt-2 text-slate-700 dark:text-slate-300">
-              Simplifying hard problems. Zero shortcuts.
+              AI systems engineer building automation platforms, applied AI workflows, and infrastructure-backed software.
             </p>
+          </div>
+
+          <div className="flex flex-wrap items-center justify-center gap-4 text-sm font-medium text-slate-600 dark:text-slate-400">
+            {footerLinks.map((link) =>
+              link.external ? (
+                <a
+                  key={link.label}
+                  href={link.href}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="transition-colors hover:text-primary-600 dark:hover:text-primary-300"
+                >
+                  {link.label}
+                </a>
+              ) : (
+                <Link
+                  key={link.label}
+                  href={link.href}
+                  className="transition-colors hover:text-primary-600 dark:hover:text-primary-300"
+                >
+                  {link.label}
+                </Link>
+              )
+            )}
           </div>
 
           {/* Social links */}
@@ -46,8 +76,8 @@ export function Footer() {
 
         {/* Copyright */}
         <div className="mt-8 pt-8 border-t border-slate-200 dark:border-slate-800 text-center">
-          <p className="text-sm text-slate-600 dark:text-slate-300 flex items-center justify-center gap-1">
-            Built with <Heart aria-hidden="true" className="w-4 h-4 text-red-500 fill-red-500" /> using Next.js & Tailwind
+          <p className="text-sm text-slate-600 dark:text-slate-300">
+            Built with Next.js, Tailwind CSS, and MDX.
           </p>
           <p className="mt-2 text-sm text-slate-600 dark:text-slate-400">
             &copy; {currentYear} David Braun. All rights reserved.

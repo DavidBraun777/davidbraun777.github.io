@@ -1,4 +1,4 @@
-import { Github, Linkedin, Mail, Instagram } from 'lucide-react'
+import { Github, Linkedin, Mail } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
 export interface SocialLink {
@@ -22,11 +22,6 @@ export const socialLinks: SocialLink[] = [
     name: 'Email',
     url: 'mailto:davidjbraun777@gmail.com',
     icon: Mail,
-  },
-  {
-    name: 'Instagram',
-    url: 'https://instagram.com/coachdavidbraun',
-    icon: Instagram,
   },
 ]
 
