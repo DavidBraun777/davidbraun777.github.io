@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useState } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import { ArrowUp } from 'lucide-react'
 import { AnimatePresence, motion } from 'framer-motion'
@@ -8,9 +8,32 @@ import { AnimatePresence, motion } from 'framer-motion'
 export function ScrollToTop() {
   const pathname = usePathname()
   const [showButton, setShowButton] = useState(false)
+  const previousPathRef = useRef<string | null>(null)
 
   useEffect(() => {
-    window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
+    const previousPath = previousPathRef.current
+    previousPathRef.current = pathname
+
+    if (previousPath === null || previousPath === pathname) return
+    if (window.location.hash) return
+
+    const scrollToTop = () => {
+      window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
+      document.documentElement.scrollTop = 0
+      document.body.scrollTop = 0
+    }
+
+    let frameTwo = 0
+    const timeoutId = window.setTimeout(scrollToTop, 120)
+    const frameOne = window.requestAnimationFrame(() => {
+      frameTwo = window.requestAnimationFrame(scrollToTop)
+    })
+
+    return () => {
+      window.cancelAnimationFrame(frameOne)
+      window.cancelAnimationFrame(frameTwo)
+      window.clearTimeout(timeoutId)
+    }
   }, [pathname])
 
   useEffect(() => {
