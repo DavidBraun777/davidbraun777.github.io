@@ -186,17 +186,17 @@ export function Header() {
                           'overflow-hidden rounded-[1.65rem] border backdrop-blur-xl',
                           isActive
                             ? 'min-w-[22rem] flex-[1_1_26rem] border-slate-200/80 bg-white/85 shadow-lg shadow-slate-200/10 dark:border-slate-700/80 dark:bg-slate-900/78 dark:shadow-slate-950/20'
-                            : 'w-[6.8rem] border-slate-200/60 bg-white/55 dark:border-slate-800/60 dark:bg-slate-900/45'
+                            : 'flex w-[6.8rem] border-slate-200/60 bg-white/55 dark:border-slate-800/60 dark:bg-slate-900/45'
                         )}
                       >
                         <Link
                           href={page.href}
                           aria-current={isActive ? 'page' : undefined}
                           className={cn(
-                            'block transition-colors',
+                            'transition-colors',
                             isActive
-                              ? 'px-4 py-3'
-                              : 'px-3 py-4 text-center hover:bg-white/55 dark:hover:bg-white/5'
+                              ? 'block px-4 py-3'
+                              : 'flex h-full w-full flex-1 flex-col justify-start px-3 py-4 text-center hover:bg-white/55 dark:hover:bg-white/5'
                           )}
                         >
                           <div
