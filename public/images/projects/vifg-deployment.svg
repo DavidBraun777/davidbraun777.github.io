@@ -18,21 +18,27 @@
   <rect x="402" y="198" width="364" height="300" rx="24" fill="#172554" stroke="#38BDF8" stroke-width="2"/>
   <text x="438" y="248" fill="#E0F2FE" font-family="monospace" font-size="24">AWS Lightsail Host</text>
   <rect x="438" y="284" width="290" height="68" rx="16" fill="#0F172A" stroke="#334155"/>
-  <text x="470" y="325" fill="#F8FAFC" font-family="monospace" font-size="18">Nginx reverse proxy + TLS</text>
+  <text x="470" y="316" fill="#F8FAFC" font-family="monospace" font-size="17">
+    <tspan x="470" dy="0">Nginx reverse</tspan>
+    <tspan x="470" dy="20">proxy + TLS</tspan>
+  </text>
   <rect x="438" y="378" width="290" height="82" rx="16" fill="#0F172A" stroke="#334155"/>
-  <text x="470" y="420" fill="#F8FAFC" font-family="monospace" font-size="18">Dockerized React/Vite app</text>
-  <text x="470" y="448" fill="#94A3B8" font-family="monospace" font-size="14">served behind localhost Nginx</text>
+  <text x="470" y="412" fill="#F8FAFC" font-family="monospace" font-size="17">
+    <tspan x="470" dy="0">Dockerized</tspan>
+    <tspan x="470" dy="20">React/Vite app</tspan>
+  </text>
+  <text x="470" y="448" fill="#94A3B8" font-family="monospace" font-size="13">served behind localhost Nginx</text>
 
   <rect x="862" y="178" width="418" height="190" rx="24" fill="#1E1B4B" stroke="#8B5CF6" stroke-width="2"/>
   <text x="898" y="228" fill="#EDE9FE" font-family="monospace" font-size="24">Delivery and Security</text>
-  <text x="898" y="272" fill="#DDD6FE" font-family="monospace" font-size="15">- GitHub Actions builds image</text>
-  <text x="898" y="302" fill="#DDD6FE" font-family="monospace" font-size="15">- AWS ECR stores deploy artifact</text>
-  <text x="898" y="332" fill="#DDD6FE" font-family="monospace" font-size="15">- Let's Encrypt / Certbot renews TLS</text>
+  <text x="898" y="270" fill="#DDD6FE" font-family="monospace" font-size="14">- GitHub Actions builds image</text>
+  <text x="898" y="298" fill="#DDD6FE" font-family="monospace" font-size="14">- AWS ECR stores deploy artifact</text>
+  <text x="898" y="326" fill="#DDD6FE" font-family="monospace" font-size="14">- Let's Encrypt / Certbot renews TLS</text>
 
   <rect x="862" y="442" width="418" height="190" rx="24" fill="#052E16" stroke="#10B981" stroke-width="2"/>
   <text x="898" y="492" fill="#D1FAE5" font-family="monospace" font-size="24">Operations Layer</text>
-  <text x="898" y="536" fill="#A7F3D0" font-family="monospace" font-size="15">- systemd maintenance timer</text>
-  <text x="898" y="566" fill="#A7F3D0" font-family="monospace" font-size="15">- unattended security patches</text>
+  <text x="898" y="534" fill="#A7F3D0" font-family="monospace" font-size="14">- systemd maintenance timer</text>
+  <text x="898" y="562" fill="#A7F3D0" font-family="monospace" font-size="14">- unattended security patches</text>
   <text x="898" y="594" fill="#A7F3D0" font-family="monospace" font-size="14">
     <tspan x="898" dy="0">- accessible content and</tspan>
     <tspan x="898" dy="18">  compliance checks</tspan>
