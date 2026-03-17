@@ -1,9 +1,9 @@
 'use client'
 
-import { useRef, useState, type TouchEvent } from 'react'
+import { useEffect, useRef, useState, type TouchEvent } from 'react'
 import Image from 'next/image'
 import { AnimatePresence, motion } from 'framer-motion'
-import { ArrowLeft, ArrowRight, ArrowUpRight, ChevronDown } from 'lucide-react'
+import { ArrowLeft, ArrowUpRight, ChevronDown } from 'lucide-react'
 import { SectionHeader } from '@/components/ui/section-header'
 import { Badge } from '@/components/ui/badge'
 import { ImageLightbox } from '@/components/ui/image-lightbox'
@@ -40,7 +40,16 @@ export function SelectedSystems() {
   const [activeIndex, setActiveIndex] = useState(0)
   const [detailsOpen, setDetailsOpen] = useState(false)
   const touchStartRef = useRef<{ x: number; y: number } | null>(null)
+  const tabRefs = useRef<Array<HTMLButtonElement | null>>([])
   const activeSystem = featuredSystems[activeIndex]
+
+  useEffect(() => {
+    tabRefs.current[activeIndex]?.scrollIntoView({
+      behavior: 'smooth',
+      block: 'nearest',
+      inline: 'center',
+    })
+  }, [activeIndex])
 
   const focusSystem = (nextIndex: number) => {
     setActiveIndex((nextIndex + featuredSystems.length) % featuredSystems.length)
@@ -69,7 +78,7 @@ export function SelectedSystems() {
 
     touchStartRef.current = null
 
-    if (Math.abs(deltaX) < 48 || Math.abs(deltaX) <= Math.abs(deltaY)) return
+    if (Math.abs(deltaX) < 88 || Math.abs(deltaX) <= Math.abs(deltaY) * 1.2) return
 
     if (deltaX < 0) {
       showNext()
@@ -96,6 +105,9 @@ export function SelectedSystems() {
                 key={system.id}
                 type="button"
                 onClick={() => focusSystem(index)}
+                ref={(element) => {
+                  tabRefs.current[index] = element
+                }}
                 className={cn(
                   'shrink-0 rounded-full border px-4 py-2 text-sm font-medium transition-colors',
                   isActive
@@ -131,7 +143,7 @@ export function SelectedSystems() {
             className="absolute right-3 top-3 z-10 hidden h-12 w-12 items-center justify-center rounded-full border border-primary-200 bg-white/96 text-primary-700 shadow-[0_22px_45px_-24px_rgba(37,99,235,0.55)] backdrop-blur transition-all hover:scale-[1.05] hover:bg-primary-50 dark:border-primary-700/70 dark:bg-slate-950/96 dark:text-primary-200 dark:shadow-[0_22px_45px_-24px_rgba(59,130,246,0.7)] dark:hover:bg-slate-900 lg:inline-flex lg:-right-6 lg:top-1/2 lg:h-14 lg:w-14 lg:-translate-y-1/2"
             aria-label="Show next system"
           >
-            <ArrowRight className="h-5 w-5" />
+            <ArrowLeft className="h-5 w-5 rotate-180" />
           </button>
 
           <AnimatePresence mode="wait" initial={false}>
@@ -192,7 +204,7 @@ export function SelectedSystems() {
                       href={activeSystem.externalUrl}
                       target="_blank"
                       rel="noopener noreferrer"
-                      className="mt-3 inline-flex items-center gap-2 text-sm font-medium text-primary-700 transition-colors hover:text-primary-800 dark:text-primary-300 dark:hover:text-primary-200"
+                      className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-primary-700 transition-colors hover:text-primary-800 dark:text-primary-300 dark:hover:text-primary-200"
                     >
                       Visit live site
                       <ArrowUpRight className="h-4 w-4" />
@@ -310,11 +322,10 @@ export function SelectedSystems() {
                   />
 
                   <div className="mt-5 rounded-3xl border border-slate-200/60 bg-white/90 p-4 shadow-lg shadow-slate-950/5 backdrop-blur dark:border-slate-800 dark:bg-slate-900/85">
-                    <div className="flex items-center justify-between gap-4">
+                    <div className="flex items-center gap-4">
                       <p className="font-mono text-xs uppercase tracking-[0.18em] text-slate-500 dark:text-slate-300">
                         Evidence
                       </p>
-                      <ArrowRight className="h-4 w-4 text-primary-500" />
                     </div>
                     <p className="mt-4 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
                       {activeSystem.evidenceSummary}
