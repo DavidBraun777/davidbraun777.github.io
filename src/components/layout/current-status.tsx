@@ -3,6 +3,7 @@
 import { useState, useEffect } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Sparkles, Code, BookOpen, Rocket } from 'lucide-react'
+import { cn } from '@/lib/utils'
 
 const statuses = [
   { icon: BookOpen, label: 'Studying', value: 'AI Master\'s @ St. Thomas' },
@@ -11,7 +12,11 @@ const statuses = [
   { icon: Sparkles, label: 'Exploring', value: 'Applied AI Workflows' },
 ]
 
-export function CurrentStatus() {
+interface CurrentStatusProps {
+  className?: string
+}
+
+export function CurrentStatus({ className }: CurrentStatusProps) {
   const [currentIndex, setCurrentIndex] = useState(0)
 
   useEffect(() => {
@@ -26,7 +31,10 @@ export function CurrentStatus() {
 
   return (
     <motion.div
-      className="flex h-[38px] w-[248px] items-center justify-center overflow-hidden rounded-full border border-slate-200/80 bg-white/70 px-3 py-1.5 whitespace-nowrap backdrop-blur-sm dark:border-slate-800/80 dark:bg-slate-900/60"
+      className={cn(
+        'flex h-[38px] w-[228px] items-center justify-center overflow-hidden rounded-full border border-slate-200/80 bg-white/70 px-3 py-1.5 whitespace-nowrap backdrop-blur-sm dark:border-slate-800/80 dark:bg-slate-900/60 2xl:w-[248px]',
+        className
+      )}
     >
       <AnimatePresence mode="wait">
         <motion.div
@@ -38,7 +46,7 @@ export function CurrentStatus() {
           className="flex w-full items-center justify-center gap-1.5 text-center"
         >
           <Icon className="h-3 w-3 shrink-0 text-primary-500/80 dark:text-primary-400/80" />
-          <span className="shrink-0 text-[13px] text-slate-500 dark:text-slate-400">
+          <span className="shrink-0 text-[13px] text-slate-600 dark:text-slate-300">
             {current.label}:
           </span>
           <span className="max-w-[150px] truncate text-[13px] font-medium text-slate-800 dark:text-slate-200">
