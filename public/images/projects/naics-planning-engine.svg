@@ -4,10 +4,10 @@
   <text x="88" y="118" fill="#BFDBFE" font-family="monospace" font-size="24" letter-spacing="3">NAICS STARTUP PLANNING SYSTEM</text>
   <text x="88" y="154" fill="#94A3B8" font-family="monospace" font-size="15">Industry data + rules engine + explainable launch planning.</text>
 
-  <rect x="92" y="214" width="252" height="138" rx="22" fill="#111827" stroke="#334155"/>
-  <text x="124" y="264" fill="#F8FAFC" font-family="monospace" font-size="24">NAICS Dataset</text>
-  <text x="124" y="300" fill="#94A3B8" font-family="monospace" font-size="16">2022 hierarchy</text>
-  <text x="124" y="330" fill="#94A3B8" font-family="monospace" font-size="16">provenance + validation</text>
+  <rect x="92" y="214" width="252" height="148" rx="22" fill="#111827" stroke="#334155"/>
+  <text x="124" y="258" fill="#F8FAFC" font-family="monospace" font-size="20">NAICS Dataset</text>
+  <text x="124" y="294" fill="#94A3B8" font-family="monospace" font-size="14">2022 hierarchy</text>
+  <text x="124" y="322" fill="#94A3B8" font-family="monospace" font-size="14">provenance + validation</text>
 
   <rect x="444" y="184" width="336" height="200" rx="24" fill="#172554" stroke="#38BDF8" stroke-width="2"/>
   <text x="482" y="238" fill="#E0F2FE" font-family="monospace" font-size="24">Planning Engine</text>
@@ -26,17 +26,20 @@
     <tspan x="914" dy="18">+ rationale</tspan>
   </text>
 
-  <rect x="162" y="490" width="300" height="172" rx="24" fill="#1E293B" stroke="#60A5FA" stroke-width="2"/>
-  <text x="196" y="540" fill="#DBEAFE" font-family="monospace" font-size="24">Founder Inputs</text>
-  <text x="196" y="580" fill="#BFDBFE" font-family="monospace" font-size="16">team shape</text>
-  <text x="196" y="610" fill="#BFDBFE" font-family="monospace" font-size="16">entity preferences</text>
-  <text x="196" y="640" fill="#BFDBFE" font-family="monospace" font-size="16">resume intake / skills</text>
+  <rect x="162" y="490" width="300" height="184" rx="24" fill="#1E293B" stroke="#60A5FA" stroke-width="2"/>
+  <text x="196" y="536" fill="#DBEAFE" font-family="monospace" font-size="20">Founder Inputs</text>
+  <text x="196" y="572" fill="#BFDBFE" font-family="monospace" font-size="14">team shape</text>
+  <text x="196" y="600" fill="#BFDBFE" font-family="monospace" font-size="14">entity preferences</text>
+  <text x="196" y="628" fill="#BFDBFE" font-family="monospace" font-size="14">
+    <tspan x="196" dy="0">resume intake</tspan>
+    <tspan x="196" dy="18">/ skills</tspan>
+  </text>
 
-  <rect x="548" y="490" width="316" height="172" rx="24" fill="#052E16" stroke="#10B981" stroke-width="2"/>
-  <text x="584" y="540" fill="#D1FAE5" font-family="monospace" font-size="24">Launch Plan Output</text>
-  <text x="584" y="580" fill="#A7F3D0" font-family="monospace" font-size="16">roles + coverage paths</text>
-  <text x="584" y="610" fill="#A7F3D0" font-family="monospace" font-size="16">growth roadmap</text>
-  <text x="584" y="640" fill="#A7F3D0" font-family="monospace" font-size="16">procedures + exports</text>
+  <rect x="548" y="490" width="316" height="184" rx="24" fill="#052E16" stroke="#10B981" stroke-width="2"/>
+  <text x="584" y="536" fill="#D1FAE5" font-family="monospace" font-size="20">Launch Plan Output</text>
+  <text x="584" y="572" fill="#A7F3D0" font-family="monospace" font-size="14">roles + coverage paths</text>
+  <text x="584" y="600" fill="#A7F3D0" font-family="monospace" font-size="14">growth roadmap</text>
+  <text x="584" y="628" fill="#A7F3D0" font-family="monospace" font-size="14">procedures + exports</text>
 
   <rect x="948" y="490" width="254" height="172" rx="24" fill="#111827" stroke="#334155"/>
   <text x="980" y="540" fill="#F8FAFC" font-family="monospace" font-size="20">Offline Runtime</text>
