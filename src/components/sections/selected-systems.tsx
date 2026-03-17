@@ -3,7 +3,7 @@
 import { useRef, useState, type TouchEvent } from 'react'
 import Image from 'next/image'
 import { AnimatePresence, motion } from 'framer-motion'
-import { ArrowLeft, ArrowRight, ChevronDown } from 'lucide-react'
+import { ArrowLeft, ArrowRight, ArrowUpRight, ChevronDown } from 'lucide-react'
 import { SectionHeader } from '@/components/ui/section-header'
 import { Badge } from '@/components/ui/badge'
 import { ImageLightbox } from '@/components/ui/image-lightbox'
@@ -119,7 +119,7 @@ export function SelectedSystems() {
           <button
             type="button"
             onClick={showPrevious}
-            className="absolute left-3 top-3 z-10 inline-flex h-12 w-12 items-center justify-center rounded-full border border-primary-200 bg-white/96 text-primary-700 shadow-[0_22px_45px_-24px_rgba(37,99,235,0.55)] backdrop-blur transition-all hover:scale-[1.05] hover:bg-primary-50 dark:border-primary-700/70 dark:bg-slate-950/96 dark:text-primary-200 dark:shadow-[0_22px_45px_-24px_rgba(59,130,246,0.7)] dark:hover:bg-slate-900 md:-left-6 md:top-1/2 md:h-14 md:w-14 md:-translate-y-1/2"
+            className="absolute left-3 top-3 z-10 hidden h-12 w-12 items-center justify-center rounded-full border border-primary-200 bg-white/96 text-primary-700 shadow-[0_22px_45px_-24px_rgba(37,99,235,0.55)] backdrop-blur transition-all hover:scale-[1.05] hover:bg-primary-50 dark:border-primary-700/70 dark:bg-slate-950/96 dark:text-primary-200 dark:shadow-[0_22px_45px_-24px_rgba(59,130,246,0.7)] dark:hover:bg-slate-900 lg:inline-flex lg:-left-6 lg:top-1/2 lg:h-14 lg:w-14 lg:-translate-y-1/2"
             aria-label="Show previous system"
           >
             <ArrowLeft className="h-5 w-5" />
@@ -128,7 +128,7 @@ export function SelectedSystems() {
           <button
             type="button"
             onClick={showNext}
-            className="absolute right-3 top-3 z-10 inline-flex h-12 w-12 items-center justify-center rounded-full border border-primary-200 bg-white/96 text-primary-700 shadow-[0_22px_45px_-24px_rgba(37,99,235,0.55)] backdrop-blur transition-all hover:scale-[1.05] hover:bg-primary-50 dark:border-primary-700/70 dark:bg-slate-950/96 dark:text-primary-200 dark:shadow-[0_22px_45px_-24px_rgba(59,130,246,0.7)] dark:hover:bg-slate-900 md:-right-6 md:top-1/2 md:h-14 md:w-14 md:-translate-y-1/2"
+            className="absolute right-3 top-3 z-10 hidden h-12 w-12 items-center justify-center rounded-full border border-primary-200 bg-white/96 text-primary-700 shadow-[0_22px_45px_-24px_rgba(37,99,235,0.55)] backdrop-blur transition-all hover:scale-[1.05] hover:bg-primary-50 dark:border-primary-700/70 dark:bg-slate-950/96 dark:text-primary-200 dark:shadow-[0_22px_45px_-24px_rgba(59,130,246,0.7)] dark:hover:bg-slate-900 lg:inline-flex lg:-right-6 lg:top-1/2 lg:h-14 lg:w-14 lg:-translate-y-1/2"
             aria-label="Show next system"
           >
             <ArrowRight className="h-5 w-5" />
@@ -145,7 +145,7 @@ export function SelectedSystems() {
             >
               <div className="grid gap-0 xl:grid-cols-[1.08fr_0.92fr]">
                 <div className="p-6 sm:p-7 lg:p-8">
-                  <div className="flex flex-wrap items-center gap-2.5 pr-24 md:pr-0">
+                  <div className="flex flex-wrap items-center gap-2.5">
                     <span className="font-mono text-xs uppercase tracking-[0.22em] text-slate-500 dark:text-slate-300">
                       Case {String(activeIndex + 1).padStart(2, '0')}
                     </span>
@@ -186,6 +186,18 @@ export function SelectedSystems() {
                       )}
                     />
                   </button>
+
+                  {activeSystem.externalUrl ? (
+                    <a
+                      href={activeSystem.externalUrl}
+                      target="_blank"
+                      rel="noopener noreferrer"
+                      className="mt-3 inline-flex items-center gap-2 text-sm font-medium text-primary-700 transition-colors hover:text-primary-800 dark:text-primary-300 dark:hover:text-primary-200"
+                    >
+                      Visit live site
+                      <ArrowUpRight className="h-4 w-4" />
+                    </a>
+                  ) : null}
 
                   <AnimatePresence initial={false}>
                     {detailsOpen ? (

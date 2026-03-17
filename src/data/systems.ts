@@ -18,6 +18,7 @@ export interface SystemCaseStudy {
   imageAlt: string
   visualSurface: 'dark' | 'light'
   visualAspect: 'landscape' | 'portrait'
+  externalUrl?: string
 }
 
 export interface SystemTheme {
@@ -254,6 +255,7 @@ export const systemThemes: SystemTheme[] = [
           'VIFG deployment diagram showing client traffic, Lightsail host, Nginx, Docker, and CI delivery.',
         visualSurface: 'dark',
         visualAspect: 'landscape',
+        externalUrl: 'https://www.vifg.org/home',
       },
     ],
   },
