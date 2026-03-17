@@ -15,6 +15,7 @@ interface ImageLightboxProps {
   visualSurface: 'dark' | 'light'
   sizes: string
   thumb: React.ReactNode
+  onOpenChange?: (open: boolean) => void
 }
 
 const desktopZoomSteps = [
@@ -38,6 +39,7 @@ export function ImageLightbox({
   visualSurface,
   sizes,
   thumb,
+  onOpenChange,
 }: ImageLightboxProps) {
   const [open, setOpen] = useState(false)
   const [zoomIndex, setZoomIndex] = useState(0)
@@ -57,6 +59,7 @@ export function ImageLightbox({
 
   const handleOpenChange = (nextOpen: boolean) => {
     setOpen(nextOpen)
+    onOpenChange?.(nextOpen)
     if (!nextOpen) {
       setZoomIndex(0)
     }
