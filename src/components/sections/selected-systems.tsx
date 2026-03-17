@@ -1,8 +1,16 @@
 'use client'
 
+import { useState } from 'react'
 import Image from 'next/image'
-import { motion } from 'framer-motion'
-import { ArrowRight, FolderKanban, ShieldCheck, TerminalSquare, Workflow } from 'lucide-react'
+import { AnimatePresence, motion } from 'framer-motion'
+import {
+  ArrowLeft,
+  ArrowRight,
+  FolderKanban,
+  ShieldCheck,
+  TerminalSquare,
+  Workflow,
+} from 'lucide-react'
 import { SectionHeader } from '@/components/ui/section-header'
 import { Badge } from '@/components/ui/badge'
 import { ImageLightbox } from '@/components/ui/image-lightbox'
@@ -38,6 +46,17 @@ const statePanelClasses: Record<string, string> = {
 const evidenceIcons = [FolderKanban, Workflow, TerminalSquare, ShieldCheck]
 
 export function SelectedSystems() {
+  const [activeIndex, setActiveIndex] = useState(0)
+  const activeSystem = featuredSystems[activeIndex]
+
+  const showPrevious = () => {
+    setActiveIndex((current) => (current - 1 + featuredSystems.length) % featuredSystems.length)
+  }
+
+  const showNext = () => {
+    setActiveIndex((current) => (current + 1) % featuredSystems.length)
+  }
+
   return (
     <section id="selected-systems" className="section">
       <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
@@ -46,64 +65,131 @@ export function SelectedSystems() {
           subtitle="Five systems that best represent how I combine applied AI, workflow software, and production-minded engineering."
         />
 
-        <div className="space-y-10">
-          {featuredSystems.map((system, index) => (
+        <div className="rounded-[2rem] border border-slate-200 bg-slate-50 p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900/45 sm:p-6">
+          <div className="flex flex-col gap-4 lg:flex-row lg:items-end lg:justify-between">
+            <div className="max-w-3xl">
+              <p className="font-mono text-xs uppercase tracking-[0.22em] text-primary-600 dark:text-primary-300">
+                Focused Case Study
+              </p>
+              <h3 className="mt-3 text-2xl font-semibold tracking-tight text-slate-900 dark:text-white">
+                Rotate through one flagship system at a time.
+              </h3>
+              <p className="mt-3 text-base leading-relaxed text-slate-600 dark:text-slate-400">
+                This keeps the homepage tighter while still letting each project carry a
+                full systems-oriented case study.
+              </p>
+            </div>
+
+            <div className="flex items-center gap-3 self-start lg:self-auto">
+              <span className="rounded-full border border-slate-200 bg-white px-3 py-1.5 text-sm font-medium text-slate-600 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-300">
+                {activeIndex + 1} / {featuredSystems.length}
+              </span>
+              <div className="flex items-center gap-2">
+                <button
+                  type="button"
+                  onClick={showPrevious}
+                  className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200 dark:hover:bg-slate-900"
+                  aria-label="Show previous system"
+                >
+                  <ArrowLeft className="h-4 w-4" />
+                </button>
+                <button
+                  type="button"
+                  onClick={showNext}
+                  className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200 dark:hover:bg-slate-900"
+                  aria-label="Show next system"
+                >
+                  <ArrowRight className="h-4 w-4" />
+                </button>
+              </div>
+            </div>
+          </div>
+
+          <div className="mt-6 flex gap-2 overflow-x-auto pb-1">
+            {featuredSystems.map((system, index) => {
+              const isActive = index === activeIndex
+
+              return (
+                <button
+                  key={system.id}
+                  type="button"
+                  onClick={() => setActiveIndex(index)}
+                  className={cn(
+                    'shrink-0 rounded-full border px-4 py-2 text-sm font-medium transition-colors',
+                    isActive
+                      ? 'border-slate-900 bg-slate-900 text-white dark:border-white dark:bg-white dark:text-slate-950'
+                      : 'border-slate-200 bg-white text-slate-600 hover:bg-slate-100 hover:text-slate-900 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-300 dark:hover:bg-slate-900 dark:hover:text-white'
+                  )}
+                  aria-pressed={isActive}
+                >
+                  {system.name}
+                </button>
+              )
+            })}
+          </div>
+        </div>
+
+        <div className="mt-8">
+          <AnimatePresence mode="wait" initial={false}>
             <motion.article
-              key={system.id}
+              key={activeSystem.id}
               initial={{ opacity: 0, y: 24 }}
-              whileInView={{ opacity: 1, y: 0 }}
-              viewport={{ once: true }}
-              transition={{ delay: index * 0.06, duration: 0.5 }}
+              animate={{ opacity: 1, y: 0 }}
+              exit={{ opacity: 0, y: -24 }}
+              transition={{ duration: 0.3, ease: 'easeOut' }}
               className="overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-[0_24px_80px_-48px_rgba(15,23,42,0.35)] dark:border-slate-800 dark:bg-slate-950"
             >
               <div className="grid gap-0 xl:grid-cols-[1.08fr_0.92fr]">
                 <div className="p-7 sm:p-8 lg:p-10">
                   <div className="flex flex-wrap items-center gap-3">
-                    <span className="font-mono text-xs uppercase tracking-[0.22em] text-slate-400 dark:text-slate-500">
-                      Case {String(index + 1).padStart(2, '0')}
+                    <span className="font-mono text-xs uppercase tracking-[0.22em] text-slate-500 dark:text-slate-300">
+                      Case {String(activeIndex + 1).padStart(2, '0')}
                     </span>
-                    <Badge variant="secondary" className="bg-accent-violet/10">
-                      {system.themeTitle}
+                    <Badge
+                      variant="secondary"
+                      className="bg-accent-violet/10 text-violet-700 dark:border dark:border-violet-500/30 dark:bg-violet-950/80 dark:text-violet-100"
+                    >
+                      {activeSystem.themeTitle}
                     </Badge>
                     <span
                       className={cn(
                         'inline-flex items-center rounded-full border px-3 py-1 text-sm font-medium',
-                        stateClasses[system.currentState] ?? stateClasses.Prototype
+                        stateClasses[activeSystem.currentState] ?? stateClasses.Prototype
                       )}
                     >
-                      {system.currentState}
+                      {activeSystem.currentState}
                     </span>
                   </div>
 
                   <h3 className="mt-5 text-3xl font-semibold tracking-tight text-slate-900 dark:text-white">
-                    {system.name}
+                    {activeSystem.name}
                   </h3>
                   <p className="mt-3 max-w-3xl text-lg leading-relaxed text-slate-600 dark:text-slate-300">
-                    {system.summary}
+                    {activeSystem.summary}
                   </p>
 
                   <div className="mt-8 grid gap-6">
                     <div className="rounded-2xl border border-slate-200 bg-slate-50 p-5 dark:border-slate-800 dark:bg-slate-900/60">
-                      <p className="font-mono text-xs uppercase tracking-[0.18em] text-slate-400 dark:text-slate-500">
+                      <p className="font-mono text-xs uppercase tracking-[0.18em] text-slate-500 dark:text-slate-300">
                         Problem
                       </p>
                       <p className="mt-3 text-sm leading-relaxed text-slate-700 dark:text-slate-300">
-                        {system.problem}
+                        {activeSystem.problem}
                       </p>
                     </div>
 
                     <div className="rounded-2xl border border-slate-200 bg-white p-5 dark:border-slate-800 dark:bg-slate-950/80">
-                      <p className="font-mono text-xs uppercase tracking-[0.18em] text-slate-400 dark:text-slate-500">
+                      <p className="font-mono text-xs uppercase tracking-[0.18em] text-slate-500 dark:text-slate-300">
                         System
                       </p>
                       <p className="mt-3 text-sm leading-relaxed text-slate-700 dark:text-slate-300">
-                        {system.system}
+                        {activeSystem.system}
                       </p>
                       <div className="mt-5 grid gap-3 sm:grid-cols-3">
-                        {system.systemHighlights.map((highlight) => (
+                        {activeSystem.systemHighlights.map((highlight) => (
                           <div
                             key={highlight}
-                            className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm leading-relaxed text-slate-600 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-400"
+                            className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm leading-relaxed text-slate-700 dark:border-slate-800 dark:bg-slate-900 dark:text-slate-300"
                           >
                             {highlight}
                           </div>
@@ -113,28 +199,30 @@ export function SelectedSystems() {
 
                     <div className="grid gap-5 lg:grid-cols-[1fr_auto] lg:items-start">
                       <div>
-                        <p className="font-mono text-xs uppercase tracking-[0.18em] text-slate-400 dark:text-slate-500">
+                        <p className="font-mono text-xs uppercase tracking-[0.18em] text-slate-500 dark:text-slate-300">
                           Stack
                         </p>
                         <div className="mt-3 flex flex-wrap gap-2">
-                          {system.stack.map((item) => (
+                          {activeSystem.stack.map((item) => (
                             <Badge key={item} variant="outline" className="text-sm">
                               {item}
                             </Badge>
                           ))}
                         </div>
                       </div>
+
                       <div
                         className={cn(
                           'rounded-2xl border px-5 py-4',
-                          statePanelClasses[system.currentState] ?? statePanelClasses.Prototype
+                          statePanelClasses[activeSystem.currentState] ??
+                            statePanelClasses.Prototype
                         )}
                       >
                         <p className="font-mono text-xs uppercase tracking-[0.18em]">
                           Current State
                         </p>
                         <p className="mt-2 text-sm font-medium">
-                          {system.currentState}
+                          {activeSystem.currentState}
                         </p>
                       </div>
                     </div>
@@ -144,31 +232,31 @@ export function SelectedSystems() {
                 <div
                   className={cn(
                     'border-t border-slate-200 p-7 sm:p-8 xl:border-t-0 xl:border-l dark:border-slate-800',
-                    system.visualSurface === 'dark'
+                    activeSystem.visualSurface === 'dark'
                       ? 'bg-slate-950'
                       : 'bg-gradient-to-br from-slate-50 via-white to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950'
                   )}
                 >
                   <ImageLightbox
-                    src={system.image}
-                    alt={system.imageAlt}
-                    title={system.name}
-                    description={system.evidenceSummary}
-                    visualAspect={system.visualAspect}
-                    visualSurface={system.visualSurface}
+                    src={activeSystem.image}
+                    alt={activeSystem.imageAlt}
+                    title={activeSystem.name}
+                    description={activeSystem.evidenceSummary}
+                    visualAspect={activeSystem.visualAspect}
+                    visualSurface={activeSystem.visualSurface}
                     sizes="(min-width: 1280px) 70vw, 92vw"
                     thumb={
                       <div
                         className={cn(
                           'relative overflow-hidden rounded-[1.75rem] border border-white/10 shadow-2xl shadow-slate-950/20',
-                          system.visualAspect === 'portrait'
+                          activeSystem.visualAspect === 'portrait'
                             ? 'mx-auto aspect-[4/5] max-w-sm'
                             : 'aspect-[16/10]'
                         )}
                       >
                         <Image
-                          src={system.image}
-                          alt={system.imageAlt}
+                          src={activeSystem.image}
+                          alt={activeSystem.imageAlt}
                           fill
                           className="object-contain transition-transform duration-300 group-hover:scale-[1.01]"
                           sizes="(min-width: 1280px) 40vw, 100vw"
@@ -179,16 +267,16 @@ export function SelectedSystems() {
 
                   <div className="mt-6 rounded-3xl border border-slate-200/60 bg-white/90 p-5 shadow-lg shadow-slate-950/5 backdrop-blur dark:border-slate-800 dark:bg-slate-900/85">
                     <div className="flex items-center justify-between gap-4">
-                      <p className="font-mono text-xs uppercase tracking-[0.18em] text-slate-400 dark:text-slate-500">
+                      <p className="font-mono text-xs uppercase tracking-[0.18em] text-slate-500 dark:text-slate-300">
                         Evidence
                       </p>
                       <ArrowRight className="h-4 w-4 text-primary-500" />
                     </div>
                     <p className="mt-4 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
-                      {system.evidenceSummary}
+                      {activeSystem.evidenceSummary}
                     </p>
                     <div className="mt-4 flex flex-wrap gap-2">
-                      {system.evidence.map((artifact) => (
+                      {activeSystem.evidence.map((artifact) => (
                         <Badge
                           key={artifact}
                           variant="primary"
@@ -202,7 +290,7 @@ export function SelectedSystems() {
                 </div>
               </div>
             </motion.article>
-          ))}
+          </AnimatePresence>
         </div>
 
         <div className="mt-16 rounded-[2rem] border border-slate-200 bg-slate-50 p-6 shadow-sm dark:border-slate-800 dark:bg-slate-900/45 sm:p-8">
@@ -224,79 +312,101 @@ export function SelectedSystems() {
             </p>
           </div>
 
-          <div className="mt-8 grid gap-5 md:grid-cols-2 xl:grid-cols-3">
-            {featuredSystems.map((system) => (
-              <div
-                key={`${system.id}-evidence`}
-                className="overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white shadow-sm dark:border-slate-800 dark:bg-slate-950"
-              >
+          <div className="mt-8 flex snap-x snap-mandatory gap-5 overflow-x-auto pb-2 md:grid md:grid-cols-2 md:overflow-visible md:pb-0 xl:grid-cols-3">
+            {featuredSystems.map((system, index) => {
+              const isActive = index === activeIndex
+
+              return (
                 <div
+                  key={`${system.id}-evidence`}
                   className={cn(
-                    'relative border-b border-slate-200 p-4 dark:border-slate-800',
-                    system.visualSurface === 'dark'
-                      ? 'bg-slate-950'
-                      : 'bg-gradient-to-br from-slate-50 to-white dark:from-slate-950 dark:to-slate-900'
+                    'min-w-[18rem] snap-start overflow-hidden rounded-[1.75rem] border bg-white shadow-sm md:min-w-0 dark:bg-slate-950',
+                    isActive
+                      ? 'border-primary-300 shadow-lg shadow-primary-900/10 dark:border-primary-700'
+                      : 'border-slate-200 dark:border-slate-800'
                   )}
                 >
-                  <ImageLightbox
-                    src={system.image}
-                    alt={system.imageAlt}
-                    title={system.name}
-                    description={system.evidenceSummary}
-                    visualAspect={system.visualAspect}
-                    visualSurface={system.visualSurface}
-                    sizes="(min-width: 1280px) 70vw, 92vw"
-                    thumb={
-                      <div
-                        className={cn(
-                          'relative overflow-hidden rounded-3xl border border-white/10 shadow-xl shadow-slate-950/15',
-                          system.visualAspect === 'portrait'
-                            ? 'mx-auto aspect-[4/5] max-w-[220px]'
-                            : 'aspect-[16/10]'
-                        )}
-                      >
-                        <Image
-                          src={system.image}
-                          alt={system.imageAlt}
-                          fill
-                          className="object-contain transition-transform duration-300 group-hover:scale-[1.01]"
-                          sizes="(min-width: 1280px) 25vw, (min-width: 768px) 40vw, 100vw"
-                        />
-                      </div>
-                    }
-                  />
-                </div>
-
-                <div className="p-5">
-                  <div className="flex items-center justify-between gap-3">
-                    <h4 className="text-lg font-semibold text-slate-900 dark:text-white">
-                      {system.name}
-                    </h4>
-                    <Badge variant="outline" className="text-xs">
-                      {system.currentState}
-                    </Badge>
-                  </div>
-
-                  <div className="mt-4 space-y-3">
-                    {system.evidence.map((item, index) => {
-                      const Icon = evidenceIcons[index] ?? FolderKanban
-
-                      return (
+                  <div
+                    className={cn(
+                      'relative border-b border-slate-200 p-4 dark:border-slate-800',
+                      system.visualSurface === 'dark'
+                        ? 'bg-slate-950'
+                        : 'bg-gradient-to-br from-slate-50 to-white dark:from-slate-950 dark:to-slate-900'
+                    )}
+                  >
+                    <ImageLightbox
+                      src={system.image}
+                      alt={system.imageAlt}
+                      title={system.name}
+                      description={system.evidenceSummary}
+                      visualAspect={system.visualAspect}
+                      visualSurface={system.visualSurface}
+                      sizes="(min-width: 1280px) 70vw, 92vw"
+                      thumb={
                         <div
-                          key={item}
-                          className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 dark:border-slate-800 dark:bg-slate-900/80 dark:text-slate-300"
+                          className={cn(
+                            'relative overflow-hidden rounded-3xl border border-white/10 shadow-xl shadow-slate-950/15',
+                            system.visualAspect === 'portrait'
+                              ? 'mx-auto aspect-[4/5] max-w-[220px]'
+                              : 'aspect-[16/10]'
+                          )}
                         >
-                          <div className="inline-flex rounded-xl bg-primary-100 p-2 text-primary-700 dark:bg-primary-900/40 dark:text-primary-200">
-                            <Icon className="h-4 w-4" />
-                          </div>
-                          <span>{item}</span>
+                          <Image
+                            src={system.image}
+                            alt={system.imageAlt}
+                            fill
+                            className="object-contain transition-transform duration-300 group-hover:scale-[1.01]"
+                            sizes="(min-width: 1280px) 25vw, (min-width: 768px) 40vw, 100vw"
+                          />
                         </div>
-                      )
-                    })}
+                      }
+                    />
+                  </div>
+
+                  <div className="p-5">
+                    <div className="flex items-center justify-between gap-3">
+                      <h4 className="text-lg font-semibold text-slate-900 dark:text-white">
+                        {system.name}
+                      </h4>
+                      <Badge variant="outline" className="text-xs">
+                        {system.currentState}
+                      </Badge>
+                    </div>
+
+                    <div className="mt-4 space-y-3">
+                      {system.evidence.map((item, evidenceIndex) => {
+                        const Icon = evidenceIcons[evidenceIndex] ?? FolderKanban
+
+                        return (
+                          <div
+                            key={item}
+                            className="flex items-center gap-3 rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm text-slate-700 dark:border-slate-800 dark:bg-slate-900/80 dark:text-slate-300"
+                          >
+                            <div className="inline-flex rounded-xl bg-primary-100 p-2 text-primary-700 dark:bg-primary-900/40 dark:text-primary-200">
+                              <Icon className="h-4 w-4" />
+                            </div>
+                            <span>{item}</span>
+                          </div>
+                        )
+                      })}
+                    </div>
+
+                    <button
+                      type="button"
+                      onClick={() => setActiveIndex(index)}
+                      className={cn(
+                        'mt-4 inline-flex items-center gap-2 rounded-full px-3 py-2 text-sm font-medium transition-colors',
+                        isActive
+                          ? 'bg-slate-900 text-white dark:bg-white dark:text-slate-950'
+                          : 'bg-slate-100 text-slate-700 hover:bg-slate-200 dark:bg-white/6 dark:text-slate-200 dark:hover:bg-white/10'
+                      )}
+                    >
+                      {isActive ? 'Currently focused' : 'Focus this system'}
+                    </button>
                   </div>
                 </div>
-              </div>
-            ))}
+              )
+            })}
           </div>
         </div>
       </div>

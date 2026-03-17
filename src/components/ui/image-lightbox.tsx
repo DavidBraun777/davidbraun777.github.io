@@ -2,7 +2,7 @@
 
 import * as Dialog from '@radix-ui/react-dialog'
 import Image from 'next/image'
-import { useState } from 'react'
+import { useEffect, useState } from 'react'
 import { Expand, X } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
@@ -17,10 +17,16 @@ interface ImageLightboxProps {
   thumb: React.ReactNode
 }
 
-const zoomSteps = [
+const desktopZoomSteps = [
   { scale: 1, label: 'Expanded view' },
   { scale: 1.85, label: 'Detail zoom' },
   { scale: 1.2, label: 'Balanced zoom' },
+]
+
+const mobileZoomSteps = [
+  { scale: 1, label: 'Expanded view' },
+  { scale: 4.5, label: 'Detail zoom' },
+  { scale: 3.15, label: 'Balanced zoom' },
 ]
 
 export function ImageLightbox({
@@ -35,7 +41,19 @@ export function ImageLightbox({
 }: ImageLightboxProps) {
   const [open, setOpen] = useState(false)
   const [zoomIndex, setZoomIndex] = useState(0)
+  const [isMobile, setIsMobile] = useState(false)
+  const zoomSteps = isMobile ? mobileZoomSteps : desktopZoomSteps
   const zoomStep = zoomSteps[zoomIndex]
+
+  useEffect(() => {
+    const mediaQuery = window.matchMedia('(max-width: 640px)')
+    const updateViewportMode = () => setIsMobile(mediaQuery.matches)
+
+    updateViewportMode()
+    mediaQuery.addEventListener('change', updateViewportMode)
+
+    return () => mediaQuery.removeEventListener('change', updateViewportMode)
+  }, [])
 
   const handleOpenChange = (nextOpen: boolean) => {
     setOpen(nextOpen)
@@ -50,7 +68,12 @@ export function ImageLightbox({
 
   const imageFrameStyle =
     visualAspect === 'portrait'
-      ? { width: zoomStep.scale === 1 ? 'min(100%, 640px)' : `${Math.round(640 * zoomStep.scale)}px` }
+      ? {
+          width:
+            zoomStep.scale === 1
+              ? 'min(100%, 640px)'
+              : `${Math.round((isMobile ? 520 : 640) * zoomStep.scale)}px`,
+        }
       : { width: `${Math.round(zoomStep.scale * 100)}%` }
 
   return (
@@ -71,7 +94,7 @@ export function ImageLightbox({
 
       <Dialog.Portal>
         <Dialog.Overlay className="fixed inset-0 z-[100] bg-slate-950/88 backdrop-blur-md" />
-        <Dialog.Content className="fixed left-1/2 top-1/2 z-[101] w-[min(92vw,1120px)] -translate-x-1/2 -translate-y-1/2 rounded-[2rem] border border-white/10 bg-slate-950/96 p-5 text-slate-100 shadow-[0_40px_120px_-40px_rgba(2,6,23,0.95)] sm:p-6">
+        <Dialog.Content className="fixed left-1/2 top-1/2 z-[101] w-[min(98vw,1120px)] -translate-x-1/2 -translate-y-1/2 rounded-[1.5rem] border border-white/10 bg-slate-950/96 p-2 text-slate-100 shadow-[0_40px_120px_-40px_rgba(2,6,23,0.95)] sm:w-[min(96vw,1120px)] sm:rounded-[2rem] sm:p-6">
           <div className="flex items-start justify-between gap-4">
             <div className="pr-6">
               <Dialog.Title className="text-xl font-semibold text-white sm:text-2xl">
@@ -97,8 +120,8 @@ export function ImageLightbox({
                 : 'bg-gradient-to-br from-slate-50 via-white to-slate-100 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950'
             )}
           >
-            <div className="flex items-center justify-between gap-4 border-b border-white/10 px-4 py-3 text-xs text-slate-300 sm:px-5">
-              <p className="font-mono uppercase tracking-[0.18em] text-slate-400">
+            <div className="flex items-center justify-between gap-4 border-b border-white/10 px-3 py-3 text-xs text-slate-300 sm:px-5">
+              <p className="hidden font-mono uppercase tracking-[0.18em] text-slate-400 sm:block">
                 Click diagram to cycle zoom
               </p>
               <span className="rounded-full border border-white/10 bg-white/5 px-3 py-1 font-medium text-slate-200">
@@ -106,7 +129,7 @@ export function ImageLightbox({
               </span>
             </div>
 
-            <div className="max-h-[72vh] overflow-auto p-3 sm:p-4">
+            <div className="max-h-[82vh] overflow-auto p-1 sm:max-h-[78vh] sm:p-4">
               <button
                 type="button"
                 onClick={cycleZoom}
