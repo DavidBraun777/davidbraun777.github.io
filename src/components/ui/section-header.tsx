@@ -99,7 +99,7 @@ export function SectionHeader({
         )}
       />
       {subtitle && (
-        <p className="section-subtitle mt-4 text-lg text-slate-700 dark:text-slate-300 max-w-2xl mx-auto">
+        <p className={cn("section-subtitle mt-4 text-lg text-slate-700 dark:text-slate-300 max-w-2xl", align === 'center' && 'mx-auto')}>
           {subtitle}
         </p>
       )}

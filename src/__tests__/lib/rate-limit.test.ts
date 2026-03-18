@@ -1,7 +1,7 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
-import { _resetRateLimits } from '@/lib/contact-validation'
+import { _resetRateLimits } from '@/lib/rate-limit'
 
-// Mock Upstash modules — vi.hoisted ensures mockLimit is available in vi.mock factory
+// Mock Upstash modules: vi.hoisted ensures mockLimit is available in vi.mock factory
 const { mockLimit } = vi.hoisted(() => ({
   mockLimit: vi.fn(),
 }))
@@ -72,7 +72,7 @@ describe('rate-limit circuit breaker', () => {
 
     mockLimit.mockClear()
 
-    // Advance 30s — still within cooldown
+    // Advance 30s: still within cooldown
     vi.advanceTimersByTime(30_000)
     await checkRateLimit('5.6.7.8')
 
@@ -108,7 +108,7 @@ describe('rate-limit circuit breaker', () => {
 
     mockLimit.mockClear()
 
-    // Within new cooldown — should skip Upstash
+    // Within new cooldown: should skip Upstash
     vi.advanceTimersByTime(30_000)
     await checkRateLimit('1.2.3.4')
 
@@ -137,5 +137,30 @@ describe('rate-limit circuit breaker', () => {
 
     // After reset, Upstash should be retried immediately (no cooldown)
     expect(mockLimit).toHaveBeenCalled()
+  })
+})
+
+describe('in-memory rate limiter', () => {
+  beforeEach(() => {
+    _resetRateLimits()
+    _resetUpstash()
+    vi.stubEnv('UPSTASH_REDIS_REST_URL', '')
+    vi.stubEnv('UPSTASH_REDIS_REST_TOKEN', '')
+  })
+
+  afterEach(() => {
+    vi.unstubAllEnvs()
+  })
+
+  it('evicts oldest entry when map reaches hard cap', async () => {
+    // Fill the map to capacity (MAX_MAP_SIZE = 10_000) with IPs that are
+    // all still within their window, so pruneStaleEntries won't help.
+    for (let i = 0; i < 10_000; i++) {
+      await checkRateLimit(`192.168.${Math.floor(i / 256)}.${i % 256}`)
+    }
+    // The 10_001st IP should succeed (not throw or grow unbounded)
+    const result = await checkRateLimit('10.0.0.1')
+    expect(result.limited).toBe(false)
+    _resetRateLimits()
   })
 })

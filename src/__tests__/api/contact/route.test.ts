@@ -1,9 +1,8 @@
 import { describe, it, expect, vi, beforeEach, afterEach } from 'vitest'
 import { POST } from '@/app/api/contact/route'
-import { _resetRateLimits } from '@/lib/contact-validation'
-import { _resetUpstash } from '@/lib/rate-limit'
+import { _resetRateLimits, _resetUpstash } from '@/lib/rate-limit'
 
-// Mock resend — vi.hoisted ensures mockSend is available when vi.mock factory runs
+// Mock resend: vi.hoisted ensures mockSend is available when vi.mock factory runs
 const { mockSend } = vi.hoisted(() => ({
   mockSend: vi.fn(),
 }))
@@ -22,6 +21,7 @@ function createRequest(
     headers: {
       'Content-Type': 'application/json',
       'x-real-ip': '127.0.0.1',
+      'origin': 'http://localhost:3000',
       ...headers,
     },
     body: JSON.stringify(body),
@@ -199,6 +199,7 @@ describe('POST /api/contact', () => {
       headers: {
         'Content-Type': 'application/json',
         'x-real-ip': '127.0.0.1',
+        'origin': 'http://localhost:3000',
       },
       body: '{not valid json',
     })
@@ -207,5 +208,58 @@ describe('POST /api/contact', () => {
     const json = await res.json()
     expect(json.success).toBe(false)
     expect(json.error).toContain('Invalid JSON')
+  })
+
+  it('returns 403 when origin is not allowed', async () => {
+    vi.stubEnv('RESEND_API_KEY', 'test-key')
+    const res = await POST(
+      createRequest(validBody, { origin: 'https://evil.com' })
+    )
+    expect(res.status).toBe(403)
+  })
+
+  it('returns 403 when no origin or referer is present', async () => {
+    vi.stubEnv('RESEND_API_KEY', 'test-key')
+    const req = new Request('http://localhost:3000/api/contact', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-real-ip': '127.0.0.1',
+      },
+      body: JSON.stringify(validBody),
+    })
+    const res = await POST(req)
+    expect(res.status).toBe(403)
+  })
+
+  it('accepts production origin', async () => {
+    vi.stubEnv('RESEND_API_KEY', 'test-key')
+    const res = await POST(
+      createRequest(validBody, { origin: 'https://dbraun.io' })
+    )
+    expect(res.status).toBe(200)
+  })
+
+  it('accepts localhost origins on non-default dev ports', async () => {
+    vi.stubEnv('RESEND_API_KEY', 'test-key')
+    const res = await POST(
+      createRequest(validBody, { origin: 'http://localhost:3001' })
+    )
+    expect(res.status).toBe(200)
+  })
+
+  it('accepts requests with valid referer when origin is missing', async () => {
+    vi.stubEnv('RESEND_API_KEY', 'test-key')
+    const req = new Request('http://localhost:3000/api/contact', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-real-ip': '127.0.0.1',
+        'referer': 'https://dbraun.io/contact',
+      },
+      body: JSON.stringify(validBody),
+    })
+    const res = await POST(req)
+    expect(res.status).toBe(200)
   })
 })

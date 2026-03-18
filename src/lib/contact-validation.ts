@@ -2,9 +2,9 @@
 const STRICT_EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
 
 // Control character detection (includes CRLF for header injection prevention)
-// Note: no 'g' flag — safe for repeated .test() calls (avoids lastIndex pitfall)
+// Note: no 'g' flag; safe for repeated .test() calls (avoids lastIndex pitfall)
 // eslint-disable-next-line no-control-regex
-const CONTROL_CHAR_REGEX = /[\x00-\x1f\x7f]/
+export const CONTROL_CHAR_REGEX = /[\x00-\x1f\x7f]/
 
 // Allowlists for optional dropdowns
 export const PROJECT_TYPES = [
@@ -87,7 +87,7 @@ export function validateContactForm(body: unknown): ValidationResult {
   const { name, email, subject, message, projectType, serviceNeeded, urgency } =
     body as Record<string, unknown>
 
-  // Required fields — type + presence
+  // Required fields: type + presence
   if (!name || typeof name !== 'string' || name.trim().length === 0) {
     return { valid: false, error: 'Name is required' }
   }
@@ -157,106 +157,4 @@ export function validateContactForm(body: unknown): ValidationResult {
   }
 
   return { valid: true, data }
-}
-
-// --- Rate Limiting ---
-
-interface RateLimitRecord {
-  count: number
-  resetAt: number
-  lastSeen: number
-}
-
-const rateLimitMap = new Map<string, RateLimitRecord>()
-const RATE_LIMIT_WINDOW_MS = 60 * 1000 // 1 minute
-const RATE_LIMIT_MAX = 5
-const MAX_MAP_SIZE = 10_000
-
-/** Prune stale entries from the rate limit map */
-function pruneStaleEntries(): void {
-  const now = Date.now()
-  for (const [key, record] of rateLimitMap) {
-    if (now > record.resetAt) {
-      rateLimitMap.delete(key)
-    }
-  }
-}
-
-export interface RateLimitResult {
-  limited: boolean
-  retryAfter?: number
-  remaining?: number
-}
-
-/** Check rate limit for a given IP. Returns whether limited and retry info. */
-export function checkRateLimit(ip: string): RateLimitResult {
-  const now = Date.now()
-
-  // Prune expired entries when map is large
-  if (rateLimitMap.size > MAX_MAP_SIZE) {
-    pruneStaleEntries()
-  }
-
-  // Look up existing record first, before any eviction
-  const record = rateLimitMap.get(ip)
-
-  // Only evict when we need to insert a brand-new key and capacity is reached.
-  // This prevents evicting the current IP's own record and resetting its count.
-  const isNewKey = !record || now > record.resetAt
-  if (isNewKey && rateLimitMap.size >= MAX_MAP_SIZE) {
-    let oldestKey: string | undefined
-    let oldestSeen = Infinity
-    for (const [key, rec] of rateLimitMap) {
-      if (rec.lastSeen < oldestSeen) {
-        oldestSeen = rec.lastSeen
-        oldestKey = key
-      }
-    }
-    if (oldestKey) rateLimitMap.delete(oldestKey)
-  }
-
-  if (isNewKey) {
-    rateLimitMap.set(ip, {
-      count: 1,
-      resetAt: now + RATE_LIMIT_WINDOW_MS,
-      lastSeen: now,
-    })
-    return { limited: false, remaining: RATE_LIMIT_MAX - 1 }
-  }
-
-  record.lastSeen = now
-
-  if (record.count >= RATE_LIMIT_MAX) {
-    const retryAfter = Math.ceil((record.resetAt - now) / 1000)
-    return { limited: true, retryAfter }
-  }
-
-  record.count++
-  return { limited: false, remaining: RATE_LIMIT_MAX - record.count }
-}
-
-/** Extract client IP from request headers (Vercel-aware). */
-export function getClientIp(headers: Headers): string {
-  // x-real-ip is set by Vercel/nginx and is most trustworthy
-  const realIp = headers.get('x-real-ip')
-  if (realIp && !CONTROL_CHAR_REGEX.test(realIp)) {
-    return realIp.trim()
-  }
-
-  // Fall back to x-forwarded-for; on Vercel the first entry is the client IP.
-  // Validate to prevent control char injection.
-  const forwarded = headers.get('x-forwarded-for')
-  if (forwarded) {
-    const firstIp = forwarded.split(',')[0]?.trim()
-    if (firstIp && !CONTROL_CHAR_REGEX.test(firstIp)) {
-      return firstIp
-    }
-  }
-
-  return 'unknown'
-}
-
-/** Reset rate limit state (for testing) */
-export function _resetRateLimits(): void {
-  rateLimitMap.clear()
 }
