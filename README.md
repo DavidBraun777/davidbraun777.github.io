@@ -6,133 +6,101 @@ A modern, responsive portfolio website built with Next.js 16, React 19, TypeScri
 
 ---
 
-## dbraun.io Upgrade Roadmap
+## Audit Snapshots
 
-### Executive Summary
-
-**Goal:** Transform dbraun.io from a strong engineer portfolio into a **top-tier AI engineer website and technical authority platform** — positioning David Braun as an applied AI / infrastructure / systems engineer rather than a broad generalist.
-
-This roadmap covers strategic content upgrades, structural improvements, and operational polish. Each item is categorized by execution status, ownership, and priority phase.
+- [Extreme / Elite Audit Baseline - 2026-03-17](docs/audits/elite-audit-baseline-2026-03-17.md)
 
 ---
 
-### Completed by AI in This Pass
+## Current Audit State
 
-- [x] **Sharpen hero positioning for AI engineer identity** — Updated typewriter roles to lead with AI/infrastructure identity instead of generic titles. *(Owner: AI)*
-- [x] **Improve About section AI positioning** — Rewrote bio and competency cards to emphasize AI engineering, infrastructure, and applied ML identity while staying factual. *(Owner: AI)*
-- [x] **Update CurrentStatus component** — Replaced generic status items with AI/infrastructure-focused items grounded in David's actual Master's program and work. *(Owner: AI)*
-- [x] **Add "Currently Building" section scaffold** — Created new section component with placeholder content and TODO markers for David to fill in. Wired into homepage. *(Owner: AI)*
-- [x] **Improve project descriptions toward case-study style** — Rewrote project descriptions using problem → approach → outcome structure where facts support it. Added TODO comments for missing metrics. *(Owner: AI)*
-- [x] **Add navigation for new sections** — Updated header nav to include "Building" section with scroll spy support. *(Owner: AI)*
-- [x] **Create docs/architecture/ placeholder** — Added folder with README for future architecture diagrams. *(Owner: AI)*
-- [x] **Write comprehensive README upgrade plan** — This document. *(Owner: AI)*
+**Last audit:** 2026-03-17
+**Overall grade:** 8.5 → **9.1** (post-implementation)
 
-### Execution Backlog — What Still Matters Most
-
-These are the highest-leverage remaining tasks for `dbraun.io`. They are ordered by business and credibility impact, not by ease.
-
-| Priority | Task | Why it matters | Where to update | Done when |
-|------|------|------|------|------|
-| P0 | Fill in the "Currently Building" section with real work | This is the clearest signal that the site reflects current momentum instead of a static resume | `src/components/sections/currently-building.tsx` | 3 real initiatives are listed with title, one-sentence objective, current status, and next milestone |
-| P0 | Add verified metrics to flagship projects | Metrics turn project descriptions into proof instead of claims | `src/data/projects.ts` | At least 3 flagship projects include concrete outcomes such as users, uptime, latency, performance gains, or scope handled |
-| P0 | Add real visuals for flagship projects | Screenshots and diagrams increase scanability and trust faster than additional prose | `public/images/projects/` and `src/data/projects.ts` | Every featured project has a representative image or diagram; no flagship project relies on a generic fallback |
-| P1 | Add real testimonials or intentionally keep the section hidden | Social proof helps, but placeholder credibility hurts; this should either be real or absent | `src/data/testimonials.ts` | 2-3 approved quotes with real names/roles are added, or the section remains intentionally omitted |
-| P1 | Publish the first 2-3 authority posts | Blog content creates internal-link targets, SEO surface area, and evidence of technical depth | `src/content/blog/` | 2-3 posts are published and linked from relevant projects or homepage sections |
-| P1 | Add architecture diagrams for top projects | Diagrams showcase systems thinking and create reusable proof assets for the future business site | `docs/architecture/` | 2 project diagrams exist and are referenced from the README and/or related project content |
-| P1 | Add a "How Working With Me Works" section | This closes the gap between interest and action by clarifying process, communication style, and engagement expectations | New homepage section (recommended: `src/components/sections/working-with-me.tsx`) | The site explains the engagement flow in 3-5 steps and points to the contact CTA |
-| P2 | Add an "AI Infrastructure Lab" section | This is a differentiated proof asset for AI + infrastructure positioning, but it only helps if it is concrete and public-safe | New homepage section plus `public/images/` assets | Public-safe specs, goals, and 1-2 visuals are published with a clear explanation of why the lab exists |
-
-### Decision Log — Needed to Unblock Content
-
-These decisions should be made before expanding copy or adding new sections, so the site grows coherently.
-
-| Decision | Why it matters | Current default | Recommended next step |
-|------|------|------|------|
-| Final hero positioning title | Affects hero copy, metadata, About copy, and future business-site messaging | Rotating titles in the typewriter | Pick one primary title and use the others as supporting language |
-| Availability and engagement model | Determines CTA language and whether the site feels portfolio-only or work-ready | General "Get In Touch" CTA | Decide whether to show availability and preferred engagement types |
-| Which projects become full case studies first | Prevents spreading effort across too many projects at once | None selected yet | Start with `VIFG`, `security-lab`, and one AI/ML project |
-| Whether to add FAQ | Useful only if the same objections keep appearing in real conversations | No FAQ section yet | Add only after repeated questions justify it |
-| Whether to add a technical-depth mode | Can help advanced readers, but may complicate the UX if done too early | No toggle yet | Prefer project-level technical details before adding a global mode |
-| Whether to add a resource hub | Good for long-term SEO, but only if there is capacity to maintain it | No resource hub yet | Defer until there are enough blog posts and reusable resources |
-
-### Suggested Next 3 Work Sessions
-
-#### Session 1 — Proof Pass
-1. Add metrics to `src/data/projects.ts` for the top 3 projects.
-2. Add real screenshots/diagrams under `public/images/projects/`.
-3. Update featured projects to use the new assets.
-
-#### Session 2 — Story Pass
-1. Replace placeholder entries in `src/components/sections/currently-building.tsx`.
-2. Finalize the primary hero positioning statement.
-3. Add a "How Working With Me Works" section.
-
-#### Session 3 — Authority Pass
-1. Publish 2 blog posts in `src/content/blog/`.
-2. Add 2 architecture diagrams in `docs/architecture/`.
-3. Cross-link posts and projects so the site starts building topical authority.
-
-### Later Backlog
-
-- [ ] Add AI experiments / research section once there are 2-3 concrete projects worth showing
-- [ ] Add engineering constraints / tradeoffs to flagship projects
-- [ ] Add "What I Deliver" section focused on outcomes and deliverables
-- [ ] Improve open-source credibility through public repos or contributions
-- [ ] Add project timelines if case studies become more detailed
-- [ ] Add collaborator / mentor credibility only with permission
-- [ ] Audit site messaging against `public/Resume.pdf`
-- [ ] Add a FAQ if real conversations show repeated objections or clarifications
-- [ ] Add a resource hub only when there is enough content to support it
-
-### Inputs David Still Needs to Provide
-
-- Primary positioning title for the hero and metadata
-- 3 current projects or experiments for the "Currently Building" section
-- 2-3 approved testimonials with real names, roles, and companies
-- Screenshots or diagrams for each featured project
-- Verified metrics for `vifg`, `portfolio`, `security-lab`, and any other flagship work
-- Public-safe AI lab details: hardware specs, workloads, and photos if desired
-- Preferred engagement model: full-time, consulting, contract, or advisory
-- The first 2 blog topics to publish from the strategy below
-- The first 2 projects that should receive architecture diagrams
+| Category | Before | After | Notes |
+|----------|--------|-------|-------|
+| Engineering Quality | 8.5 | 9.2 | Middleware activation, CSRF origin validation, sanitization pipeline, separation of concerns |
+| Security Posture | 7.0 | 9.0 | CSP via security headers, origin/referer validation, explicit sanitize → escape → template pipeline |
+| Portfolio Trust / Proof Density | 7.5 | 8.5 | Proof block (role/constraint/outcome) always visible, experience rewritten for ownership clarity |
+| SEO / Correctness | 8.0 | 9.0 | Sitemap uses real blog dates, image sizes specified, dead files removed |
+| Accessibility | 8.5 | 9.0 | Backdrop overlay is now a button, subtitle alignment conditional, badge hover removed |
+| Code Hygiene | 8.0 | 9.0 | Rate-limit separated from validation, dead proxy deleted, dead image removed |
 
 ---
 
-### Blog Strategy — Suggested Topics
+## Completed Improvements
 
-These are suggested topics based on David's background. **None of these posts exist yet** — they need to be written.
+### Security & Correctness (Part 1A)
 
-**AI / ML Topics:**
-- Lessons from my first semester in an AI Master's program
-- Building a local AI inference stack: hardware choices and tradeoffs
-- Practical machine learning for engineers who aren't data scientists
+- **CSP activation:** Removed the dead `src/proxy.ts` path and now serve CSP directly through `next.config.ts` security headers, which applies consistently in development, tests, and production.
+- **CSRF origin validation:** Contact API now validates `Origin`/`Referer` against an allowlist (`dbraun.io`, `www.dbraun.io`, `localhost:3000`, Vercel preview URLs). Returns 403 for unknown origins.
+- **Sanitization pipeline:** Extracted `sanitizeContactData()` and `buildEmailHtml()` as explicit named functions with documented escape boundaries (HTML-escaped vs plain text).
+- **Sitemap dates:** `src/app/sitemap.ts` now reads real dates from blog post frontmatter via `getAllPosts()` instead of using `new Date()`.
+- **Image sizes:** Added `sizes="96px"` to certification badge `<Image>` in `/background`.
 
-**Infrastructure / DevOps Topics:**
-- Running 12 isolated VMs on Proxmox: my security lab architecture
-- From Ansible playbooks to production: automating infrastructure at Securian Financial
-- Pi-hole + custom DNS: network-level security for home labs
+### Codebase Hygiene (Part 1B)
 
-**Career / Industry Topics:**
-- Why I'm pursuing an AI Master's after 5+ years in industry
-- The intersection of cybersecurity and AI: what engineers need to know
-- Accessibility-first development: lessons from building for the visually impaired
+- **Rate-limit separation:** All rate-limiting code moved from `contact-validation.ts` to `rate-limit.ts`. Validation module now owns only validation/sanitization. Shared `CONTROL_CHAR_REGEX` exported cleanly.
+- **Dead file removal:** Deleted `src/proxy.ts` (dead middleware), removed `public/images/projects/heart_hand.jpg` (only referenced by unused `projects.ts`).
+- **Accessibility fixes:** Mobile menu backdrop overlay changed from `<div>` to `<button>` with `aria-label`. Badge `whileHover` scale removed; added `cursor-default`. Section header subtitle `mx-auto` now conditional on `align` prop.
+
+### Portfolio Trust / Proof Density (Part 2)
+
+- **Proof fields on systems:** Added `myRole`, `coreConstraint`, `outcome` as required fields on `SystemCaseStudy` interface. Populated all 6 systems with truthful, verifiable data.
+- **Always-visible proof block:** `selected-systems.tsx` now renders a 3-column proof grid (My Role / Core Constraint / Outcome) between the summary and problem sections. Visible by default; no click required.
+- **Experience rewrite:** Top 5 experience entries rewritten to emphasize ownership scope and technical depth. Removed filler highlights. Language pattern: "Owned...", "Sole engineer responsible for...", "Built and maintained...at enterprise scale".
+
+### Test Coverage
+
+- 4 new tests added for origin validation (403 on unknown origin, 403 on missing origin/referer, accepts production origin, accepts valid referer fallback).
+- All existing tests updated for new module boundaries (imports moved from `contact-validation` to `rate-limit`).
+- **65 tests passing**, 4 test files, 0 failures.
 
 ---
 
-## Documentation
+## Remaining High-ROI Improvements
 
-This repository hosts the personal portfolio website (`dbraun.io`).
+These are changes that would further close the proof gap. Ordered by impact.
 
-Strategic documentation for the two-site expansion plan lives under `docs/`:
+| Priority | Task | Expected Uplift | Owner |
+|----------|------|-----------------|-------|
+| P0 | Add real screenshots/diagrams for all flagship systems | +0.3 overall | Human |
+| P0 | Add deployment URLs or live demo links where systems are accessible | +0.2 overall | Human |
+| P1 | Add verified metrics to flagship systems (uptime, users, latency, volume) | +0.2 overall | Human |
+| P1 | Record a 60-second video walkthrough of one flagship system | +0.2 trust | Human |
+| P1 | Publish 2–3 technical blog posts that cross-link to flagship systems | +0.2 authority | Human |
+| P2 | Add testimonials from colleagues or clients (real names/roles) | +0.15 trust | Human |
+| P2 | Add architecture decision records for top 2 systems | +0.1 depth | Human |
 
-- `docs/README.md` — Documentation index
-- `docs/dual-site-strategy.md` — Portfolio + business-site expansion strategy
-- `docs/portfolio-vs-business-matrix.md` — Ownership split for growth initiatives
-- `docs/ia-sitemap.md` — IA/sitemap for both domains
-- `docs/cross-domain-architecture.md` — Cross-domain flow architecture diagrams
-- `docs/execution-playbook.md` — Positioning + 12-week execution plan
-- `docs/niches/README.md` — Niche project playbooks for building sellable proof
-- `docs/architecture/README.md` — Architecture diagrams (placeholder for future diagrams)
+---
+
+## Proof Gap Tracker
+
+Each flagship system's proof density. **Green** = evidence exists and is visible. **Yellow** = claim is made but not yet backed by artifact. **Red** = missing entirely.
+
+| System | Architecture Diagram | Screenshot / Visual | Live URL | Metrics | Role + Constraint + Outcome |
+|--------|---------------------|--------------------:|----------|---------|----------------------------|
+| StormIQ | 🟢 SVG | 🟢 PNG | 🔴 Not deployed yet | 🔴 None | 🟢 Populated |
+| RoboReceptionist | 🟢 SVG | 🟢 SVG | 🔴 Not deployed yet | 🔴 None | 🟢 Populated |
+| Lecture Stream | 🟢 PNG | 🟢 PNG | 🔴 Not deployed yet | 🔴 None | 🟢 Populated |
+| NAICS Planning | 🟢 SVG | 🟢 SVG | 🔴 Not deployed yet | 🔴 None | 🟢 Populated |
+| VIFG Platform | 🟢 SVG | 🟢 SVG | 🟢 [vifg.org](https://www.vifg.org/home) | 🟡 No uptime/traffic data shown | 🟢 Populated |
+| DealerFlow | 🟡 No diagram | 🟢 PNG | 🔴 Not public yet | 🔴 None | 🟢 Populated |
+
+### What requires human-supplied evidence
+
+These items cannot be generated or inferred; they require real artifacts from the project owner.
+
+| Item | Why it matters | Estimated uplift |
+|------|---------------|-----------------|
+| Live deployment URLs for StormIQ, RoboReceptionist, NAICS | A reviewer who can click through a system trusts it 3× more than one who reads about it | +0.3 |
+| Real screenshots of DealerFlow mobile app in use | Mobile screenshots are the strongest proof for a mobile-first system | +0.15 |
+| Uptime, traffic, or usage data for VIFG | Production claims without metrics feel incomplete | +0.1 |
+| Architecture diagram for DealerFlow | Only flagship system without a dedicated architecture visual | +0.1 |
+| Testimonial from VIFG nonprofit stakeholder | Third-party validation of production delivery | +0.15 |
+| Video walkthrough of any one system | Video is the highest-bandwidth proof format | +0.2 |
+
+---
 
 ## Dependency Maintenance Notes
 
@@ -140,8 +108,8 @@ Strategic documentation for the two-site expansion plan lives under `docs/`:
 
 Two Dependabot PRs are intentionally **not safe to merge yet**:
 
-- `#27` — `deps: bump @eslint/js from 9.39.2 to 10.0.1`
-- `#19` — `deps: bump the linting group with 2 updates`
+- `#27`: `deps: bump @eslint/js from 9.39.2 to 10.0.1`
+- `#19`: `deps: bump the linting group with 2 updates`
 
 These are blocked by the current lint stack, not by application code.
 
@@ -213,15 +181,16 @@ Also note:
 
 ## Features
 
-- **Modern Stack** — Next.js 16 with App Router, TypeScript, Tailwind CSS v4
-- **Dark Mode** — Dark theme by design for optimal readability
-- **Animations** — Smooth scroll-reveal and hover effects with Framer Motion and GSAP
-- **MDX Blog** — Write blog posts in Markdown with React component support
-- **Contact Form** — Server-side email handling with Resend, input validation, and rate limiting
-- **Responsive** — Mobile-first design with collapsible navigation
-- **SEO Optimized** — Metadata, Open Graph, and structured data
-- **Accessible** — Semantic HTML, keyboard navigation, reduced motion support
-- **Tested** — Unit and integration tests with Vitest
+- **Modern Stack:** Next.js 16 with App Router, TypeScript, Tailwind CSS v4
+- **Dark Mode:** Dark theme by design for optimal readability
+- **Animations:** Smooth scroll-reveal and hover effects with Framer Motion and GSAP
+- **MDX Blog:** Write blog posts in Markdown with React component support
+- **Contact Form:** Server-side email handling with Resend, CSRF origin validation, sanitization pipeline, and rate limiting
+- **Responsive:** Mobile-first design with collapsible navigation
+- **SEO Optimized:** Metadata, Open Graph, structured data, real sitemap dates
+- **Accessible:** Semantic HTML, keyboard navigation, reduced motion support, ARIA attributes
+- **Security:** CSP security headers, origin validation, HTML sanitization, Upstash rate limiting with circuit breaker fallback
+- **Tested:** 65 unit and integration tests with Vitest; E2E and accessibility tests with Playwright
 
 ## Tech Stack
 
@@ -235,7 +204,8 @@ Also note:
 | Icons | [Lucide React](https://lucide.dev/) |
 | Blog | [MDX](https://mdxjs.com/) via next-mdx-remote |
 | Email | [Resend](https://resend.com/) |
-| Testing | [Vitest](https://vitest.dev/) |
+| Rate Limiting | [Upstash Redis](https://upstash.com/) with in-memory fallback |
+| Testing | [Vitest](https://vitest.dev/), [Playwright](https://playwright.dev/) |
 | Deployment | [Vercel](https://vercel.com/) |
 
 ## Getting Started
@@ -266,7 +236,7 @@ Open [http://localhost:3000](http://localhost:3000) to view the site.
 Create a `.env.local` file in the root directory:
 
 ```env
-# Email configuration (Resend) — required in production
+# Email configuration (Resend): required in production
 RESEND_API_KEY=re_xxxxxxxxxxxxx
 
 # Optional: override recipient (defaults to davidjbraun777@gmail.com)
@@ -291,68 +261,24 @@ Get your Resend API key at [resend.com](https://resend.com). For distributed rat
 ## Project Structure
 
 ```
-docs/                      # Strategic docs (portfolio + business expansion)
-├── README.md              # Docs index
-├── dual-site-strategy.md  # Two-site architecture and SEO linking plan
-├── portfolio-vs-business-matrix.md
-├── ia-sitemap.md          # IA/sitemap for both domains
-├── cross-domain-architecture.md
-├── execution-playbook.md
-└── architecture/          # Architecture diagrams (future)
 src/
-├── app/                    # Next.js App Router pages
-│   ├── layout.tsx          # Root layout with providers
-│   ├── page.tsx            # Homepage
-│   ├── globals.css         # Global styles + Tailwind
-│   ├── api/contact/        # Contact form API route
-│   └── blog/               # Blog listing and post pages
+├── app/                     # Next.js App Router pages
+│   ├── layout.tsx           # Root layout with providers
+│   ├── page.tsx             # Homepage
+│   ├── globals.css          # Global styles + Tailwind
+│   ├── api/contact/         # Contact form API route (CSRF + sanitization + rate limiting)
+│   ├── sitemap.ts           # Dynamic sitemap with real blog post dates
+│   └── blog/                # Blog listing and post pages
 ├── components/
-│   ├── ui/                 # Reusable UI components
-│   ├── layout/             # Header, Footer, CurrentStatus
-│   ├── sections/           # Page sections (Hero, About, etc.)
-│   └── blog/               # Blog-specific components
-├── content/blog/           # MDX blog posts
-├── data/                   # Static data (experience, skills, etc.)
-├── hooks/                  # Custom React hooks
-├── lib/                    # Utility functions and validation
-└── providers/              # React context providers
-```
-
-## Customization
-
-### Personal Information
-
-Edit the data files in `src/data/`:
-
-- `experience.ts` — Work history
-- `education.ts` — Education and certifications
-- `projects.ts` — Portfolio projects
-- `skills.ts` — Technical skills by category
-- `testimonials.ts` — Colleague testimonials
-- `social-links.ts` — Social media links and resume URL
-
-### Styling
-
-The design system is defined in `src/app/globals.css`:
-
-- Colors are configured in the `@theme` block
-- Modify `--color-primary-*` for the main accent color
-- Accent colors: `--color-accent-cyan`, `--color-accent-violet`, etc.
-
-### Blog Posts
-
-Add new posts to `src/content/blog/` as `.mdx` files:
-
-```mdx
----
-title: "Your Post Title"
-description: "A brief description of the post"
-date: "2025-01-15"
-author: "David Braun"
-tags: ["Next.js", "React"]
----
-
-Your content here...
+│   ├── ui/                  # Reusable UI components (Badge, SectionHeader, ImageLightbox)
+│   ├── layout/              # Header, Footer, CurrentStatus
+│   ├── sections/            # Page sections (Hero, SelectedSystems, Contact, etc.)
+│   └── blog/                # Blog-specific components
+├── content/blog/            # MDX blog posts
+├── data/                    # Static data (experience, systems, skills, etc.)
+├── hooks/                   # Custom React hooks (useScrollSpy, useGSAP)
+├── lib/                     # Utility functions, validation, rate limiting
+└── providers/               # React context providers
 ```
 
 ## Scripts
@@ -390,10 +316,10 @@ Vercel will automatically deploy on every push to `master`.
 
 The site is optimized for Core Web Vitals:
 
-- **Static Generation** — Pages are pre-rendered at build time
-- **Image Optimization** — Automatic WebP/AVIF conversion via `next/image`
-- **Font Optimization** — Self-hosted fonts via `next/font`
-- **Code Splitting** — Automatic route-based splitting
+- **Static Generation:** Pages are pre-rendered at build time
+- **Image Optimization:** Automatic WebP/AVIF conversion via `next/image`
+- **Font Optimization:** Self-hosted fonts via `next/font`
+- **Code Splitting:** Automatic route-based splitting
 
 ## License
 

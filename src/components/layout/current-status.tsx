@@ -14,9 +14,10 @@ const statuses = [
 
 interface CurrentStatusProps {
   className?: string
+  compact?: boolean
 }
 
-export function CurrentStatus({ className }: CurrentStatusProps) {
+export function CurrentStatus({ className, compact = false }: CurrentStatusProps) {
   const [currentIndex, setCurrentIndex] = useState(0)
 
   useEffect(() => {
@@ -32,7 +33,9 @@ export function CurrentStatus({ className }: CurrentStatusProps) {
   return (
     <motion.div
       className={cn(
-        'flex h-[38px] w-[228px] items-center justify-center overflow-hidden rounded-full border border-slate-200/80 bg-white/70 px-3 py-1.5 whitespace-nowrap backdrop-blur-sm dark:border-slate-800/80 dark:bg-slate-900/60 2xl:w-[248px]',
+        compact
+          ? 'flex h-[34px] w-[214px] items-center justify-center overflow-hidden rounded-full border border-slate-200/80 bg-white/70 px-3 py-1 whitespace-nowrap backdrop-blur-sm dark:border-slate-800/80 dark:bg-slate-900/60 sm:w-[228px]'
+          : 'flex h-[38px] w-[228px] items-center justify-center overflow-hidden rounded-full border border-slate-200/80 bg-white/70 px-3 py-1.5 whitespace-nowrap backdrop-blur-sm dark:border-slate-800/80 dark:bg-slate-900/60 2xl:w-[248px]',
         className
       )}
     >
@@ -43,13 +46,28 @@ export function CurrentStatus({ className }: CurrentStatusProps) {
           animate={{ opacity: 1, y: 0 }}
           exit={{ opacity: 0, y: -10 }}
           transition={{ duration: 0.3 }}
-          className="flex w-full items-center justify-center gap-1.5 text-center"
+          className={cn(
+            'flex w-full items-center justify-center text-center',
+            compact ? 'gap-1' : 'gap-1.5'
+          )}
         >
-          <Icon className="h-3 w-3 shrink-0 text-primary-500/80 dark:text-primary-400/80" />
-          <span className="shrink-0 text-[13px] text-slate-600 dark:text-slate-300">
-            {current.label}:
-          </span>
-          <span className="max-w-[150px] truncate text-[13px] font-medium text-slate-800 dark:text-slate-200">
+          <Icon
+            className={cn(
+              'shrink-0 text-primary-500/80 dark:text-primary-400/80',
+              compact ? 'h-[11px] w-[11px]' : 'h-3 w-3'
+            )}
+          />
+          {compact ? null : (
+            <span className="shrink-0 text-[13px] text-slate-600 dark:text-slate-300">
+              {current.label}:
+            </span>
+          )}
+          <span
+            className={cn(
+              'truncate font-medium text-slate-800 dark:text-slate-200',
+              compact ? 'max-w-[184px] text-[11px] sm:max-w-[198px]' : 'max-w-[150px] text-[13px]'
+            )}
+          >
             {current.value}
           </span>
         </motion.div>

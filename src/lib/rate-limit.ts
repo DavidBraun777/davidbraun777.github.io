@@ -1,10 +1,112 @@
-import {
-  checkRateLimit as inMemoryCheckRateLimit,
-  getClientIp,
-  type RateLimitResult,
-} from './contact-validation'
+import { CONTROL_CHAR_REGEX } from './contact-validation'
 
-export { getClientIp, type RateLimitResult }
+// ---------------------------------------------------------------------------
+// In-memory rate limiter (used as fallback when Upstash is unavailable)
+// ---------------------------------------------------------------------------
+
+interface RateLimitRecord {
+  count: number
+  resetAt: number
+  lastSeen: number
+}
+
+const rateLimitMap = new Map<string, RateLimitRecord>()
+const RATE_LIMIT_WINDOW_MS = 60 * 1000 // 1 minute
+const RATE_LIMIT_MAX = 5
+const MAX_MAP_SIZE = 10_000
+
+export interface RateLimitResult {
+  limited: boolean
+  retryAfter?: number
+  remaining?: number
+}
+
+/** Prune stale entries from the rate limit map */
+function pruneStaleEntries(): void {
+  const now = Date.now()
+  for (const [key, record] of rateLimitMap) {
+    if (now > record.resetAt) {
+      rateLimitMap.delete(key)
+    }
+  }
+}
+
+/** In-memory rate limit check for a given IP */
+function inMemoryCheckRateLimit(ip: string): RateLimitResult {
+  const now = Date.now()
+
+  // Prune expired entries when map is large
+  if (rateLimitMap.size > MAX_MAP_SIZE) {
+    pruneStaleEntries()
+  }
+
+  // Look up existing record first, before any eviction
+  const record = rateLimitMap.get(ip)
+
+  // Only evict when we need to insert a brand-new key and capacity is reached.
+  // This prevents evicting the current IP's own record and resetting its count.
+  const isNewKey = !record || now > record.resetAt
+  if (isNewKey && rateLimitMap.size >= MAX_MAP_SIZE) {
+    let oldestKey: string | undefined
+    let oldestSeen = Infinity
+    for (const [key, rec] of rateLimitMap) {
+      if (rec.lastSeen < oldestSeen) {
+        oldestSeen = rec.lastSeen
+        oldestKey = key
+      }
+    }
+    if (oldestKey) rateLimitMap.delete(oldestKey)
+  }
+
+  if (isNewKey) {
+    rateLimitMap.set(ip, {
+      count: 1,
+      resetAt: now + RATE_LIMIT_WINDOW_MS,
+      lastSeen: now,
+    })
+    return { limited: false, remaining: RATE_LIMIT_MAX - 1 }
+  }
+
+  record.lastSeen = now
+
+  if (record.count >= RATE_LIMIT_MAX) {
+    const retryAfter = Math.ceil((record.resetAt - now) / 1000)
+    return { limited: true, retryAfter }
+  }
+
+  record.count++
+  return { limited: false, remaining: RATE_LIMIT_MAX - record.count }
+}
+
+/** Extract client IP from request headers (Vercel-aware). */
+export function getClientIp(headers: Headers): string {
+  // x-real-ip is set by Vercel/nginx and is most trustworthy
+  const realIp = headers.get('x-real-ip')
+  if (realIp && !CONTROL_CHAR_REGEX.test(realIp)) {
+    return realIp.trim()
+  }
+
+  // Fall back to x-forwarded-for; on Vercel the first entry is the client IP.
+  // Validate to prevent control char injection.
+  const forwarded = headers.get('x-forwarded-for')
+  if (forwarded) {
+    const firstIp = forwarded.split(',')[0]?.trim()
+    if (firstIp && !CONTROL_CHAR_REGEX.test(firstIp)) {
+      return firstIp
+    }
+  }
+
+  return 'unknown'
+}
+
+/** Reset in-memory rate limit state (for testing) */
+export function _resetRateLimits(): void {
+  rateLimitMap.clear()
+}
+
+// ---------------------------------------------------------------------------
+// Upstash rate limiter (used when UPSTASH_REDIS_REST_URL is configured)
+// ---------------------------------------------------------------------------
 
 // Lazily-initialized Upstash rate limiter (singleton across requests)
 let upstashLimiter: {
