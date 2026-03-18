@@ -1,6 +1,6 @@
 'use client'
 
-import { useState, useEffect, useMemo } from 'react'
+import { useState, useEffect, useMemo, type MouseEvent } from 'react'
 import { motion, AnimatePresence } from 'framer-motion'
 import { Menu, X, FileText } from 'lucide-react'
 import Link from 'next/link'
@@ -22,6 +22,7 @@ interface PageTab {
   href: string
   description: string
   shortcuts: PageShortcut[]
+  sectionId?: string
 }
 
 const homeShortcuts: PageShortcut[] = [
@@ -57,6 +58,7 @@ const pageTabs: PageTab[] = [
     href: '/#top',
     description: 'Systems portfolio and flagship case studies.',
     shortcuts: homeShortcuts,
+    sectionId: 'top',
   },
   {
     id: 'blog',
@@ -64,6 +66,7 @@ const pageTabs: PageTab[] = [
     href: '/blog',
     description: 'Engineering notes on AI systems and workflow architecture.',
     shortcuts: blogShortcuts,
+    sectionId: 'blog-overview',
   },
   {
     id: 'experience',
@@ -71,6 +74,7 @@ const pageTabs: PageTab[] = [
     href: '/background',
     description: 'Work history, stack, credentials, and current focus areas.',
     shortcuts: experienceShortcuts,
+    sectionId: 'experience-overview',
   },
 ]
 
@@ -148,6 +152,41 @@ export function Header() {
     return () => window.removeEventListener('keydown', handleKeyDown)
   }, [isMobileMenuOpen])
 
+  const handleSectionLinkClick = (
+    event: MouseEvent<HTMLAnchorElement>,
+    href: string,
+    sectionId?: string
+  ) => {
+    if (!sectionId) return
+
+    const [targetPath] = href.split('#')
+    const normalizedPath = targetPath || '/'
+
+    if (normalizedPath !== pathname) return
+
+    const target = document.getElementById(sectionId)
+    if (!target) return
+
+    event.preventDefault()
+    setIsMobileMenuOpen(false)
+
+    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches
+    const headerOffset = window.innerWidth >= 1024 ? 144 : 112
+    const targetTop = Math.max(
+      target.getBoundingClientRect().top + window.scrollY - headerOffset,
+      0
+    )
+
+    if (window.location.hash !== `#${sectionId}`) {
+      window.history.replaceState(null, '', href)
+    }
+
+    window.scrollTo({
+      top: targetTop,
+      behavior: prefersReducedMotion ? 'auto' : 'smooth',
+    })
+  }
+
   return (
     <>
       <motion.header
@@ -163,7 +202,11 @@ export function Header() {
         <nav className="mx-auto max-w-[88rem] px-4 sm:px-6 lg:px-8">
           <div className="flex min-h-16 items-center justify-between gap-5 py-2 md:min-h-20 lg:min-h-0 lg:items-start lg:py-4 xl:gap-6">
             <div className="flex min-w-0 items-center gap-4 lg:items-start xl:gap-6">
-              <Link href="/#top" className="flex items-center gap-2 group shrink-0">
+              <Link
+                href="/#top"
+                onClick={(event) => handleSectionLinkClick(event, '/#top', 'top')}
+                className="flex items-center gap-2 group shrink-0"
+              >
                 <motion.span
                   whileHover={{ scale: 1.05 }}
                   className="text-xl md:text-2xl font-bold bg-gradient-to-r from-primary-500 to-accent-violet bg-clip-text text-transparent"
@@ -191,6 +234,9 @@ export function Header() {
                       >
                         <Link
                           href={page.href}
+                          onClick={(event) =>
+                            handleSectionLinkClick(event, page.href, isActive ? page.sectionId : undefined)
+                          }
                           aria-current={isActive ? 'page' : undefined}
                           className={cn(
                             'transition-colors',
@@ -238,6 +284,9 @@ export function Header() {
                                     <Link
                                       key={shortcut.name}
                                       href={shortcut.href}
+                                      onClick={(event) =>
+                                        handleSectionLinkClick(event, shortcut.href, shortcut.sectionId)
+                                      }
                                       aria-current={isShortcutActive ? 'location' : undefined}
                                       className={cn(
                                         'rounded-full px-3 py-1.5 text-xs font-medium transition-colors',
@@ -360,7 +409,10 @@ export function Header() {
                     >
                       <Link
                         href={page.href}
-                        onClick={() => setIsMobileMenuOpen(false)}
+                        onClick={(event) => {
+                          handleSectionLinkClick(event, page.href, isActive ? page.sectionId : undefined)
+                          setIsMobileMenuOpen(false)
+                        }}
                         className="block"
                       >
                         <p
@@ -401,7 +453,10 @@ export function Header() {
                             <Link
                               key={shortcut.name}
                               href={shortcut.href}
-                              onClick={() => setIsMobileMenuOpen(false)}
+                              onClick={(event) => {
+                                handleSectionLinkClick(event, shortcut.href, shortcut.sectionId)
+                                setIsMobileMenuOpen(false)
+                              }}
                               className={cn(
                                 'rounded-full px-3 py-1.5 text-xs font-medium transition-colors',
                                 activeShortcut === shortcut.name

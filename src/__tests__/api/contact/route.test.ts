@@ -151,18 +151,18 @@ describe('POST /api/contact', () => {
     const res = await POST(
       createRequest({
         ...validBody,
-        projectType: 'business',
-        serviceNeeded: 'feature',
-        urgency: 'this-week',
+        projectType: 'consulting',
+        serviceNeeded: 'platform-infra',
+        urgency: 'this-quarter',
       })
     )
     expect(res.status).toBe(200)
     expect(mockSend).toHaveBeenCalledOnce()
     const callArgs = mockSend.mock.calls[0][0]
     expect(callArgs.html).toContain('Project Type')
-    expect(callArgs.html).toContain('business')
+    expect(callArgs.html).toContain('consulting')
     expect(callArgs.html).toContain('Service Needed')
-    expect(callArgs.html).toContain('feature')
+    expect(callArgs.html).toContain('platform-infra')
   })
 
   it('uses x-real-ip for rate limiting over x-forwarded-for', async () => {

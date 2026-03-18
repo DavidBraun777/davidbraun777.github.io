@@ -10,23 +10,17 @@ export function ScrollToTop() {
   const [showButton, setShowButton] = useState(false)
   const previousPathRef = useRef<string | null>(null)
 
-  useEffect(() => {
-    const previousPath = previousPathRef.current
-    previousPathRef.current = pathname
+  const scrollWindowToTop = () => {
+    window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
+    document.documentElement.scrollTop = 0
+    document.body.scrollTop = 0
+  }
 
-    if (previousPath === null || previousPath === pathname) return
-    if (window.location.hash) return
-
-    const scrollToTop = () => {
-      window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
-      document.documentElement.scrollTop = 0
-      document.body.scrollTop = 0
-    }
-
+  const scheduleScrollReset = () => {
     let frameTwo = 0
-    const timeoutId = window.setTimeout(scrollToTop, 120)
+    const timeoutId = window.setTimeout(scrollWindowToTop, 160)
     const frameOne = window.requestAnimationFrame(() => {
-      frameTwo = window.requestAnimationFrame(scrollToTop)
+      frameTwo = window.requestAnimationFrame(scrollWindowToTop)
     })
 
     return () => {
@@ -34,6 +28,48 @@ export function ScrollToTop() {
       window.cancelAnimationFrame(frameTwo)
       window.clearTimeout(timeoutId)
     }
+  }
+
+  useEffect(() => {
+    const canManageHistory = 'scrollRestoration' in window.history
+    const previousRestoration = canManageHistory
+      ? window.history.scrollRestoration
+      : null
+
+    if (canManageHistory) {
+      window.history.scrollRestoration = 'manual'
+    }
+
+    if (!window.location.hash) {
+      scrollWindowToTop()
+    }
+
+    const handlePageShow = (event: PageTransitionEvent) => {
+      if (window.location.hash) return
+      if (!event.persisted) return
+
+      scheduleScrollReset()
+    }
+
+    window.addEventListener('pageshow', handlePageShow)
+
+    return () => {
+      window.removeEventListener('pageshow', handlePageShow)
+
+      if (canManageHistory && previousRestoration) {
+        window.history.scrollRestoration = previousRestoration
+      }
+    }
+  }, [])
+
+  useEffect(() => {
+    const previousPath = previousPathRef.current
+    previousPathRef.current = pathname
+
+    if (previousPath === null || previousPath === pathname) return
+    if (window.location.hash) return
+
+    return scheduleScrollReset()
   }, [pathname])
 
   useEffect(() => {

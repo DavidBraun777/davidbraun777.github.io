@@ -1,43 +1,47 @@
 import type { NextConfig } from 'next'
+import { PHASE_DEVELOPMENT_SERVER } from 'next/constants'
 
-const nextConfig: NextConfig = {
-  images: {
-    formats: ['image/avif', 'image/webp'],
-  },
-  async headers() {
-    return [
-      {
-        source: '/(.*)',
-        headers: [
-          // CSP is set per-request by proxy.ts
-          {
-            key: 'X-Frame-Options',
-            value: 'DENY',
-          },
-          {
-            key: 'X-Content-Type-Options',
-            value: 'nosniff',
-          },
-          {
-            key: 'Referrer-Policy',
-            value: 'strict-origin-when-cross-origin',
-          },
-          {
-            key: 'Permissions-Policy',
-            value: 'camera=(), microphone=(), geolocation=()',
-          },
-          {
-            key: 'X-DNS-Prefetch-Control',
-            value: 'on',
-          },
-          {
-            key: 'Strict-Transport-Security',
-            value: 'max-age=63072000; includeSubDomains; preload',
-          },
-        ],
-      },
-    ]
-  },
+export default function nextConfig(phase: string): NextConfig {
+  return {
+    // Keep dev and production build artifacts separate so `next dev`
+    // never has to reuse or reconcile a recent `next build` output tree.
+    distDir: phase === PHASE_DEVELOPMENT_SERVER ? '.next-dev' : '.next',
+    images: {
+      formats: ['image/avif', 'image/webp'],
+    },
+    async headers() {
+      return [
+        {
+          source: '/(.*)',
+          headers: [
+            // CSP is set per-request by proxy.ts
+            {
+              key: 'X-Frame-Options',
+              value: 'DENY',
+            },
+            {
+              key: 'X-Content-Type-Options',
+              value: 'nosniff',
+            },
+            {
+              key: 'Referrer-Policy',
+              value: 'strict-origin-when-cross-origin',
+            },
+            {
+              key: 'Permissions-Policy',
+              value: 'camera=(), microphone=(), geolocation=()',
+            },
+            {
+              key: 'X-DNS-Prefetch-Control',
+              value: 'on',
+            },
+            {
+              key: 'Strict-Transport-Security',
+              value: 'max-age=63072000; includeSubDomains; preload',
+            },
+          ],
+        },
+      ]
+    },
+  }
 }
-
-export default nextConfig
