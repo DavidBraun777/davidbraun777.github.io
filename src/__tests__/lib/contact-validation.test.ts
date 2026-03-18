@@ -152,15 +152,15 @@ describe('validateContactForm', () => {
   it('accepts valid optional dropdown fields', () => {
     const result = validateContactForm({
       ...validBody,
-      projectType: 'business',
-      serviceNeeded: 'feature',
-      urgency: 'this-week',
+      projectType: 'consulting',
+      serviceNeeded: 'platform-infra',
+      urgency: 'this-quarter',
     })
     expect(result.valid).toBe(true)
     if (result.valid) {
-      expect(result.data.projectType).toBe('business')
-      expect(result.data.serviceNeeded).toBe('feature')
-      expect(result.data.urgency).toBe('this-week')
+      expect(result.data.projectType).toBe('consulting')
+      expect(result.data.serviceNeeded).toBe('platform-infra')
+      expect(result.data.urgency).toBe('this-quarter')
     }
   })
 

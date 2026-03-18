@@ -3,13 +3,27 @@
 import { useState, useRef, useEffect } from 'react'
 import { motion } from 'framer-motion'
 import Link from 'next/link'
-import { Send, Mail, MapPin, CheckCircle, AlertCircle, Calendar, Clock, ArrowRight } from 'lucide-react'
+import {
+  Send,
+  Mail,
+  MapPin,
+  CheckCircle,
+  AlertCircle,
+  Calendar,
+  Clock,
+  ArrowRight,
+  ArrowUpRight,
+} from 'lucide-react'
 import { socialLinks } from '@/data/social-links'
 import { SectionHeader } from '@/components/ui/section-header'
 import { Button } from '@/components/ui/button'
 import { Input, Textarea, Select } from '@/components/ui/input'
 
 type FormStatus = 'idle' | 'loading' | 'success' | 'error'
+
+interface ContactProps {
+  calLink?: string
+}
 
 const conversationTypeOptions = [
   { value: 'full-time', label: 'Full-time role' },
@@ -35,7 +49,7 @@ const urgencyOptions = [
   { value: 'urgent', label: 'Urgent' },
 ]
 
-export function Contact() {
+export function Contact({ calLink }: ContactProps) {
   const [formStatus, setFormStatus] = useState<FormStatus>('idle')
   const resetTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined)
   const [formData, setFormData] = useState({
@@ -47,6 +61,10 @@ export function Contact() {
     serviceNeeded: '',
     urgency: '',
   })
+  const calendlyUrl =
+    typeof calLink === 'string' && /^https?:\/\//i.test(calLink.trim())
+      ? calLink.trim()
+      : null
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -159,10 +177,15 @@ export function Contact() {
                 <div>
                   <p className="text-sm text-slate-500 dark:text-slate-400">Quick chat</p>
                   <a
-                    href="mailto:davidjbraun777@gmail.com?subject=Request%20a%2015-minute%20intro%20call"
+                    href={
+                      calendlyUrl ??
+                      'mailto:davidjbraun777@gmail.com?subject=Request%20a%2015-minute%20intro%20call'
+                    }
+                    target={calendlyUrl ? '_blank' : undefined}
+                    rel={calendlyUrl ? 'noopener noreferrer' : undefined}
                     className="text-lg font-medium text-slate-900 dark:text-white hover:text-accent-emerald transition-colors"
                   >
-                    Request a 15-min call
+                    {calendlyUrl ? 'Book a 15-min call' : 'Request a 15-min call'}
                   </a>
                 </div>
               </div>
@@ -198,6 +221,7 @@ export function Contact() {
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
+            className="space-y-5"
           >
             <form onSubmit={handleSubmit} className="space-y-6">
               <div className="grid sm:grid-cols-2 gap-6">
@@ -233,7 +257,6 @@ export function Contact() {
                 required
               />
 
-              {/* Optional structured dropdowns */}
               <div className="grid sm:grid-cols-3 gap-4">
                 <Select
                   id="contact-project-type"
@@ -289,7 +312,6 @@ export function Contact() {
                 </p>
               </div>
 
-              {/* Status messages — live regions for screen readers */}
               {formStatus === 'success' && (
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
@@ -315,13 +337,34 @@ export function Contact() {
                   </div>
                   <a
                     href="mailto:davidjbraun777@gmail.com"
-                    className="text-sm text-primary-600 dark:text-primary-400 hover:underline ml-7"
+                    className="ml-7 text-sm text-primary-600 hover:underline dark:text-primary-400"
                   >
                     davidjbraun777@gmail.com
                   </a>
                 </motion.div>
               )}
             </form>
+
+            {calendlyUrl ? (
+              <div className="rounded-[1.75rem] border border-slate-200 bg-slate-50/90 p-5 dark:border-slate-800 dark:bg-slate-900/60">
+                <p className="font-mono text-xs uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
+                  Prefer live scheduling?
+                </p>
+                <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
+                  If it&apos;s easier to talk through the workflow, system scope, or role
+                  fit live, you can skip email and book directly on Calendly.
+                </p>
+                <a
+                  href={calendlyUrl}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className="mt-4 inline-flex items-center justify-center gap-2 rounded-lg bg-primary-600 px-6 py-3 text-base font-medium text-white shadow-lg shadow-primary-500/25 transition-colors hover:bg-primary-700 hover:shadow-primary-500/40 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-slate-950"
+                >
+                  Open Calendly
+                  <ArrowUpRight className="h-4 w-4" />
+                </a>
+              </div>
+            ) : null}
           </motion.div>
         </div>
       </div>
