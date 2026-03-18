@@ -15,7 +15,7 @@ export default function Home() {
       <HowIBuild />
       <EngineeringPrinciples />
       <CurrentInterests />
-      <Contact />
+      <Contact calLink={process.env.CAL_LINK} />
     </>
   )
 }
