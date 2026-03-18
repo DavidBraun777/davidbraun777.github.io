@@ -4,7 +4,7 @@ This directory will contain architecture diagrams for flagship projects.
 
 ## Planned Diagrams
 
-<!-- TODO: David — decide which projects should get architecture diagrams first.
+<!-- TODO: David: decide which projects should get architecture diagrams first.
      Recommended starting points:
      - Security Lab PC (VM topology, network isolation, GPU passthrough)
      - VIFG (deployment pipeline, AWS infrastructure, CI/CD flow)
@@ -14,9 +14,9 @@ This directory will contain architecture diagrams for flagship projects.
 ### Format
 
 Diagrams can be created as:
-- **Mermaid** — embedded in MDX blog posts or rendered as SVG
-- **SVG** — for high-quality static diagrams
-- **PNG** — exported from diagramming tools (draw.io, Excalidraw, etc.)
+- **Mermaid:** embedded in MDX blog posts or rendered as SVG
+- **SVG:** for high-quality static diagrams
+- **PNG:** exported from diagramming tools (draw.io, Excalidraw, etc.)
 
 ### Usage
 

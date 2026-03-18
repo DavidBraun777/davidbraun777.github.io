@@ -2,10 +2,24 @@ import type { NextConfig } from 'next'
 import { PHASE_DEVELOPMENT_SERVER } from 'next/constants'
 
 export default function nextConfig(phase: string): NextConfig {
+  const isDev = phase === PHASE_DEVELOPMENT_SERVER
+  const cspHeader = [
+    "default-src 'self'",
+    `script-src 'self' 'unsafe-inline'${isDev ? " 'unsafe-eval'" : ''}`,
+    "style-src 'self' 'unsafe-inline'",
+    "img-src 'self' data: blob: https:",
+    "font-src 'self'",
+    "connect-src 'self'" + (isDev ? ' http: ws: wss:' : ''),
+    "frame-ancestors 'none'",
+    "form-action 'self'",
+    "base-uri 'self'",
+    'upgrade-insecure-requests',
+  ].join('; ')
+
   return {
     // Keep dev and production build artifacts separate so `next dev`
     // never has to reuse or reconcile a recent `next build` output tree.
-    distDir: phase === PHASE_DEVELOPMENT_SERVER ? '.next-dev' : '.next',
+    distDir: isDev ? '.next-dev' : '.next',
     images: {
       formats: ['image/avif', 'image/webp'],
     },
@@ -14,7 +28,10 @@ export default function nextConfig(phase: string): NextConfig {
         {
           source: '/(.*)',
           headers: [
-            // CSP is set per-request by proxy.ts
+            {
+              key: 'Content-Security-Policy',
+              value: cspHeader,
+            },
             {
               key: 'X-Frame-Options',
               value: 'DENY',

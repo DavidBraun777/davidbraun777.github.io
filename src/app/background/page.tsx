@@ -367,6 +367,7 @@ export default function BackgroundPage() {
                         src={certification.badgeImage}
                         alt={certification.name}
                         fill
+                        sizes="96px"
                         className="object-contain p-2"
                       />
                     </div>

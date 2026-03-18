@@ -170,23 +170,34 @@ export function Contact({ calLink }: ContactProps) {
                 </div>
               </div>
 
-              <div className="flex items-center gap-4">
-                <div className="p-3 bg-accent-emerald/10 rounded-xl">
+              <div className="rounded-2xl border border-emerald-200/70 bg-emerald-50/80 p-4 dark:border-emerald-900/70 dark:bg-emerald-950/20">
+                <div className="flex items-center gap-4">
+                  <div className="p-3 bg-accent-emerald/10 rounded-xl">
                   <Calendar className="w-6 h-6 text-accent-emerald" />
-                </div>
-                <div>
-                  <p className="text-sm text-slate-500 dark:text-slate-400">Quick chat</p>
-                  <a
-                    href={
-                      calendlyUrl ??
-                      'mailto:davidjbraun777@gmail.com?subject=Request%20a%2015-minute%20intro%20call'
-                    }
-                    target={calendlyUrl ? '_blank' : undefined}
-                    rel={calendlyUrl ? 'noopener noreferrer' : undefined}
-                    className="text-lg font-medium text-slate-900 dark:text-white hover:text-accent-emerald transition-colors"
-                  >
-                    {calendlyUrl ? 'Book a 15-min call' : 'Request a 15-min call'}
-                  </a>
+                  </div>
+                  <div>
+                    <div className="flex flex-wrap items-center gap-2">
+                      <p className="text-sm text-slate-500 dark:text-slate-400">Quick chat</p>
+                      <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-medium uppercase tracking-[0.08em] text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-300">
+                        Preferred
+                      </span>
+                    </div>
+                    <a
+                      href={
+                        calendlyUrl ??
+                        'mailto:davidjbraun777@gmail.com?subject=Request%20a%2015-minute%20intro%20call'
+                      }
+                      target={calendlyUrl ? '_blank' : undefined}
+                      rel={calendlyUrl ? 'noopener noreferrer' : undefined}
+                      className="mt-1 inline-flex items-center gap-1.5 text-lg font-semibold text-slate-900 transition-colors hover:text-accent-emerald dark:text-white"
+                    >
+                      {calendlyUrl ? 'Book a 15-minute meeting' : 'Request a 15-minute meeting'}
+                      <ArrowUpRight className="h-4 w-4" />
+                    </a>
+                    <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">
+                      Best for role fit, system scope, or project next steps.
+                    </p>
+                  </div>
                 </div>
               </div>
             </div>
@@ -345,26 +356,6 @@ export function Contact({ calLink }: ContactProps) {
               )}
             </form>
 
-            {calendlyUrl ? (
-              <div className="rounded-[1.75rem] border border-slate-200 bg-slate-50/90 p-5 dark:border-slate-800 dark:bg-slate-900/60">
-                <p className="font-mono text-xs uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
-                  Prefer live scheduling?
-                </p>
-                <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
-                  If it&apos;s easier to talk through the workflow, system scope, or role
-                  fit live, you can skip email and book directly on Calendly.
-                </p>
-                <a
-                  href={calendlyUrl}
-                  target="_blank"
-                  rel="noopener noreferrer"
-                  className="mt-4 inline-flex items-center justify-center gap-2 rounded-lg bg-primary-600 px-6 py-3 text-base font-medium text-white shadow-lg shadow-primary-500/25 transition-colors hover:bg-primary-700 hover:shadow-primary-500/40 focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 dark:focus:ring-offset-slate-950"
-                >
-                  Open Calendly
-                  <ArrowUpRight className="h-4 w-4" />
-                </a>
-              </div>
-            ) : null}
           </motion.div>
         </div>
       </div>

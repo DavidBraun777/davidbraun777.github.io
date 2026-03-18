@@ -19,6 +19,12 @@ export interface SystemCaseStudy {
   visualSurface: 'dark' | 'light'
   visualAspect: 'landscape' | 'portrait'
   externalUrl?: string
+  /** What I personally owned on this project */
+  myRole: string
+  /** The hardest engineering constraint the system had to solve */
+  coreConstraint: string
+  /** Current milestone or truthful operational outcome */
+  outcome: string
 }
 
 export interface SystemTheme {
@@ -101,6 +107,9 @@ export const systemThemes: SystemTheme[] = [
           'StormIQ architecture diagram showing voice, orchestration, backend, and data layers.',
         visualSurface: 'dark',
         visualAspect: 'landscape',
+        myRole: 'Sole architect and full-stack engineer',
+        coreConstraint: 'Async job orchestration: separating telephony events from decision logic via queue-backed services',
+        outcome: 'Architecture validated with working voice gateway, queue orchestration, and CRM integration layer; advancing toward pilot deployment',
       },
       {
         id: 'roboreceptionist',
@@ -132,6 +141,9 @@ export const systemThemes: SystemTheme[] = [
           'RoboReceptionist architecture diagram showing policy engine, validated AI layer, storage, and notifications.',
         visualSurface: 'dark',
         visualAspect: 'landscape',
+        myRole: 'Sole architect and backend engineer',
+        coreConstraint: 'Validation and safety boundary: every LLM response must pass through a deterministic policy engine before reaching callers',
+        outcome: 'Working prototype with policy-gated intake flow, jurisdiction detection, and conflict-check pipeline',
       },
       {
         id: 'lecture-stream-platform',
@@ -164,6 +176,9 @@ export const systemThemes: SystemTheme[] = [
           'Lecture Stream Platform boundary diagram showing producer, processing cluster, API, and dashboard.',
         visualSurface: 'dark',
         visualAspect: 'portrait',
+        myRole: 'Sole architect and pipeline engineer',
+        coreConstraint: 'Event-driven decoupling: Kafka ensures transcription, summarization, and archival stages fail independently without data loss',
+        outcome: 'End-to-end pipeline processing audio through transcription and summarization to structured artifacts',
       },
     ],
   },
@@ -197,6 +212,9 @@ export const systemThemes: SystemTheme[] = [
           'NAICS planning engine diagram showing dataset, rules engine, plan generation, and exports.',
         visualSurface: 'dark',
         visualAspect: 'landscape',
+        myRole: 'Sole architect and full-stack engineer',
+        coreConstraint: 'Explainability: every generated recommendation must trace back to a rule, data source, or constraint, not a black-box model',
+        outcome: 'Working planning engine with rules-based role generation, income modeling, and explainability views across NAICS hierarchy',
       },
       {
         id: 'dealerflow',
@@ -222,6 +240,9 @@ export const systemThemes: SystemTheme[] = [
           'DealerFlow mobile feed showing newly published wholesale inventory.',
         visualSurface: 'light',
         visualAspect: 'portrait',
+        myRole: 'Sole backend engineer and mobile developer',
+        coreConstraint: 'State consistency: vehicle lifecycle transitions must keep buyer/seller state safe across concurrent offer and inventory workflows',
+        outcome: 'Beta pilot with working mobile workflows for buyer matching, seller inventory management, and real-time notification delivery',
       },
     ],
   },
@@ -256,6 +277,9 @@ export const systemThemes: SystemTheme[] = [
         visualSurface: 'dark',
         visualAspect: 'landscape',
         externalUrl: 'https://www.vifg.org/home',
+        myRole: 'Sole engineer for architecture, frontend, infrastructure, and deployment',
+        coreConstraint: 'Accessibility as a system constraint: screen reader compatibility, keyboard navigation, and contrast requirements treated as first-class delivery requirements',
+        outcome: 'Production site serving VIFG nonprofit since 2020, deployed on AWS Lightsail with automated CI/CD and TLS termination',
       },
     ],
   },

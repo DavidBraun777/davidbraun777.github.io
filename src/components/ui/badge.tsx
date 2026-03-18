@@ -26,9 +26,8 @@ export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
     return (
       <motion.span
         ref={ref}
-        whileHover={{ scale: 1.05 }}
         className={cn(
-          'inline-flex items-center px-3 py-1 rounded-full text-sm font-medium transition-colors',
+          'inline-flex items-center px-3 py-1 rounded-full text-sm font-medium transition-colors cursor-default',
           variants[variant],
           className
         )}
