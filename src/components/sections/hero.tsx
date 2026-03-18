@@ -1,5 +1,6 @@
 'use client'
 
+import Image from 'next/image'
 import { motion } from 'framer-motion'
 import { ArrowRight, Binary, Braces, MapPin, Network, Workflow } from 'lucide-react'
 import { socialLinks } from '@/data/social-links'
@@ -50,19 +51,38 @@ export function Hero() {
               initial={{ opacity: 0, y: 20 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ duration: 0.6 }}
-              className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/6 px-4 py-2 text-sm font-medium tracking-[0.08em] text-primary-200 uppercase backdrop-blur"
+              className="flex flex-col gap-5 sm:flex-row sm:items-center"
             >
-              <Binary className="h-4 w-4" />
-              David Braun
+              <div className="relative h-32 w-32 overflow-hidden rounded-[2rem] border border-white/12 bg-slate-950/75 shadow-[0_24px_70px_-32px_rgba(15,23,42,0.95)] backdrop-blur sm:h-36 sm:w-36 lg:h-40 lg:w-40">
+                <Image
+                  src="/images/profile/Smolder.png"
+                  alt="David Braun portrait"
+                  fill
+                  className="object-cover"
+                  sizes="(min-width: 1024px) 160px, (min-width: 640px) 144px, 128px"
+                  priority
+                />
+              </div>
+
+              <div>
+                <div className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/6 px-4 py-2 text-sm font-medium tracking-[0.08em] text-primary-200 uppercase backdrop-blur">
+                  <Binary className="h-4 w-4" />
+                  Applied AI + Infrastructure
+                </div>
+                <p className="mt-4 text-4xl font-semibold tracking-tight text-white sm:text-5xl lg:text-[3.9rem]">
+                  David Braun
+                </p>
+              </div>
             </motion.div>
 
             <motion.h1
               initial={{ opacity: 0, y: 24 }}
               animate={{ opacity: 1, y: 0 }}
               transition={{ delay: 0.12, duration: 0.7 }}
-              className="mt-7 text-4xl font-semibold tracking-tight text-white sm:text-5xl lg:text-6xl"
+              className="mt-8 max-w-2xl text-2xl font-semibold tracking-tight text-white sm:text-3xl lg:text-4xl"
             >
-              AI Systems Engineer building automation platforms
+              <span className="block">AI Systems Engineer</span>
+              <span className="mt-2 block text-slate-200">building automation platforms</span>
             </motion.h1>
 
             <motion.p
@@ -194,8 +214,23 @@ export function Hero() {
                     AI is one layer in the architecture
                   </h2>
                 </div>
-                <div className="hidden rounded-full border border-white/10 bg-white/5 px-3 py-1 text-xs font-medium text-slate-300 sm:block">
-                  problem - system - outcome
+                <div className="hidden rounded-[1.25rem] border border-white/8 bg-[linear-gradient(180deg,rgba(15,23,42,0.78),rgba(15,23,42,0.52))] px-3 py-1.5 shadow-[inset_0_1px_0_rgba(255,255,255,0.04)] sm:flex sm:flex-col sm:items-end">
+                  <span className="font-mono text-[9px] uppercase tracking-[0.22em] text-slate-500">
+                    Framing
+                  </span>
+                  <div className="mt-1.5 flex items-center gap-1.5 text-[10px] font-medium uppercase tracking-[0.1em] text-slate-300">
+                    <span className="rounded-full border border-white/8 bg-white/[0.04] px-2 py-0.5">
+                      problem
+                    </span>
+                    <span className="h-1 w-1 rounded-full bg-primary-300/70" />
+                    <span className="rounded-full border border-white/8 bg-white/[0.04] px-2 py-0.5">
+                      system
+                    </span>
+                    <span className="h-1 w-1 rounded-full bg-primary-300/70" />
+                    <span className="rounded-full border border-white/8 bg-white/[0.04] px-2 py-0.5">
+                      outcome
+                    </span>
+                  </div>
                 </div>
               </div>
 

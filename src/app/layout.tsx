@@ -1,5 +1,6 @@
 import type { Metadata } from 'next'
 import localFont from 'next/font/local'
+import Script from 'next/script'
 import { ThemeProvider } from '@/providers/theme-provider'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
@@ -17,6 +18,27 @@ const jetbrainsMono = localFont({
   variable: '--font-mono',
   display: 'swap',
 })
+
+const initialScrollResetScript = `
+  (() => {
+    const resetScroll = () => {
+      if (window.location.hash) return;
+      window.scrollTo(0, 0);
+      document.documentElement.scrollTop = 0;
+      document.body.scrollTop = 0;
+    };
+
+    if ('scrollRestoration' in window.history) {
+      window.history.scrollRestoration = 'manual';
+    }
+
+    resetScroll();
+    requestAnimationFrame(() => requestAnimationFrame(resetScroll));
+    window.setTimeout(resetScroll, 180);
+    window.addEventListener('load', resetScroll, { once: true });
+    window.addEventListener('pageshow', resetScroll);
+  })();
+`
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://dbraun.io'),
@@ -84,6 +106,9 @@ export default function RootLayout({
   return (
     <html lang="en" className="dark" suppressHydrationWarning>
       <body className={`${inter.variable} ${jetbrainsMono.variable} font-sans`}>
+        <Script id="initial-scroll-reset" strategy="beforeInteractive">
+          {initialScrollResetScript}
+        </Script>
         <ThemeProvider>
           <ScrollToTop />
           <Header />

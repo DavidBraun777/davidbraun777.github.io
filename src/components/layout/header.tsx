@@ -201,22 +201,24 @@ export function Header() {
       >
         <nav className="mx-auto max-w-[88rem] px-4 sm:px-6 lg:px-8">
           <div className="flex min-h-16 items-center justify-between gap-5 py-2 md:min-h-20 lg:min-h-0 lg:items-start lg:py-4 xl:gap-6">
-            <div className="flex min-w-0 items-center gap-4 lg:items-start xl:gap-6">
+            <div className="flex min-w-0 items-center gap-3 lg:items-start lg:gap-3 xl:gap-4">
               <Link
                 href="/#top"
                 onClick={(event) => handleSectionLinkClick(event, '/#top', 'top')}
-                className="flex items-center gap-2 group shrink-0"
+                className="group flex shrink-0 items-center gap-2 lg:-translate-x-12 xl:-translate-x-14"
               >
-                <motion.span
-                  whileHover={{ scale: 1.05 }}
-                  className="text-xl md:text-2xl font-bold bg-gradient-to-r from-primary-500 to-accent-violet bg-clip-text text-transparent"
+                <motion.div
+                  whileHover={{ scale: 1.03 }}
+                  className="flex h-14 w-14 items-center justify-center overflow-hidden rounded-[1.45rem] border border-white/12 bg-slate-950/75 shadow-[0_16px_35px_-18px_rgba(15,23,42,0.85)] backdrop-blur md:h-16 md:w-16 lg:h-[7rem] lg:w-[6.4rem] lg:rounded-[1.8rem] xl:h-[7rem] xl:w-[6.4rem]"
                 >
-                  DB
-                </motion.span>
+                  <span className="bg-gradient-to-r from-primary-500 to-accent-violet bg-clip-text text-xl font-bold text-transparent md:text-2xl lg:text-[2.7rem]">
+                    DB
+                  </span>
+                </motion.div>
               </Link>
 
               <div className="hidden min-w-0 lg:flex items-start">
-                <div className="flex min-w-0 items-stretch gap-2 xl:gap-3">
+                <div className="-ml-14 flex min-w-0 items-stretch gap-2 xl:gap-3">
                   {pageTabs.map((page) => {
                     const isActive = activePageId === page.id
 
