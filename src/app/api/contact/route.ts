@@ -4,8 +4,59 @@ import {
   sanitizeInput,
   sanitizeEmail,
   escapeHtml,
+  type ContactFormData,
 } from '@/lib/contact-validation'
 import { checkRateLimit, getClientIp } from '@/lib/rate-limit'
+
+// ---------------------------------------------------------------------------
+// Allowed origins for cross-site abuse prevention.
+// Requests without a recognised Origin or Referer are rejected with 403.
+// Vercel preview URLs are accepted when VERCEL_URL is set.
+// ---------------------------------------------------------------------------
+const ALLOWED_ORIGINS = new Set([
+  'https://dbraun.io',
+  'https://www.dbraun.io',
+  'http://localhost:3000',
+])
+
+function isAllowedLocalDevOrigin(origin: string): boolean {
+  if (process.env.NODE_ENV === 'production') return false
+
+  try {
+    const url = new URL(origin)
+    return (
+      url.protocol === 'http:' &&
+      (url.hostname === 'localhost' || url.hostname === '127.0.0.1')
+    )
+  } catch {
+    return false
+  }
+}
+
+function isAllowedOrigin(request: Request): boolean {
+  const origin = request.headers.get('origin')
+  if (origin && ALLOWED_ORIGINS.has(origin)) return true
+  if (origin && isAllowedLocalDevOrigin(origin)) return true
+
+  // Accept Vercel preview deployments (*.vercel.app)
+  const vercelUrl = process.env.VERCEL_URL
+  if (origin && vercelUrl && origin === `https://${vercelUrl}`) return true
+
+  // Fallback: check Referer header (some clients omit Origin on same-origin)
+  const referer = request.headers.get('referer')
+  if (referer) {
+    try {
+      const refererOrigin = new URL(referer).origin
+      if (ALLOWED_ORIGINS.has(refererOrigin)) return true
+      if (isAllowedLocalDevOrigin(refererOrigin)) return true
+      if (vercelUrl && refererOrigin === `https://${vercelUrl}`) return true
+    } catch {
+      // malformed Referer: reject
+    }
+  }
+
+  return false
+}
 
 function logRequest(status: number, start: number, errorType?: string) {
   console.log(
@@ -18,11 +69,84 @@ function logRequest(status: number, start: number, errorType?: string) {
   )
 }
 
+// ---------------------------------------------------------------------------
+// Sanitization pipeline: every field is sanitized in one explicit step.
+// sanitizeInput: trim → truncate → HTML-escape (returns safe HTML string)
+// sanitizeEmail: trim → truncate → strip control chars (returns plain text)
+//
+// After this step, `name`, `subject`, and `message` are HTML-safe strings.
+// `email` is plain text and must be HTML-escaped separately when embedded
+// in the email body template.
+// ---------------------------------------------------------------------------
+interface SanitizedContact {
+  name: string       // HTML-escaped
+  email: string      // plain text (safe for replyTo, must escape for HTML)
+  subject: string    // HTML-escaped
+  message: string    // HTML-escaped
+}
+
+function sanitizeContactData(data: ContactFormData): SanitizedContact {
+  return {
+    name: sanitizeInput(data.name, 100),
+    email: sanitizeEmail(data.email),
+    subject: sanitizeInput(data.subject, 200),
+    message: sanitizeInput(data.message, 2000),
+  }
+}
+
+// ---------------------------------------------------------------------------
+// Build email HTML body.
+// All interpolated values are already HTML-escaped by the sanitization step
+// above, except `email` which is escaped inline via escapeHtml().
+// The `.replace(/\n/g, '<br>')` on `message` is safe because the message
+// has already been HTML-escaped, so no raw `<` or `>` characters remain.
+// ---------------------------------------------------------------------------
+function buildEmailHtml(
+  sanitized: SanitizedContact,
+  data: ContactFormData
+): string {
+  const optionalFields: string[] = []
+  if (data.projectType) {
+    optionalFields.push(
+      `<p><strong>Project Type:</strong> ${escapeHtml(data.projectType)}</p>`
+    )
+  }
+  if (data.serviceNeeded) {
+    optionalFields.push(
+      `<p><strong>Service Needed:</strong> ${escapeHtml(data.serviceNeeded)}</p>`
+    )
+  }
+  if (data.urgency) {
+    optionalFields.push(
+      `<p><strong>Urgency:</strong> ${escapeHtml(data.urgency)}</p>`
+    )
+  }
+
+  return `
+    <h2>New Contact Form Submission</h2>
+    <p><strong>Name:</strong> ${sanitized.name}</p>
+    <p><strong>Email:</strong> ${escapeHtml(sanitized.email)}</p>
+    <p><strong>Subject:</strong> ${sanitized.subject}</p>
+    ${optionalFields.join('\n    ')}
+    <p><strong>Message:</strong></p>
+    <p>${sanitized.message.replace(/\n/g, '<br>')}</p>
+  `
+}
+
 export async function POST(request: Request) {
   const start = performance.now()
 
   try {
-    // Rate limiting (Upstash Redis when configured, in-memory fallback)
+    // 1. Origin / Referer validation: reject cross-site submissions
+    if (!isAllowedOrigin(request)) {
+      logRequest(403, start, 'origin_rejected')
+      return NextResponse.json(
+        { success: false, error: 'Forbidden' },
+        { status: 403 }
+      )
+    }
+
+    // 2. Rate limiting (Upstash Redis when configured, in-memory fallback)
     const ip = getClientIp(request.headers)
     const rateLimit = await checkRateLimit(ip)
 
@@ -37,6 +161,7 @@ export async function POST(request: Request) {
       )
     }
 
+    // 3. Parse JSON body
     let body: unknown
     try {
       body = await request.json()
@@ -47,6 +172,8 @@ export async function POST(request: Request) {
         { status: 400 }
       )
     }
+
+    // 4. Validate
     const result = validateContactForm(body)
 
     if (!result.valid) {
@@ -57,31 +184,11 @@ export async function POST(request: Request) {
       )
     }
 
+    // 5. Sanitize: explicit pipeline, all in one step
     const { data } = result
-    const sanitizedName = sanitizeInput(data.name, 100)
-    const sanitizedEmail = sanitizeEmail(data.email)
-    const sanitizedSubject = sanitizeInput(data.subject, 200)
-    const sanitizedMessage = sanitizeInput(data.message, 2000)
+    const sanitized = sanitizeContactData(data)
 
-    // Build optional fields for email body
-    const optionalFields: string[] = []
-    if (data.projectType) {
-      optionalFields.push(
-        `<p><strong>Project Type:</strong> ${escapeHtml(data.projectType)}</p>`
-      )
-    }
-    if (data.serviceNeeded) {
-      optionalFields.push(
-        `<p><strong>Service Needed:</strong> ${escapeHtml(data.serviceNeeded)}</p>`
-      )
-    }
-    if (data.urgency) {
-      optionalFields.push(
-        `<p><strong>Urgency:</strong> ${escapeHtml(data.urgency)}</p>`
-      )
-    }
-
-    // Require RESEND_API_KEY — missing key means misconfigured mail service
+    // 6. Require mail service configuration
     if (!process.env.RESEND_API_KEY) {
       console.error('RESEND_API_KEY is not configured')
       logRequest(500, start, 'missing_api_key')
@@ -91,23 +198,16 @@ export async function POST(request: Request) {
       )
     }
 
+    // 7. Send email
     const { Resend } = await import('resend')
     const resend = new Resend(process.env.RESEND_API_KEY)
 
     const { error } = await resend.emails.send({
       from: 'Portfolio Contact <onboarding@resend.dev>',
       to: process.env.CONTACT_EMAIL || 'davidjbraun777@gmail.com',
-      subject: `Portfolio Contact: ${sanitizedSubject}`,
-      html: `
-        <h2>New Contact Form Submission</h2>
-        <p><strong>Name:</strong> ${sanitizedName}</p>
-        <p><strong>Email:</strong> ${escapeHtml(sanitizedEmail)}</p>
-        <p><strong>Subject:</strong> ${sanitizedSubject}</p>
-        ${optionalFields.join('\n        ')}
-        <p><strong>Message:</strong></p>
-        <p>${sanitizedMessage.replace(/\n/g, '<br>')}</p>
-      `,
-      replyTo: sanitizedEmail,
+      subject: `Portfolio Contact: ${sanitized.subject}`,
+      html: buildEmailHtml(sanitized, data),
+      replyTo: sanitized.email,
     })
 
     if (error) {

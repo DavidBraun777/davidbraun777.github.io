@@ -312,6 +312,10 @@ export function Header() {
               </div>
             </div>
 
+            <div className="flex min-w-0 flex-1 justify-center px-2 lg:hidden">
+              <CurrentStatus compact className="w-full max-w-[214px] sm:max-w-[228px]" />
+            </div>
+
             <div className="flex shrink-0 items-center gap-3 lg:items-start lg:pt-2 xl:gap-4">
               <CurrentStatus className="hidden xl:flex" />
 
@@ -352,9 +356,11 @@ export function Header() {
             exit={{ opacity: 0, y: -20 }}
             className="fixed inset-0 z-[60] lg:hidden"
           >
-            <div
+            <button
+              type="button"
               className="absolute inset-0 bg-black/50 backdrop-blur-sm"
               onClick={() => setIsMobileMenuOpen(false)}
+              aria-label="Close navigation menu"
             />
             <motion.div
               initial={{ x: '100%' }}
@@ -386,13 +392,6 @@ export function Header() {
               </div>
 
               <div className="flex flex-col gap-4 p-5">
-                <div className="rounded-[1.5rem] border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-950">
-                  <p className="font-mono text-[10px] uppercase tracking-[0.22em] text-slate-500 dark:text-slate-400">
-                    Current Status
-                  </p>
-                  <CurrentStatus className="mt-3 w-full max-w-none" />
-                </div>
-
                 {pageTabs.map((page, index) => {
                   const isActive = activePageId === page.id
 

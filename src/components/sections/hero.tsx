@@ -53,13 +53,13 @@ export function Hero() {
               transition={{ duration: 0.6 }}
               className="flex flex-col gap-5 sm:flex-row sm:items-center"
             >
-              <div className="relative h-32 w-32 overflow-hidden rounded-[2rem] border border-white/12 bg-slate-950/75 shadow-[0_24px_70px_-32px_rgba(15,23,42,0.95)] backdrop-blur sm:h-36 sm:w-36 lg:h-40 lg:w-40">
+              <div className="relative h-64 w-64 overflow-hidden rounded-[2rem] border border-white/12 bg-slate-950/75 shadow-[0_24px_70px_-32px_rgba(15,23,42,0.95)] backdrop-blur sm:h-40 sm:w-40 lg:h-40 lg:w-40">
                 <Image
                   src="/images/profile/Smolder.png"
                   alt="David Braun portrait"
                   fill
                   className="object-cover"
-                  sizes="(min-width: 1024px) 160px, (min-width: 640px) 144px, 128px"
+                  sizes="(min-width: 1024px) 160px, (min-width: 640px) 160px, 256px"
                   priority
                 />
               </div>

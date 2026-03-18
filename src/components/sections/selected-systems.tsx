@@ -192,6 +192,35 @@ export function SelectedSystems() {
                   <p className="mt-3 max-w-3xl text-base leading-relaxed text-slate-600 sm:text-lg dark:text-slate-300">
                     {activeSystem.summary}
                   </p>
+
+                  {/* Proof block: always visible for fast trust formation */}
+                  <div className="mt-5 grid gap-3 sm:grid-cols-3">
+                    <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 dark:border-slate-800 dark:bg-slate-900/60">
+                      <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-400 dark:text-slate-400">
+                        My Role
+                      </p>
+                      <p className="mt-1.5 text-sm font-medium text-slate-800 dark:text-slate-200">
+                        {activeSystem.myRole}
+                      </p>
+                    </div>
+                    <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 dark:border-slate-800 dark:bg-slate-900/60">
+                      <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-400 dark:text-slate-400">
+                        Core Constraint
+                      </p>
+                      <p className="mt-1.5 text-sm font-medium text-slate-800 dark:text-slate-200">
+                        {activeSystem.coreConstraint}
+                      </p>
+                    </div>
+                    <div className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 dark:border-slate-800 dark:bg-slate-900/60">
+                      <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-400 dark:text-slate-400">
+                        Outcome
+                      </p>
+                      <p className="mt-1.5 text-sm font-medium text-slate-800 dark:text-slate-200">
+                        {activeSystem.outcome}
+                      </p>
+                    </div>
+                  </div>
+
                   <div className="mt-5 hidden rounded-2xl border border-slate-200 bg-slate-50 p-4 lg:block dark:border-slate-800 dark:bg-slate-900/60">
                     <p className="font-mono text-xs uppercase tracking-[0.18em] text-slate-500 dark:text-slate-300">
                       Problem

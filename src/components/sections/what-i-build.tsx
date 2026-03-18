@@ -1,6 +1,6 @@
 'use client'
 
-import { motion } from 'framer-motion'
+import { motion, useReducedMotion } from 'framer-motion'
 import { Boxes, Bot, Server, Workflow } from 'lucide-react'
 import { SectionHeader } from '@/components/ui/section-header'
 import { buildPatterns } from '@/data/systems'
@@ -8,6 +8,8 @@ import { buildPatterns } from '@/data/systems'
 const patternIcons = [Bot, Workflow, Server, Boxes]
 
 export function WhatIBuild() {
+  const prefersReducedMotion = useReducedMotion()
+
   return (
     <section id="what-i-build" className="section bg-slate-50 dark:bg-slate-900/45">
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
@@ -54,8 +56,10 @@ export function WhatIBuild() {
               return (
                 <motion.div
                   key={pattern.title}
-                  initial={{ opacity: 0, y: 20 }}
-                  whileInView={{ opacity: 1, y: 0 }}
+                  initial={prefersReducedMotion ? false : { opacity: 0, y: 20 }}
+                  whileInView={
+                    prefersReducedMotion ? undefined : { opacity: 1, y: 0 }
+                  }
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.08, duration: 0.45 }}
                   className="rounded-3xl border border-slate-200 bg-white p-6 shadow-lg shadow-slate-200/40 dark:border-slate-800 dark:bg-slate-950"
