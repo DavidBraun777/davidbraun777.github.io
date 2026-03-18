@@ -272,6 +272,9 @@ RESEND_API_KEY=re_xxxxxxxxxxxxx
 # Optional: override recipient (defaults to davidjbraun777@gmail.com)
 CONTACT_EMAIL=your-email@example.com
 
+# Optional: direct scheduling link shown alongside the contact form
+CAL_LINK=https://calendly.com/your-handle/intro-call
+
 # Optional: Upstash Redis for distributed rate limiting
 # Falls back to in-memory rate limiting when not set
 UPSTASH_REDIS_REST_URL=https://your-instance.upstash.io
@@ -280,7 +283,10 @@ UPSTASH_REDIS_REST_TOKEN=your-token
 
 Get your Resend API key at [resend.com](https://resend.com). For distributed rate limiting, create a free Redis database at [upstash.com](https://upstash.com).
 
-**Note:** The contact form returns a 500 error if `RESEND_API_KEY` is not set.
+**Notes:**
+
+- The contact form returns a 500 error if `RESEND_API_KEY` is not set.
+- If `CAL_LINK` is set, the contact section adds a second option so visitors can either send the form or open the Calendly event directly.
 
 ## Project Structure
 

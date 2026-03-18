@@ -7,9 +7,27 @@ const STRICT_EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
 const CONTROL_CHAR_REGEX = /[\x00-\x1f\x7f]/
 
 // Allowlists for optional dropdowns
-export const PROJECT_TYPES = ['home', 'business', 'school', 'fun', 'other'] as const
-export const SERVICE_TYPES = ['bugfix', 'feature', 'infra', 'security', 'ai', 'other'] as const
-export const URGENCY_LEVELS = ['today', 'this-week', 'this-month'] as const
+export const PROJECT_TYPES = [
+  'full-time',
+  'consulting',
+  'build',
+  'architecture',
+  'other',
+] as const
+export const SERVICE_TYPES = [
+  'applied-ai',
+  'workflow-automation',
+  'platform-infra',
+  'product-delivery',
+  'accessibility',
+  'other',
+] as const
+export const URGENCY_LEVELS = [
+  'exploring',
+  'this-quarter',
+  'this-month',
+  'urgent',
+] as const
 
 export type ProjectType = (typeof PROJECT_TYPES)[number]
 export type ServiceType = (typeof SERVICE_TYPES)[number]

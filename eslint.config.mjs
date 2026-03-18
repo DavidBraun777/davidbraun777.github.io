@@ -32,6 +32,6 @@ export default tseslint.config(
     },
   },
   {
-    ignores: [".next/*", "node_modules/*", "out/*"],
+    ignores: [".next/**", ".next-dev/**", "node_modules/**", "out/**"],
   }
 );
