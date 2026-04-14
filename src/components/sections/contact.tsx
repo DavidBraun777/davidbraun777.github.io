@@ -23,6 +23,10 @@ type FormStatus = 'idle' | 'loading' | 'success' | 'error'
 
 interface ContactProps {
   calLink?: string
+  showSectionHeader?: boolean
+  title?: string
+  subtitle?: string
+  sectionId?: string
 }
 
 const conversationTypeOptions = [
@@ -49,7 +53,13 @@ const urgencyOptions = [
   { value: 'urgent', label: 'Urgent' },
 ]
 
-export function Contact({ calLink }: ContactProps) {
+export function Contact({
+  calLink,
+  showSectionHeader = true,
+  title = 'Get In Touch',
+  subtitle = 'For systems work where architecture, implementation, and product judgment all need to show up in the same project.',
+  sectionId = 'contact',
+}: ContactProps) {
   const [formStatus, setFormStatus] = useState<FormStatus>('idle')
   const resetTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined)
   const [formData, setFormData] = useState({
@@ -108,12 +118,9 @@ export function Contact({ calLink }: ContactProps) {
   }, [])
 
   return (
-    <section id="contact" className="section">
+    <section id={sectionId} className="section">
       <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
-        <SectionHeader
-          title="Get In Touch"
-          subtitle="For systems work where architecture, implementation, and product judgment all need to show up in the same project."
-        />
+        {showSectionHeader ? <SectionHeader title={title} subtitle={subtitle} /> : null}
 
         <div className="grid lg:grid-cols-2 gap-12">
           {/* Contact info */}
@@ -134,10 +141,10 @@ export function Contact({ calLink }: ContactProps) {
                 and selected builds.
               </p>
               <Link
-                href="/background"
+                href="/resume"
                 className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-primary-700 transition-colors hover:text-primary-600 dark:text-primary-300 dark:hover:text-primary-200"
               >
-                View experience, skills, and credentials
+                View resume, skills, and credentials
                 <ArrowRight className="h-4 w-4" />
               </Link>
             </div>
