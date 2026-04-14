@@ -5,6 +5,7 @@ export interface Education {
   programUrl?: string
   degree: string
   field: string
+  secondaryCredential?: string
   startDate: string
   endDate: string | null
   description?: string
@@ -20,6 +21,7 @@ export const education: Education[] = [
     programUrl: 'https://software.stthomas.edu/degree/masters/artificial-intelligence/',
     degree: "Master's",
     field: 'Artificial Intelligence',
+    secondaryCredential: 'Big Data certificate',
     startDate: 'September 2024',
     endDate: 'December 2026',
     inProgress: true,

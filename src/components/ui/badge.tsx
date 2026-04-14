@@ -1,12 +1,9 @@
-'use client'
-
-import { forwardRef } from 'react'
+import { forwardRef, type HTMLAttributes } from 'react'
 import { cn } from '@/lib/utils'
-import { motion, type HTMLMotionProps } from 'framer-motion'
 
 type BadgeVariant = 'default' | 'primary' | 'secondary' | 'outline'
 
-interface BadgeProps extends Omit<HTMLMotionProps<'span'>, 'ref'> {
+interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
   variant?: BadgeVariant
 }
 
@@ -24,7 +21,7 @@ const variants: Record<BadgeVariant, string> = {
 export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
   ({ className, variant = 'default', children, ...props }, ref) => {
     return (
-      <motion.span
+      <span
         ref={ref}
         className={cn(
           'inline-flex items-center px-3 py-1 rounded-full text-sm font-medium transition-colors cursor-default',
@@ -34,7 +31,7 @@ export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(
         {...props}
       >
         {children}
-      </motion.span>
+      </span>
     )
   }
 )

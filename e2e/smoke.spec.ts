@@ -13,18 +13,27 @@ test.describe('Smoke tests', () => {
     const header = page.locator('header')
     await expect(header).toBeVisible()
     // Check key nav links exist
-    await expect(header.getByRole('link', { name: /blog/i })).toBeVisible()
+    await expect(header.getByRole('link', { name: /projects/i })).toBeVisible()
+    await expect(header.getByRole('link', { name: /writing/i })).toBeVisible()
   })
 
-  test('blog page loads', async ({ page }) => {
-    await page.goto('/blog')
-    await expect(page).toHaveTitle(/Blog/)
+  test('writing page loads', async ({ page }) => {
+    await page.goto('/writing')
+    await expect(page).toHaveTitle(/Writing/)
   })
 
-  test('contact section is reachable', async ({ page }) => {
+  test('contact section is reachable from the homepage', async ({ page }) => {
     await page.goto('/')
     const contact = page.locator('#contact')
     await expect(contact).toBeAttached()
+  })
+
+  test('legacy routes redirect to the new IA', async ({ page }) => {
+    await page.goto('/blog')
+    await expect(page).toHaveURL(/\/writing$/)
+
+    await page.goto('/background')
+    await expect(page).toHaveURL(/\/resume$/)
   })
 
   test('CSP header is set', async ({ page }) => {

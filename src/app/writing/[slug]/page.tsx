@@ -1,0 +1,100 @@
+import type { Metadata } from 'next'
+import Link from 'next/link'
+import { ArrowLeft, Calendar, Clock } from 'lucide-react'
+import { notFound } from 'next/navigation'
+import { MDXRemote } from 'next-mdx-remote/rsc'
+import { mdxComponents } from '@/components/blog/mdx-components'
+import { Badge } from '@/components/ui/badge'
+import { getAllPostSlugs, getPostBySlug } from '@/lib/mdx'
+
+interface Props {
+  params: Promise<{ slug: string }>
+}
+
+export function generateStaticParams() {
+  return getAllPostSlugs().map((slug) => ({ slug }))
+}
+
+export async function generateMetadata({ params }: Props): Promise<Metadata> {
+  const { slug } = await params
+  const post = getPostBySlug(slug)
+
+  if (!post) {
+    return { title: 'Post Not Found' }
+  }
+
+  return {
+    title: post.title,
+    description: post.description,
+    openGraph: {
+      title: post.title,
+      description: post.description,
+      type: 'article',
+      publishedTime: post.date,
+      authors: [post.author],
+      tags: post.tags,
+    },
+  }
+}
+
+export default async function WritingPostPage({ params }: Props) {
+  const { slug } = await params
+  const post = getPostBySlug(slug)
+
+  if (!post) {
+    notFound()
+  }
+
+  const formattedDate = new Date(post.date).toLocaleDateString('en-US', {
+    year: 'numeric',
+    month: 'long',
+    day: 'numeric',
+  })
+
+  return (
+    <article className="min-h-screen pb-16 pt-10 md:pt-12">
+      <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+        <Link
+          href="/writing"
+          className="inline-flex items-center gap-2 text-sm font-medium text-slate-600 transition-colors hover:text-primary-600 dark:text-slate-300 dark:hover:text-primary-300"
+        >
+          <ArrowLeft className="h-4 w-4" />
+          Back to Writing
+        </Link>
+
+        <header className="mt-8 border-b border-slate-200 pb-8 dark:border-slate-800">
+          <div className="flex flex-wrap gap-2">
+            {post.tags.map((tag) => (
+              <Badge key={tag} variant="primary">
+                {tag}
+              </Badge>
+            ))}
+          </div>
+
+          <h1 className="mt-6 text-4xl font-semibold tracking-tight text-slate-900 dark:text-white md:text-5xl">
+            {post.title}
+          </h1>
+          <p className="mt-4 text-lg leading-8 text-slate-600 dark:text-slate-300">
+            {post.description}
+          </p>
+
+          <div className="mt-6 flex flex-wrap items-center gap-4 text-sm text-slate-500 dark:text-slate-400">
+            <span className="inline-flex items-center gap-2">
+              <Calendar className="h-4 w-4" />
+              {formattedDate}
+            </span>
+            <span className="inline-flex items-center gap-2">
+              <Clock className="h-4 w-4" />
+              {post.readingTime}
+            </span>
+            <span>By {post.author}</span>
+          </div>
+        </header>
+
+        <div className="prose prose-lg mt-10 max-w-none dark:prose-invert">
+          <MDXRemote source={post.content} components={mdxComponents} />
+        </div>
+      </div>
+    </article>
+  )
+}
