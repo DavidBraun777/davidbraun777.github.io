@@ -1,28 +1,24 @@
-'use client'
-
 import { forwardRef, type HTMLAttributes } from 'react'
 import { cn } from '@/lib/utils'
-import { motion, type HTMLMotionProps } from 'framer-motion'
 
-interface CardProps extends Omit<HTMLMotionProps<'div'>, 'ref'> {
+interface CardProps extends HTMLAttributes<HTMLDivElement> {
   hover?: boolean
 }
 
 export const Card = forwardRef<HTMLDivElement, CardProps>(
   ({ className, hover = true, children, ...props }, ref) => {
     return (
-      <motion.div
+      <div
         ref={ref}
-        whileHover={hover ? { y: -4, scale: 1.01 } : undefined}
-        transition={{ type: 'spring', stiffness: 300 }}
         className={cn(
-          'rounded-2xl bg-white dark:bg-slate-900 border border-slate-200 dark:border-slate-800 shadow-lg shadow-slate-200/50 dark:shadow-slate-900/50 overflow-hidden',
+          'overflow-hidden rounded-2xl border border-slate-200 bg-white shadow-lg shadow-slate-200/50 dark:border-slate-800 dark:bg-slate-900 dark:shadow-slate-900/50',
+          hover && 'transition-transform duration-200 hover:-translate-y-1',
           className
         )}
         {...props}
       >
         {children}
-      </motion.div>
+      </div>
     )
   }
 )

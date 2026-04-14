@@ -1,8 +1,5 @@
-'use client'
-
 import { type ReactNode } from 'react'
 import { cn } from '@/lib/utils'
-import { motion } from 'framer-motion'
 
 type ButtonVariant = 'primary' | 'secondary' | 'ghost' | 'outline'
 type ButtonSize = 'sm' | 'md' | 'lg'
@@ -46,12 +43,10 @@ export function Button({
   onClick,
 }: ButtonProps) {
   return (
-    <motion.button
+    <button
       type={type}
-      whileHover={{ scale: 1.02 }}
-      whileTap={{ scale: 0.98 }}
       className={cn(
-        'inline-flex items-center justify-center gap-2 rounded-lg font-medium transition-colors focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:opacity-50 disabled:pointer-events-none',
+        'inline-flex items-center justify-center gap-2 rounded-full font-medium transition-all focus:outline-none focus:ring-2 focus:ring-primary-500 focus:ring-offset-2 disabled:pointer-events-none disabled:opacity-50',
         variants[variant],
         sizes[size],
         className
@@ -82,6 +77,6 @@ export function Button({
         </svg>
       )}
       {children}
-    </motion.button>
+    </button>
   )
 }

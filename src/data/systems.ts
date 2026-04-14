@@ -309,6 +309,18 @@ export const featuredSystems: FeaturedSystemCaseStudy[] = featuredSystemIds.map(
   return system
 })
 
+export const allSystems: FeaturedSystemCaseStudy[] = systemThemes.flatMap((theme) =>
+  theme.systems.map((system) => ({ ...system, themeTitle: theme.title }))
+)
+
+export const supportingSystems = allSystems.filter(
+  (system) => !featuredSystemIds.includes(system.id)
+)
+
+export function getSystemById(id: string) {
+  return systemById.get(id) ?? null
+}
+
 export const buildSteps: BuildStep[] = [
   {
     title: 'Architecture-first design',

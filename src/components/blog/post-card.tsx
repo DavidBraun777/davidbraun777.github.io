@@ -1,6 +1,3 @@
-'use client'
-
-import { motion, useReducedMotion } from 'framer-motion'
 import Link from 'next/link'
 import Image from 'next/image'
 import { Calendar, Clock, ArrowRight } from 'lucide-react'
@@ -13,7 +10,6 @@ interface PostCardProps {
 }
 
 export function PostCard({ post, index = 0 }: PostCardProps) {
-  const prefersReducedMotion = useReducedMotion()
   const formattedDate = new Date(post.date).toLocaleDateString('en-US', {
     year: 'numeric',
     month: 'long',
@@ -21,17 +17,12 @@ export function PostCard({ post, index = 0 }: PostCardProps) {
   })
 
   return (
-    <motion.article
-      initial={prefersReducedMotion ? false : { opacity: 0, y: 30 }}
-      whileInView={prefersReducedMotion ? undefined : { opacity: 1, y: 0 }}
-      viewport={{ once: true }}
-      transition={prefersReducedMotion ? undefined : { delay: index * 0.1 }}
-      whileHover={prefersReducedMotion ? undefined : { y: -4 }}
-      className="group"
+    <article
+      className="group overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white shadow-sm transition-transform duration-200 hover:-translate-y-1 dark:border-slate-800 dark:bg-slate-950"
+      style={{ animationDelay: `${index * 80}ms` }}
     >
-      <Link href={`/blog/${encodeURIComponent(post.slug)}`}>
-        <div className="bg-white dark:bg-slate-900 rounded-2xl overflow-hidden shadow-lg hover:shadow-xl transition-all duration-300 border border-slate-200 dark:border-slate-800">
-          {/* Image */}
+      <Link href={`/writing/${encodeURIComponent(post.slug)}`}>
+        <div>
           {post.image && (
             <div className="relative h-48 overflow-hidden">
               <Image
@@ -39,13 +30,12 @@ export function PostCard({ post, index = 0 }: PostCardProps) {
                 alt={post.title}
                 fill
                 className="object-cover transition-transform duration-500 group-hover:scale-105"
+                sizes="(min-width: 1024px) 24vw, (min-width: 768px) 42vw, 100vw"
               />
             </div>
           )}
 
-          {/* Content */}
           <div className="p-6">
-            {/* Tags */}
             <div className="flex flex-wrap gap-2 mb-3">
               {post.tags.slice(0, 2).map((tag) => (
                 <Badge key={tag} variant="primary">
@@ -62,7 +52,6 @@ export function PostCard({ post, index = 0 }: PostCardProps) {
               {post.description}
             </p>
 
-            {/* Meta */}
             <div className="flex items-center justify-between text-sm text-slate-500 dark:text-slate-300">
               <div className="flex items-center gap-4">
                 <span className="flex items-center gap-1">
@@ -82,6 +71,6 @@ export function PostCard({ post, index = 0 }: PostCardProps) {
           </div>
         </div>
       </Link>
-    </motion.article>
+    </article>
   )
 }
