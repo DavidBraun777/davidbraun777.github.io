@@ -41,6 +41,10 @@ describe('POST /api/contact', () => {
     _resetUpstash()
     mockSend.mockReset()
     mockSend.mockResolvedValue({ data: { id: 'test-id' }, error: null })
+    vi.stubEnv('RESEND_API_KEY', 'test-key')
+    vi.stubEnv('CONTACT_NOTIFICATION_EMAIL', 'owner@example.com')
+    vi.stubEnv('CONTACT_FROM_EMAIL', 'contact@dbraun.io')
+    vi.stubEnv('CONTACT_FROM_NAME', 'dbraun.io Contact')
     // Ensure Upstash is never used in unit tests, regardless of env
     vi.stubEnv('UPSTASH_REDIS_REST_URL', '')
     vi.stubEnv('UPSTASH_REDIS_REST_TOKEN', '')
@@ -59,8 +63,17 @@ describe('POST /api/contact', () => {
     expect(json.error).toContain('misconfigured')
   })
 
+  it('returns 500 when contact recipient email is missing', async () => {
+    vi.stubEnv('CONTACT_NOTIFICATION_EMAIL', '')
+    vi.stubEnv('CONTACT_EMAIL', '')
+    const res = await POST(createRequest(validBody))
+    expect(res.status).toBe(500)
+    const json = await res.json()
+    expect(json.success).toBe(false)
+    expect(json.error).toContain('misconfigured')
+  })
+
   it('returns 400 for invalid email', async () => {
-    vi.stubEnv('RESEND_API_KEY', 'test-key')
     const res = await POST(createRequest({ ...validBody, email: 'not-an-email' }))
     expect(res.status).toBe(400)
     const json = await res.json()
@@ -68,7 +81,6 @@ describe('POST /api/contact', () => {
   })
 
   it('returns 400 for empty message', async () => {
-    vi.stubEnv('RESEND_API_KEY', 'test-key')
     const res = await POST(createRequest({ ...validBody, message: '' }))
     expect(res.status).toBe(400)
     const json = await res.json()
@@ -76,13 +88,11 @@ describe('POST /api/contact', () => {
   })
 
   it('returns 400 for missing fields', async () => {
-    vi.stubEnv('RESEND_API_KEY', 'test-key')
     const res = await POST(createRequest({ name: 'Test' }))
     expect(res.status).toBe(400)
   })
 
   it('returns 429 when rate limited', async () => {
-    vi.stubEnv('RESEND_API_KEY', 'test-key')
     // Exhaust rate limit (5 requests)
     for (let i = 0; i < 5; i++) {
       await POST(createRequest(validBody))
@@ -95,16 +105,27 @@ describe('POST /api/contact', () => {
   })
 
   it('returns 200 and sends email on happy path', async () => {
-    vi.stubEnv('RESEND_API_KEY', 'test-key')
-    const res = await POST(createRequest(validBody))
+    const res = await POST(
+      createRequest(validBody, {
+        'x-contact-submission-id': '00000000-0000-4000-8000-000000000001',
+      })
+    )
     expect(res.status).toBe(200)
     const json = await res.json()
     expect(json.success).toBe(true)
     expect(mockSend).toHaveBeenCalledOnce()
+    expect(mockSend).toHaveBeenCalledWith(
+      expect.objectContaining({
+        from: 'dbraun.io Contact <contact@dbraun.io>',
+        to: ['owner@example.com'],
+        subject: '[dbraun.io contact] Test Subject',
+        replyTo: 'test@example.com',
+      }),
+      { idempotencyKey: 'contact-form/00000000-0000-4000-8000-000000000001' }
+    )
   })
 
   it('escapes HTML in email payload', async () => {
-    vi.stubEnv('RESEND_API_KEY', 'test-key')
     const xssBody = {
       ...validBody,
       name: '<script>alert("xss")</script>',
@@ -119,7 +140,6 @@ describe('POST /api/contact', () => {
   })
 
   it('returns 400 for email with HTML injection', async () => {
-    vi.stubEnv('RESEND_API_KEY', 'test-key')
     const res = await POST(
       createRequest({ ...validBody, email: '<script>@evil.com' })
     )
@@ -127,7 +147,6 @@ describe('POST /api/contact', () => {
   })
 
   it('returns 500 when Resend returns an error', async () => {
-    vi.stubEnv('RESEND_API_KEY', 'test-key')
     mockSend.mockResolvedValue({
       data: null,
       error: { message: 'API error' },
@@ -139,7 +158,6 @@ describe('POST /api/contact', () => {
   })
 
   it('validates optional dropdown fields', async () => {
-    vi.stubEnv('RESEND_API_KEY', 'test-key')
     const res = await POST(
       createRequest({ ...validBody, projectType: 'invalid-type' })
     )
@@ -147,7 +165,6 @@ describe('POST /api/contact', () => {
   })
 
   it('accepts valid optional dropdown fields and includes them in email', async () => {
-    vi.stubEnv('RESEND_API_KEY', 'test-key')
     const res = await POST(
       createRequest({
         ...validBody,
@@ -166,7 +183,6 @@ describe('POST /api/contact', () => {
   })
 
   it('uses x-real-ip for rate limiting over x-forwarded-for', async () => {
-    vi.stubEnv('RESEND_API_KEY', 'test-key')
     // Exhaust rate limit for IP 10.0.0.1 via x-real-ip
     for (let i = 0; i < 5; i++) {
       await POST(
@@ -193,7 +209,6 @@ describe('POST /api/contact', () => {
   })
 
   it('returns 400 for invalid JSON body', async () => {
-    vi.stubEnv('RESEND_API_KEY', 'test-key')
     const req = new Request('http://localhost:3000/api/contact', {
       method: 'POST',
       headers: {
@@ -211,7 +226,6 @@ describe('POST /api/contact', () => {
   })
 
   it('returns 403 when origin is not allowed', async () => {
-    vi.stubEnv('RESEND_API_KEY', 'test-key')
     const res = await POST(
       createRequest(validBody, { origin: 'https://evil.com' })
     )
@@ -219,7 +233,6 @@ describe('POST /api/contact', () => {
   })
 
   it('returns 403 when no origin or referer is present', async () => {
-    vi.stubEnv('RESEND_API_KEY', 'test-key')
     const req = new Request('http://localhost:3000/api/contact', {
       method: 'POST',
       headers: {
@@ -233,7 +246,6 @@ describe('POST /api/contact', () => {
   })
 
   it('accepts production origin', async () => {
-    vi.stubEnv('RESEND_API_KEY', 'test-key')
     const res = await POST(
       createRequest(validBody, { origin: 'https://dbraun.io' })
     )
@@ -241,7 +253,6 @@ describe('POST /api/contact', () => {
   })
 
   it('accepts localhost origins on non-default dev ports', async () => {
-    vi.stubEnv('RESEND_API_KEY', 'test-key')
     const res = await POST(
       createRequest(validBody, { origin: 'http://localhost:3001' })
     )
@@ -249,7 +260,6 @@ describe('POST /api/contact', () => {
   })
 
   it('accepts requests with valid referer when origin is missing', async () => {
-    vi.stubEnv('RESEND_API_KEY', 'test-key')
     const req = new Request('http://localhost:3000/api/contact', {
       method: 'POST',
       headers: {

@@ -87,7 +87,6 @@ const personStructuredData = {
   '@type': 'Person',
   name: profile.name,
   url: 'https://dbraun.io',
-  email: `mailto:${profile.email}`,
   address: {
     '@type': 'PostalAddress',
     addressLocality: 'Maple Grove',
@@ -107,6 +106,12 @@ const personStructuredData = {
   sameAs: socialLinks
     .map((link) => link.url)
     .filter((url) => url.startsWith('http')),
+  contactPoint: {
+    '@type': 'ContactPoint',
+    contactType: 'professional inquiries',
+    url: 'https://dbraun.io/contact',
+    availableLanguage: ['English'],
+  },
   knowsAbout: [
     'Artificial intelligence',
     'Software engineering',
