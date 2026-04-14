@@ -45,7 +45,6 @@ export interface ContactPath {
 
 export const profile = {
   name: 'David Braun',
-  email: 'davidjbraun777@gmail.com',
   location: 'Maple Grove, Minnesota',
   title: 'AI systems engineer building software, infrastructure, and applied product systems.',
   summary:
