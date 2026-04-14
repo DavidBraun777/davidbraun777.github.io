@@ -13,14 +13,7 @@ function formatViolations(violations: Awaited<ReturnType<AxeBuilder['analyze']>>
 }
 
 async function waitForClientHydration(page: Page) {
-  await page.waitForFunction(() => {
-    const header = document.querySelector('header')
-    if (!header) return false
-    const style = header.getAttribute('style') ?? ''
-    // Header starts with translateY(-100px) from Framer Motion initial state.
-    // Once hydrated, animation runs and this initial transform is removed.
-    return !style.includes('translateY(-100px)')
-  })
+  await expect(page.locator('header')).toBeVisible()
 }
 
 test.describe('Accessibility', () => {
@@ -39,8 +32,8 @@ test.describe('Accessibility', () => {
     expect(violations, formatViolations(violations)).toEqual([])
   })
 
-  test('blog page has no critical or serious a11y violations', async ({ page }) => {
-    await page.goto('/blog')
+  test('writing page has no critical or serious a11y violations', async ({ page }) => {
+    await page.goto('/writing')
     await waitForClientHydration(page)
     await expect(page.getByRole('heading', { level: 1 }).first()).toBeVisible()
     const results = await new AxeBuilder({ page }).analyze()
@@ -51,9 +44,9 @@ test.describe('Accessibility', () => {
   })
 
   test('contact form inputs have associated labels', async ({ page }) => {
-    await page.goto('/')
+    await page.goto('/contact')
     await waitForClientHydration(page)
-    const contactSection = page.locator('#contact')
+    const contactSection = page.locator('#contact-form')
     await contactSection.scrollIntoViewIfNeeded()
 
     // All required fields should have a label element
@@ -71,9 +64,9 @@ test.describe('Accessibility', () => {
       route.fulfill({ status: 200, contentType: 'application/json', body: '{"success":true}' })
     )
 
-    await page.goto('/')
+    await page.goto('/contact')
     await waitForClientHydration(page)
-    const form = page.locator('#contact form')
+    const form = page.locator('#contact-form form')
     await form.scrollIntoViewIfNeeded()
 
     // Fill required fields
@@ -97,9 +90,9 @@ test.describe('Accessibility', () => {
       route.fulfill({ status: 500, contentType: 'application/json', body: '{"error":"fail"}' })
     )
 
-    await page.goto('/')
+    await page.goto('/contact')
     await waitForClientHydration(page)
-    const form = page.locator('#contact form')
+    const form = page.locator('#contact-form form')
     await form.scrollIntoViewIfNeeded()
 
     // Fill required fields

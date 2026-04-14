@@ -1,10 +1,11 @@
 import type { Metadata } from 'next'
 import localFont from 'next/font/local'
-import Script from 'next/script'
 import { ThemeProvider } from '@/providers/theme-provider'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
 import { ScrollToTop } from '@/components/layout/scroll-to-top'
+import { profile } from '@/data/profile'
+import { socialLinks } from '@/data/social-links'
 import './globals.css'
 
 const inter = localFont({
@@ -19,69 +20,49 @@ const jetbrainsMono = localFont({
   display: 'swap',
 })
 
-const initialScrollResetScript = `
-  (() => {
-    const resetScroll = () => {
-      if (window.location.hash) return;
-      window.scrollTo(0, 0);
-      document.documentElement.scrollTop = 0;
-      document.body.scrollTop = 0;
-    };
-
-    if ('scrollRestoration' in window.history) {
-      window.history.scrollRestoration = 'manual';
-    }
-
-    resetScroll();
-    requestAnimationFrame(() => requestAnimationFrame(resetScroll));
-    window.setTimeout(resetScroll, 180);
-    window.addEventListener('load', resetScroll, { once: true });
-    window.addEventListener('pageshow', resetScroll);
-  })();
-`
-
 export const metadata: Metadata = {
   metadataBase: new URL('https://dbraun.io'),
   title: {
-    default: 'David Braun | AI Systems Engineer',
+    default: 'David Braun | AI Systems, Software, and Infrastructure',
     template: '%s | David Braun',
   },
   description:
-    'AI systems engineer building automation platforms, AI workflow systems, and infrastructure-backed operational software.',
+    "David Braun is a master's student in Artificial Intelligence at the University of St. Thomas building systems across software, AI, infrastructure, and applied product development.",
   keywords: [
     'AI Systems Engineer',
+    'Applied AI',
+    'Software Engineering',
     'Workflow Automation',
-    'Operational Software',
-    'Applied AI Systems',
-    'Automation Platforms',
-    'Infrastructure-backed Applications',
-    'System Architecture',
+    'Infrastructure',
+    'Portfolio',
+    'Systems Design',
     'Minnesota',
   ],
-  authors: [{ name: 'David Braun' }],
-  creator: 'David Braun',
+  authors: [{ name: profile.name }],
+  creator: profile.name,
+  applicationName: 'dbraun.io',
   openGraph: {
     type: 'website',
     locale: 'en_US',
     url: 'https://dbraun.io',
-    title: 'AI Systems Engineer building automation platforms',
+    title: 'David Braun | AI systems, software, and infrastructure',
     description:
-      'Systems that combine AI, workflow automation, and infrastructure to solve real operational problems.',
-    siteName: 'David Braun Portfolio',
+      "Master's student in Artificial Intelligence at the University of St. Thomas building systems across software, AI, infrastructure, and applied product development.",
+    siteName: 'dbraun.io',
     images: [
       {
         url: '/opengraph-image',
         width: 1200,
         height: 630,
-        alt: 'AI Systems Engineer building automation platforms and AI workflow systems',
+        alt: 'David Braun portfolio site',
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'AI Systems Engineer building automation platforms',
+    title: 'David Braun | AI systems, software, and infrastructure',
     description:
-      'Systems that combine AI, workflow automation, and infrastructure to solve real operational problems.',
+      "Master's student in Artificial Intelligence at the University of St. Thomas building systems across software, AI, infrastructure, and applied product development.",
     images: ['/twitter-image'],
   },
   robots: {
@@ -96,6 +77,44 @@ export const metadata: Metadata = {
     icon: '/user-icon.png',
     apple: '/user-icon.png',
   },
+  alternates: {
+    canonical: '/',
+  },
+}
+
+const personStructuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'Person',
+  name: profile.name,
+  url: 'https://dbraun.io',
+  email: `mailto:${profile.email}`,
+  address: {
+    '@type': 'PostalAddress',
+    addressLocality: 'Maple Grove',
+    addressRegion: 'MN',
+    addressCountry: 'US',
+  },
+  alumniOf: [
+    {
+      '@type': 'CollegeOrUniversity',
+      name: 'Augsburg University',
+    },
+  ],
+  affiliation: {
+    '@type': 'CollegeOrUniversity',
+    name: 'University of St. Thomas',
+  },
+  sameAs: socialLinks
+    .map((link) => link.url)
+    .filter((url) => url.startsWith('http')),
+  knowsAbout: [
+    'Artificial intelligence',
+    'Software engineering',
+    'Workflow automation',
+    'Infrastructure',
+    'Cloud engineering',
+    'Applied product development',
+  ],
 }
 
 export default function RootLayout({
@@ -104,15 +123,22 @@ export default function RootLayout({
   children: React.ReactNode
 }) {
   return (
-    <html lang="en" className="dark" suppressHydrationWarning>
+    <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} ${jetbrainsMono.variable} font-sans`}>
-        <Script id="initial-scroll-reset" strategy="beforeInteractive">
-          {initialScrollResetScript}
-        </Script>
         <ThemeProvider>
+          <a
+            href="#main-content"
+            className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-slate-950 focus:px-4 focus:py-2 focus:text-white dark:focus:bg-white dark:focus:text-slate-950"
+          >
+            Skip to content
+          </a>
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(personStructuredData) }}
+          />
           <ScrollToTop />
           <Header />
-          <main>{children}</main>
+          <main id="main-content">{children}</main>
           <Footer />
         </ThemeProvider>
       </body>
