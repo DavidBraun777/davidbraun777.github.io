@@ -1,12 +1,16 @@
 import { NextResponse } from 'next/server'
 import {
   validateContactForm,
-  sanitizeInput,
   sanitizeEmail,
   escapeHtml,
   type ContactFormData,
 } from '@/lib/contact-validation'
 import { checkRateLimit, getClientIp } from '@/lib/rate-limit'
+import {
+  formatFromAddress,
+  getContactEmailConfig,
+  getResendClient,
+} from '@/lib/resend'
 
 // ---------------------------------------------------------------------------
 // Allowed origins for cross-site abuse prevention.
@@ -18,6 +22,9 @@ const ALLOWED_ORIGINS = new Set([
   'https://www.dbraun.io',
   'http://localhost:3000',
 ])
+const SUBMISSION_ID_HEADER = 'x-contact-submission-id'
+const SUBMISSION_ID_REGEX =
+  /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
 
 function isAllowedLocalDevOrigin(origin: string): boolean {
   if (process.env.NODE_ENV === 'production') return false
@@ -58,48 +65,71 @@ function isAllowedOrigin(request: Request): boolean {
   return false
 }
 
-function logRequest(status: number, start: number, errorType?: string) {
+function getSubmissionId(request: Request): string | null {
+  const rawValue = request.headers.get(SUBMISSION_ID_HEADER)?.trim()
+  if (!rawValue) return null
+  return SUBMISSION_ID_REGEX.test(rawValue) ? rawValue : null
+}
+
+function logRequest(
+  status: number,
+  start: number,
+  options?: { errorType?: string; submissionId?: string | null }
+) {
   console.log(
     JSON.stringify({
       event: 'contact_submission',
       status,
       duration_ms: Math.round(performance.now() - start),
-      ...(errorType && { error: errorType }),
+      ...(options?.errorType && { error: options.errorType }),
+      ...(options?.submissionId && { submission_id: options.submissionId }),
     })
   )
 }
 
 // ---------------------------------------------------------------------------
-// Sanitization pipeline: every field is sanitized in one explicit step.
-// sanitizeInput: trim → truncate → HTML-escape (returns safe HTML string)
-// sanitizeEmail: trim → truncate → strip control chars (returns plain text)
+// Sanitization pipeline: every field is normalized in one explicit step.
+// name/subject: single-line plain text safe for headers and text output
+// message: multiline plain text with non-printable control chars removed
+// email: plain text safe for replyTo
 //
-// After this step, `name`, `subject`, and `message` are HTML-safe strings.
-// `email` is plain text and must be HTML-escaped separately when embedded
-// in the email body template.
+// HTML escaping happens only at render time inside the email template.
 // ---------------------------------------------------------------------------
 interface SanitizedContact {
-  name: string       // HTML-escaped
+  name: string       // plain text, escaped at render time
   email: string      // plain text (safe for replyTo, must escape for HTML)
-  subject: string    // HTML-escaped
-  message: string    // HTML-escaped
+  subject: string    // plain text, safe for email headers
+  message: string    // plain text, escaped at render time
+}
+
+function sanitizeSingleLine(input: string, maxLength: number): string {
+  // eslint-disable-next-line no-control-regex
+  return input.trim().slice(0, maxLength).replace(/[\x00-\x1f\x7f]/g, ' ')
+}
+
+function sanitizeMultiline(input: string, maxLength: number): string {
+  return input
+    .trim()
+    .slice(0, maxLength)
+    .replace(/\r\n?/g, '\n')
+    // eslint-disable-next-line no-control-regex
+    .replace(/[\x00-\x08\x0b\x0c\x0e-\x1f\x7f]/g, '')
 }
 
 function sanitizeContactData(data: ContactFormData): SanitizedContact {
   return {
-    name: sanitizeInput(data.name, 100),
+    name: sanitizeSingleLine(data.name, 100),
     email: sanitizeEmail(data.email),
-    subject: sanitizeInput(data.subject, 200),
-    message: sanitizeInput(data.message, 2000),
+    subject: sanitizeSingleLine(data.subject, 200),
+    message: sanitizeMultiline(data.message, 2000),
   }
 }
 
 // ---------------------------------------------------------------------------
 // Build email HTML body.
-// All interpolated values are already HTML-escaped by the sanitization step
-// above, except `email` which is escaped inline via escapeHtml().
-// The `.replace(/\n/g, '<br>')` on `message` is safe because the message
-// has already been HTML-escaped, so no raw `<` or `>` characters remain.
+// All interpolated values are escaped inline via escapeHtml().
+// The `.replace(/\n/g, '<br>')` on `message` is safe because escapeHtml()
+// runs first, so no raw `<` or `>` characters remain in the rendered markup.
 // ---------------------------------------------------------------------------
 function buildEmailHtml(
   sanitized: SanitizedContact,
@@ -124,22 +154,43 @@ function buildEmailHtml(
 
   return `
     <h2>New Contact Form Submission</h2>
-    <p><strong>Name:</strong> ${sanitized.name}</p>
+    <p><strong>Name:</strong> ${escapeHtml(sanitized.name)}</p>
     <p><strong>Email:</strong> ${escapeHtml(sanitized.email)}</p>
-    <p><strong>Subject:</strong> ${sanitized.subject}</p>
+    <p><strong>Subject:</strong> ${escapeHtml(sanitized.subject)}</p>
     ${optionalFields.join('\n    ')}
     <p><strong>Message:</strong></p>
-    <p>${sanitized.message.replace(/\n/g, '<br>')}</p>
+    <p>${escapeHtml(sanitized.message).replace(/\n/g, '<br>')}</p>
   `
+}
+
+function buildEmailText(
+  sanitized: SanitizedContact,
+  data: ContactFormData
+): string {
+  const lines = [
+    'New contact form submission',
+    '',
+    `Name: ${sanitized.name}`,
+    `Email: ${sanitized.email}`,
+    `Subject: ${sanitized.subject}`,
+  ]
+
+  if (data.projectType) lines.push(`Project Type: ${data.projectType}`)
+  if (data.serviceNeeded) lines.push(`Service Needed: ${data.serviceNeeded}`)
+  if (data.urgency) lines.push(`Urgency: ${data.urgency}`)
+
+  lines.push('', 'Message:', sanitized.message)
+  return lines.join('\n')
 }
 
 export async function POST(request: Request) {
   const start = performance.now()
+  const submissionId = getSubmissionId(request)
 
   try {
     // 1. Origin / Referer validation: reject cross-site submissions
     if (!isAllowedOrigin(request)) {
-      logRequest(403, start, 'origin_rejected')
+      logRequest(403, start, { errorType: 'origin_rejected', submissionId })
       return NextResponse.json(
         { success: false, error: 'Forbidden' },
         { status: 403 }
@@ -151,7 +202,7 @@ export async function POST(request: Request) {
     const rateLimit = await checkRateLimit(ip)
 
     if (rateLimit.limited) {
-      logRequest(429, start, 'rate_limited')
+      logRequest(429, start, { errorType: 'rate_limited', submissionId })
       return NextResponse.json(
         { success: false, error: 'Too many requests. Please try again later.' },
         {
@@ -166,7 +217,7 @@ export async function POST(request: Request) {
     try {
       body = await request.json()
     } catch {
-      logRequest(400, start, 'invalid_json')
+      logRequest(400, start, { errorType: 'invalid_json', submissionId })
       return NextResponse.json(
         { success: false, error: 'Invalid JSON in request body' },
         { status: 400 }
@@ -177,7 +228,7 @@ export async function POST(request: Request) {
     const result = validateContactForm(body)
 
     if (!result.valid) {
-      logRequest(400, start, 'validation_failed')
+      logRequest(400, start, { errorType: 'validation_failed', submissionId })
       return NextResponse.json(
         { success: false, error: result.error },
         { status: 400 }
@@ -189,9 +240,17 @@ export async function POST(request: Request) {
     const sanitized = sanitizeContactData(data)
 
     // 6. Require mail service configuration
-    if (!process.env.RESEND_API_KEY) {
-      console.error('RESEND_API_KEY is not configured')
-      logRequest(500, start, 'missing_api_key')
+    let resend: ReturnType<typeof getResendClient>
+    let emailConfig: ReturnType<typeof getContactEmailConfig>
+    try {
+      resend = getResendClient()
+      emailConfig = getContactEmailConfig()
+    } catch (error) {
+      console.error(
+        'Contact mail configuration error:',
+        error instanceof Error ? error.message : 'Unknown error'
+      )
+      logRequest(500, start, { errorType: 'mail_config_error', submissionId })
       return NextResponse.json(
         { success: false, error: 'Mail service misconfigured' },
         { status: 500 }
@@ -199,34 +258,38 @@ export async function POST(request: Request) {
     }
 
     // 7. Send email
-    const { Resend } = await import('resend')
-    const resend = new Resend(process.env.RESEND_API_KEY)
-
-    const { error } = await resend.emails.send({
-      from: 'Portfolio Contact <onboarding@resend.dev>',
-      to: process.env.CONTACT_EMAIL || 'davidjbraun777@gmail.com',
-      subject: `Portfolio Contact: ${sanitized.subject}`,
-      html: buildEmailHtml(sanitized, data),
-      replyTo: sanitized.email,
-    })
+    const { error } = await resend.emails.send(
+      {
+        from: formatFromAddress(emailConfig.fromName, emailConfig.fromEmail),
+        to: [emailConfig.notificationEmail],
+        subject: `[dbraun.io contact] ${sanitized.subject}`,
+        html: buildEmailHtml(sanitized, data),
+        text: buildEmailText(sanitized, data),
+        replyTo: sanitized.email,
+        tags: [{ name: 'source', value: 'contact-form' }],
+      },
+      submissionId
+        ? { idempotencyKey: `contact-form/${submissionId}` }
+        : undefined
+    )
 
     if (error) {
       console.error('Resend error:', error.message)
-      logRequest(500, start, 'resend_error')
+      logRequest(500, start, { errorType: 'resend_error', submissionId })
       return NextResponse.json(
         { success: false, error: 'Failed to send message' },
         { status: 500 }
       )
     }
 
-    logRequest(200, start)
+    logRequest(200, start, { submissionId })
     return NextResponse.json({ success: true })
   } catch (error) {
     console.error(
       'Contact form error:',
       error instanceof Error ? error.message : 'Unknown error'
     )
-    logRequest(500, start, 'unhandled_error')
+    logRequest(500, start, { errorType: 'unhandled_error', submissionId })
     return NextResponse.json(
       { success: false, error: 'Failed to send message' },
       { status: 500 }

@@ -75,6 +75,10 @@ export function Contact({
     typeof calLink === 'string' && /^https?:\/\//i.test(calLink.trim())
       ? calLink.trim()
       : null
+  const linkedinUrl =
+    socialLinks.find((link) => link.name === 'LinkedIn')?.url ??
+    'https://linkedin.com/in/david-braun777'
+  const formAnchorId = `${sectionId}-fields`
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault()
@@ -84,7 +88,10 @@ export function Contact({
     try {
       const response = await fetch('/api/contact', {
         method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
+        headers: {
+          'Content-Type': 'application/json',
+          'x-contact-submission-id': crypto.randomUUID(),
+        },
         body: JSON.stringify(formData),
       })
 
@@ -155,13 +162,13 @@ export function Contact({
                   <Mail className="w-6 h-6 text-primary-600 dark:text-primary-400" />
                 </div>
                 <div>
-                  <p className="text-sm text-slate-500 dark:text-slate-400">Email</p>
-                  <a
-                    href="mailto:davidjbraun777@gmail.com"
-                    className="text-lg font-medium text-slate-900 dark:text-white hover:text-primary-600 dark:hover:text-primary-400 transition-colors"
-                  >
-                    davidjbraun777@gmail.com
-                  </a>
+                  <p className="text-sm text-slate-500 dark:text-slate-400">Private inbox</p>
+                  <p className="text-lg font-medium text-slate-900 dark:text-white">
+                    Use the form below for direct replies
+                  </p>
+                  <p className="text-sm text-slate-600 dark:text-slate-300">
+                    Messages route through a private mailbox and I reply directly.
+                  </p>
                 </div>
               </div>
 
@@ -180,7 +187,7 @@ export function Contact({
               <div className="rounded-2xl border border-emerald-200/70 bg-emerald-50/80 p-4 dark:border-emerald-900/70 dark:bg-emerald-950/20">
                 <div className="flex items-center gap-4">
                   <div className="p-3 bg-accent-emerald/10 rounded-xl">
-                  <Calendar className="w-6 h-6 text-accent-emerald" />
+                    <Calendar className="w-6 h-6 text-accent-emerald" />
                   </div>
                   <div>
                     <div className="flex flex-wrap items-center gap-2">
@@ -190,10 +197,7 @@ export function Contact({
                       </span>
                     </div>
                     <a
-                      href={
-                        calendlyUrl ??
-                        'mailto:davidjbraun777@gmail.com?subject=Request%20a%2015-minute%20intro%20call'
-                      }
+                      href={calendlyUrl ?? `#${formAnchorId}`}
                       target={calendlyUrl ? '_blank' : undefined}
                       rel={calendlyUrl ? 'noopener noreferrer' : undefined}
                       className="mt-1 inline-flex items-center gap-1.5 text-lg font-semibold text-slate-900 transition-colors hover:text-accent-emerald dark:text-white"
@@ -241,7 +245,7 @@ export function Contact({
             viewport={{ once: true }}
             className="space-y-5"
           >
-            <form onSubmit={handleSubmit} className="space-y-6">
+            <form id={formAnchorId} onSubmit={handleSubmit} className="space-y-6">
               <div className="grid sm:grid-cols-2 gap-6">
                 <Input
                   id="contact-name"
@@ -351,13 +355,15 @@ export function Contact({
                 >
                   <div className="flex items-center gap-2">
                     <AlertCircle className="w-5 h-5" />
-                    Something went wrong. Please try again or email me directly.
+                    Something went wrong. Please try again or reach out on LinkedIn.
                   </div>
                   <a
-                    href="mailto:davidjbraun777@gmail.com"
+                    href={linkedinUrl}
+                    target="_blank"
+                    rel="noopener noreferrer"
                     className="ml-7 text-sm text-primary-600 hover:underline dark:text-primary-400"
                   >
-                    davidjbraun777@gmail.com
+                    linkedin.com/in/david-braun777
                   </a>
                 </motion.div>
               )}
