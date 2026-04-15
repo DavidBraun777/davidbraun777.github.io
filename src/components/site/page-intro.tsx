@@ -64,7 +64,7 @@ export function PageIntro({
                       'inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-medium transition-colors',
                       action.variant === 'secondary'
                         ? 'border border-border-subtle bg-background-elevated text-text-secondary hover:bg-background-subtle hover:text-text-primary'
-                        : 'bg-slate-950 text-white hover:bg-slate-800 dark:bg-primary-500 dark:text-slate-950 dark:hover:bg-primary-400'
+                        : 'bg-primary-700 text-white hover:bg-primary-800 dark:bg-primary-500 dark:text-slate-950 dark:hover:bg-primary-400'
                     )}
                   >
                     {action.label}
@@ -78,7 +78,7 @@ export function PageIntro({
                       'inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-medium transition-colors',
                       action.variant === 'secondary'
                         ? 'border border-border-subtle bg-background-elevated text-text-secondary hover:bg-background-subtle hover:text-text-primary'
-                        : 'bg-slate-950 text-white hover:bg-slate-800 dark:bg-primary-500 dark:text-slate-950 dark:hover:bg-primary-400'
+                        : 'bg-primary-700 text-white hover:bg-primary-800 dark:bg-primary-500 dark:text-slate-950 dark:hover:bg-primary-400'
                     )}
                   >
                     {action.label}

@@ -12,6 +12,7 @@ test.describe('Smoke tests', () => {
     await page.goto('/')
     const header = page.locator('header')
     await expect(header).toBeVisible()
+    await expect(header.getByRole('link', { name: /^home$/i })).toBeVisible()
     await expect(header.getByRole('link', { name: /^services$/i })).toBeVisible()
     await expect(header.getByRole('link', { name: /case studies/i })).toBeVisible()
     await expect(header.getByRole('link', { name: /why work with me/i })).toBeVisible()

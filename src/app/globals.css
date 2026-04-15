@@ -2,17 +2,17 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  --theme-background: #f4f6f8;
-  --theme-background-elevated: #fbfcfd;
-  --theme-background-subtle: #e8edf3;
-  --theme-text-primary: #162235;
-  --theme-text-secondary: #445368;
-  --theme-text-muted: #526376;
-  --theme-border-subtle: #c9d3df;
-  --theme-border-strong: #9fb0c2;
-  --theme-link-primary: #2348a6;
-  --theme-link-primary-hover: #1f4fc4;
-  --theme-accent: #1d4ed8;
+  --theme-background: #f6f4e8;
+  --theme-background-elevated: #fbfaf3;
+  --theme-background-subtle: #dde5d9;
+  --theme-text-primary: #273126;
+  --theme-text-secondary: #4a5848;
+  --theme-text-muted: #566351;
+  --theme-border-subtle: #c8d3c2;
+  --theme-border-strong: #a8b69f;
+  --theme-link-primary: #5b6b56;
+  --theme-link-primary-hover: #485744;
+  --theme-accent: #727d73;
 }
 
 .dark {
@@ -30,16 +30,16 @@
 }
 
 @theme {
-  --color-primary-50: #eff6ff;
-  --color-primary-100: #dbeafe;
-  --color-primary-200: #bfdbfe;
-  --color-primary-300: #93c5fd;
-  --color-primary-400: #60a5fa;
-  --color-primary-500: #2563eb;
-  --color-primary-600: #1d4ed8;
-  --color-primary-700: #1e40af;
-  --color-primary-800: #1e3a8a;
-  --color-primary-900: #172554;
+  --color-primary-50: #f6f7f1;
+  --color-primary-100: #edf1e7;
+  --color-primary-200: #dce5d6;
+  --color-primary-300: #c9d5c1;
+  --color-primary-400: #aab99a;
+  --color-primary-500: #8b987f;
+  --color-primary-600: #727d73;
+  --color-primary-700: #5b6755;
+  --color-primary-800: #43503f;
+  --color-primary-900: #30392d;
 
   --color-accent-cyan: #0f766e;
   --color-accent-violet: #475569;
@@ -74,7 +74,7 @@ body {
   min-height: 100vh;
   color: var(--theme-text-secondary);
   background:
-    radial-gradient(circle at top, rgba(37, 99, 235, 0.05), transparent 34%),
+    radial-gradient(circle at top, rgba(114, 125, 115, 0.12), transparent 38%),
     linear-gradient(
       180deg,
       var(--theme-background) 0%,
@@ -94,7 +94,7 @@ body {
 }
 
 ::selection {
-  background: rgba(37, 99, 235, 0.16);
+  background: rgba(170, 185, 154, 0.32);
 }
 
 a,
@@ -123,7 +123,7 @@ summary::-webkit-details-marker {
 }
 
 :focus-visible {
-  @apply outline-none ring-2 ring-primary-500 ring-offset-2 ring-offset-white;
+  @apply outline-none ring-2 ring-primary-600 ring-offset-2 ring-offset-white;
 }
 
 .dark :focus-visible {
@@ -135,7 +135,7 @@ summary::-webkit-details-marker {
 }
 
 ::-webkit-scrollbar-track {
-  background: #dfe6ee;
+  background: #e6e9dc;
 }
 
 .dark ::-webkit-scrollbar-track {
@@ -143,7 +143,7 @@ summary::-webkit-details-marker {
 }
 
 ::-webkit-scrollbar-thumb {
-  background: #9aaabd;
+  background: #a5b29b;
   border-radius: 9999px;
 }
 
@@ -152,7 +152,7 @@ summary::-webkit-details-marker {
 }
 
 ::-webkit-scrollbar-thumb:hover {
-  background: #76879b;
+  background: #86957f;
 }
 
 .dark ::-webkit-scrollbar-thumb:hover {

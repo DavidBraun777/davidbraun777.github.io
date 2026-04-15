@@ -5,12 +5,12 @@ import Link from 'next/link'
 import { motion } from 'framer-motion'
 import {
   AlertCircle,
+  ArrowRight,
   ArrowUpRight,
   Calendar,
   CheckCircle,
   Clock,
   FileText,
-  Send,
 } from 'lucide-react'
 import { SectionHeader } from '@/components/ui/section-header'
 import { Button } from '@/components/ui/button'
@@ -259,12 +259,12 @@ export function Contact({
                     </div>
                     <Button
                       type="submit"
-                      size="lg"
-                      className="w-full sm:w-auto"
+                      size="md"
+                      className="w-full rounded-xl px-5 sm:w-auto"
                       isLoading={formStatus === 'loading'}
                     >
-                      <Send className="mr-2 h-4 w-4" />
-                      Send Project Details
+                      Send
+                      <ArrowRight className="h-4 w-4" />
                     </Button>
                   </div>
 

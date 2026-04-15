@@ -9,13 +9,13 @@ interface BadgeProps extends HTMLAttributes<HTMLSpanElement> {
 
 const variants: Record<BadgeVariant, string> = {
   default:
-    'bg-background-subtle text-text-secondary dark:bg-slate-800 dark:text-slate-300',
+    'bg-background-subtle text-text-secondary',
   primary:
-    'bg-primary-100 text-primary-700 dark:bg-primary-900/50 dark:text-primary-300',
+    'bg-primary-100 text-primary-800 dark:bg-primary-900/50 dark:text-primary-300',
   secondary:
-    'bg-accent-violet/10 text-accent-violet dark:bg-accent-violet/20',
+    'bg-primary-50 text-primary-700 dark:bg-primary-950/60 dark:text-primary-200',
   outline:
-    'border border-border-subtle dark:border-slate-700 text-text-secondary dark:text-slate-400',
+    'border border-border-subtle text-text-secondary',
 }
 
 export const Badge = forwardRef<HTMLSpanElement, BadgeProps>(

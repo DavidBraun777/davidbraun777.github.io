@@ -61,7 +61,7 @@ export function Header() {
                 className={cn(
                   'rounded-full px-4 py-2 text-sm font-medium transition-colors',
                   active
-                    ? 'bg-slate-950 text-white dark:bg-white dark:text-slate-950'
+                    ? 'bg-primary-700 text-white dark:bg-white dark:text-slate-950'
                     : 'text-text-secondary hover:bg-background-subtle hover:text-text-primary'
                 )}
               >
@@ -75,7 +75,7 @@ export function Header() {
           <ThemeToggle />
           <Link
             href="/contact"
-            className="rounded-full bg-slate-950 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-slate-800 dark:bg-primary-500 dark:text-slate-950 dark:hover:bg-primary-400"
+            className="rounded-full bg-primary-700 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-primary-800 dark:bg-primary-500 dark:text-slate-950 dark:hover:bg-primary-400"
           >
             Book a Call
           </Link>
@@ -113,7 +113,7 @@ export function Header() {
                   className={cn(
                   'rounded-2xl px-4 py-3 text-sm font-medium transition-colors',
                   active
-                    ? 'bg-slate-950 text-white dark:bg-white dark:text-slate-950'
+                    ? 'bg-primary-700 text-white dark:bg-white dark:text-slate-950'
                     : 'bg-background-subtle text-text-secondary hover:bg-background-elevated hover:text-text-primary'
                 )}
               >
@@ -126,7 +126,7 @@ export function Header() {
           <div className="mt-4 grid gap-2 sm:grid-cols-2">
             <Link
               href="/contact"
-              className="rounded-2xl bg-slate-950 px-4 py-3 text-center text-sm font-medium text-white transition-colors hover:bg-slate-800 dark:bg-primary-500 dark:text-slate-950 dark:hover:bg-primary-400 sm:col-span-2"
+              className="rounded-2xl bg-primary-700 px-4 py-3 text-center text-sm font-medium text-white transition-colors hover:bg-primary-800 dark:bg-primary-500 dark:text-slate-950 dark:hover:bg-primary-400 sm:col-span-2"
             >
               Book a Call
             </Link>
