@@ -2,9 +2,9 @@
 @custom-variant dark (&:where(.dark, .dark *));
 
 :root {
-  --theme-background: #f6f4e8;
-  --theme-background-elevated: #fbfaf3;
-  --theme-background-subtle: #dde5d9;
+  --theme-background: #f5f5e6;
+  --theme-background-elevated: #fbfbf2;
+  --theme-background-subtle: #e2ead9;
   --theme-text-primary: #273126;
   --theme-text-secondary: #4a5848;
   --theme-text-muted: #566351;
@@ -13,6 +13,18 @@
   --theme-link-primary: #5b6b56;
   --theme-link-primary-hover: #485744;
   --theme-accent: #727d73;
+  --theme-frame-bg: rgba(26, 145, 2, 0.92);
+  --theme-frame-bg-strong: #157a02;
+  --theme-frame-bg-solid: #1a9102;
+  --theme-frame-border: rgba(47, 166, 26, 0.42);
+  --theme-frame-border-strong: rgba(47, 166, 26, 0.68);
+  --theme-frame-text: #f5f5e6;
+  --theme-frame-text-muted: rgba(245, 245, 230, 0.78);
+  --theme-frame-overlay: rgba(245, 245, 230, 0.08);
+  --theme-frame-overlay-strong: rgba(245, 245, 230, 0.14);
+  --theme-frame-cta-bg: #f5f5e6;
+  --theme-frame-cta-bg-hover: #ffffff;
+  --theme-frame-cta-text: #157a02;
 }
 
 .dark {
@@ -27,6 +39,18 @@
   --theme-link-primary: #93c5fd;
   --theme-link-primary-hover: #bfdbfe;
   --theme-accent: #93c5fd;
+  --theme-frame-bg: rgba(11, 18, 32, 0.88);
+  --theme-frame-bg-strong: #0b1220;
+  --theme-frame-bg-solid: #0b1220;
+  --theme-frame-border: rgba(35, 48, 68, 0.8);
+  --theme-frame-border-strong: rgba(59, 75, 101, 1);
+  --theme-frame-text: #f8fafc;
+  --theme-frame-text-muted: #b8c6d8;
+  --theme-frame-overlay: rgba(248, 250, 252, 0.08);
+  --theme-frame-overlay-strong: rgba(248, 250, 252, 0.12);
+  --theme-frame-cta-bg: #93c5fd;
+  --theme-frame-cta-bg-hover: #60a5fa;
+  --theme-frame-cta-text: #020617;
 }
 
 @theme {
@@ -74,11 +98,11 @@ body {
   min-height: 100vh;
   color: var(--theme-text-secondary);
   background:
-    radial-gradient(circle at top, rgba(114, 125, 115, 0.16), transparent 28%),
+    radial-gradient(circle at top, rgba(26, 145, 2, 0.14), transparent 28%),
     linear-gradient(
       180deg,
-      #e4ebde 0%,
-      #eef2e4 28%,
+      #e8f2e1 0%,
+      #eef5e5 24%,
       var(--theme-background) 62%,
       var(--theme-background-elevated) 100%
     );
