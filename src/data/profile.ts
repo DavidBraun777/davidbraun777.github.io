@@ -76,7 +76,7 @@ export const profile = {
 }
 
 export const primaryNavigation: NavigationItem[] = [
-  { label: 'Services', href: '/#services' },
+  { label: 'Services', href: '/services' },
   { label: 'Case Studies', href: '/case-studies' },
   { label: 'Why Work With Me', href: '/why-work-with-me' },
   { label: 'Contact', href: '/contact' },

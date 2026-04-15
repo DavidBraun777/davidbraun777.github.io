@@ -68,7 +68,7 @@ export default function WhyWorkWithMePage() {
           <SectionHeader
             align="left"
             title="Experience and background"
-            subtitle="Expandable sections so you can skim first and open only what you care about."
+            subtitle="Open the roles you care about and skim the rest."
           />
           <div className="grid gap-5">
             {experiences.slice(0, 5).map((experience, index) => (
@@ -104,12 +104,9 @@ export default function WhyWorkWithMePage() {
         </section>
 
         <section className="grid gap-5 lg:grid-cols-3">
-          <DisclosurePanel
-            title="How I work"
-            summary="A short look at the habits and values that shape the delivery."
-            defaultOpen
-          >
-            <div className="space-y-4">
+          <article className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm">
+            <h2 className="text-xl font-semibold text-text-primary">How I work</h2>
+            <div className="mt-5 space-y-4">
               {credibilityPoints.map((point) => (
                 <div key={point.title}>
                   <p className="text-sm font-semibold text-text-primary">{point.title}</p>
@@ -119,13 +116,11 @@ export default function WhyWorkWithMePage() {
                 </div>
               ))}
             </div>
-          </DisclosurePanel>
+          </article>
 
-          <DisclosurePanel
-            title="Education and credentials"
-            summary="Useful supporting context, but not the main reason to trust the work."
-          >
-            <div className="space-y-5">
+          <article className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm">
+            <h2 className="text-xl font-semibold text-text-primary">Education and credentials</h2>
+            <div className="mt-5 space-y-5">
               {education.map((item) => (
                 <article key={item.id}>
                   <h3 className="text-base font-semibold text-text-primary">
@@ -152,15 +147,13 @@ export default function WhyWorkWithMePage() {
                 </div>
               ))}
             </div>
-          </DisclosurePanel>
+          </article>
 
-          <DisclosurePanel
-            title="Resume PDF"
-            summary="The full PDF is still available as a supporting asset."
-          >
-            <p className="text-sm leading-7 text-text-secondary">
-              Use the PDF if you want the full timeline, complete role history, and the
-              traditional resume format. The main page is designed to be faster to skim.
+          <article className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm">
+            <h2 className="text-xl font-semibold text-text-primary">Resume PDF</h2>
+            <p className="mt-4 text-sm leading-7 text-text-secondary">
+              The full PDF is still available if you want the complete timeline and
+              traditional resume format. It stays secondary to the on-page summary.
             </p>
             <a
               href={resumeUrl}
@@ -171,7 +164,7 @@ export default function WhyWorkWithMePage() {
               <FileText className="h-4 w-4" />
               Open Resume PDF
             </a>
-          </DisclosurePanel>
+          </article>
         </section>
       </div>
     </div>

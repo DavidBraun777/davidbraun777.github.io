@@ -14,8 +14,8 @@ export default function ContactPage() {
       <div className="mx-auto max-w-7xl space-y-8 px-4 sm:px-6 lg:px-8">
         <PageIntro
           eyebrow="Contact"
-          title="Book a call about the workflow that is costing you time."
-          description="For business owners and operators who need to reduce manual work, connect systems, or clean up an unreliable process."
+          title="Tell me about the workflow you want to improve."
+          description="Start with the intake form so I can understand the problem before we talk. If you prefer, you can still book a short call after."
         />
       </div>
       <Contact
