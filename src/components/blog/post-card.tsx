@@ -18,7 +18,7 @@ export function PostCard({ post, index = 0 }: PostCardProps) {
 
   return (
     <article
-      className="group overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white shadow-sm transition-transform duration-200 hover:-translate-y-1 dark:border-slate-800 dark:bg-slate-950"
+      className="group overflow-hidden rounded-[1.75rem] border border-border-subtle bg-background-elevated shadow-sm transition-transform duration-200 hover:-translate-y-1"
       style={{ animationDelay: `${index * 80}ms` }}
     >
       <Link href={`/writing/${encodeURIComponent(post.slug)}`}>
@@ -44,15 +44,15 @@ export function PostCard({ post, index = 0 }: PostCardProps) {
               ))}
             </div>
 
-            <h3 className="text-xl font-bold text-slate-900 dark:text-white mb-2 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
+            <h3 className="text-xl font-bold text-text-primary mb-2 group-hover:text-primary-600 dark:group-hover:text-primary-400 transition-colors">
               {post.title}
             </h3>
 
-            <p className="text-slate-600 dark:text-slate-300 mb-4 line-clamp-2">
+            <p className="text-text-secondary mb-4 line-clamp-2">
               {post.description}
             </p>
 
-            <div className="flex items-center justify-between text-sm text-slate-500 dark:text-slate-300">
+            <div className="flex items-center justify-between text-sm text-text-muted">
               <div className="flex items-center gap-4">
                 <span className="flex items-center gap-1">
                   <Calendar className="w-4 h-4" />
@@ -63,7 +63,7 @@ export function PostCard({ post, index = 0 }: PostCardProps) {
                   {post.readingTime}
                 </span>
               </div>
-              <span className="flex items-center gap-1 text-primary-600 dark:text-primary-300 group-hover:gap-2 transition-all">
+              <span className="flex items-center gap-1 text-link-primary group-hover:gap-2 transition-all">
                 Read more
                 <ArrowRight className="w-4 h-4" />
               </span>

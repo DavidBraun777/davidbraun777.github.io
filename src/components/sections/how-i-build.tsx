@@ -34,7 +34,7 @@ export function HowIBuild() {
                     whileInView={{ opacity: 1, y: 0 }}
                     viewport={{ once: true }}
                     transition={{ delay: index * 0.08, duration: 0.45 }}
-                    className="flex gap-4 rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-950"
+                    className="flex gap-4 rounded-3xl border border-border-subtle bg-background-elevated p-6 shadow-sm"
                   >
                     <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-primary-600 to-accent-violet text-white">
                       <Icon className="h-5 w-5" />
@@ -43,10 +43,10 @@ export function HowIBuild() {
                       <p className="font-mono text-xs uppercase tracking-[0.18em] text-slate-400 dark:text-slate-500">
                         Step {index + 1}
                       </p>
-                      <h3 className="mt-2 text-xl font-semibold text-slate-900 dark:text-white">
+                      <h3 className="mt-2 text-xl font-semibold text-text-primary">
                         {step.title}
                       </h3>
-                      <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+                      <p className="mt-3 text-sm leading-relaxed text-text-muted">
                         {step.description}
                       </p>
                     </div>

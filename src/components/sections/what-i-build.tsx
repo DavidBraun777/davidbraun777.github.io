@@ -19,7 +19,7 @@ export function WhatIBuild() {
         />
 
         <div className="grid gap-10 lg:grid-cols-[1.05fr_0.95fr] lg:items-start">
-          <div className="space-y-6 text-lg leading-relaxed text-slate-700 dark:text-slate-300">
+          <div className="space-y-6 text-lg leading-relaxed text-text-secondary">
             <p>
               I build systems that use AI inside real operational workflows. The work
               usually combines applied AI, workflow automation, infrastructure, and
@@ -36,11 +36,11 @@ export function WhatIBuild() {
               happens in engineering rigor, architecture design, and refining systems until
               they operate reliably.
             </p>
-            <div className="rounded-3xl border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-950/70">
+            <div className="rounded-3xl border border-border-subtle bg-background-elevated p-6 shadow-sm/70">
               <p className="font-mono text-sm uppercase tracking-[0.2em] text-primary-600 dark:text-primary-300">
                 Engineering Philosophy
               </p>
-              <p className="mt-3 text-base leading-relaxed text-slate-600 dark:text-slate-400">
+              <p className="mt-3 text-base leading-relaxed text-text-muted">
                 The breadth across voice workflows, legal intake, planning engines, and
                 lecture pipelines is intentional. I explore adjacent domains to find
                 high-leverage operational problems, then go deeper where the system design
@@ -62,15 +62,15 @@ export function WhatIBuild() {
                   }
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.08, duration: 0.45 }}
-                  className="rounded-3xl border border-slate-200 bg-white p-6 shadow-lg shadow-slate-200/40 dark:border-slate-800 dark:bg-slate-950"
+                  className="rounded-3xl border border-border-subtle bg-background-elevated p-6 shadow-lg shadow-slate-200/20 dark:shadow-slate-950/25"
                 >
                   <div className="inline-flex rounded-2xl bg-gradient-to-br from-primary-600 to-accent-cyan p-3 text-white shadow-lg shadow-primary-900/10">
                     <Icon className="h-5 w-5" />
                   </div>
-                  <h3 className="mt-5 text-lg font-semibold text-slate-900 dark:text-white">
+                  <h3 className="mt-5 text-lg font-semibold text-text-primary">
                     {pattern.title}
                   </h3>
-                  <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+                  <p className="mt-3 text-sm leading-relaxed text-text-muted">
                     {pattern.description}
                   </p>
                 </motion.div>

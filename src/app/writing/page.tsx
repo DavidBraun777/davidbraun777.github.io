@@ -40,7 +40,7 @@ export default function WritingPage() {
             ))}
           </div>
         ) : (
-          <div className="rounded-[1.75rem] border border-slate-200 bg-white p-8 text-slate-600 shadow-sm dark:border-slate-800 dark:bg-slate-950 dark:text-slate-300">
+          <div className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-8 text-text-secondary shadow-sm">
             Writing is in progress. Posts will appear here as they are published.
           </div>
         )}

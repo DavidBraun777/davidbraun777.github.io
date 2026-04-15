@@ -21,11 +21,11 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
           ref={ref}
           id={id}
           className={cn(
-            'w-full px-4 py-3 rounded-lg border bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 transition-colors',
+            'w-full rounded-lg border border-border-subtle bg-background-elevated px-4 py-3 text-text-primary placeholder:text-text-muted transition-colors',
             'focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent',
             error
               ? 'border-red-500 focus:ring-red-500'
-              : 'border-slate-300 dark:border-slate-700',
+              : '',
             className
           )}
           {...props}
@@ -58,11 +58,11 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
           ref={ref}
           id={id}
           className={cn(
-            'w-full px-4 py-3 rounded-lg border bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 placeholder:text-slate-400 dark:placeholder:text-slate-500 transition-colors resize-none',
+            'w-full resize-none rounded-lg border border-border-subtle bg-background-elevated px-4 py-3 text-text-primary placeholder:text-text-muted transition-colors',
             'focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent',
             error
               ? 'border-red-500 focus:ring-red-500'
-              : 'border-slate-300 dark:border-slate-700',
+              : '',
             className
           )}
           {...props}
@@ -97,12 +97,12 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
           ref={ref}
           id={id}
           className={cn(
-            'w-full px-4 py-3 rounded-lg border bg-white dark:bg-slate-900 text-slate-900 dark:text-slate-100 transition-colors appearance-none',
+            'w-full appearance-none rounded-lg border border-border-subtle bg-background-elevated px-4 py-3 text-text-primary transition-colors',
             'focus:outline-none focus:ring-2 focus:ring-primary-500 focus:border-transparent',
             error
               ? 'border-red-500 focus:ring-red-500'
-              : 'border-slate-300 dark:border-slate-700',
-            !props.value && 'text-slate-400 dark:text-slate-500',
+              : '',
+            !props.value && 'text-text-muted',
             className
           )}
           {...props}

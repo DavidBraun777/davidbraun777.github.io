@@ -33,17 +33,17 @@ export function CurrentInterests() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.08, duration: 0.45 }}
-                  className="rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-950"
+                  className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm"
                 >
                   <div className="flex items-center gap-3">
                     <div className="inline-flex rounded-2xl bg-primary-100 p-3 text-primary-700 dark:bg-primary-900/40 dark:text-primary-200">
                       <Icon className="h-5 w-5" />
                     </div>
-                    <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
+                    <h3 className="text-lg font-semibold text-text-primary">
                       {interest.title}
                     </h3>
                   </div>
-                  <p className="mt-4 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+                  <p className="mt-4 text-sm leading-relaxed text-text-muted">
                     {interest.description}
                   </p>
                 </motion.div>

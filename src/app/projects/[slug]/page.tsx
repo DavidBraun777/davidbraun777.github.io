@@ -67,32 +67,32 @@ export default async function ProjectDetailPage({ params }: Props) {
               : []),
           ]}
           aside={
-            <div className="rounded-[1.75rem] border border-slate-200 bg-slate-50 p-6 dark:border-slate-800 dark:bg-slate-900/50">
-              <p className="font-mono text-xs uppercase tracking-[0.22em] text-primary-700 dark:text-primary-300">
+            <div className="rounded-[1.75rem] border border-border-subtle bg-background-subtle p-6">
+              <p className="font-mono text-xs uppercase tracking-[0.22em] text-link-primary">
                 Project facts
               </p>
               <div className="mt-4 space-y-3">
-                <div className="rounded-2xl border border-slate-200 bg-white px-4 py-3 dark:border-slate-800 dark:bg-slate-950">
-                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
+                <div className="rounded-2xl border border-border-subtle bg-background-elevated px-4 py-3">
+                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-text-muted">
                     Theme
                   </p>
-                  <p className="mt-2 text-sm font-medium text-slate-800 dark:text-slate-200">
+                  <p className="mt-2 text-sm font-medium text-text-primary">
                     {system.themeTitle}
                   </p>
                 </div>
-                <div className="rounded-2xl border border-slate-200 bg-white px-4 py-3 dark:border-slate-800 dark:bg-slate-950">
-                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
+                <div className="rounded-2xl border border-border-subtle bg-background-elevated px-4 py-3">
+                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-text-muted">
                     Current state
                   </p>
-                  <p className="mt-2 text-sm font-medium text-slate-800 dark:text-slate-200">
+                  <p className="mt-2 text-sm font-medium text-text-primary">
                     {system.currentState}
                   </p>
                 </div>
-                <div className="rounded-2xl border border-slate-200 bg-white px-4 py-3 dark:border-slate-800 dark:bg-slate-950">
-                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
+                <div className="rounded-2xl border border-border-subtle bg-background-elevated px-4 py-3">
+                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-text-muted">
                     My role
                   </p>
-                  <p className="mt-2 text-sm font-medium text-slate-800 dark:text-slate-200">
+                  <p className="mt-2 text-sm font-medium text-text-primary">
                     {system.myRole}
                   </p>
                 </div>
@@ -119,23 +119,23 @@ export default async function ProjectDetailPage({ params }: Props) {
           </div>
 
           <div className="space-y-5">
-            <article className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-950">
-              <h2 className="text-lg font-semibold text-slate-900 dark:text-white">Problem</h2>
-              <p className="mt-3 text-sm leading-7 text-slate-600 dark:text-slate-300">
+            <article className="rounded-[1.5rem] border border-border-subtle bg-background-elevated p-6 shadow-sm">
+              <h2 className="text-lg font-semibold text-text-primary">Problem</h2>
+              <p className="mt-3 text-sm leading-7 text-text-secondary">
                 {system.problem}
               </p>
             </article>
-            <article className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-950">
-              <h2 className="text-lg font-semibold text-slate-900 dark:text-white">
+            <article className="rounded-[1.5rem] border border-border-subtle bg-background-elevated p-6 shadow-sm">
+              <h2 className="text-lg font-semibold text-text-primary">
                 Core constraint
               </h2>
-              <p className="mt-3 text-sm leading-7 text-slate-600 dark:text-slate-300">
+              <p className="mt-3 text-sm leading-7 text-text-secondary">
                 {system.coreConstraint}
               </p>
             </article>
-            <article className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-950">
-              <h2 className="text-lg font-semibold text-slate-900 dark:text-white">Outcome</h2>
-              <p className="mt-3 text-sm leading-7 text-slate-600 dark:text-slate-300">
+            <article className="rounded-[1.5rem] border border-border-subtle bg-background-elevated p-6 shadow-sm">
+              <h2 className="text-lg font-semibold text-text-primary">Outcome</h2>
+              <p className="mt-3 text-sm leading-7 text-text-secondary">
                 {system.outcome}
               </p>
             </article>
@@ -149,18 +149,18 @@ export default async function ProjectDetailPage({ params }: Props) {
             subtitle="A concise problem → system → evidence structure so the engineering story is easier to inspect."
           />
           <div className="grid gap-6 xl:grid-cols-[1.05fr_0.95fr]">
-            <article className="rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-950">
-              <h3 className="text-xl font-semibold text-slate-900 dark:text-white">
+            <article className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm">
+              <h3 className="text-xl font-semibold text-text-primary">
                 System design
               </h3>
-              <p className="mt-4 text-sm leading-8 text-slate-600 dark:text-slate-300">
+              <p className="mt-4 text-sm leading-8 text-text-secondary">
                 {system.system}
               </p>
               <div className="mt-6 grid gap-3 md:grid-cols-3">
                 {system.systemHighlights.map((highlight) => (
                   <div
                     key={highlight}
-                    className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm leading-7 text-slate-700 dark:border-slate-800 dark:bg-slate-900/70 dark:text-slate-200"
+                    className="rounded-2xl border border-border-subtle bg-background-subtle px-4 py-3 text-sm leading-7 text-text-secondary"
                   >
                     {highlight}
                   </div>
@@ -169,8 +169,8 @@ export default async function ProjectDetailPage({ params }: Props) {
             </article>
 
             <div className="space-y-6">
-              <article className="rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-950">
-                <h3 className="text-xl font-semibold text-slate-900 dark:text-white">Stack</h3>
+              <article className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm">
+                <h3 className="text-xl font-semibold text-text-primary">Stack</h3>
                 <div className="mt-4 flex flex-wrap gap-2">
                   {system.stack.map((item) => (
                     <Badge key={item} variant="outline" className="text-sm">
@@ -180,9 +180,9 @@ export default async function ProjectDetailPage({ params }: Props) {
                 </div>
               </article>
 
-              <article className="rounded-[1.75rem] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-950">
-                <h3 className="text-xl font-semibold text-slate-900 dark:text-white">Evidence</h3>
-                <p className="mt-4 text-sm leading-8 text-slate-600 dark:text-slate-300">
+              <article className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm">
+                <h3 className="text-xl font-semibold text-text-primary">Evidence</h3>
+                <p className="mt-4 text-sm leading-8 text-text-secondary">
                   {system.evidenceSummary}
                 </p>
                 <div className="mt-4 flex flex-wrap gap-2">
@@ -198,11 +198,11 @@ export default async function ProjectDetailPage({ params }: Props) {
         </section>
 
         {system.externalUrl ? (
-          <section className="rounded-[1.75rem] border border-slate-200 bg-slate-50 p-8 dark:border-slate-800 dark:bg-slate-900/50">
-            <h2 className="text-2xl font-semibold tracking-tight text-slate-900 dark:text-white">
+          <section className="rounded-[1.75rem] border border-border-subtle bg-background-subtle p-8">
+            <h2 className="text-2xl font-semibold tracking-tight text-text-primary">
               Live project
             </h2>
-            <p className="mt-4 max-w-2xl text-base leading-8 text-slate-600 dark:text-slate-300">
+            <p className="mt-4 max-w-2xl text-base leading-8 text-text-secondary">
               This project also has a public live surface that helps reinforce the
               delivery story beyond screenshots and diagrams.
             </p>
@@ -210,7 +210,7 @@ export default async function ProjectDetailPage({ params }: Props) {
               href={system.externalUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-primary-700 transition-colors hover:text-primary-600 dark:text-primary-300 dark:hover:text-primary-200"
+              className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-link-primary transition-colors hover:text-link-primary-hover"
             >
               Visit live site
               <ArrowUpRight className="h-4 w-4" />
@@ -236,7 +236,7 @@ export default async function ProjectDetailPage({ params }: Props) {
         <div>
           <Link
             href="/projects"
-            className="inline-flex items-center gap-2 text-sm font-medium text-primary-700 transition-colors hover:text-primary-600 dark:text-primary-300 dark:hover:text-primary-200"
+            className="inline-flex items-center gap-2 text-sm font-medium text-link-primary transition-colors hover:text-link-primary-hover"
           >
             Back to all projects
             <ArrowRight className="h-4 w-4" />

@@ -19,11 +19,11 @@ const variants: Record<ButtonVariant, string> = {
   primary:
     'bg-primary-600 text-white hover:bg-primary-700 shadow-lg shadow-primary-500/25 hover:shadow-primary-500/40',
   secondary:
-    'bg-slate-100 text-slate-900 hover:bg-slate-200 dark:bg-slate-800 dark:text-slate-100 dark:hover:bg-slate-700',
+    'border border-border-subtle bg-background-elevated text-text-primary hover:bg-background-subtle',
   ghost:
-    'hover:bg-slate-100 dark:hover:bg-slate-800 text-slate-700 dark:text-slate-300',
+    'text-text-secondary hover:bg-background-subtle hover:text-text-primary',
   outline:
-    'border-2 border-primary-500 text-primary-600 hover:bg-primary-50 dark:text-primary-400 dark:hover:bg-primary-950',
+    'border-2 border-primary-500 text-link-primary hover:bg-primary-50 dark:hover:bg-primary-950',
 }
 
 const sizes: Record<ButtonSize, string> = {

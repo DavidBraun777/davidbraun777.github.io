@@ -199,7 +199,7 @@ export function SelectedSystems() {
                       <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-400 dark:text-slate-400">
                         My Role
                       </p>
-                      <p className="mt-1.5 text-sm font-medium text-slate-800 dark:text-slate-200">
+                      <p className="mt-1.5 text-sm font-medium text-text-primary">
                         {activeSystem.myRole}
                       </p>
                     </div>
@@ -207,7 +207,7 @@ export function SelectedSystems() {
                       <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-400 dark:text-slate-400">
                         Core Constraint
                       </p>
-                      <p className="mt-1.5 text-sm font-medium text-slate-800 dark:text-slate-200">
+                      <p className="mt-1.5 text-sm font-medium text-text-primary">
                         {activeSystem.coreConstraint}
                       </p>
                     </div>
@@ -215,7 +215,7 @@ export function SelectedSystems() {
                       <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-400 dark:text-slate-400">
                         Outcome
                       </p>
-                      <p className="mt-1.5 text-sm font-medium text-slate-800 dark:text-slate-200">
+                      <p className="mt-1.5 text-sm font-medium text-text-primary">
                         {activeSystem.outcome}
                       </p>
                     </div>
@@ -225,7 +225,7 @@ export function SelectedSystems() {
                     <p className="font-mono text-xs uppercase tracking-[0.18em] text-slate-500 dark:text-slate-300">
                       Problem
                     </p>
-                    <p className="mt-3 text-sm leading-relaxed text-slate-700 dark:text-slate-300">
+                    <p className="mt-3 text-sm leading-relaxed text-text-secondary">
                       {activeSystem.problem}
                     </p>
                   </div>
@@ -272,7 +272,7 @@ export function SelectedSystems() {
                             <p className="font-mono text-xs uppercase tracking-[0.18em] text-slate-500 dark:text-slate-300">
                               Problem
                             </p>
-                            <p className="mt-3 text-sm leading-relaxed text-slate-700 dark:text-slate-300">
+                            <p className="mt-3 text-sm leading-relaxed text-text-secondary">
                               {activeSystem.problem}
                             </p>
                           </div>
@@ -281,7 +281,7 @@ export function SelectedSystems() {
                             <p className="font-mono text-xs uppercase tracking-[0.18em] text-slate-500 dark:text-slate-300">
                               System
                             </p>
-                            <p className="mt-3 text-sm leading-relaxed text-slate-700 dark:text-slate-300">
+                            <p className="mt-3 text-sm leading-relaxed text-text-secondary">
                               {activeSystem.system}
                             </p>
                             <div className="mt-4 grid gap-3 sm:grid-cols-3">
@@ -374,7 +374,7 @@ export function SelectedSystems() {
                         Evidence
                       </p>
                     </div>
-                    <p className="mt-4 text-sm leading-relaxed text-slate-600 dark:text-slate-300">
+                    <p className="mt-4 text-sm leading-relaxed text-text-secondary">
                       {activeSystem.evidenceSummary}
                     </p>
                     <div className="mt-4 flex flex-wrap gap-2">
