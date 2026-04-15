@@ -46,18 +46,18 @@ next-env.d.ts
 .idea/
 .claude
 
-# macOS / local caches
-Library/
-Caches/
+# macOS
+.DS_Store
+
+# Node / tooling
+node_modules/
+.npm/
 
 # Playwright
 ms-playwright/
 playwright-report/
 test-results/
 
-# local junk
+# macOS system junk
 Library/
 Caches/
-ms-playwright/
-playwright-report/
-test-results/
