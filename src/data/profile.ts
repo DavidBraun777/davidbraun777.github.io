@@ -1,15 +1,14 @@
 import {
+  ArrowRight,
   Blocks,
-  BriefcaseBusiness,
   Building2,
   FileText,
-  GraduationCap,
   type LucideIcon,
   Mail,
-  NotebookPen,
   ShieldCheck,
   Sparkles,
   Workflow,
+  Wrench,
 } from 'lucide-react'
 
 export interface NavigationItem {
@@ -24,15 +23,28 @@ export interface Signal {
   icon: LucideIcon
 }
 
-export interface FocusArea {
+export interface ServiceOffering {
   title: string
-  description: string
+  problem: string
+  outcome: string
+  example: string
   icon: LucideIcon
 }
 
 export interface ProcessStep {
   title: string
   description: string
+}
+
+export interface CredibilityPoint {
+  title: string
+  description: string
+}
+
+export interface ConversionPoint {
+  title: string
+  description: string
+  icon: LucideIcon
 }
 
 export interface ContactPath {
@@ -46,153 +58,217 @@ export interface ContactPath {
 export const profile = {
   name: 'David Braun',
   location: 'Maple Grove, Minnesota',
-  title: 'AI systems engineer building software, infrastructure, and applied product systems.',
+  title: 'Workflow automation and systems consulting for small and midsized businesses.',
   summary:
-    'I build systems across software, AI, infrastructure, and applied product development.',
+    'I help small and midsized businesses remove manual work, connect disconnected tools, and build systems that stay dependable after launch.',
+  heroHeadline: 'Remove manual work from the workflows that keep slowing your business down.',
   heroDescription:
-    'I design and ship operational software where AI, backend systems, cloud infrastructure, and product thinking have to work together instead of living in separate demos.',
+    'I design and build AI systems, workflow automation, and integration-heavy software for businesses that are tired of re-entry, missed follow-up, disconnected tools, and fragile handoffs.',
+  audience:
+    'Best fit for owners and operators who need lead handling, internal workflows, or data movement to run with less manual effort and more consistency.',
+  availability: 'Open for consulting projects, automation builds, and operational software work.',
+  responseTime: 'I usually reply within one business day.',
   graduateStatus: "Master's student in Artificial Intelligence at the University of St. Thomas.",
   graduateProgram: 'Completing a Big Data certificate alongside the program.',
   graduation: 'Expected graduation: December 2026.',
-  availability:
-    'Open to full-time roles, research-minded engineering work, and selective consulting engagements.',
+  faithStatement:
+    'My faith shapes how I work: honest communication, clear commitments, stewardship, and respect for the people who have to live with the system after launch.',
 }
 
 export const primaryNavigation: NavigationItem[] = [
-  { label: 'Home', href: '/' },
-  { label: 'About', href: '/about' },
-  { label: 'Projects', href: '/projects' },
-  { label: 'Systems', href: '/systems' },
-  { label: 'Writing', href: '/writing' },
-  { label: 'Resume', href: '/resume' },
+  { label: 'Services', href: '/#services' },
+  { label: 'Case Studies', href: '/case-studies' },
+  { label: 'Why Work With Me', href: '/why-work-with-me' },
   { label: 'Contact', href: '/contact' },
 ]
 
+export const companySignals = ['Target', 'GE Aerospace', 'Securian', 'U.S. Bank']
+
 export const homeSignals: Signal[] = [
   {
-    title: 'Graduate Study',
-    value: "Master's in AI at St. Thomas",
-    detail: 'Big Data certificate in progress. Graduation target: December 2026.',
-    icon: GraduationCap,
-  },
-  {
-    title: 'Production Ownership',
-    value: 'Accessibility-first nonprofit platform live since 2020',
-    detail: 'Owned architecture, frontend, AWS hosting, Docker delivery, CI/CD, and operations.',
+    title: 'Production proof',
+    value: 'Public system live since 2020',
+    detail:
+      'The VIFG platform has been running in production with ongoing hosting, deployment, and accessibility ownership.',
     icon: ShieldCheck,
   },
   {
-    title: 'Enterprise Background',
-    value: 'Target, GE Aerospace, Securian, and U.S. Bank',
-    detail: 'Work spans software delivery, security hardening, infrastructure automation, and API support.',
+    title: 'Enterprise background',
+    value: 'Built inside large operating environments',
+    detail:
+      'Experience across Target, GE Aerospace, Securian, and U.S. Bank translates into stronger discipline around delivery, security, and reliability.',
     icon: Building2,
   },
   {
-    title: 'Technical Breadth',
-    value: 'AI, backend, cloud, infrastructure, and product systems',
-    detail: 'Best fit when architecture, implementation, and operational judgment all matter.',
+    title: 'Automation focus',
+    value: 'Manual work reduced through software',
+    detail:
+      'The work consistently centers on removing repetitive routing, processing, and follow-up from business operations.',
+    icon: Workflow,
+  },
+  {
+    title: 'System ownership',
+    value: 'From architecture to deployment',
+    detail:
+      'I work across software, data flow, infrastructure, automation, and handoff so the system holds up after launch.',
     icon: Blocks,
   },
 ]
 
 export const resumeHighlights: Signal[] = [
   {
-    title: 'Repository Scale',
-    value: '30+ repos supported and 50+ modernized at Target',
-    detail: 'Handled platform support, upgrades, and cross-repo modernization work.',
-    icon: BriefcaseBusiness,
-  },
-  {
-    title: 'Operational Improvement',
-    value: '40% reduction in manual work at Securian',
-    detail: 'Automated recurring data-processing workflows with Python.',
-    icon: Workflow,
-  },
-  {
-    title: 'Cloud Credential',
-    value: 'AWS Certified Cloud Practitioner',
-    detail: 'Issued March 2024 through Pearson VUE.',
-    icon: Sparkles,
-  },
-  {
-    title: 'Delivery Scope',
-    value: 'Production, enterprise, and founder-led builds',
-    detail: 'Comfortable moving from architecture and APIs to deployment and operations.',
-    icon: FileText,
-  },
-]
-
-export const whatIDoAreas: FocusArea[] = [
-  {
-    title: 'AI / ML systems',
-    description:
-      'Retrieval, guided workflows, policy-aware assistants, summarization pipelines, and other systems where models sit inside a dependable operational boundary.',
-    icon: Sparkles,
-  },
-  {
-    title: 'Software engineering',
-    description:
-      'Backend services, APIs, data flow, state management, and application logic that turn ideas into software people can actually use.',
-    icon: Blocks,
-  },
-  {
-    title: 'Cloud / infrastructure / DevOps',
-    description:
-      'AWS delivery, Docker, CI/CD, deployment topology, automation, and reliability work that keeps systems operating after launch.',
+    title: 'Production ownership',
+    value: 'Architecture, deployment, and operations',
+    detail:
+      'Comfortable taking responsibility for the real delivery surface, not just the prototype layer.',
     icon: ShieldCheck,
   },
   {
-    title: 'Product and system design',
-    description:
-      'Workflow framing, architecture boundaries, decision paths, and interface choices that make complex systems easier to understand and operate.',
+    title: 'Automation impact',
+    value: 'Operational work made lighter',
+    detail:
+      'Past automation work includes recurring processing and workflow improvements that cut manual team effort.',
     icon: Workflow,
   },
   {
-    title: 'Consulting and applied problem-solving',
-    description:
-      'Best on messy, real-world technical problems where business context and engineering execution need to meet in the same plan.',
-    icon: BriefcaseBusiness,
+    title: 'Enterprise credibility',
+    value: 'Cross-functional software and infrastructure work',
+    detail:
+      'Background includes frontend, APIs, security hardening, infrastructure automation, and production support.',
+    icon: Building2,
+  },
+  {
+    title: 'Ongoing technical growth',
+    value: 'Applied AI plus production engineering',
+    detail:
+      'Graduate study in AI supports the consulting work, but it is not the reason to trust the delivery.',
+    icon: Sparkles,
+  },
+]
+
+export const servicesOffered: ServiceOffering[] = [
+  {
+    title: 'Lead automation',
+    problem:
+      'Leads get lost when calls, qualification, follow-up, and CRM updates depend on manual steps.',
+    outcome:
+      'Lead handling becomes faster, more consistent, and easier to track from first contact to next action.',
+    example: 'StormIQ voice workflow and CRM handoff architecture.',
+    icon: Sparkles,
+  },
+  {
+    title: 'System integration',
+    problem:
+      'Important information is trapped across forms, inboxes, spreadsheets, CRMs, and internal tools.',
+    outcome:
+      'The right data moves to the right place without staff copying it between systems.',
+    example: 'Lecture Stream processing pipeline and enterprise API integration work.',
+    icon: ArrowRight,
+  },
+  {
+    title: 'Workflow automation',
+    problem:
+      'Teams waste time on repetitive review, routing, status updates, and handoffs that should already be handled.',
+    outcome:
+      'Routine steps are automated so people spend less time coordinating and more time acting.',
+    example: 'DealerFlow notifications and operational workflow design.',
+    icon: Workflow,
+  },
+  {
+    title: 'Long-term system reliability',
+    problem:
+      'A tool that works in a demo but breaks in production creates more work than it saves.',
+    outcome:
+      'Delivery includes deployment, monitoring, accessibility, and operational boundaries so the system stays useful.',
+    example: 'VIFG production platform on AWS with repeatable deployment.',
+    icon: Wrench,
   },
 ]
 
 export const processPreview: ProcessStep[] = [
   {
-    title: 'Frame the workflow first',
+    title: 'Discovery',
     description:
-      'Start with users, inputs, routing, constraints, and failure points before choosing tools or interfaces.',
+      'Start with the workflow, the bottlenecks, and the manual work that is actually costing time or revenue.',
   },
   {
-    title: 'Use AI where it earns its place',
+    title: 'Design',
     description:
-      'Models are useful inside retrieval, decision support, summarization, or guided workflows when the surrounding system stays inspectable.',
+      'Map the system, data movement, rules, edge cases, and handoffs before choosing what gets automated.',
   },
   {
-    title: 'Ship the operational layer',
+    title: 'Build',
     description:
-      'Queues, persistence, monitoring, delivery paths, and human handoffs are part of the product, not afterthoughts.',
+      'Implement the workflow, integration, UI, and backend pieces needed to make the system usable in real work.',
+  },
+  {
+    title: 'Deploy',
+    description:
+      'Ship the operational version with hosting, security, observability, and release discipline in place.',
+  },
+  {
+    title: 'Iterate',
+    description:
+      'Tighten the system using real usage, new edge cases, and the next operational constraint that appears.',
+  },
+]
+
+export const credibilityPoints: CredibilityPoint[] = [
+  {
+    title: 'System-level thinking',
+    description:
+      'I do not treat automation as a prompt plus a UI. I design the routing, state, validation, handoffs, and failure handling around it.',
+  },
+  {
+    title: 'Enterprise discipline',
+    description:
+      'Large-company engineering experience shows up in documentation, reliability, security thinking, and clear delivery boundaries.',
+  },
+  {
+    title: 'Hands-on delivery',
+    description:
+      'The work does not stop at recommendations. I can design, build, deploy, and support the actual system.',
+  },
+  {
+    title: 'Values that travel into the work',
+    description:
+      'My Christian faith informs how I communicate, scope work, and handle trust, while the services themselves are for anyone who is a good fit.',
+  },
+]
+
+export const conversionPoints: ConversionPoint[] = [
+  {
+    title: 'Best fit',
+    description:
+      'You have a repeated workflow, disconnected tools, or lead handling problems that are already costing time.',
+    icon: Sparkles,
+  },
+  {
+    title: 'What happens next',
+    description:
+      'The first call is used to understand the workflow, the current friction, and whether a scoped build makes sense.',
+    icon: ArrowRight,
+  },
+  {
+    title: 'Response time',
+    description: profile.responseTime,
+    icon: Mail,
+  },
+  {
+    title: 'Privacy',
+    description:
+      'Project details shared through the form stay private and are only used to evaluate the fit for the conversation.',
+    icon: FileText,
   },
 ]
 
 export const contactPaths: ContactPath[] = [
   {
-    title: 'Career opportunities',
-    description: 'Full-time roles in AI systems, backend engineering, platform work, or applied product development.',
-    href: '/resume',
-    label: 'Review Resume',
-    icon: FileText,
-  },
-  {
-    title: 'Project or consulting work',
-    description: 'Architecture help, workflow automation, system reviews, or scoped technical builds.',
+    title: 'Book a call',
+    description:
+      'Use this if you want to talk through a workflow problem, an integration need, or a system you want built.',
     href: '/contact',
-    label: 'Start a Conversation',
+    label: 'Book a Call',
     icon: Mail,
-  },
-  {
-    title: 'Technical writing and ideas',
-    description: 'Notes on AI systems, automation, software delivery, and the tradeoffs behind real systems.',
-    href: '/writing',
-    label: 'Read Writing',
-    icon: NotebookPen,
   },
 ]

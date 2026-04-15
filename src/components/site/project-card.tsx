@@ -12,7 +12,7 @@ interface ProjectCardProps {
 
 export function ProjectCard({
   system,
-  href = `/projects/${system.id}`,
+  href = `/case-studies/${system.id}`,
   compact = false,
 }: ProjectCardProps) {
   return (
@@ -38,10 +38,14 @@ export function ProjectCard({
 
         <div className="p-6 sm:p-7">
           <div className="flex flex-wrap items-center gap-2">
-            <Badge variant="secondary" className="bg-primary-50 text-primary-700 dark:bg-primary-950/60 dark:text-primary-200">
-              {system.themeTitle}
+            <Badge
+              variant="secondary"
+              className="bg-primary-50 text-primary-700 dark:bg-primary-950/60 dark:text-primary-200"
+            >
+              {system.caseStudyStage}
             </Badge>
             <Badge variant="outline">{system.currentState}</Badge>
+            <Badge variant="outline">{system.themeTitle}</Badge>
           </div>
 
           <h3 className="mt-4 text-2xl font-semibold tracking-tight text-text-primary">

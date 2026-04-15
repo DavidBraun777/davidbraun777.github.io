@@ -5,13 +5,13 @@ import Link from 'next/link'
 import { Menu, X } from 'lucide-react'
 import { usePathname } from 'next/navigation'
 import { primaryNavigation, profile } from '@/data/profile'
-import { resumeUrl } from '@/data/social-links'
 import { cn } from '@/lib/utils'
 import { ThemeToggle } from '@/components/site/theme-toggle'
 
 function isActive(pathname: string, href: string) {
-  if (href === '/') return pathname === '/'
-  return pathname === href || pathname.startsWith(`${href}/`)
+  const normalizedHref = href.split('#')[0] || '/'
+  if (normalizedHref === '/') return pathname === '/'
+  return pathname === normalizedHref || pathname.startsWith(`${normalizedHref}/`)
 }
 
 export function Header() {
@@ -44,7 +44,7 @@ export function Header() {
               {profile.name}
             </span>
             <span className="text-sm text-text-muted">
-              AI systems, software, and infrastructure
+              Workflow automation and systems consulting
             </span>
           </Link>
         </div>
@@ -73,19 +73,11 @@ export function Header() {
 
         <div className="hidden items-center gap-3 lg:flex">
           <ThemeToggle />
-          <a
-            href={resumeUrl}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="rounded-full border border-border-subtle bg-background-elevated px-4 py-2 text-sm font-medium text-text-secondary transition-colors hover:bg-background-subtle hover:text-text-primary"
-          >
-            View Resume
-          </a>
           <Link
             href="/contact"
             className="rounded-full bg-slate-950 px-4 py-2 text-sm font-medium text-white transition-colors hover:bg-slate-800 dark:bg-primary-500 dark:text-slate-950 dark:hover:bg-primary-400"
           >
-            Contact
+            Book a Call
           </Link>
         </div>
 
@@ -132,19 +124,11 @@ export function Header() {
           </nav>
 
           <div className="mt-4 grid gap-2 sm:grid-cols-2">
-            <a
-              href={resumeUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="rounded-2xl border border-border-subtle bg-background-elevated px-4 py-3 text-center text-sm font-medium text-text-secondary transition-colors hover:bg-background-subtle hover:text-text-primary"
-            >
-              View Resume
-            </a>
             <Link
               href="/contact"
-              className="rounded-2xl bg-slate-950 px-4 py-3 text-center text-sm font-medium text-white transition-colors hover:bg-slate-800 dark:bg-primary-500 dark:text-slate-950 dark:hover:bg-primary-400"
+              className="rounded-2xl bg-slate-950 px-4 py-3 text-center text-sm font-medium text-white transition-colors hover:bg-slate-800 dark:bg-primary-500 dark:text-slate-950 dark:hover:bg-primary-400 sm:col-span-2"
             >
-              Contact
+              Book a Call
             </Link>
           </div>
         </div>

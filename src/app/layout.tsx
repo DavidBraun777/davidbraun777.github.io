@@ -23,19 +23,19 @@ const jetbrainsMono = localFont({
 export const metadata: Metadata = {
   metadataBase: new URL('https://dbraun.io'),
   title: {
-    default: 'David Braun | AI Systems, Software, and Infrastructure',
+    default: 'David Braun | Workflow Automation and Systems Consulting',
     template: '%s | David Braun',
   },
   description:
-    "David Braun is a master's student in Artificial Intelligence at the University of St. Thomas building systems across software, AI, infrastructure, and applied product development.",
+    'Workflow automation, AI systems, and integration-focused consulting for small and midsized businesses that need less manual work and more dependable operations.',
   keywords: [
-    'AI Systems Engineer',
-    'Applied AI',
-    'Software Engineering',
+    'Workflow Automation Consultant',
+    'AI Systems Consultant',
+    'System Integration',
     'Workflow Automation',
-    'Infrastructure',
-    'Portfolio',
-    'Systems Design',
+    'Data Pipelines',
+    'Operational Software',
+    'Systems Consulting',
     'Minnesota',
   ],
   authors: [{ name: profile.name }],
@@ -45,24 +45,24 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_US',
     url: 'https://dbraun.io',
-    title: 'David Braun | AI systems, software, and infrastructure',
+    title: 'David Braun | Workflow automation and systems consulting',
     description:
-      "Master's student in Artificial Intelligence at the University of St. Thomas building systems across software, AI, infrastructure, and applied product development.",
+      'Consulting for small and midsized businesses that need workflow automation, better system handoffs, and software that holds up in production.',
     siteName: 'dbraun.io',
     images: [
-      {
-        url: '/opengraph-image',
-        width: 1200,
-        height: 630,
-        alt: 'David Braun portfolio site',
-      },
+        {
+          url: '/opengraph-image',
+          width: 1200,
+          height: 630,
+          alt: 'David Braun consulting site',
+        },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'David Braun | AI systems, software, and infrastructure',
+    title: 'David Braun | Workflow automation and systems consulting',
     description:
-      "Master's student in Artificial Intelligence at the University of St. Thomas building systems across software, AI, infrastructure, and applied product development.",
+      'Workflow automation, AI systems, and integration-focused consulting for businesses that want less manual work.',
     images: ['/twitter-image'],
   },
   robots: {
@@ -76,9 +76,6 @@ export const metadata: Metadata = {
   icons: {
     icon: '/user-icon.png',
     apple: '/user-icon.png',
-  },
-  alternates: {
-    canonical: '/',
   },
 }
 
@@ -116,9 +113,9 @@ const personStructuredData = {
     'Artificial intelligence',
     'Software engineering',
     'Workflow automation',
-    'Infrastructure',
+    'System integration',
     'Cloud engineering',
-    'Applied product development',
+    'Operational software',
   ],
 }
 

@@ -1,23 +1,22 @@
 'use client'
 
-import { useState, useRef, useEffect } from 'react'
+import { useEffect, useRef, useState } from 'react'
 import { motion } from 'framer-motion'
-import Link from 'next/link'
 import {
-  Send,
-  Mail,
-  MapPin,
-  CheckCircle,
   AlertCircle,
-  Calendar,
-  Clock,
   ArrowRight,
   ArrowUpRight,
+  Calendar,
+  CheckCircle,
+  Clock,
+  FileText,
+  Mail,
+  Send,
 } from 'lucide-react'
-import { socialLinks } from '@/data/social-links'
 import { SectionHeader } from '@/components/ui/section-header'
 import { Button } from '@/components/ui/button'
-import { Input, Textarea, Select } from '@/components/ui/input'
+import { Input, Select, Textarea } from '@/components/ui/input'
+import { profile } from '@/data/profile'
 
 type FormStatus = 'idle' | 'loading' | 'success' | 'error'
 
@@ -30,34 +29,46 @@ interface ContactProps {
 }
 
 const conversationTypeOptions = [
-  { value: 'full-time', label: 'Full-time role' },
-  { value: 'consulting', label: 'Consulting engagement' },
-  { value: 'build', label: 'Product or platform build' },
-  { value: 'architecture', label: 'Architecture / technical review' },
+  { value: 'consulting', label: 'Workflow automation project' },
+  { value: 'build', label: 'New system or internal tool' },
+  { value: 'architecture', label: 'System integration or reliability review' },
   { value: 'other', label: 'Other' },
 ]
 
 const serviceOptions = [
-  { value: 'applied-ai', label: 'Applied AI systems' },
+  { value: 'applied-ai', label: 'Lead automation' },
   { value: 'workflow-automation', label: 'Workflow automation' },
-  { value: 'platform-infra', label: 'Platform / infrastructure' },
-  { value: 'product-delivery', label: 'Domain-specific software' },
-  { value: 'accessibility', label: 'Accessibility-minded product work' },
+  { value: 'platform-infra', label: 'System integration' },
+  { value: 'product-delivery', label: 'Operational software build' },
+  { value: 'accessibility', label: 'Public-facing accessible system' },
   { value: 'other', label: 'Other' },
 ]
 
 const urgencyOptions = [
-  { value: 'exploring', label: 'Exploring' },
-  { value: 'this-quarter', label: 'This quarter' },
-  { value: 'this-month', label: 'This month' },
+  { value: 'exploring', label: 'Researching options' },
+  { value: 'this-quarter', label: 'Need it this quarter' },
+  { value: 'this-month', label: 'Need it this month' },
   { value: 'urgent', label: 'Urgent' },
+]
+
+const fitPoints = [
+  'A repeated workflow is taking too much manual coordination.',
+  'Important data has to move across multiple systems or tools.',
+  'Leads or requests are slipping because follow-up is inconsistent.',
+  'You need the system to keep working after launch, not just demo well.',
+]
+
+const nextStepPoints = [
+  'The first call is used to understand the workflow, the current friction, and whether there is a clear fit.',
+  'If the project makes sense, I follow up with a scoped recommendation or next-step plan.',
+  'If it is not a fit, I will say so directly instead of dragging the process out.',
 ]
 
 export function Contact({
   calLink,
   showSectionHeader = true,
-  title = 'Get In Touch',
-  subtitle = 'For systems work where architecture, implementation, and product judgment all need to show up in the same project.',
+  title = 'Book a call',
+  subtitle = 'Use this page if you want to reduce manual work, connect systems, or clean up an unreliable workflow.',
   sectionId = 'contact',
 }: ContactProps) {
   const [formStatus, setFormStatus] = useState<FormStatus>('idle')
@@ -75,13 +86,10 @@ export function Contact({
     typeof calLink === 'string' && /^https?:\/\//i.test(calLink.trim())
       ? calLink.trim()
       : null
-  const linkedinUrl =
-    socialLinks.find((link) => link.name === 'LinkedIn')?.url ??
-    'https://linkedin.com/in/david-braun777'
   const formAnchorId = `${sectionId}-fields`
 
-  const handleSubmit = async (e: React.FormEvent) => {
-    e.preventDefault()
+  const handleSubmit = async (event: React.FormEvent) => {
+    event.preventDefault()
     clearTimeout(resetTimerRef.current)
     setFormStatus('loading')
 
@@ -107,8 +115,6 @@ export function Contact({
           urgency: '',
         })
       } else {
-        const data = await response.json()
-        console.error('Contact form error:', data.error)
         setFormStatus('error')
       }
     } catch {
@@ -119,222 +125,218 @@ export function Contact({
     resetTimerRef.current = setTimeout(() => setFormStatus('idle'), 5000)
   }
 
-  // Clean up pending timer on unmount
   useEffect(() => {
     return () => clearTimeout(resetTimerRef.current)
   }, [])
 
   return (
     <section id={sectionId} className="section">
-      <div className="max-w-6xl mx-auto px-4 sm:px-6 lg:px-8">
+      <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         {showSectionHeader ? <SectionHeader title={title} subtitle={subtitle} /> : null}
 
-        <div className="grid lg:grid-cols-2 gap-12">
-          {/* Contact info */}
+        <div className="grid gap-12 lg:grid-cols-[0.95fr_1.05fr]">
           <motion.div
             initial={{ opacity: 0, x: -30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             className="space-y-8"
           >
-            <div>
-              <h3 className="text-2xl font-bold text-text-primary mb-4">
-                Start a conversation
-              </h3>
-              <p className="text-lg text-text-muted">
-                If you need someone who can turn complex ideas into working systems,
-                automate real workflows, and build with both speed and engineering rigor,
-                let&apos;s talk. I&apos;m open to full-time roles, consulting engagements,
-                and selected builds.
-              </p>
-              <Link
-                href="/resume"
-                className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-link-primary transition-colors hover:text-link-primary-hover"
-              >
-                View resume, skills, and credentials
-                <ArrowRight className="h-4 w-4" />
-              </Link>
+            <div className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm">
+              <div className="flex items-start gap-4">
+                <div className="rounded-2xl bg-primary-50 p-3 text-primary-700 dark:bg-primary-950/60 dark:text-primary-200">
+                  <Calendar className="h-6 w-6" />
+                </div>
+                <div>
+                  <div className="flex flex-wrap items-center gap-2">
+                    <h2 className="text-2xl font-semibold tracking-tight text-text-primary">
+                      Start with a short call
+                    </h2>
+                    <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-medium uppercase tracking-[0.08em] text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-300">
+                      Primary path
+                    </span>
+                  </div>
+                  <p className="mt-3 text-sm leading-7 text-text-secondary">
+                    Best for owners and operators who already know a workflow is broken,
+                    too manual, or too fragile and want to talk through the right next step.
+                  </p>
+                  <a
+                    href={calendlyUrl ?? `#${formAnchorId}`}
+                    target={calendlyUrl ? '_blank' : undefined}
+                    rel={calendlyUrl ? 'noopener noreferrer' : undefined}
+                    className="mt-5 inline-flex items-center gap-2 rounded-full bg-slate-950 px-5 py-3 text-sm font-medium text-white transition-colors hover:bg-slate-800 dark:bg-primary-500 dark:text-slate-950 dark:hover:bg-primary-400"
+                  >
+                    Book a Call
+                    <ArrowUpRight className="h-4 w-4" />
+                  </a>
+                </div>
+              </div>
             </div>
 
-            <div className="space-y-4">
-              <div className="flex items-center gap-4">
-                <div className="p-3 bg-primary-100 dark:bg-primary-900/50 rounded-xl">
-                  <Mail className="w-6 h-6 text-link-primary" />
-                </div>
-                <div>
-                  <p className="text-sm text-text-muted">Private inbox</p>
-                  <p className="text-lg font-medium text-text-primary">
-                    Use the form below for direct replies
-                  </p>
-                  <p className="text-sm text-text-secondary">
-                    Messages route through a private mailbox and I reply directly.
-                  </p>
-                </div>
-              </div>
-
-              <div className="flex items-center gap-4">
-                <div className="p-3 bg-accent-violet/10 rounded-xl">
-                  <MapPin className="w-6 h-6 text-accent-violet" />
-                </div>
-                <div>
-                  <p className="text-sm text-text-muted">Location</p>
-                  <p className="text-lg font-medium text-text-primary">
-                    Maple Grove, Minnesota
-                  </p>
-                </div>
-              </div>
-
-              <div className="rounded-2xl border border-emerald-200/70 bg-emerald-50/80 p-4 dark:border-emerald-900/70 dark:bg-emerald-950/20">
-                <div className="flex items-center gap-4">
-                  <div className="p-3 bg-accent-emerald/10 rounded-xl">
-                    <Calendar className="w-6 h-6 text-accent-emerald" />
+            <div className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm">
+              <h2 className="text-xl font-semibold text-text-primary">Good fit if</h2>
+              <div className="mt-5 space-y-3">
+                {fitPoints.map((point) => (
+                  <div
+                    key={point}
+                    className="rounded-2xl border border-border-subtle bg-background-subtle px-4 py-3 text-sm leading-7 text-text-secondary"
+                  >
+                    {point}
                   </div>
-                  <div>
-                    <div className="flex flex-wrap items-center gap-2">
-                      <p className="text-sm text-text-muted">Quick chat</p>
-                      <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-medium uppercase tracking-[0.08em] text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-300">
-                        Preferred
-                      </span>
+                ))}
+              </div>
+            </div>
+
+            <div className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm">
+              <h2 className="text-xl font-semibold text-text-primary">What happens next</h2>
+              <div className="mt-5 space-y-4">
+                {nextStepPoints.map((point, index) => (
+                  <div key={point} className="flex gap-4">
+                    <div className="flex h-8 w-8 items-center justify-center rounded-full bg-primary-50 font-mono text-xs font-semibold text-primary-700 dark:bg-primary-950/60 dark:text-primary-200">
+                      {index + 1}
                     </div>
-                    <a
-                      href={calendlyUrl ?? `#${formAnchorId}`}
-                      target={calendlyUrl ? '_blank' : undefined}
-                      rel={calendlyUrl ? 'noopener noreferrer' : undefined}
-                      className="mt-1 inline-flex items-center gap-1.5 text-lg font-semibold text-text-primary transition-colors hover:text-accent-emerald"
-                    >
-                      {calendlyUrl ? 'Book a 15-minute meeting' : 'Request a 15-minute meeting'}
-                      <ArrowUpRight className="h-4 w-4" />
-                    </a>
-                    <p className="mt-1 text-sm text-text-secondary">
-                      Best for role fit, system scope, or project next steps.
+                    <p className="flex-1 pt-0.5 text-sm leading-7 text-text-secondary">
+                      {point}
                     </p>
                   </div>
-                </div>
+                ))}
               </div>
             </div>
 
-            {/* Social links */}
-            <div>
-              <p className="text-sm text-text-muted mb-4">Profiles</p>
-              <div className="flex gap-4">
-                {socialLinks.map((link) => {
-                  const Icon = link.icon
-                  return (
-                    <motion.a
-                      key={link.name}
-                      href={link.url}
-                      target="_blank"
-                      rel="noopener noreferrer"
-                      whileHover={{ scale: 1.1, y: -2 }}
-                      whileTap={{ scale: 0.95 }}
-                      className="p-3 bg-slate-100 dark:bg-slate-800 rounded-xl text-text-muted hover:text-primary-600 dark:hover:text-primary-400 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
-                      aria-label={link.name}
-                    >
-                      <Icon aria-hidden="true" className="w-5 h-5" />
-                    </motion.a>
-                  )
-                })}
-              </div>
+            <div className="grid gap-4 sm:grid-cols-2">
+              <article className="rounded-[1.5rem] border border-border-subtle bg-background-elevated p-5 shadow-sm">
+                <div className="inline-flex rounded-2xl bg-primary-50 p-3 text-primary-700 dark:bg-primary-950/60 dark:text-primary-200">
+                  <Clock className="h-5 w-5" />
+                </div>
+                <h2 className="mt-4 text-lg font-semibold text-text-primary">Response time</h2>
+                <p className="mt-3 text-sm leading-7 text-text-secondary">
+                  {profile.responseTime}
+                </p>
+              </article>
+
+              <article className="rounded-[1.5rem] border border-border-subtle bg-background-elevated p-5 shadow-sm">
+                <div className="inline-flex rounded-2xl bg-primary-50 p-3 text-primary-700 dark:bg-primary-950/60 dark:text-primary-200">
+                  <FileText className="h-5 w-5" />
+                </div>
+                <h2 className="mt-4 text-lg font-semibold text-text-primary">Privacy</h2>
+                <p className="mt-3 text-sm leading-7 text-text-secondary">
+                  Anything you share here is used only to evaluate fit for the conversation.
+                </p>
+              </article>
             </div>
           </motion.div>
 
-          {/* Contact form */}
           <motion.div
             initial={{ opacity: 0, x: 30 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             className="space-y-5"
           >
+            <div className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm">
+              <h2 className="text-2xl font-semibold tracking-tight text-text-primary">
+                Prefer to send details first?
+              </h2>
+              <p className="mt-3 text-sm leading-7 text-text-secondary">
+                Use the form below if you want to share the workflow, the systems
+                involved, and the timing before booking. That gives me better context for
+                the first conversation.
+              </p>
+            </div>
+
             <form id={formAnchorId} onSubmit={handleSubmit} className="space-y-6">
-              <div className="grid sm:grid-cols-2 gap-6">
+              <div className="grid gap-6 sm:grid-cols-2">
                 <Input
                   id="contact-name"
-                  label="Your name"
+                  label="Name"
                   type="text"
                   placeholder="Your name"
                   value={formData.name}
-                  onChange={(e) => setFormData({ ...formData, name: e.target.value })}
+                  onChange={(event) => setFormData({ ...formData, name: event.target.value })}
                   maxLength={100}
                   required
                 />
                 <Input
                   id="contact-email"
-                  label="Your email"
+                  label="Email"
                   type="email"
-                  placeholder="Your email"
+                  placeholder="you@company.com"
                   value={formData.email}
-                  onChange={(e) => setFormData({ ...formData, email: e.target.value })}
+                  onChange={(event) => setFormData({ ...formData, email: event.target.value })}
                   maxLength={254}
                   required
                 />
               </div>
+
               <Input
                 id="contact-subject"
-                label="Subject"
+                label="What do you need help with?"
                 type="text"
-                placeholder="Subject"
+                placeholder="Example: automate lead follow-up across forms and our CRM"
                 value={formData.subject}
-                onChange={(e) => setFormData({ ...formData, subject: e.target.value })}
+                onChange={(event) => setFormData({ ...formData, subject: event.target.value })}
                 maxLength={200}
                 required
               />
 
-              <div className="grid sm:grid-cols-3 gap-4">
+              <div className="grid gap-4 sm:grid-cols-3">
                 <Select
                   id="contact-project-type"
-                  label="Conversation type"
-                  placeholder="What is this about?"
+                  label="Project type"
+                  placeholder="Select one"
                   options={conversationTypeOptions}
                   value={formData.projectType}
-                  onChange={(e) => setFormData({ ...formData, projectType: e.target.value })}
+                  onChange={(event) =>
+                    setFormData({ ...formData, projectType: event.target.value })
+                  }
                 />
                 <Select
                   id="contact-service"
-                  label="Focus area"
-                  placeholder="What kind of work?"
+                  label="Primary need"
+                  placeholder="Select one"
                   options={serviceOptions}
                   value={formData.serviceNeeded}
-                  onChange={(e) => setFormData({ ...formData, serviceNeeded: e.target.value })}
+                  onChange={(event) =>
+                    setFormData({ ...formData, serviceNeeded: event.target.value })
+                  }
                 />
                 <Select
                   id="contact-urgency"
                   label="Timeline"
-                  placeholder="Timeline"
+                  placeholder="Select one"
                   options={urgencyOptions}
                   value={formData.urgency}
-                  onChange={(e) => setFormData({ ...formData, urgency: e.target.value })}
+                  onChange={(event) => setFormData({ ...formData, urgency: event.target.value })}
                 />
               </div>
 
               <Textarea
                 id="contact-message"
-                label="Your message"
-                placeholder="What workflow, product, or system are you trying to build?"
-                rows={6}
+                label="Project details"
+                placeholder="Describe the current workflow, the systems involved, what is breaking, and what outcome you want."
+                rows={7}
                 value={formData.message}
-                onChange={(e) => setFormData({ ...formData, message: e.target.value })}
+                onChange={(event) => setFormData({ ...formData, message: event.target.value })}
                 maxLength={2000}
                 required
               />
 
-              <div className="flex flex-col sm:flex-row sm:items-center gap-4">
+              <div className="flex flex-col gap-4 sm:flex-row sm:items-center sm:justify-between">
                 <Button
                   type="submit"
                   size="lg"
                   className="w-full sm:w-auto"
                   isLoading={formStatus === 'loading'}
                 >
-                  <Send className="w-4 h-4 mr-2" />
-                  Send Message
+                  <Send className="mr-2 h-4 w-4" />
+                  Send Project Details
                 </Button>
 
                 <p className="flex items-center gap-1.5 text-sm text-text-muted">
-                  <Clock className="w-4 h-4" />
-                  I typically reply within 24 hours
+                  <Mail className="h-4 w-4" />
+                  Private intake. Direct reply from David.
                 </p>
               </div>
 
-              {formStatus === 'success' && (
+              {formStatus === 'success' ? (
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
@@ -342,33 +344,36 @@ export function Contact({
                   aria-live="polite"
                   className="flex items-center gap-2 text-green-600 dark:text-green-400"
                 >
-                  <CheckCircle className="w-5 h-5" />
-                  Message sent successfully! I&apos;ll get back to you soon.
+                  <CheckCircle className="h-5 w-5" />
+                  Message sent. I&apos;ll follow up soon.
                 </motion.div>
-              )}
-              {formStatus === 'error' && (
+              ) : null}
+
+              {formStatus === 'error' ? (
                 <motion.div
                   initial={{ opacity: 0, y: 10 }}
                   animate={{ opacity: 1, y: 0 }}
                   role="alert"
-                  className="flex flex-col gap-2 text-red-600 dark:text-red-400"
+                  className="flex items-start gap-2 text-red-600 dark:text-red-400"
                 >
-                  <div className="flex items-center gap-2">
-                    <AlertCircle className="w-5 h-5" />
-                    Something went wrong. Please try again or reach out on LinkedIn.
-                  </div>
-                  <a
-                    href={linkedinUrl}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="ml-7 text-sm text-primary-600 hover:underline dark:text-primary-400"
-                  >
-                    linkedin.com/in/david-braun777
-                  </a>
+                  <AlertCircle className="mt-0.5 h-5 w-5" />
+                  <p className="text-sm leading-7">
+                    Something went wrong. Try again, or use the booking option above so
+                    the conversation does not stall.
+                  </p>
                 </motion.div>
-              )}
+              ) : null}
             </form>
 
+            <a
+              href={calendlyUrl ?? `#${formAnchorId}`}
+              target={calendlyUrl ? '_blank' : undefined}
+              rel={calendlyUrl ? 'noopener noreferrer' : undefined}
+              className="inline-flex items-center gap-2 text-sm font-medium text-link-primary transition-colors hover:text-link-primary-hover"
+            >
+              Use the faster path and book a call
+              <ArrowRight className="h-4 w-4" />
+            </a>
           </motion.div>
         </div>
       </div>

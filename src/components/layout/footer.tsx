@@ -3,7 +3,8 @@ import { primaryNavigation, profile } from '@/data/profile'
 import { resumeUrl, socialLinks } from '@/data/social-links'
 
 const footerLinks = [
-  ...primaryNavigation.filter((item) => item.href !== '/'),
+  ...primaryNavigation,
+  { label: 'Writing', href: '/writing' },
   { label: 'Resume PDF', href: resumeUrl, external: true },
 ]
 
@@ -19,11 +20,11 @@ export function Footer() {
             {profile.name}
           </Link>
           <p className="mt-3 max-w-md text-sm leading-7 text-text-secondary">
-            Personal authority site for projects, systems thinking, writing, resume details,
-            and future consulting credibility.
+            Consulting for businesses that need workflow automation, better system handoffs,
+            and software that stays dependable after launch.
           </p>
           <p className="mt-4 text-sm text-text-muted">
-            {profile.graduateStatus} {profile.graduation}
+            {profile.faithStatement}
           </p>
         </div>
 
@@ -81,7 +82,7 @@ export function Footer() {
       <div className="border-t border-border-subtle px-4 py-5 text-sm text-text-muted sm:px-6 lg:px-8">
         <div className="mx-auto flex max-w-7xl flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <p>&copy; {currentYear} {profile.name}. All rights reserved.</p>
-          <p>Built with Next.js, TypeScript, MDX, and a systems-first approach.</p>
+          <p>Built with Next.js, TypeScript, and a delivery-first approach.</p>
         </div>
       </div>
     </footer>

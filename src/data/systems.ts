@@ -7,6 +7,7 @@ export interface SystemCaseStudy {
   id: string
   name: string
   summary: string
+  caseStudyStage: 'Production' | 'Pilot' | 'R&D'
   problem: string
   system: string
   systemHighlights: string[]
@@ -87,7 +88,8 @@ export const systemThemes: SystemTheme[] = [
         id: 'stormiq',
         name: 'StormIQ',
         summary:
-          'AI-powered lead generation platform designed to automate prospect engagement workflows and move structured outcomes into sales operations.',
+          'Lead automation platform designed to handle calls, qualification, and CRM handoff without manual follow-up bottlenecks.',
+        caseStudyStage: 'R&D',
         problem:
           'Lead generation teams lose momentum when telephony, qualification, and follow-up depend on scripts, disconnected tools, and inconsistent operator decisions.',
         system:
@@ -115,7 +117,8 @@ export const systemThemes: SystemTheme[] = [
         id: 'roboreceptionist',
         name: 'RoboReceptionist',
         summary:
-          'AI-assisted legal intake system that guides non-experts through complex legal situations with structured workflows and knowledge retrieval.',
+          'Legal intake workflow that screens urgency, gathers structured information, and routes cases without inconsistent or unsafe responses.',
+        caseStudyStage: 'R&D',
         problem:
           'Legal intake is high-friction for callers and high-risk for firms when urgency, jurisdiction, conflict checks, and advice boundaries are handled inconsistently.',
         system:
@@ -149,7 +152,8 @@ export const systemThemes: SystemTheme[] = [
         id: 'lecture-stream-platform',
         name: 'Lecture Stream Platform',
         summary:
-          'AI transcription and summarization pipeline that converts spoken lectures into structured knowledge artifacts.',
+          'Audio-processing pipeline that turns raw recordings into transcripts, summaries, and reusable knowledge outputs.',
+        caseStudyStage: 'R&D',
         problem:
           'Lecture capture often stops at raw recordings, leaving transcription, summarization, storage, and retrieval fragmented across separate tools.',
         system:
@@ -192,7 +196,8 @@ export const systemThemes: SystemTheme[] = [
         id: 'naics-startup-planning-system',
         name: 'NAICS Startup Planning System',
         summary:
-          'Software that guides founders through structured startup planning workflows instead of vague brainstorming.',
+          'Planning system that turns broad startup ideas into structured, traceable business planning steps.',
+        caseStudyStage: 'R&D',
         problem:
           'Founders often start with broad ideas but no repeatable way to turn an industry choice into a realistic plan, staffing model, income assumptions, or startup sequence.',
         system:
@@ -220,7 +225,8 @@ export const systemThemes: SystemTheme[] = [
         id: 'dealerflow',
         name: 'DealerFlow',
         summary:
-          'Vehicle monitoring and notification platform that aggregates inventory updates and alerts users to relevant deals.',
+          'Pilot platform that automates inventory alerts, buyer matching, and seller workflows for wholesale vehicle activity.',
+        caseStudyStage: 'Pilot',
         problem:
           'Wholesale vehicle buyers and sellers lose time when fresh inventory, offer status, and lifecycle changes are spread across slow manual workflows.',
         system:
@@ -256,7 +262,8 @@ export const systemThemes: SystemTheme[] = [
         id: 'vifg-nonprofit-platform',
         name: 'VIFG Nonprofit Platform',
         summary:
-          'Production website and infrastructure system supporting a nonprofit organization serving the visually impaired community.',
+          'Production platform and delivery stack supporting a nonprofit serving the visually impaired community.',
+        caseStudyStage: 'Production',
         problem:
           'Mission-driven organizations need dependable public systems, but production reliability and accessibility often get treated as separate concerns instead of one delivery problem.',
         system:
@@ -285,12 +292,13 @@ export const systemThemes: SystemTheme[] = [
   },
 ]
 
-const featuredSystemIds = [
+const orderedSystemIds = [
+  'vifg-nonprofit-platform',
+  'dealerflow',
   'stormiq',
   'roboreceptionist',
   'lecture-stream-platform',
   'naics-startup-planning-system',
-  'vifg-nonprofit-platform',
 ]
 
 const systemById = new Map<string, FeaturedSystemCaseStudy>(
@@ -299,7 +307,7 @@ const systemById = new Map<string, FeaturedSystemCaseStudy>(
   )
 )
 
-export const featuredSystems: FeaturedSystemCaseStudy[] = featuredSystemIds.map((id) => {
+export const featuredSystems: FeaturedSystemCaseStudy[] = orderedSystemIds.map((id) => {
   const system = systemById.get(id)
 
   if (!system) {
@@ -309,12 +317,23 @@ export const featuredSystems: FeaturedSystemCaseStudy[] = featuredSystemIds.map(
   return system
 })
 
-export const allSystems: FeaturedSystemCaseStudy[] = systemThemes.flatMap((theme) =>
-  theme.systems.map((system) => ({ ...system, themeTitle: theme.title }))
+export const allSystems: FeaturedSystemCaseStudy[] = [
+  ...featuredSystems,
+  ...systemThemes
+    .flatMap((theme) => theme.systems.map((system) => ({ ...system, themeTitle: theme.title })))
+    .filter((system) => !orderedSystemIds.includes(system.id)),
+]
+
+export const productionSystems = featuredSystems.filter(
+  (system) => system.caseStudyStage === 'Production'
 )
 
+export const pilotSystems = featuredSystems.filter((system) => system.caseStudyStage === 'Pilot')
+
+export const researchSystems = featuredSystems.filter((system) => system.caseStudyStage === 'R&D')
+
 export const supportingSystems = allSystems.filter(
-  (system) => !featuredSystemIds.includes(system.id)
+  (system) => !orderedSystemIds.includes(system.id)
 )
 
 export function getSystemById(id: string) {

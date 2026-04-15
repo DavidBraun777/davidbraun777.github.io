@@ -5,7 +5,7 @@ import { PageIntro } from '@/components/site/page-intro'
 export const metadata: Metadata = {
   title: 'Contact',
   description:
-    'Contact David Braun for career opportunities, consulting conversations, or technical project work.',
+    'Book a call about workflow automation, system integration, or operational software consulting.',
 }
 
 export default function ContactPage() {
@@ -14,8 +14,8 @@ export default function ContactPage() {
       <div className="mx-auto max-w-7xl space-y-8 px-4 sm:px-6 lg:px-8">
         <PageIntro
           eyebrow="Contact"
-          title="Start a conversation."
-          description="Use this page for full-time opportunities, consulting conversations, collaboration, or system-specific questions. The form is structured to make the next step low-friction."
+          title="Book a call about the workflow that is costing you time."
+          description="This page is for business owners and operators who need to automate manual work, connect systems, or make an unreliable process easier to run. Start with the call if you want the fastest path."
         />
       </div>
       <Contact

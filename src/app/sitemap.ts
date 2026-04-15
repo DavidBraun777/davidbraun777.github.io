@@ -34,45 +34,31 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
     {
-      url: `${baseUrl}/about`,
+      url: `${baseUrl}/why-work-with-me`,
       lastModified: getLatestModified(
-        ['src/app/about/page.tsx', 'src/data/experience.ts', 'src/data/education.ts'],
+        ['src/app/why-work-with-me/page.tsx', 'src/data/experience.ts', 'src/data/education.ts'],
         latestPostDate
       ),
       changeFrequency: 'monthly' as const,
       priority: 0.9,
     },
     {
-      url: `${baseUrl}/projects`,
+      url: `${baseUrl}/case-studies`,
       lastModified: getLatestModified(
-        ['src/app/projects/page.tsx', 'src/app/projects/[slug]/page.tsx', 'src/data/systems.ts'],
+        [
+          'src/app/case-studies/page.tsx',
+          'src/app/case-studies/[slug]/page.tsx',
+          'src/data/systems.ts',
+        ],
         latestPostDate
       ),
       changeFrequency: 'weekly' as const,
       priority: 0.9,
-    },
-    {
-      url: `${baseUrl}/systems`,
-      lastModified: getLatestModified(
-        ['src/app/systems/page.tsx', 'src/data/systems.ts'],
-        latestPostDate
-      ),
-      changeFrequency: 'monthly' as const,
-      priority: 0.8,
     },
     {
       url: `${baseUrl}/writing`,
       lastModified: latestPostDate,
       changeFrequency: 'weekly' as const,
-      priority: 0.8,
-    },
-    {
-      url: `${baseUrl}/resume`,
-      lastModified: getLatestModified(
-        ['src/app/resume/page.tsx', 'src/data/experience.ts', 'src/data/skills.ts'],
-        latestPostDate
-      ),
-      changeFrequency: 'monthly' as const,
       priority: 0.8,
     },
     {
@@ -87,9 +73,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
   ]
 
   const projectRoutes = allSystems.map((system) => ({
-    url: `${baseUrl}/projects/${system.id}`,
+    url: `${baseUrl}/case-studies/${system.id}`,
     lastModified: getLatestModified(
-      ['src/app/projects/[slug]/page.tsx', 'src/data/systems.ts'],
+      ['src/app/case-studies/[slug]/page.tsx', 'src/data/systems.ts'],
       latestPostDate
     ),
     changeFrequency: 'monthly' as const,
