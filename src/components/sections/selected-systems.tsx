@@ -139,7 +139,7 @@ export function SelectedSystems() {
                     type="button"
                     onClick={showPrevious}
                     disabled={isLightboxOpen}
-                    className="absolute left-3 top-3 z-10 hidden h-12 w-12 items-center justify-center rounded-full border border-primary-200 bg-white/96 text-primary-700 shadow-[0_22px_45px_-24px_rgba(37,99,235,0.55)] backdrop-blur transition-all hover:scale-[1.05] hover:bg-primary-50 disabled:cursor-default disabled:opacity-55 dark:border-primary-700/70 dark:bg-slate-950/96 dark:text-primary-200 dark:shadow-[0_22px_45px_-24px_rgba(59,130,246,0.7)] dark:hover:bg-slate-900 lg:inline-flex lg:-left-6 lg:top-1/2 lg:h-14 lg:w-14 lg:-translate-y-1/2"
+                    className="absolute left-3 top-3 z-10 hidden h-12 w-12 items-center justify-center rounded-full border border-primary-200 bg-white/96 text-primary-700 shadow-[0_22px_45px_-24px_rgba(13,73,205,0.42)] backdrop-blur transition-all hover:scale-[1.05] hover:bg-primary-50 disabled:cursor-default disabled:opacity-55 dark:border-primary-700/70 dark:bg-slate-950/96 dark:text-primary-200 dark:shadow-[0_22px_45px_-24px_rgba(58,210,255,0.38)] dark:hover:bg-slate-900 lg:inline-flex lg:-left-6 lg:top-1/2 lg:h-14 lg:w-14 lg:-translate-y-1/2"
             aria-label="Show previous system"
           >
             <ArrowLeft className="h-5 w-5" />
@@ -149,7 +149,7 @@ export function SelectedSystems() {
                     type="button"
                     onClick={showNext}
                     disabled={isLightboxOpen}
-                    className="absolute right-3 top-3 z-10 hidden h-12 w-12 items-center justify-center rounded-full border border-primary-200 bg-white/96 text-primary-700 shadow-[0_22px_45px_-24px_rgba(37,99,235,0.55)] backdrop-blur transition-all hover:scale-[1.05] hover:bg-primary-50 disabled:cursor-default disabled:opacity-55 dark:border-primary-700/70 dark:bg-slate-950/96 dark:text-primary-200 dark:shadow-[0_22px_45px_-24px_rgba(59,130,246,0.7)] dark:hover:bg-slate-900 lg:inline-flex lg:-right-6 lg:top-1/2 lg:h-14 lg:w-14 lg:-translate-y-1/2"
+                    className="absolute right-3 top-3 z-10 hidden h-12 w-12 items-center justify-center rounded-full border border-primary-200 bg-white/96 text-primary-700 shadow-[0_22px_45px_-24px_rgba(13,73,205,0.42)] backdrop-blur transition-all hover:scale-[1.05] hover:bg-primary-50 disabled:cursor-default disabled:opacity-55 dark:border-primary-700/70 dark:bg-slate-950/96 dark:text-primary-200 dark:shadow-[0_22px_45px_-24px_rgba(58,210,255,0.38)] dark:hover:bg-slate-900 lg:inline-flex lg:-right-6 lg:top-1/2 lg:h-14 lg:w-14 lg:-translate-y-1/2"
             aria-label="Show next system"
           >
             <ArrowLeft className="h-5 w-5 rotate-180" />
@@ -172,7 +172,7 @@ export function SelectedSystems() {
                     </span>
                     <Badge
                       variant="secondary"
-                      className="bg-accent-violet/10 text-violet-700 dark:border dark:border-violet-500/30 dark:bg-violet-950/80 dark:text-violet-100"
+                      className="bg-primary-100 text-primary-800 dark:border dark:border-primary-500/30 dark:bg-primary-950/80 dark:text-primary-200"
                     >
                       {activeSystem.themeTitle}
                     </Badge>

@@ -50,7 +50,7 @@ export default async function WritingPostPage({ params }: Props) {
     month: 'long',
     day: 'numeric',
   })
-  const articleStructuredData = {
+  const breadcrumbStructuredData = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
     itemListElement: [
@@ -68,10 +68,35 @@ export default async function WritingPostPage({ params }: Props) {
       },
     ],
   }
+  const articleStructuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'BlogPosting',
+    headline: post.title,
+    description: post.description,
+    datePublished: post.date,
+    author: {
+      '@type': 'Person',
+      name: post.author,
+      url: absoluteUrl('/'),
+    },
+    publisher: {
+      '@type': 'Person',
+      name: post.author,
+      url: absoluteUrl('/'),
+    },
+    mainEntityOfPage: absoluteUrl(`/writing/${slug}`),
+    url: absoluteUrl(`/writing/${slug}`),
+    ...(post.image ? { image: absoluteUrl(post.image) } : {}),
+    ...(post.tags.length > 0 ? { keywords: post.tags.join(', ') } : {}),
+  }
 
   return (
     <article className="min-h-screen pb-16 pt-10 md:pt-12">
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbStructuredData) }}
+        />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(articleStructuredData) }}

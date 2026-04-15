@@ -22,10 +22,14 @@ export default function Home() {
   const homepageConversionPoints = conversionPoints.slice(0, 3)
   const featuredProductionResult =
     'Public site serving VIFG since 2020 with AWS hosting, repeatable releases, and accessibility-first delivery.'
+  const primaryCtaClass =
+    'inline-flex items-center gap-2 rounded-full border border-primary-800/10 bg-primary-700 px-6 py-3 text-sm font-medium text-white shadow-[0_18px_40px_-26px_rgba(10,41,104,0.5)] transition-colors hover:bg-primary-800'
+  const secondaryCtaClass =
+    'inline-flex items-center gap-2 rounded-full border border-border-subtle bg-background-elevated px-6 py-3 text-sm font-medium text-text-secondary transition-colors hover:bg-background-subtle hover:text-text-primary'
 
   return (
     <div className="pb-16">
-      <section className="relative overflow-hidden border-b border-border-subtle/70 bg-[radial-gradient(circle_at_top,_rgba(114,125,115,0.16),_transparent_46%)]">
+      <section className="relative overflow-hidden border-b border-border-subtle/70 bg-[radial-gradient(circle_at_top,_rgba(58,210,255,0.1),_transparent_46%)]">
         <div className="mx-auto max-w-7xl px-4 pb-12 pt-12 sm:px-6 md:pt-16 lg:px-8 lg:pb-14">
           <div className="grid gap-6 lg:grid-cols-[1.08fr_0.92fr] lg:items-start">
             <div>
@@ -45,14 +49,14 @@ export default function Home() {
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link
                   href="/contact"
-                  className="inline-flex items-center gap-2 rounded-full bg-primary-700 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-primary-800 dark:bg-primary-500 dark:text-slate-950 dark:hover:bg-primary-400"
+                  className={primaryCtaClass}
                 >
                   Book a Call
                   <ArrowRight className="h-4 w-4" />
                 </Link>
                 <Link
                   href="/services"
-                  className="inline-flex items-center gap-2 rounded-full border border-border-subtle bg-background-elevated px-6 py-3 text-sm font-medium text-text-secondary transition-colors hover:bg-background-subtle hover:text-text-primary"
+                  className={secondaryCtaClass}
                 >
                   View Services
                   <ArrowRight className="h-4 w-4" />
@@ -127,8 +131,8 @@ export default function Home() {
                 </p>
 
                 <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                  <div className="rounded-xl border border-border-subtle bg-background-subtle p-3">
-                    <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-text-muted">
+                    <div className="rounded-xl border border-border-subtle bg-background-subtle p-3">
+                    <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-text-secondary">
                       Role
                     </p>
                     <p className="mt-1 text-sm font-medium text-text-primary">
@@ -136,7 +140,7 @@ export default function Home() {
                     </p>
                   </div>
                   <div className="rounded-xl border border-border-subtle bg-background-subtle p-3">
-                    <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-text-muted">
+                    <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-text-secondary">
                       Result
                     </p>
                     <p className="mt-1 text-sm font-medium text-text-primary">
@@ -220,7 +224,7 @@ export default function Home() {
                 <div className="mt-8">
                   <Link
                     href="/contact"
-                    className="inline-flex items-center gap-2 rounded-full bg-primary-700 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-primary-800 dark:bg-primary-500 dark:text-slate-950 dark:hover:bg-primary-400"
+                    className={primaryCtaClass}
                   >
                     Book a Call
                     <ArrowRight className="h-4 w-4" />

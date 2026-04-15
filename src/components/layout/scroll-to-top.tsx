@@ -92,7 +92,7 @@ export function ScrollToTop() {
           exit={{ opacity: 0, y: 16, scale: 0.96 }}
           transition={{ duration: 0.2, ease: 'easeOut' }}
           onClick={() => window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })}
-          className="fixed bottom-5 right-5 z-[70] inline-flex h-12 w-12 items-center justify-center rounded-full border border-primary-200 bg-white/95 text-primary-700 shadow-[0_20px_45px_-22px_rgba(37,99,235,0.55)] backdrop-blur transition-colors hover:bg-primary-50 dark:border-primary-700/70 dark:bg-slate-950/95 dark:text-primary-200 dark:hover:bg-slate-900"
+          className="fixed bottom-5 right-5 z-[70] inline-flex h-12 w-12 items-center justify-center rounded-full border border-border-subtle bg-background-elevated/95 text-link-primary shadow-[0_16px_36px_-24px_rgba(10,41,104,0.32)] backdrop-blur transition-colors hover:bg-background-subtle dark:border-border-subtle dark:bg-background-elevated/95 dark:text-link-primary dark:shadow-[0_16px_36px_-24px_rgba(2,6,23,0.5)] dark:hover:bg-background-subtle"
           aria-label="Back to top"
         >
           <ArrowUp className="h-5 w-5" />

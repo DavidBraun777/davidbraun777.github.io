@@ -3,6 +3,12 @@ import Link from 'next/link'
 import { ArrowRight, type LucideIcon } from 'lucide-react'
 import { cn } from '@/lib/utils'
 
+const primaryActionClass =
+  'inline-flex items-center gap-2 rounded-full border border-primary-800/10 bg-primary-700 px-5 py-3 text-sm font-medium text-white shadow-[0_18px_40px_-26px_rgba(10,41,104,0.5)] transition-colors hover:bg-primary-800'
+
+const secondaryActionClass =
+  'inline-flex items-center gap-2 rounded-full border border-border-subtle bg-background-elevated px-5 py-3 text-sm font-medium text-text-secondary transition-colors hover:bg-background-subtle hover:text-text-primary'
+
 interface Action {
   label: string
   href: string
@@ -61,10 +67,9 @@ export function PageIntro({
                     target="_blank"
                     rel="noopener noreferrer"
                     className={cn(
-                      'inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-medium transition-colors',
                       action.variant === 'secondary'
-                        ? 'border border-border-subtle bg-background-elevated text-text-secondary hover:bg-background-subtle hover:text-text-primary'
-                        : 'bg-primary-700 text-white hover:bg-primary-800 dark:bg-primary-500 dark:text-slate-950 dark:hover:bg-primary-400'
+                        ? secondaryActionClass
+                        : primaryActionClass
                     )}
                   >
                     {action.label}
@@ -75,10 +80,9 @@ export function PageIntro({
                     key={action.label}
                     href={action.href}
                     className={cn(
-                      'inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-medium transition-colors',
                       action.variant === 'secondary'
-                        ? 'border border-border-subtle bg-background-elevated text-text-secondary hover:bg-background-subtle hover:text-text-primary'
-                        : 'bg-primary-700 text-white hover:bg-primary-800 dark:bg-primary-500 dark:text-slate-950 dark:hover:bg-primary-400'
+                        ? secondaryActionClass
+                        : primaryActionClass
                     )}
                   >
                     {action.label}

@@ -88,6 +88,16 @@ export default function nextConfig(phase: string): NextConfig {
           permanent: true,
         },
         {
+          source: '/blog',
+          destination: '/writing',
+          permanent: true,
+        },
+        {
+          source: '/blog/:slug',
+          destination: '/writing/:slug',
+          permanent: true,
+        },
+        {
           source: '/systems',
           destination: '/case-studies',
           permanent: true,

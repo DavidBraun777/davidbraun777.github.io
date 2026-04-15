@@ -40,7 +40,7 @@ export function Hero() {
       id="top"
       className="relative overflow-hidden pb-16 pt-28 md:pb-24 md:pt-36 lg:pb-28"
     >
-      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(37,99,235,0.16),_transparent_34%),radial-gradient(circle_at_80%_20%,_rgba(6,182,212,0.14),_transparent_28%),linear-gradient(180deg,_#020617_0%,_#0f172a_48%,_#111827_100%)]" />
+      <div className="absolute inset-0 bg-[radial-gradient(circle_at_top_left,_rgba(13,73,205,0.2),_transparent_34%),radial-gradient(circle_at_80%_20%,_rgba(58,210,255,0.16),_transparent_30%),linear-gradient(180deg,_#020617_0%,_#071a3a_48%,_#0b1d3d_100%)]" />
       <div className="absolute inset-0 bg-[linear-gradient(rgba(148,163,184,0.08)_1px,transparent_1px),linear-gradient(90deg,rgba(148,163,184,0.08)_1px,transparent_1px)] bg-[size:42px_42px] [mask-image:radial-gradient(circle_at_center,black,transparent_82%)]" />
       <div className="absolute inset-x-0 top-0 h-px bg-gradient-to-r from-transparent via-primary-400/40 to-transparent" />
 
@@ -203,7 +203,7 @@ export function Hero() {
             transition={{ delay: 0.2, duration: 0.8 }}
             className="relative"
           >
-            <div className="absolute inset-0 rounded-[2rem] bg-gradient-to-br from-primary-500/20 via-accent-violet/10 to-accent-cyan/20 blur-3xl" />
+            <div className="bg-theme-gradient-primary absolute inset-0 rounded-[2rem] opacity-25 blur-3xl" />
             <div className="relative overflow-hidden rounded-[2rem] border border-white/10 bg-slate-950/80 p-6 shadow-[0_30px_120px_-40px_rgba(2,6,23,0.8)] backdrop-blur">
               <div className="flex items-center justify-between border-b border-white/10 pb-4">
                 <div>
@@ -267,7 +267,7 @@ export function Hero() {
                   <p className="font-mono text-xs uppercase tracking-[0.18em] text-slate-500">
                     Operating Pattern
                   </p>
-                  <span className="rounded-full bg-emerald-500/10 px-3 py-1 text-xs font-medium text-emerald-300">
+                  <span className="rounded-full bg-primary-500/12 px-3 py-1 text-xs font-medium text-primary-200">
                     systems first
                   </span>
                 </div>
