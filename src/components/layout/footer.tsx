@@ -11,7 +11,7 @@ const footerLinks = [
 export function Footer() {
   const currentYear = new Date().getFullYear()
   const linkClass =
-    'text-[var(--theme-frame-text)] transition-colors hover:text-white'
+    'text-[var(--theme-frame-text-muted)] transition-colors hover:text-[var(--theme-frame-text)]'
 
   return (
     <footer className="border-t border-[var(--theme-frame-border)] bg-[var(--theme-frame-bg-strong)] text-[var(--theme-frame-text)]">
@@ -20,11 +20,11 @@ export function Footer() {
           <Link href="/" className="text-2xl font-semibold tracking-tight text-[var(--theme-frame-text)]">
             {profile.name}
           </Link>
-          <p className="mt-3 max-w-md text-sm leading-7 text-[var(--theme-frame-text)]">
+          <p className="mt-3 max-w-md text-sm leading-7 text-[var(--theme-frame-text-muted)]">
             Consulting for businesses that need workflow automation, better system handoffs,
             and software that stays dependable after launch.
           </p>
-          <p className="mt-4 text-sm text-[var(--theme-frame-text)]">
+          <p className="mt-4 text-sm text-[var(--theme-frame-text-muted)]">
             {profile.faithStatement}
           </p>
         </div>
@@ -76,11 +76,11 @@ export function Footer() {
               </li>
             ))}
           </ul>
-          <p className="mt-6 text-sm text-[var(--theme-frame-text)]">{profile.location}</p>
+          <p className="mt-6 text-sm text-[var(--theme-frame-text-muted)]">{profile.location}</p>
         </div>
       </div>
 
-      <div className="border-t border-[var(--theme-frame-border)] px-4 py-5 text-sm text-[var(--theme-frame-text)] sm:px-6 lg:px-8">
+      <div className="border-t border-[var(--theme-frame-border)] px-4 py-5 text-sm text-[var(--theme-frame-text-muted)] sm:px-6 lg:px-8">
         <div className="mx-auto flex max-w-7xl flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <p>&copy; {currentYear} {profile.name}. All rights reserved.</p>
           <p>Built with Next.js, TypeScript, and a delivery-first approach.</p>

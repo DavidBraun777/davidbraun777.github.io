@@ -64,7 +64,7 @@ export function WhatIBuild() {
                   transition={{ delay: index * 0.08, duration: 0.45 }}
                   className="rounded-3xl border border-border-subtle bg-background-elevated p-6 shadow-lg shadow-slate-200/20 dark:shadow-slate-950/25"
                 >
-                  <div className="inline-flex rounded-2xl bg-gradient-to-br from-primary-600 to-accent-cyan p-3 text-white shadow-lg shadow-primary-900/10">
+                  <div className="bg-theme-gradient-primary inline-flex rounded-2xl p-3 text-white shadow-lg shadow-primary-900/10">
                     <Icon className="h-5 w-5" />
                   </div>
                   <h3 className="mt-5 text-lg font-semibold text-text-primary">

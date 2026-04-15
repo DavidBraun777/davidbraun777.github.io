@@ -36,7 +36,7 @@ export function HowIBuild() {
                     transition={{ delay: index * 0.08, duration: 0.45 }}
                     className="flex gap-4 rounded-3xl border border-border-subtle bg-background-elevated p-6 shadow-sm"
                   >
-                    <div className="flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl bg-gradient-to-br from-primary-600 to-accent-violet text-white">
+                    <div className="bg-theme-gradient-primary flex h-12 w-12 shrink-0 items-center justify-center rounded-2xl text-white">
                       <Icon className="h-5 w-5" />
                     </div>
                     <div>

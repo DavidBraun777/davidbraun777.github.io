@@ -22,7 +22,7 @@ export function SectionHeader({
       </Heading>
       <div
         className={cn(
-          'mt-4 h-1 w-20 rounded-full bg-gradient-to-r from-primary-700 to-primary-400',
+          'bg-theme-gradient-primary mt-4 h-1 w-[4.5rem] rounded-full opacity-80',
           align === 'center' && 'mx-auto'
         )}
       />
