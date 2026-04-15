@@ -1,6 +1,7 @@
+import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
-import { ProjectCard } from '@/components/site/project-card'
+import { Badge } from '@/components/ui/badge'
 import { SignalGrid } from '@/components/site/signal-grid'
 import { SectionHeader } from '@/components/ui/section-header'
 import { companySignals, conversionPoints, homeSignals, profile } from '@/data/profile'
@@ -11,10 +12,12 @@ export default function Home() {
   const researchPreview = researchSystems.slice(0, 2).map((system) => system.name).join(' and ')
   const homepageTrustSignals = homeSignals.slice(0, 2)
   const homepageConversionPoints = conversionPoints.slice(0, 3)
+  const featuredProductionResult =
+    'Public site serving VIFG since 2020 with AWS hosting, repeatable releases, and accessibility-first delivery.'
 
   return (
     <div className="pb-20">
-      <section className="relative overflow-hidden border-b border-border-subtle/70 bg-[radial-gradient(circle_at_top,_rgba(37,99,235,0.10),_transparent_46%)]">
+      <section className="relative overflow-hidden border-b border-border-subtle/70 bg-[radial-gradient(circle_at_top,_rgba(114,125,115,0.16),_transparent_46%)]">
         <div className="mx-auto max-w-7xl px-4 pb-14 pt-14 sm:px-6 md:pt-20 lg:px-8 lg:pb-16">
           <div className="grid gap-8 lg:grid-cols-[1.08fr_0.92fr] lg:items-start">
             <div>
@@ -34,7 +37,7 @@ export default function Home() {
               <div className="mt-8 flex flex-wrap gap-3">
                 <Link
                   href="/contact"
-                  className="inline-flex items-center gap-2 rounded-full bg-slate-950 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-slate-800 dark:bg-primary-500 dark:text-slate-950 dark:hover:bg-primary-400"
+                  className="inline-flex items-center gap-2 rounded-full bg-primary-700 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-primary-800 dark:bg-primary-500 dark:text-slate-950 dark:hover:bg-primary-400"
                 >
                   Book a Call
                   <ArrowRight className="h-4 w-4" />
@@ -79,30 +82,90 @@ export default function Home() {
       </section>
 
       <section className="section">
-        <div className="mx-auto max-w-7xl space-y-8 px-4 sm:px-6 lg:px-8">
-          <SectionHeader
-            align="left"
-            title="Proof"
-            subtitle="The strongest public proof comes first. Deeper detail stays on the case studies page."
-          />
+        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
+          <div className="grid gap-6 lg:grid-cols-[0.78fr_1.22fr] lg:items-start">
+            <div className="lg:pt-2">
+              <p className="font-mono text-xs uppercase tracking-[0.22em] text-link-primary">
+                Proof
+              </p>
+              <h2 className="mt-4 text-3xl font-semibold tracking-tight text-text-primary md:text-4xl">
+                Strongest public proof first.
+              </h2>
+              <p className="mt-4 max-w-xl text-base leading-8 text-text-secondary">
+                Start with the public production system. Pilot and R&amp;D work,
+                including {researchPreview}, stays on the case studies page so the
+                homepage remains a short proof preview.
+              </p>
+              <Link
+                href="/case-studies"
+                className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-link-primary transition-colors hover:text-link-primary-hover"
+              >
+                See all case studies
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
 
-          {featuredProduction ? <ProjectCard system={featuredProduction} compact /> : null}
+            {featuredProduction ? (
+              <article className="overflow-hidden rounded-[1.75rem] border border-border-subtle bg-background-elevated shadow-sm">
+                <div className="grid gap-0 sm:grid-cols-[220px_1fr]">
+                  <div
+                    className={
+                      featuredProduction.visualSurface === 'dark'
+                        ? 'relative min-h-[190px] bg-slate-950'
+                        : 'relative min-h-[190px] bg-gradient-to-br from-background-subtle via-background-elevated to-background-subtle'
+                    }
+                  >
+                    <Image
+                      src={featuredProduction.image}
+                      alt={featuredProduction.imageAlt}
+                      fill
+                      className="object-contain p-5"
+                      sizes="(min-width: 1024px) 18rem, 100vw"
+                    />
+                  </div>
 
-          <div className="rounded-[1.5rem] border border-border-subtle bg-background-elevated p-6 shadow-sm">
-            <p className="font-mono text-xs uppercase tracking-[0.22em] text-link-primary">
-              More proof
-            </p>
-            <p className="mt-4 text-sm leading-7 text-text-secondary">
-              Pilot and R&amp;D work is still available, including {researchPreview}. It
-              is labeled clearly and kept on the case studies page so the homepage stays focused.
-            </p>
-            <Link
-              href="/case-studies"
-              className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-link-primary transition-colors hover:text-link-primary-hover"
-            >
-              See all case studies
-              <ArrowRight className="h-4 w-4" />
-            </Link>
+                  <div className="p-5 sm:p-6">
+                    <div className="flex flex-wrap items-center gap-2">
+                      <Badge variant="secondary">{featuredProduction.caseStudyStage}</Badge>
+                      <Badge variant="outline">Public since 2020</Badge>
+                    </div>
+                    <h3 className="mt-3 text-xl font-semibold tracking-tight text-text-primary sm:text-2xl">
+                      {featuredProduction.name}
+                    </h3>
+                    <p className="mt-2 text-sm leading-7 text-text-secondary sm:text-base">
+                      {featuredProduction.summary}
+                    </p>
+
+                    <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                      <div className="rounded-xl border border-border-subtle bg-background-subtle p-3">
+                        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-text-muted">
+                          Role
+                        </p>
+                        <p className="mt-1 text-sm font-medium text-text-primary">
+                          {featuredProduction.myRole}
+                        </p>
+                      </div>
+                      <div className="rounded-xl border border-border-subtle bg-background-subtle p-3">
+                        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-text-muted">
+                          Result
+                        </p>
+                        <p className="mt-1 text-sm font-medium text-text-primary">
+                          {featuredProductionResult}
+                        </p>
+                      </div>
+                    </div>
+
+                    <Link
+                      href={`/case-studies/${featuredProduction.id}`}
+                      className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-link-primary transition-colors hover:text-link-primary-hover"
+                    >
+                      Read case study
+                      <ArrowRight className="h-4 w-4" />
+                    </Link>
+                  </div>
+                </div>
+              </article>
+            ) : null}
           </div>
         </div>
       </section>
@@ -169,7 +232,7 @@ export default function Home() {
                 <div className="mt-8">
                   <Link
                     href="/contact"
-                    className="inline-flex items-center gap-2 rounded-full bg-slate-950 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-slate-800 dark:bg-primary-500 dark:text-slate-950 dark:hover:bg-primary-400"
+                    className="inline-flex items-center gap-2 rounded-full bg-primary-700 px-6 py-3 text-sm font-medium text-white transition-colors hover:bg-primary-800 dark:bg-primary-500 dark:text-slate-950 dark:hover:bg-primary-400"
                   >
                     Book a Call
                     <ArrowRight className="h-4 w-4" />
