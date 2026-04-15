@@ -60,5 +60,39 @@ export default function nextConfig(phase: string): NextConfig {
         },
       ]
     },
+    async redirects() {
+      return [
+        {
+          source: '/about',
+          destination: '/why-work-with-me',
+          permanent: true,
+        },
+        {
+          source: '/resume',
+          destination: '/why-work-with-me',
+          permanent: true,
+        },
+        {
+          source: '/background',
+          destination: '/why-work-with-me',
+          permanent: true,
+        },
+        {
+          source: '/projects',
+          destination: '/case-studies',
+          permanent: true,
+        },
+        {
+          source: '/projects/:slug',
+          destination: '/case-studies/:slug',
+          permanent: true,
+        },
+        {
+          source: '/systems',
+          destination: '/case-studies',
+          permanent: true,
+        },
+      ]
+    },
   }
 }

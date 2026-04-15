@@ -3,9 +3,14 @@ import type { Signal } from '@/data/profile'
 interface SignalGridProps {
   items: Signal[]
   columns?: 'two' | 'four'
+  headingLevel?: 'h2' | 'h3'
 }
 
-export function SignalGrid({ items, columns = 'four' }: SignalGridProps) {
+export function SignalGrid({
+  items,
+  columns = 'four',
+  headingLevel: Heading = 'h3',
+}: SignalGridProps) {
   return (
     <div
       className={
@@ -28,9 +33,9 @@ export function SignalGrid({ items, columns = 'four' }: SignalGridProps) {
             <p className="mt-4 font-mono text-[10px] uppercase tracking-[0.18em] text-text-muted">
               {item.title}
             </p>
-            <h3 className="mt-2 text-lg font-semibold text-text-primary">
+            <Heading className="mt-2 text-lg font-semibold text-text-primary">
               {item.value}
-            </h3>
+            </Heading>
             <p className="mt-3 text-sm leading-7 text-text-secondary">
               {item.detail}
             </p>

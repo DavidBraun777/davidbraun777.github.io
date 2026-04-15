@@ -1,5 +1,5 @@
 export const socialCardAlt =
-  'AI Systems Engineer building automation platforms and AI workflow systems'
+  'Workflow automation and systems consulting for businesses that need less manual work'
 
 export function SocialCard() {
   return (
@@ -87,7 +87,7 @@ export function SocialCard() {
                   display: 'flex',
                 }}
               >
-                AI Systems Engineer
+                Workflow Automation Consulting
               </div>
               <div
                 style={{
@@ -97,7 +97,7 @@ export function SocialCard() {
                   display: 'flex',
                 }}
               >
-                Systems that combine AI, workflow automation, and infrastructure.
+                Systems that remove manual work and hold up after launch.
               </div>
             </div>
           </div>
@@ -110,7 +110,7 @@ export function SocialCard() {
               alignItems: 'center',
             }}
           >
-            {['Automation Platforms', 'AI Workflow Systems', 'Operational Software'].map(
+            {['Lead Automation', 'System Integration', 'Operational Software'].map(
               (item) => (
                 <div
                   key={item}

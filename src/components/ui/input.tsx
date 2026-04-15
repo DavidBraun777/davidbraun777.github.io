@@ -13,7 +13,10 @@ export const Input = forwardRef<HTMLInputElement, InputProps>(
     return (
       <div className="w-full">
         {label && (
-          <label htmlFor={id} className="sr-only">
+          <label
+            htmlFor={id}
+            className="mb-2 block text-sm font-medium text-text-primary"
+          >
             {label}
           </label>
         )}
@@ -50,7 +53,10 @@ export const Textarea = forwardRef<HTMLTextAreaElement, TextareaProps>(
     return (
       <div className="w-full">
         {label && (
-          <label htmlFor={id} className="sr-only">
+          <label
+            htmlFor={id}
+            className="mb-2 block text-sm font-medium text-text-primary"
+          >
             {label}
           </label>
         )}
@@ -89,7 +95,10 @@ export const Select = forwardRef<HTMLSelectElement, SelectProps>(
     return (
       <div className="w-full">
         {label && (
-          <label htmlFor={id} className="sr-only">
+          <label
+            htmlFor={id}
+            className="mb-2 block text-sm font-medium text-text-primary"
+          >
             {label}
           </label>
         )}
