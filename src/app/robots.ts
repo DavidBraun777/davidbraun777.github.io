@@ -7,6 +7,7 @@ export default function robots(): MetadataRoute.Robots {
       allow: '/',
       disallow: ['/api/'],
     },
+    host: 'https://dbraun.io',
     sitemap: 'https://dbraun.io/sitemap.xml',
   }
 }

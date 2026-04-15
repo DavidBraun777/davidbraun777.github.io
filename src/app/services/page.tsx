@@ -4,6 +4,7 @@ import { ArrowRight } from 'lucide-react'
 import { PageIntro } from '@/components/site/page-intro'
 import { SectionHeader } from '@/components/ui/section-header'
 import { processPreview, servicesOffered } from '@/data/profile'
+import { createPageMetadata } from '@/lib/seo'
 
 const fitExamples = [
   'A lead process that still depends on manual follow-up.',
@@ -11,11 +12,12 @@ const fitExamples = [
   'A useful system that needs to be built cleanly and kept reliable after launch.',
 ]
 
-export const metadata: Metadata = {
+export const metadata: Metadata = createPageMetadata({
   title: 'Services',
   description:
     'Workflow automation, system integration, and operational software services for small and midsized businesses.',
-}
+  path: '/services',
+})
 
 export default function ServicesPage() {
   return (

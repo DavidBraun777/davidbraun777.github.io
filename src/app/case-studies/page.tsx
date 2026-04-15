@@ -5,12 +5,14 @@ import { PageIntro } from '@/components/site/page-intro'
 import { Badge } from '@/components/ui/badge'
 import { ExternalLinkAction } from '@/components/ui/external-link-action'
 import { pilotSystems, productionSystems, researchSystems, type FeaturedSystemCaseStudy } from '@/data/systems'
+import { createPageMetadata } from '@/lib/seo'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = createPageMetadata({
   title: 'Case Studies',
   description:
     'Production, pilot, and R&D case studies showing workflow automation, system integration, and delivery work.',
-}
+  path: '/case-studies',
+})
 
 function StageSection({
   title,

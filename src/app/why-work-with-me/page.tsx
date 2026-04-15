@@ -10,12 +10,14 @@ import { certifications, education } from '@/data/education'
 import { experiences } from '@/data/experience'
 import { companySignals, credibilityPoints, profile, resumeHighlights } from '@/data/profile'
 import { resumeUrl } from '@/data/social-links'
+import { createPageMetadata } from '@/lib/seo'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = createPageMetadata({
   title: 'Why Work With Me',
   description:
     'Background, delivery experience, and credibility for businesses that need workflow automation and dependable systems.',
-}
+  path: '/why-work-with-me',
+})
 
 export default function WhyWorkWithMePage() {
   return (
@@ -69,7 +71,14 @@ export default function WhyWorkWithMePage() {
           </div>
         </section>
 
-        <SignalGrid items={resumeHighlights} columns="two" headingLevel="h3" />
+        <section>
+          <SectionHeader
+            align="left"
+            title="Credibility highlights"
+            subtitle="Quick signals that summarize the delivery background behind the consulting work."
+          />
+          <SignalGrid items={resumeHighlights} columns="two" headingLevel="h3" />
+        </section>
 
         <section>
           <SectionHeader
