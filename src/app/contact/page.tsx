@@ -15,7 +15,7 @@ export default function ContactPage() {
         <PageIntro
           eyebrow="Contact"
           title="Book a call about the workflow that is costing you time."
-          description="This page is for business owners and operators who need to automate manual work, connect systems, or make an unreliable process easier to run. Start with the call if you want the fastest path."
+          description="For business owners and operators who need to reduce manual work, connect systems, or clean up an unreliable process."
         />
       </div>
       <Contact

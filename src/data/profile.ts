@@ -60,12 +60,12 @@ export const profile = {
   location: 'Maple Grove, Minnesota',
   title: 'Workflow automation and systems consulting for small and midsized businesses.',
   summary:
-    'I help small and midsized businesses remove manual work, connect disconnected tools, and build systems that stay dependable after launch.',
+    'I help small and midsized businesses remove manual work, connect tools, and make operations run more smoothly.',
   heroHeadline: 'Remove manual work from the workflows that keep slowing your business down.',
   heroDescription:
-    'I design and build AI systems, workflow automation, and integration-heavy software for businesses that are tired of re-entry, missed follow-up, disconnected tools, and fragile handoffs.',
+    'I design and build automation, integrations, and internal tools for businesses that are tired of re-entry, missed follow-up, and disconnected systems.',
   audience:
-    'Best fit for owners and operators who need lead handling, internal workflows, or data movement to run with less manual effort and more consistency.',
+    'Best fit for owners and operators who need lead handling, internal workflows, or data movement to work with less manual effort.',
   availability: 'Open for consulting projects, automation builds, and operational software work.',
   responseTime: 'I usually reply within one business day.',
   graduateStatus: "Master's student in Artificial Intelligence at the University of St. Thomas.",
@@ -89,14 +89,14 @@ export const homeSignals: Signal[] = [
     title: 'Production proof',
     value: 'Public system live since 2020',
     detail:
-      'The VIFG platform has been running in production with ongoing hosting, deployment, and accessibility ownership.',
+      'The VIFG platform has been live for years with ongoing hosting, deployment, and accessibility support.',
     icon: ShieldCheck,
   },
   {
     title: 'Enterprise background',
     value: 'Built inside large operating environments',
     detail:
-      'Experience across Target, GE Aerospace, Securian, and U.S. Bank translates into stronger discipline around delivery, security, and reliability.',
+      'Experience across Target, GE Aerospace, Securian, and U.S. Bank shows up in stronger delivery, reliability, and communication.',
     icon: Building2,
   },
   {
@@ -150,36 +150,36 @@ export const servicesOffered: ServiceOffering[] = [
   {
     title: 'Lead automation',
     problem:
-      'Leads get lost when calls, qualification, follow-up, and CRM updates depend on manual steps.',
+      'Leads get lost when calls, follow-up, and CRM updates depend on manual steps.',
     outcome:
-      'Lead handling becomes faster, more consistent, and easier to track from first contact to next action.',
-    example: 'StormIQ voice workflow and CRM handoff architecture.',
+      'Faster response, cleaner handoff, and fewer missed opportunities.',
+    example: 'StormIQ lead routing and CRM handoff.',
     icon: Sparkles,
   },
   {
     title: 'System integration',
     problem:
-      'Important information is trapped across forms, inboxes, spreadsheets, CRMs, and internal tools.',
+      'Important information is stuck across forms, inboxes, spreadsheets, CRMs, and internal tools.',
     outcome:
-      'The right data moves to the right place without staff copying it between systems.',
-    example: 'Lecture Stream processing pipeline and enterprise API integration work.',
+      'The right information gets where it needs to go without staff re-entering it.',
+    example: 'Lecture Stream pipeline and enterprise integration support.',
     icon: ArrowRight,
   },
   {
     title: 'Workflow automation',
     problem:
-      'Teams waste time on repetitive review, routing, status updates, and handoffs that should already be handled.',
+      'Teams spend too much time routing requests, checking status, and pushing work to the next step.',
     outcome:
-      'Routine steps are automated so people spend less time coordinating and more time acting.',
+      'Routine work gets handled automatically so the team can focus on decisions that matter.',
     example: 'DealerFlow notifications and operational workflow design.',
     icon: Workflow,
   },
   {
     title: 'Long-term system reliability',
     problem:
-      'A tool that works in a demo but breaks in production creates more work than it saves.',
+      'A tool that looks good in a demo but breaks in real use creates more work than it saves.',
     outcome:
-      'Delivery includes deployment, monitoring, accessibility, and operational boundaries so the system stays useful.',
+      'Delivery includes deployment and ongoing reliability so the system stays useful after launch.',
     example: 'VIFG production platform on AWS with repeatable deployment.',
     icon: Wrench,
   },
@@ -217,22 +217,22 @@ export const credibilityPoints: CredibilityPoint[] = [
   {
     title: 'System-level thinking',
     description:
-      'I do not treat automation as a prompt plus a UI. I design the routing, state, validation, handoffs, and failure handling around it.',
+      'I do not stop at the interface. I plan the handoffs, rules, and failure points that make the system usable in real work.',
   },
   {
     title: 'Enterprise discipline',
     description:
-      'Large-company engineering experience shows up in documentation, reliability, security thinking, and clear delivery boundaries.',
+      'Large-company experience shows up in clearer delivery, better documentation, and fewer sloppy surprises.',
   },
   {
     title: 'Hands-on delivery',
     description:
-      'The work does not stop at recommendations. I can design, build, deploy, and support the actual system.',
+      'I can scope the work, build it, ship it, and support it instead of handing off a slide deck.',
   },
   {
     title: 'Values that travel into the work',
     description:
-      'My Christian faith informs how I communicate, scope work, and handle trust, while the services themselves are for anyone who is a good fit.',
+      'My Christian faith shapes how I communicate and handle trust, while the work itself is for anyone who is a good fit.',
   },
 ]
 
@@ -240,13 +240,13 @@ export const conversionPoints: ConversionPoint[] = [
   {
     title: 'Best fit',
     description:
-      'You have a repeated workflow, disconnected tools, or lead handling problems that are already costing time.',
+      'You already know a workflow, handoff, or lead process is wasting time.',
     icon: Sparkles,
   },
   {
     title: 'What happens next',
     description:
-      'The first call is used to understand the workflow, the current friction, and whether a scoped build makes sense.',
+      'The first call is used to understand the problem and decide whether a scoped build makes sense.',
     icon: ArrowRight,
   },
   {

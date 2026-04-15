@@ -52,16 +52,15 @@ const urgencyOptions = [
 ]
 
 const fitPoints = [
-  'A repeated workflow is taking too much manual coordination.',
-  'Important data has to move across multiple systems or tools.',
+  'A repeated workflow is taking too much manual effort.',
+  'Important information has to move across multiple tools or systems.',
   'Leads or requests are slipping because follow-up is inconsistent.',
-  'You need the system to keep working after launch, not just demo well.',
 ]
 
 const nextStepPoints = [
-  'The first call is used to understand the workflow, the current friction, and whether there is a clear fit.',
-  'If the project makes sense, I follow up with a scoped recommendation or next-step plan.',
-  'If it is not a fit, I will say so directly instead of dragging the process out.',
+  'We talk through the workflow, the bottleneck, and the goal.',
+  'If there is a fit, I follow up with a scoped next step.',
+  'If there is not a fit, I will say so directly.',
 ]
 
 export function Contact({
@@ -156,8 +155,8 @@ export function Contact({
                     </span>
                   </div>
                   <p className="mt-3 text-sm leading-7 text-text-secondary">
-                    Best for owners and operators who already know a workflow is broken,
-                    too manual, or too fragile and want to talk through the right next step.
+                    Best for owners and operators who already know a workflow is too
+                    manual, too messy, or too unreliable.
                   </p>
                   <a
                     href={calendlyUrl ?? `#${formAnchorId}`}
@@ -236,9 +235,8 @@ export function Contact({
                 Prefer to send details first?
               </h2>
               <p className="mt-3 text-sm leading-7 text-text-secondary">
-                Use the form below if you want to share the workflow, the systems
-                involved, and the timing before booking. That gives me better context for
-                the first conversation.
+                Use the form if you want to share the workflow, the systems involved,
+                and the timing before booking.
               </p>
             </div>
 
@@ -311,7 +309,7 @@ export function Contact({
               <Textarea
                 id="contact-message"
                 label="Project details"
-                placeholder="Describe the current workflow, the systems involved, what is breaking, and what outcome you want."
+                placeholder="Describe the workflow, what is breaking, and what outcome you want."
                 rows={7}
                 value={formData.message}
                 onChange={(event) => setFormData({ ...formData, message: event.target.value })}
