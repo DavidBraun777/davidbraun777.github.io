@@ -34,6 +34,15 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 1,
     },
     {
+      url: `${baseUrl}/services`,
+      lastModified: getLatestModified(
+        ['src/app/services/page.tsx', 'src/data/profile.ts'],
+        latestPostDate
+      ),
+      changeFrequency: 'monthly' as const,
+      priority: 0.85,
+    },
+    {
       url: `${baseUrl}/why-work-with-me`,
       lastModified: getLatestModified(
         ['src/app/why-work-with-me/page.tsx', 'src/data/experience.ts', 'src/data/education.ts'],
