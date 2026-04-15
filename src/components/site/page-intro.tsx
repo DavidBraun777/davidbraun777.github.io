@@ -31,21 +31,21 @@ export function PageIntro({
   return (
     <section
       className={cn(
-        'rounded-[2rem] border border-slate-200 bg-white px-6 py-10 shadow-sm dark:border-slate-800 dark:bg-slate-950/80 sm:px-8 sm:py-12',
+        'rounded-[2rem] border border-border-subtle bg-background-elevated px-6 py-10 shadow-sm sm:px-8 sm:py-12',
         className
       )}
     >
       <div className={cn('grid gap-10', aside && 'xl:grid-cols-[1.15fr_0.85fr] xl:items-start')}>
         <div>
           {eyebrow ? (
-            <p className="font-mono text-xs uppercase tracking-[0.22em] text-primary-700 dark:text-primary-300">
+            <p className="font-mono text-xs uppercase tracking-[0.22em] text-link-primary">
               {eyebrow}
             </p>
           ) : null}
-          <h1 className="mt-4 max-w-4xl text-4xl font-semibold tracking-tight text-slate-900 dark:text-white sm:text-5xl">
+          <h1 className="mt-4 max-w-4xl text-4xl font-semibold tracking-tight text-text-primary sm:text-5xl">
             {title}
           </h1>
-          <p className="mt-5 max-w-3xl text-lg leading-8 text-slate-600 dark:text-slate-300">
+          <p className="mt-5 max-w-3xl text-lg leading-8 text-text-secondary">
             {description}
           </p>
 
@@ -63,7 +63,7 @@ export function PageIntro({
                     className={cn(
                       'inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-medium transition-colors',
                       action.variant === 'secondary'
-                        ? 'border border-slate-300 bg-white text-slate-700 hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200 dark:hover:bg-slate-900'
+                        ? 'border border-border-subtle bg-background-elevated text-text-secondary hover:bg-background-subtle hover:text-text-primary'
                         : 'bg-slate-950 text-white hover:bg-slate-800 dark:bg-primary-500 dark:text-slate-950 dark:hover:bg-primary-400'
                     )}
                   >
@@ -77,7 +77,7 @@ export function PageIntro({
                     className={cn(
                       'inline-flex items-center gap-2 rounded-full px-5 py-3 text-sm font-medium transition-colors',
                       action.variant === 'secondary'
-                        ? 'border border-slate-300 bg-white text-slate-700 hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200 dark:hover:bg-slate-900'
+                        ? 'border border-border-subtle bg-background-elevated text-text-secondary hover:bg-background-subtle hover:text-text-primary'
                         : 'bg-slate-950 text-white hover:bg-slate-800 dark:bg-primary-500 dark:text-slate-950 dark:hover:bg-primary-400'
                     )}
                   >

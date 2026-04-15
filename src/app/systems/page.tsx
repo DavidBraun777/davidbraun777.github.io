@@ -34,15 +34,15 @@ export default function SystemsPage() {
             { label: 'Contact', href: '/contact', variant: 'secondary' },
           ]}
           aside={
-            <div className="rounded-[1.75rem] border border-slate-200 bg-slate-50 p-6 dark:border-slate-800 dark:bg-slate-900/50">
-              <p className="font-mono text-xs uppercase tracking-[0.22em] text-primary-700 dark:text-primary-300">
+            <div className="rounded-[1.75rem] border border-border-subtle bg-background-subtle p-6">
+              <p className="font-mono text-xs uppercase tracking-[0.22em] text-link-primary">
                 Artifact types
               </p>
               <div className="mt-4 space-y-3">
                 {artifactTypes.map((item) => (
                   <div
                     key={item}
-                    className="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm text-slate-700 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200"
+                    className="rounded-2xl border border-border-subtle bg-background-elevated px-4 py-3 text-sm text-text-secondary"
                   >
                     {item}
                   </div>
@@ -70,33 +70,33 @@ export default function SystemsPage() {
                   {theme.systems.map((system) => (
                     <article
                       key={system.id}
-                      className="rounded-[1.5rem] border border-slate-200 bg-slate-50 p-5 dark:border-slate-800 dark:bg-slate-900/70"
+                      className="rounded-[1.5rem] border border-border-subtle bg-background-subtle p-5"
                     >
                       <div className="flex flex-wrap items-center gap-2 text-sm">
-                        <span className="rounded-full bg-white px-3 py-1 text-slate-600 dark:bg-slate-950 dark:text-slate-300">
+                        <span className="rounded-full bg-background-elevated px-3 py-1 text-text-secondary">
                           {system.currentState}
                         </span>
                         <span className="rounded-full bg-primary-50 px-3 py-1 text-primary-700 dark:bg-primary-950/60 dark:text-primary-200">
                           {theme.title}
                         </span>
                       </div>
-                      <h3 className="mt-4 text-xl font-semibold text-slate-900 dark:text-white">
+                      <h3 className="mt-4 text-xl font-semibold text-text-primary">
                         {system.name}
                       </h3>
-                      <p className="mt-3 text-sm leading-7 text-slate-600 dark:text-slate-300">
+                      <p className="mt-3 text-sm leading-7 text-text-secondary">
                         {system.problem}
                       </p>
-                      <div className="mt-4 rounded-2xl border border-slate-200 bg-white px-4 py-3 dark:border-slate-800 dark:bg-slate-950">
-                        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
+                      <div className="mt-4 rounded-2xl border border-border-subtle bg-background-elevated px-4 py-3">
+                        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-text-muted">
                           Core constraint
                         </p>
-                        <p className="mt-2 text-sm leading-7 text-slate-700 dark:text-slate-200">
+                        <p className="mt-2 text-sm leading-7 text-text-secondary">
                           {system.coreConstraint}
                         </p>
                       </div>
                       <Link
                         href={`/projects/${system.id}`}
-                        className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-primary-700 transition-colors hover:text-primary-600 dark:text-primary-300 dark:hover:text-primary-200"
+                        className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-link-primary transition-colors hover:text-link-primary-hover"
                       >
                         Open case study
                         <ArrowRight className="h-4 w-4" />
@@ -119,12 +119,12 @@ export default function SystemsPage() {
             {engineeringPrinciples.map((principle) => (
               <article
                 key={principle.title}
-                className="rounded-[1.5rem] border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-950"
+                className="rounded-[1.5rem] border border-border-subtle bg-background-elevated p-5 shadow-sm"
               >
-                <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
+                <h3 className="text-lg font-semibold text-text-primary">
                   {principle.title}
                 </h3>
-                <p className="mt-3 text-sm leading-7 text-slate-600 dark:text-slate-300">
+                <p className="mt-3 text-sm leading-7 text-text-secondary">
                   {principle.description}
                 </p>
               </article>
@@ -142,12 +142,12 @@ export default function SystemsPage() {
             {currentInterests.map((interest) => (
               <article
                 key={interest.title}
-                className="rounded-[1.5rem] border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-950"
+                className="rounded-[1.5rem] border border-border-subtle bg-background-elevated p-5 shadow-sm"
               >
-                <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
+                <h3 className="text-lg font-semibold text-text-primary">
                   {interest.title}
                 </h3>
-                <p className="mt-3 text-sm leading-7 text-slate-600 dark:text-slate-300">
+                <p className="mt-3 text-sm leading-7 text-text-secondary">
                   {interest.description}
                 </p>
               </article>

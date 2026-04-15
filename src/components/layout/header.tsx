@@ -36,14 +36,14 @@ export function Header() {
   }, [menuOpen])
 
   return (
-    <header className="sticky top-0 z-50 border-b border-slate-200/80 bg-white/88 backdrop-blur-xl dark:border-slate-800/80 dark:bg-slate-950/88">
+    <header className="sticky top-0 z-50 border-b border-border-subtle/80 bg-background-elevated/88 backdrop-blur-xl">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
         <div className="min-w-0">
           <Link href="/" className="inline-flex flex-col">
-            <span className="text-lg font-semibold tracking-tight text-slate-950 dark:text-white">
+            <span className="text-lg font-semibold tracking-tight text-text-primary">
               {profile.name}
             </span>
-            <span className="text-sm text-slate-500 dark:text-slate-400">
+            <span className="text-sm text-text-muted">
               AI systems, software, and infrastructure
             </span>
           </Link>
@@ -62,7 +62,7 @@ export function Header() {
                   'rounded-full px-4 py-2 text-sm font-medium transition-colors',
                   active
                     ? 'bg-slate-950 text-white dark:bg-white dark:text-slate-950'
-                    : 'text-slate-600 hover:bg-slate-100 hover:text-slate-950 dark:text-slate-300 dark:hover:bg-slate-900 dark:hover:text-white'
+                    : 'text-text-secondary hover:bg-background-subtle hover:text-text-primary'
                 )}
               >
                 {item.label}
@@ -77,7 +77,7 @@ export function Header() {
             href={resumeUrl}
             target="_blank"
             rel="noopener noreferrer"
-            className="rounded-full border border-slate-300 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200 dark:hover:bg-slate-900"
+            className="rounded-full border border-border-subtle bg-background-elevated px-4 py-2 text-sm font-medium text-text-secondary transition-colors hover:bg-background-subtle hover:text-text-primary"
           >
             View Resume
           </a>
@@ -94,7 +94,7 @@ export function Header() {
           <button
             type="button"
             onClick={() => setMenuOpen((current) => !current)}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-slate-200 bg-white text-slate-700 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-border-subtle bg-background-elevated text-text-secondary"
             aria-expanded={menuOpen}
             aria-controls="mobile-navigation"
             aria-label={menuOpen ? 'Close navigation menu' : 'Open navigation menu'}
@@ -107,7 +107,7 @@ export function Header() {
       {menuOpen ? (
         <div
           id="mobile-navigation"
-          className="border-t border-slate-200 bg-white px-4 py-4 shadow-lg dark:border-slate-800 dark:bg-slate-950 lg:hidden"
+          className="border-t border-border-subtle bg-background-elevated px-4 py-4 shadow-lg lg:hidden"
         >
           <nav className="flex flex-col gap-2" aria-label="Mobile">
             {primaryNavigation.map((item) => {
@@ -119,13 +119,13 @@ export function Header() {
                   href={item.href}
                   aria-current={active ? 'page' : undefined}
                   className={cn(
-                    'rounded-2xl px-4 py-3 text-sm font-medium transition-colors',
-                    active
-                      ? 'bg-slate-950 text-white dark:bg-white dark:text-slate-950'
-                      : 'bg-slate-50 text-slate-700 hover:bg-slate-100 dark:bg-slate-900 dark:text-slate-200 dark:hover:bg-slate-800'
-                  )}
-                >
-                  {item.label}
+                  'rounded-2xl px-4 py-3 text-sm font-medium transition-colors',
+                  active
+                    ? 'bg-slate-950 text-white dark:bg-white dark:text-slate-950'
+                    : 'bg-background-subtle text-text-secondary hover:bg-background-elevated hover:text-text-primary'
+                )}
+              >
+                {item.label}
                 </Link>
               )
             })}
@@ -136,7 +136,7 @@ export function Header() {
               href={resumeUrl}
               target="_blank"
               rel="noopener noreferrer"
-              className="rounded-2xl border border-slate-300 bg-white px-4 py-3 text-center text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200 dark:hover:bg-slate-900"
+              className="rounded-2xl border border-border-subtle bg-background-elevated px-4 py-3 text-center text-sm font-medium text-text-secondary transition-colors hover:bg-background-subtle hover:text-text-primary"
             >
               View Resume
             </a>

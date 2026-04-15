@@ -58,13 +58,13 @@ export function CurrentStatus({ className, compact = false }: CurrentStatusProps
             )}
           />
           {compact ? null : (
-            <span className="shrink-0 text-[13px] text-slate-600 dark:text-slate-300">
+            <span className="shrink-0 text-[13px] text-text-secondary">
               {current.label}:
             </span>
           )}
           <span
             className={cn(
-              'truncate font-medium text-slate-800 dark:text-slate-200',
+              'truncate font-medium text-text-primary',
               compact ? 'max-w-[184px] text-[11px] sm:max-w-[198px]' : 'max-w-[150px] text-[13px]'
             )}
           >

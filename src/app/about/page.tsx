@@ -30,18 +30,18 @@ export default function AboutPage() {
             { label: 'Explore Projects', href: '/projects', variant: 'secondary' },
           ]}
           aside={
-            <div className="rounded-[1.75rem] border border-slate-200 bg-slate-50 p-6 dark:border-slate-800 dark:bg-slate-900/50">
-              <p className="font-mono text-xs uppercase tracking-[0.22em] text-primary-700 dark:text-primary-300">
+            <div className="rounded-[1.75rem] border border-border-subtle bg-background-subtle p-6">
+              <p className="font-mono text-xs uppercase tracking-[0.22em] text-link-primary">
                 Current positioning
               </p>
               <div className="mt-4 space-y-3">
-                <p className="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm leading-7 text-slate-700 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200">
+                <p className="rounded-2xl border border-border-subtle bg-background-elevated px-4 py-3 text-sm leading-7 text-text-secondary">
                   {profile.graduateStatus}
                 </p>
-                <p className="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm leading-7 text-slate-700 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200">
+                <p className="rounded-2xl border border-border-subtle bg-background-elevated px-4 py-3 text-sm leading-7 text-text-secondary">
                   {profile.graduateProgram}
                 </p>
-                <p className="rounded-2xl border border-slate-200 bg-white px-4 py-3 text-sm leading-7 text-slate-700 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200">
+                <p className="rounded-2xl border border-border-subtle bg-background-elevated px-4 py-3 text-sm leading-7 text-text-secondary">
                   {profile.availability}
                 </p>
               </div>
@@ -58,7 +58,7 @@ export default function AboutPage() {
             subtitle="The throughline is not one narrow stack. It is systems work where software, architecture, and operations have to reinforce each other."
           />
           <div className="grid gap-6 lg:grid-cols-[1.1fr_0.9fr]">
-            <div className="space-y-5 text-base leading-8 text-slate-600 dark:text-slate-300">
+            <div className="space-y-5 text-base leading-8 text-text-secondary">
               <p>
                 I am most interested in systems that do real work: routing, validation,
                 persistence, delivery, observability, and human handoff. That is why the
@@ -80,15 +80,15 @@ export default function AboutPage() {
               {positioningTracks.map((track) => (
                 <article
                   key={track.title}
-                  className="rounded-[1.5rem] border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-950"
+                  className="rounded-[1.5rem] border border-border-subtle bg-background-elevated p-5 shadow-sm"
                 >
-                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
+                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-text-muted">
                     Best-fit role
                   </p>
-                  <h3 className="mt-3 text-lg font-semibold text-slate-900 dark:text-white">
+                  <h3 className="mt-3 text-lg font-semibold text-text-primary">
                     {track.title}
                   </h3>
-                  <p className="mt-3 text-sm leading-7 text-slate-600 dark:text-slate-300">
+                  <p className="mt-3 text-sm leading-7 text-text-secondary">
                     {track.description}
                   </p>
                 </article>
@@ -104,23 +104,23 @@ export default function AboutPage() {
             subtitle="A few roles that shape how I think about systems, delivery, and credibility."
           />
           <div className="grid gap-5 lg:grid-cols-2">
-            {experiences.slice(0, 4).map((experience) => (
-              <article
-                key={experience.id}
-                className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-950"
-              >
-                <div className="flex flex-wrap items-center gap-2 text-sm text-slate-500 dark:text-slate-400">
+              {experiences.slice(0, 4).map((experience) => (
+                <article
+                  key={experience.id}
+                  className="rounded-[1.5rem] border border-border-subtle bg-background-elevated p-6 shadow-sm"
+                >
+                <div className="flex flex-wrap items-center gap-2 text-sm text-text-muted">
                   <span>{experience.startDate}</span>
                   <span>to</span>
                   <span>{experience.endDate ?? 'Present'}</span>
                 </div>
-                <h3 className="mt-3 text-xl font-semibold text-slate-900 dark:text-white">
+                <h3 className="mt-3 text-xl font-semibold text-text-primary">
                   {experience.role}
                 </h3>
-                <p className="mt-1 text-sm font-medium text-primary-700 dark:text-primary-300">
+                <p className="mt-1 text-sm font-medium text-link-primary">
                   {experience.company}
                 </p>
-                <p className="mt-4 text-sm leading-7 text-slate-600 dark:text-slate-300">
+                <p className="mt-4 text-sm leading-7 text-text-secondary">
                   {experience.description}
                 </p>
               </article>
@@ -128,7 +128,7 @@ export default function AboutPage() {
           </div>
           <Link
             href="/resume"
-            className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-primary-700 transition-colors hover:text-primary-600 dark:text-primary-300 dark:hover:text-primary-200"
+            className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-link-primary transition-colors hover:text-link-primary-hover"
           >
             Review the full resume page
             <ArrowRight className="h-4 w-4" />
@@ -146,24 +146,24 @@ export default function AboutPage() {
               {education.map((item) => (
                 <article
                   key={item.id}
-                  className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-950"
+                  className="rounded-[1.5rem] border border-border-subtle bg-background-elevated p-6 shadow-sm"
                 >
-                  <h3 className="text-xl font-semibold text-slate-900 dark:text-white">
+                  <h3 className="text-xl font-semibold text-text-primary">
                     {item.degree} in {item.field}
                   </h3>
-                  <p className="mt-2 text-sm font-medium text-primary-700 dark:text-primary-300">
+                  <p className="mt-2 text-sm font-medium text-link-primary">
                     {item.institution}
                   </p>
-                  <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+                  <p className="mt-1 text-sm text-text-muted">
                     {item.startDate} to {item.endDate ?? 'Present'}
                   </p>
                   {item.secondaryCredential ? (
-                    <p className="mt-4 text-sm leading-7 text-slate-600 dark:text-slate-300">
+                    <p className="mt-4 text-sm leading-7 text-text-secondary">
                       Additional credential: {item.secondaryCredential}.
                     </p>
                   ) : null}
                   {item.description ? (
-                    <p className="mt-3 text-sm leading-7 text-slate-600 dark:text-slate-300">
+                    <p className="mt-3 text-sm leading-7 text-text-secondary">
                       {item.description}
                     </p>
                   ) : null}
@@ -178,15 +178,15 @@ export default function AboutPage() {
                   href={item.credentialUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-sm transition-transform hover:-translate-y-1 dark:border-slate-800 dark:bg-slate-950"
+                  className="block rounded-[1.5rem] border border-border-subtle bg-background-elevated p-6 shadow-sm transition-transform hover:-translate-y-1"
                 >
-                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
+                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-text-muted">
                     Certification
                   </p>
-                  <h3 className="mt-3 text-xl font-semibold text-slate-900 dark:text-white">
+                  <h3 className="mt-3 text-xl font-semibold text-text-primary">
                     {item.name}
                   </h3>
-                  <p className="mt-2 text-sm leading-7 text-slate-600 dark:text-slate-300">
+                  <p className="mt-2 text-sm leading-7 text-text-secondary">
                     {item.issuer} · {item.issueDate}
                   </p>
                 </a>
@@ -202,15 +202,15 @@ export default function AboutPage() {
             subtitle="The constraints I try to preserve while moving quickly."
           />
           <div className="grid gap-5 md:grid-cols-2 xl:grid-cols-4">
-            {engineeringPrinciples.map((principle) => (
-              <article
-                key={principle.title}
-                className="rounded-[1.5rem] border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-950"
-              >
-                <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
+              {engineeringPrinciples.map((principle) => (
+                <article
+                  key={principle.title}
+                  className="rounded-[1.5rem] border border-border-subtle bg-background-elevated p-5 shadow-sm"
+                >
+                <h3 className="text-lg font-semibold text-text-primary">
                   {principle.title}
                 </h3>
-                <p className="mt-3 text-sm leading-7 text-slate-600 dark:text-slate-300">
+                <p className="mt-3 text-sm leading-7 text-text-secondary">
                   {principle.description}
                 </p>
               </article>

@@ -4,22 +4,22 @@ import Image from 'next/image'
 
 export const mdxComponents: MDXComponents = {
   h1: ({ children }) => (
-    <h1 className="text-4xl font-bold text-slate-900 dark:text-white mb-6 mt-8">
+    <h1 className="text-4xl font-bold text-text-primary mb-6 mt-8">
       {children}
     </h1>
   ),
   h2: ({ children }) => (
-    <h2 className="text-3xl font-bold text-slate-900 dark:text-white mb-4 mt-8">
+    <h2 className="text-3xl font-bold text-text-primary mb-4 mt-8">
       {children}
     </h2>
   ),
   h3: ({ children }) => (
-    <h3 className="text-2xl font-semibold text-slate-900 dark:text-white mb-3 mt-6">
+    <h3 className="text-2xl font-semibold text-text-primary mb-3 mt-6">
       {children}
     </h3>
   ),
   p: ({ children }) => (
-    <p className="text-lg text-slate-600 dark:text-slate-300 mb-4 leading-relaxed">
+    <p className="text-lg text-text-secondary mb-4 leading-relaxed">
       {children}
     </p>
   ),
@@ -31,25 +31,25 @@ export const mdxComponents: MDXComponents = {
           href={href}
           target="_blank"
           rel="noopener noreferrer"
-          className="text-primary-600 dark:text-primary-400 hover:underline"
+          className="text-link-primary hover:underline"
         >
           {children}
         </a>
       )
     }
     return (
-      <Link href={href || '#'} className="text-primary-600 dark:text-primary-400 hover:underline">
+      <Link href={href || '#'} className="text-link-primary hover:underline">
         {children}
       </Link>
     )
   },
   ul: ({ children }) => (
-    <ul className="list-disc list-inside space-y-2 mb-4 text-slate-600 dark:text-slate-300">
+    <ul className="list-disc list-inside space-y-2 mb-4 text-text-secondary">
       {children}
     </ul>
   ),
   ol: ({ children }) => (
-    <ol className="list-decimal list-inside space-y-2 mb-4 text-slate-600 dark:text-slate-300">
+    <ol className="list-decimal list-inside space-y-2 mb-4 text-text-secondary">
       {children}
     </ol>
   ),
@@ -58,7 +58,7 @@ export const mdxComponents: MDXComponents = {
     const isInline = !className
     if (isInline) {
       return (
-        <code className="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-primary-600 dark:text-primary-400 text-sm font-mono">
+        <code className="px-1.5 py-0.5 rounded bg-slate-100 dark:bg-slate-800 text-link-primary text-sm font-mono">
           {children}
         </code>
       )
@@ -75,7 +75,7 @@ export const mdxComponents: MDXComponents = {
     </pre>
   ),
   blockquote: ({ children }) => (
-    <blockquote className="border-l-4 border-primary-500 pl-4 italic text-slate-600 dark:text-slate-400 my-4">
+    <blockquote className="border-l-4 border-primary-500 pl-4 italic text-text-muted my-4">
       {children}
     </blockquote>
   ),

@@ -51,7 +51,7 @@ export default function ResumePage() {
                   {experience.highlights.map((highlight) => (
                     <li
                       key={highlight}
-                      className="flex gap-3 text-sm leading-7 text-slate-600 dark:text-slate-300"
+                      className="flex gap-3 text-sm leading-7 text-text-secondary"
                     >
                       <span className="mt-2 h-2 w-2 rounded-full bg-primary-500" />
                       <span>{highlight}</span>
@@ -82,9 +82,9 @@ export default function ResumePage() {
             {skillCategories.map((category) => (
               <article
                 key={category.id}
-                className="rounded-[1.5rem] border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-950"
+                className="rounded-[1.5rem] border border-border-subtle bg-background-elevated p-5 shadow-sm"
               >
-                <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
+                <h3 className="text-lg font-semibold text-text-primary">
                   {category.name}
                 </h3>
                 <div className="mt-4 flex flex-wrap gap-2">
@@ -100,7 +100,7 @@ export default function ResumePage() {
 
           <div className="mt-6 grid gap-5 lg:grid-cols-[1fr_1fr]">
             <article className="rounded-[1.5rem] border border-slate-200 bg-slate-50 p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900/50">
-              <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
+              <h3 className="text-lg font-semibold text-text-primary">
                 Working style
               </h3>
               <div className="mt-4 flex flex-wrap gap-2">
@@ -120,16 +120,16 @@ export default function ResumePage() {
             </article>
 
             <article className="rounded-[1.5rem] border border-slate-200 bg-slate-50 p-5 shadow-sm dark:border-slate-800 dark:bg-slate-900/50">
-              <h3 className="text-lg font-semibold text-slate-900 dark:text-white">
+              <h3 className="text-lg font-semibold text-text-primary">
                 Current focus areas
               </h3>
               <div className="mt-4 grid gap-4">
                 {focusAreas.map((area) => (
                   <div key={area.title}>
-                    <p className="text-sm font-semibold text-slate-900 dark:text-white">
+                    <p className="text-sm font-semibold text-text-primary">
                       {area.title}
                     </p>
-                    <p className="mt-1 text-sm leading-7 text-slate-600 dark:text-slate-300">
+                    <p className="mt-1 text-sm leading-7 text-text-secondary">
                       {area.description}
                     </p>
                   </div>
@@ -150,19 +150,19 @@ export default function ResumePage() {
               {education.map((item) => (
                 <article
                   key={item.id}
-                  className="rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-sm dark:border-slate-800 dark:bg-slate-950"
+                  className="rounded-[1.5rem] border border-border-subtle bg-background-elevated p-6 shadow-sm"
                 >
-                  <h3 className="text-xl font-semibold text-slate-900 dark:text-white">
+                  <h3 className="text-xl font-semibold text-text-primary">
                     {item.degree} in {item.field}
                   </h3>
-                  <p className="mt-2 text-sm font-medium text-primary-700 dark:text-primary-300">
+                  <p className="mt-2 text-sm font-medium text-link-primary">
                     {item.institution}
                   </p>
-                  <p className="mt-1 text-sm text-slate-500 dark:text-slate-400">
+                  <p className="mt-1 text-sm text-text-muted">
                     {item.startDate} to {item.endDate ?? 'Present'}
                   </p>
                   {item.secondaryCredential ? (
-                    <p className="mt-4 text-sm leading-7 text-slate-600 dark:text-slate-300">
+                    <p className="mt-4 text-sm leading-7 text-text-secondary">
                       Additional credential: {item.secondaryCredential}.
                     </p>
                   ) : null}
@@ -186,15 +186,15 @@ export default function ResumePage() {
                   href={item.credentialUrl}
                   target="_blank"
                   rel="noopener noreferrer"
-                  className="block rounded-[1.5rem] border border-slate-200 bg-white p-6 shadow-sm transition-transform hover:-translate-y-1 dark:border-slate-800 dark:bg-slate-950"
+                  className="block rounded-[1.5rem] border border-border-subtle bg-background-elevated p-6 shadow-sm transition-transform hover:-translate-y-1"
                 >
-                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
+                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-text-muted">
                     Certification
                   </p>
-                  <h3 className="mt-3 text-xl font-semibold text-slate-900 dark:text-white">
+                  <h3 className="mt-3 text-xl font-semibold text-text-primary">
                     {item.name}
                   </h3>
-                  <p className="mt-2 text-sm leading-7 text-slate-600 dark:text-slate-300">
+                  <p className="mt-2 text-sm leading-7 text-text-secondary">
                     {item.issuer} · {item.issueDate}
                   </p>
                 </a>

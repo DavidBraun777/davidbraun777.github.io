@@ -138,10 +138,10 @@ export function Contact({
             className="space-y-8"
           >
             <div>
-              <h3 className="text-2xl font-bold text-slate-900 dark:text-white mb-4">
+              <h3 className="text-2xl font-bold text-text-primary mb-4">
                 Start a conversation
               </h3>
-              <p className="text-lg text-slate-600 dark:text-slate-400">
+              <p className="text-lg text-text-muted">
                 If you need someone who can turn complex ideas into working systems,
                 automate real workflows, and build with both speed and engineering rigor,
                 let&apos;s talk. I&apos;m open to full-time roles, consulting engagements,
@@ -149,7 +149,7 @@ export function Contact({
               </p>
               <Link
                 href="/resume"
-                className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-primary-700 transition-colors hover:text-primary-600 dark:text-primary-300 dark:hover:text-primary-200"
+                className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-link-primary transition-colors hover:text-link-primary-hover"
               >
                 View resume, skills, and credentials
                 <ArrowRight className="h-4 w-4" />
@@ -159,14 +159,14 @@ export function Contact({
             <div className="space-y-4">
               <div className="flex items-center gap-4">
                 <div className="p-3 bg-primary-100 dark:bg-primary-900/50 rounded-xl">
-                  <Mail className="w-6 h-6 text-primary-600 dark:text-primary-400" />
+                  <Mail className="w-6 h-6 text-link-primary" />
                 </div>
                 <div>
-                  <p className="text-sm text-slate-500 dark:text-slate-400">Private inbox</p>
-                  <p className="text-lg font-medium text-slate-900 dark:text-white">
+                  <p className="text-sm text-text-muted">Private inbox</p>
+                  <p className="text-lg font-medium text-text-primary">
                     Use the form below for direct replies
                   </p>
-                  <p className="text-sm text-slate-600 dark:text-slate-300">
+                  <p className="text-sm text-text-secondary">
                     Messages route through a private mailbox and I reply directly.
                   </p>
                 </div>
@@ -177,8 +177,8 @@ export function Contact({
                   <MapPin className="w-6 h-6 text-accent-violet" />
                 </div>
                 <div>
-                  <p className="text-sm text-slate-500 dark:text-slate-400">Location</p>
-                  <p className="text-lg font-medium text-slate-900 dark:text-white">
+                  <p className="text-sm text-text-muted">Location</p>
+                  <p className="text-lg font-medium text-text-primary">
                     Maple Grove, Minnesota
                   </p>
                 </div>
@@ -191,7 +191,7 @@ export function Contact({
                   </div>
                   <div>
                     <div className="flex flex-wrap items-center gap-2">
-                      <p className="text-sm text-slate-500 dark:text-slate-400">Quick chat</p>
+                      <p className="text-sm text-text-muted">Quick chat</p>
                       <span className="rounded-full bg-emerald-100 px-2 py-0.5 text-[11px] font-medium uppercase tracking-[0.08em] text-emerald-700 dark:bg-emerald-900/50 dark:text-emerald-300">
                         Preferred
                       </span>
@@ -200,12 +200,12 @@ export function Contact({
                       href={calendlyUrl ?? `#${formAnchorId}`}
                       target={calendlyUrl ? '_blank' : undefined}
                       rel={calendlyUrl ? 'noopener noreferrer' : undefined}
-                      className="mt-1 inline-flex items-center gap-1.5 text-lg font-semibold text-slate-900 transition-colors hover:text-accent-emerald dark:text-white"
+                      className="mt-1 inline-flex items-center gap-1.5 text-lg font-semibold text-text-primary transition-colors hover:text-accent-emerald"
                     >
                       {calendlyUrl ? 'Book a 15-minute meeting' : 'Request a 15-minute meeting'}
                       <ArrowUpRight className="h-4 w-4" />
                     </a>
-                    <p className="mt-1 text-sm text-slate-600 dark:text-slate-300">
+                    <p className="mt-1 text-sm text-text-secondary">
                       Best for role fit, system scope, or project next steps.
                     </p>
                   </div>
@@ -215,7 +215,7 @@ export function Contact({
 
             {/* Social links */}
             <div>
-              <p className="text-sm text-slate-500 dark:text-slate-400 mb-4">Profiles</p>
+              <p className="text-sm text-text-muted mb-4">Profiles</p>
               <div className="flex gap-4">
                 {socialLinks.map((link) => {
                   const Icon = link.icon
@@ -227,7 +227,7 @@ export function Contact({
                       rel="noopener noreferrer"
                       whileHover={{ scale: 1.1, y: -2 }}
                       whileTap={{ scale: 0.95 }}
-                      className="p-3 bg-slate-100 dark:bg-slate-800 rounded-xl text-slate-600 dark:text-slate-400 hover:text-primary-600 dark:hover:text-primary-400 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
+                      className="p-3 bg-slate-100 dark:bg-slate-800 rounded-xl text-text-muted hover:text-primary-600 dark:hover:text-primary-400 hover:bg-slate-200 dark:hover:bg-slate-700 transition-colors"
                       aria-label={link.name}
                     >
                       <Icon aria-hidden="true" className="w-5 h-5" />
@@ -328,7 +328,7 @@ export function Contact({
                   Send Message
                 </Button>
 
-                <p className="flex items-center gap-1.5 text-sm text-slate-500 dark:text-slate-400">
+                <p className="flex items-center gap-1.5 text-sm text-text-muted">
                   <Clock className="w-4 h-4" />
                   I typically reply within 24 hours
                 </p>
