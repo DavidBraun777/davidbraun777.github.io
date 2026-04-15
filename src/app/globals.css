@@ -1,6 +1,34 @@
 @import "tailwindcss";
 @custom-variant dark (&:where(.dark, .dark *));
 
+:root {
+  --theme-background: #f8fafc;
+  --theme-background-elevated: #ffffff;
+  --theme-background-subtle: #eef3f8;
+  --theme-text-primary: #0f172a;
+  --theme-text-secondary: #334155;
+  --theme-text-muted: #475569;
+  --theme-border-subtle: #cbd5e1;
+  --theme-border-strong: #94a3b8;
+  --theme-link-primary: #1e40af;
+  --theme-link-primary-hover: #1d4ed8;
+  --theme-accent: #1d4ed8;
+}
+
+.dark {
+  --theme-background: #020617;
+  --theme-background-elevated: #0b1220;
+  --theme-background-subtle: #111b2e;
+  --theme-text-primary: #f8fafc;
+  --theme-text-secondary: #dbe7f3;
+  --theme-text-muted: #b8c6d8;
+  --theme-border-subtle: #233044;
+  --theme-border-strong: #3b4b65;
+  --theme-link-primary: #93c5fd;
+  --theme-link-primary-hover: #bfdbfe;
+  --theme-accent: #93c5fd;
+}
+
 @theme {
   --color-primary-50: #eff6ff;
   --color-primary-100: #dbeafe;
@@ -23,6 +51,20 @@
   --font-mono: "JetBrains Mono", ui-monospace, monospace;
 }
 
+@theme inline {
+  --color-text-primary: var(--theme-text-primary);
+  --color-text-secondary: var(--theme-text-secondary);
+  --color-text-muted: var(--theme-text-muted);
+  --color-background: var(--theme-background);
+  --color-background-elevated: var(--theme-background-elevated);
+  --color-background-subtle: var(--theme-background-subtle);
+  --color-border-subtle: var(--theme-border-subtle);
+  --color-border-strong: var(--theme-border-strong);
+  --color-link-primary: var(--theme-link-primary);
+  --color-link-primary-hover: var(--theme-link-primary-hover);
+  --color-accent: var(--theme-accent);
+}
+
 html {
   scroll-behavior: smooth;
   scroll-padding-top: 6.5rem;
@@ -30,20 +72,25 @@ html {
 
 body {
   min-height: 100vh;
-  color: #0f172a;
+  color: var(--theme-text-secondary);
   background:
     radial-gradient(circle at top, rgba(37, 99, 235, 0.08), transparent 32%),
-    linear-gradient(180deg, #f8fafc 0%, #ffffff 42%, #f8fafc 100%);
+    linear-gradient(
+      180deg,
+      var(--theme-background) 0%,
+      var(--theme-background-elevated) 42%,
+      var(--theme-background) 100%
+    );
   font-feature-settings: "rlig" 1, "calt" 1;
   text-rendering: optimizeLegibility;
   -webkit-font-smoothing: antialiased;
 }
 
 .dark body {
-  color: #e2e8f0;
+  color: var(--theme-text-secondary);
   background:
     radial-gradient(circle at top, rgba(59, 130, 246, 0.16), transparent 28%),
-    linear-gradient(180deg, #020617 0%, #020617 100%);
+    linear-gradient(180deg, var(--theme-background) 0%, var(--theme-background) 100%);
 }
 
 ::selection {
@@ -63,6 +110,16 @@ summary::-webkit-details-marker {
 
 .section {
   @apply py-16 md:py-24;
+}
+
+.prose-link,
+.text-link-primary {
+  color: var(--theme-link-primary);
+}
+
+.prose-link:hover,
+.text-link-primary:hover {
+  color: var(--theme-link-primary-hover);
 }
 
 :focus-visible {

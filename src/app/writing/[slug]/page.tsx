@@ -56,7 +56,7 @@ export default async function WritingPostPage({ params }: Props) {
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
         <Link
           href="/writing"
-          className="inline-flex items-center gap-2 text-sm font-medium text-slate-600 transition-colors hover:text-primary-600 dark:text-slate-300 dark:hover:text-primary-300"
+          className="inline-flex items-center gap-2 text-sm font-medium text-text-secondary transition-colors hover:text-link-primary"
         >
           <ArrowLeft className="h-4 w-4" />
           Back to Writing
@@ -71,14 +71,14 @@ export default async function WritingPostPage({ params }: Props) {
             ))}
           </div>
 
-          <h1 className="mt-6 text-4xl font-semibold tracking-tight text-slate-900 dark:text-white md:text-5xl">
+          <h1 className="mt-6 text-4xl font-semibold tracking-tight text-text-primary md:text-5xl">
             {post.title}
           </h1>
-          <p className="mt-4 text-lg leading-8 text-slate-600 dark:text-slate-300">
+          <p className="mt-4 text-lg leading-8 text-text-secondary">
             {post.description}
           </p>
 
-          <div className="mt-6 flex flex-wrap items-center gap-4 text-sm text-slate-500 dark:text-slate-400">
+          <div className="mt-6 flex flex-wrap items-center gap-4 text-sm text-text-muted">
             <span className="inline-flex items-center gap-2">
               <Calendar className="h-4 w-4" />
               {formattedDate}

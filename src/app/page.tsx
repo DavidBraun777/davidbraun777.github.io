@@ -17,6 +17,29 @@ const homeProjectIds = [
   'vifg-nonprofit-platform',
 ]
 
+const startingPoints = [
+  {
+    href: '/projects',
+    label: 'Projects',
+    detail: 'Proof of shipped work',
+  },
+  {
+    href: '/systems',
+    label: 'Systems',
+    detail: 'Technical depth and architecture',
+  },
+  {
+    href: '/writing',
+    label: 'Writing',
+    detail: 'How I think through tradeoffs',
+  },
+  {
+    href: '/resume',
+    label: 'Resume',
+    detail: 'Credentials and experience',
+  },
+]
+
 export default function Home() {
   const posts = getAllPosts().slice(0, 3)
   const selectedProjects = featuredSystems.filter((project) => homeProjectIds.includes(project.id))
@@ -28,16 +51,16 @@ export default function Home() {
         <div className="mx-auto max-w-7xl px-4 pb-8 pt-12 sm:px-6 md:pt-16 lg:px-8 lg:pt-20">
           <div className="grid gap-10 lg:grid-cols-[1.15fr_0.85fr] lg:items-center">
             <div className="relative z-10">
-              <p className="font-mono text-xs uppercase tracking-[0.22em] text-primary-700 dark:text-primary-300">
+              <p className="font-mono text-xs uppercase tracking-[0.22em] text-link-primary">
                 Personal authority site
               </p>
-              <h1 className="mt-4 text-5xl font-semibold tracking-tight text-slate-950 dark:text-white sm:text-6xl">
+              <h1 className="mt-4 text-5xl font-semibold tracking-tight text-text-primary sm:text-6xl">
                 Hi, I&apos;m David Braun.
               </h1>
-              <p className="mt-5 max-w-3xl text-2xl font-medium leading-9 text-slate-800 dark:text-slate-100">
+              <p className="mt-5 max-w-3xl text-2xl font-medium leading-9 text-text-primary">
                 AI systems engineer and software builder focused on real operational systems.
               </p>
-              <div className="mt-6 space-y-3 text-base leading-7 text-slate-600 dark:text-slate-300 sm:text-lg">
+              <div className="mt-6 space-y-3 text-base leading-7 text-text-secondary sm:text-lg">
                 <p>{profile.graduateStatus}</p>
                 <p>{profile.graduateProgram}</p>
                 <p>{profile.graduation}</p>
@@ -56,32 +79,32 @@ export default function Home() {
                 </a>
                 <Link
                   href="/projects"
-                  className="inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-5 py-3 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200 dark:hover:bg-slate-900"
+                  className="inline-flex items-center gap-2 rounded-full border border-border-subtle bg-background-elevated px-5 py-3 text-sm font-medium text-text-secondary transition-colors hover:bg-background-subtle hover:text-text-primary"
                 >
                   Explore Projects
                   <ArrowRight className="h-4 w-4" />
                 </Link>
                 <Link
                   href="/writing"
-                  className="inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-5 py-3 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200 dark:hover:bg-slate-900"
+                  className="inline-flex items-center gap-2 rounded-full border border-border-subtle bg-background-elevated px-5 py-3 text-sm font-medium text-text-secondary transition-colors hover:bg-background-subtle hover:text-text-primary"
                 >
                   <NotebookPen className="h-4 w-4" />
                   Read Writing
                 </Link>
                 <Link
                   href="/contact"
-                  className="inline-flex items-center gap-2 rounded-full border border-slate-300 bg-white px-5 py-3 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100 dark:border-slate-700 dark:bg-slate-950 dark:text-slate-200 dark:hover:bg-slate-900"
+                  className="inline-flex items-center gap-2 rounded-full border border-border-subtle bg-background-elevated px-5 py-3 text-sm font-medium text-text-secondary transition-colors hover:bg-background-subtle hover:text-text-primary"
                 >
                   <Mail className="h-4 w-4" />
                   Work With Me
                 </Link>
               </div>
 
-              <div className="mt-8 flex flex-wrap items-center gap-3 text-sm text-slate-600 dark:text-slate-300">
-                <span className="rounded-full border border-slate-200 bg-white px-3 py-1.5 dark:border-slate-700 dark:bg-slate-950">
+              <div className="mt-8 flex flex-wrap items-center gap-3 text-sm text-text-secondary">
+                <span className="rounded-full border border-border-subtle bg-background-elevated px-3 py-1.5">
                   {profile.location}
                 </span>
-                <span className="rounded-full border border-slate-200 bg-white px-3 py-1.5 dark:border-slate-700 dark:bg-slate-950">
+                <span className="rounded-full border border-border-subtle bg-background-elevated px-3 py-1.5">
                   {profile.availability}
                 </span>
               </div>
@@ -96,7 +119,7 @@ export default function Home() {
                       href={link.url}
                       target={link.url.startsWith('http') ? '_blank' : undefined}
                       rel={link.url.startsWith('http') ? 'noopener noreferrer' : undefined}
-                      className="inline-flex items-center gap-2 rounded-full border border-slate-200 bg-white px-4 py-2 text-sm font-medium text-slate-700 transition-colors hover:bg-slate-100 dark:border-slate-800 dark:bg-slate-950 dark:text-slate-200 dark:hover:bg-slate-900"
+                      className="inline-flex items-center gap-2 rounded-full border border-border-subtle bg-background-elevated px-4 py-2 text-sm font-medium text-text-secondary transition-colors hover:bg-background-subtle hover:text-text-primary"
                     >
                       <Icon className="h-4 w-4" />
                       {link.name}
@@ -107,7 +130,7 @@ export default function Home() {
             </div>
 
             <div className="relative z-10">
-              <div className="overflow-hidden rounded-[2rem] border border-slate-200 bg-white shadow-[0_32px_80px_-40px_rgba(15,23,42,0.35)] dark:border-slate-800 dark:bg-slate-950">
+              <div className="overflow-hidden rounded-[2rem] border border-border-subtle bg-background-elevated shadow-[0_32px_80px_-40px_rgba(15,23,42,0.35)]">
                 <div className="grid gap-0 sm:grid-cols-[0.9fr_1.1fr]">
                   <div className="relative min-h-[340px] bg-gradient-to-br from-slate-200 via-slate-100 to-white dark:from-slate-900 dark:via-slate-950 dark:to-slate-900">
                     <Image
@@ -120,7 +143,7 @@ export default function Home() {
                     />
                   </div>
                   <div className="p-6 sm:p-7">
-                    <p className="font-mono text-xs uppercase tracking-[0.22em] text-primary-700 dark:text-primary-300">
+                    <p className="font-mono text-xs uppercase tracking-[0.22em] text-link-primary">
                       First-screen clarity
                     </p>
                     <div className="mt-4 space-y-3">
@@ -132,21 +155,34 @@ export default function Home() {
                       ].map((item) => (
                         <div
                           key={item}
-                          className="rounded-2xl border border-slate-200 bg-slate-50 px-4 py-3 text-sm leading-7 text-slate-700 dark:border-slate-800 dark:bg-slate-900/70 dark:text-slate-200"
+                          className="rounded-2xl border border-border-subtle bg-background-subtle px-4 py-3 text-sm leading-7 text-text-secondary"
                         >
                           {item}
                         </div>
                       ))}
                     </div>
 
-                    <div className="mt-6 rounded-[1.5rem] border border-primary-200 bg-primary-50 p-4 dark:border-primary-900 dark:bg-primary-950/40">
-                      <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-primary-700 dark:text-primary-300">
+                    <div className="mt-6 rounded-[1.5rem] border border-primary-200/80 bg-gradient-to-br from-primary-50 via-white to-primary-50/80 p-5 dark:border-primary-800/70 dark:bg-gradient-to-br dark:from-primary-950/55 dark:via-slate-950 dark:to-primary-950/35">
+                      <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-link-primary">
                         Where to start
                       </p>
-                      <p className="mt-2 text-sm leading-7 text-slate-700 dark:text-slate-200">
-                        Start with projects for proof, systems for technical depth, writing for
-                        thinking, and resume for credentials.
+                      <p className="mt-3 text-sm font-medium leading-6 text-text-primary">
+                        Use this order if you want the fastest read on the site.
                       </p>
+                      <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                        {startingPoints.map((item) => (
+                          <Link
+                            key={item.href}
+                            href={item.href}
+                            className="rounded-2xl border border-border-subtle bg-background-elevated px-4 py-3 transition-colors hover:border-primary-300 hover:bg-primary-50/60 dark:hover:border-primary-700 dark:hover:bg-primary-950/40"
+                          >
+                            <p className="text-sm font-semibold text-text-primary">{item.label}</p>
+                            <p className="mt-1 text-sm leading-6 text-text-secondary">
+                              {item.detail}
+                            </p>
+                          </Link>
+                        ))}
+                      </div>
                     </div>
                   </div>
                 </div>
@@ -177,7 +213,7 @@ export default function Home() {
           <div className="mt-8">
             <Link
               href="/projects"
-              className="inline-flex items-center gap-2 text-sm font-medium text-primary-700 transition-colors hover:text-primary-600 dark:text-primary-300 dark:hover:text-primary-200"
+              className="inline-flex items-center gap-2 text-sm font-medium text-link-primary transition-colors hover:text-link-primary-hover"
             >
               See the full project archive
               <ArrowRight className="h-4 w-4" />
@@ -199,15 +235,15 @@ export default function Home() {
               return (
                 <article
                   key={area.title}
-                  className="rounded-[1.5rem] border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-950"
+                  className="rounded-[1.5rem] border border-border-subtle bg-background-elevated p-5 shadow-sm"
                 >
                   <div className="inline-flex rounded-2xl bg-primary-50 p-3 text-primary-700 dark:bg-primary-950/60 dark:text-primary-200">
                     <Icon className="h-5 w-5" />
                   </div>
-                  <h3 className="mt-4 text-lg font-semibold text-slate-900 dark:text-white">
+                  <h3 className="mt-4 text-lg font-semibold text-text-primary">
                     {area.title}
                   </h3>
-                  <p className="mt-3 text-sm leading-7 text-slate-600 dark:text-slate-300">
+                  <p className="mt-3 text-sm leading-7 text-text-secondary">
                     {area.description}
                   </p>
                 </article>
@@ -227,14 +263,14 @@ export default function Home() {
                 subtitle="A concise version of the engineering philosophy. The deeper system thinking lives on the systems page."
                 className="mb-8"
               />
-              <p className="max-w-xl text-base leading-8 text-slate-600 dark:text-slate-300">
+              <p className="max-w-xl text-base leading-8 text-text-secondary">
                 I prefer projects where the hard part is not just the feature, but the
                 routing, constraints, validation, state, observability, and delivery path
                 around it. That is usually where the actual product value lives.
               </p>
               <Link
                 href="/systems"
-                className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-primary-700 transition-colors hover:text-primary-600 dark:text-primary-300 dark:hover:text-primary-200"
+                className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-link-primary transition-colors hover:text-link-primary-hover"
               >
                 Explore systems and engineering artifacts
                 <ArrowRight className="h-4 w-4" />
@@ -245,15 +281,15 @@ export default function Home() {
               {processPreview.map((step, index) => (
                 <article
                   key={step.title}
-                  className="rounded-[1.5rem] border border-slate-200 bg-white p-5 shadow-sm dark:border-slate-800 dark:bg-slate-950"
+                  className="rounded-[1.5rem] border border-border-subtle bg-background-elevated p-5 shadow-sm"
                 >
-                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
+                  <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-text-muted">
                     Step {index + 1}
                   </p>
-                  <h3 className="mt-3 text-lg font-semibold text-slate-900 dark:text-white">
+                  <h3 className="mt-3 text-lg font-semibold text-text-primary">
                     {step.title}
                   </h3>
-                  <p className="mt-3 text-sm leading-7 text-slate-600 dark:text-slate-300">
+                  <p className="mt-3 text-sm leading-7 text-text-secondary">
                     {step.description}
                   </p>
                 </article>
@@ -277,7 +313,7 @@ export default function Home() {
               ))}
             </div>
           ) : (
-            <div className="rounded-[1.75rem] border border-slate-200 bg-white p-8 text-slate-600 shadow-sm dark:border-slate-800 dark:bg-slate-950 dark:text-slate-300">
+            <div className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-8 text-text-secondary shadow-sm">
               Writing previews will appear here as new essays are published.
             </div>
           )}
@@ -286,7 +322,7 @@ export default function Home() {
 
       <section id="contact" className="section">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="rounded-[2rem] border border-slate-200 bg-white p-8 shadow-sm dark:border-slate-800 dark:bg-slate-950 sm:p-10">
+          <div className="rounded-[2rem] border border-border-subtle bg-background-elevated p-8 shadow-sm sm:p-10">
             <SectionHeader
               align="left"
               title="Next step"
@@ -300,20 +336,20 @@ export default function Home() {
                 return (
                   <article
                     key={path.title}
-                    className="rounded-[1.5rem] border border-slate-200 bg-slate-50 p-5 dark:border-slate-800 dark:bg-slate-900/70"
+                    className="rounded-[1.5rem] border border-border-subtle bg-background-subtle p-5"
                   >
                     <div className="inline-flex rounded-2xl bg-primary-50 p-3 text-primary-700 dark:bg-primary-950/60 dark:text-primary-200">
                       <Icon className="h-5 w-5" />
                     </div>
-                    <h3 className="mt-4 text-lg font-semibold text-slate-900 dark:text-white">
+                    <h3 className="mt-4 text-lg font-semibold text-text-primary">
                       {path.title}
                     </h3>
-                    <p className="mt-3 text-sm leading-7 text-slate-600 dark:text-slate-300">
+                    <p className="mt-3 text-sm leading-7 text-text-secondary">
                       {path.description}
                     </p>
                     <Link
                       href={path.href}
-                      className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-primary-700 transition-colors hover:text-primary-600 dark:text-primary-300 dark:hover:text-primary-200"
+                      className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-link-primary transition-colors hover:text-link-primary-hover"
                     >
                       {path.label}
                       <ArrowRight className="h-4 w-4" />

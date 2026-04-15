@@ -45,3 +45,19 @@ next-env.d.ts
 # IDE
 .idea/
 .claude
+
+# macOS
+.DS_Store
+
+# Node / tooling
+node_modules/
+.npm/
+
+# Playwright
+ms-playwright/
+playwright-report/
+test-results/
+
+# macOS system junk
+Library/
+Caches/

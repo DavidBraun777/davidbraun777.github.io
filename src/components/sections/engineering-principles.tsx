@@ -33,15 +33,15 @@ export function EngineeringPrinciples() {
                   whileInView={{ opacity: 1, y: 0 }}
                   viewport={{ once: true }}
                   transition={{ delay: index * 0.08, duration: 0.45 }}
-                  className="rounded-3xl border border-slate-200 bg-white p-6 shadow-lg shadow-slate-200/35 dark:border-slate-800 dark:bg-slate-950"
+                  className="rounded-3xl border border-border-subtle bg-background-elevated p-6 shadow-lg shadow-slate-200/20 dark:shadow-slate-950/25"
                 >
                   <div className="inline-flex rounded-2xl bg-gradient-to-br from-primary-600 to-accent-cyan p-3 text-white">
                     <Icon className="h-5 w-5" />
                   </div>
-                  <h3 className="mt-5 text-xl font-semibold text-slate-900 dark:text-white">
+                  <h3 className="mt-5 text-xl font-semibold text-text-primary">
                     {principle.title}
                   </h3>
-                  <p className="mt-3 text-sm leading-relaxed text-slate-600 dark:text-slate-400">
+                  <p className="mt-3 text-sm leading-relaxed text-text-muted">
                     {principle.description}
                   </p>
                 </motion.div>

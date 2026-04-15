@@ -55,16 +55,16 @@ export default function ProjectsPage() {
         ) : null}
 
         <section className="rounded-[2rem] border border-slate-200 bg-slate-50 p-8 dark:border-slate-800 dark:bg-slate-900/50">
-          <h2 className="text-2xl font-semibold tracking-tight text-slate-900 dark:text-white">
+          <h2 className="text-2xl font-semibold tracking-tight text-text-primary">
             Looking for technical depth instead of project thumbnails?
           </h2>
-          <p className="mt-4 max-w-2xl text-base leading-8 text-slate-600 dark:text-slate-300">
+          <p className="mt-4 max-w-2xl text-base leading-8 text-text-secondary">
             The systems page pulls the work apart by architecture lens, artifacts, and
             engineering process so the technical story is easier to inspect.
           </p>
           <Link
             href="/systems"
-            className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-primary-700 transition-colors hover:text-primary-600 dark:text-primary-300 dark:hover:text-primary-200"
+            className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-link-primary transition-colors hover:text-link-primary-hover"
           >
             Go to systems
             <ArrowRight className="h-4 w-4" />

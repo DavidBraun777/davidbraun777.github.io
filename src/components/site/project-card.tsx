@@ -16,7 +16,7 @@ export function ProjectCard({
   compact = false,
 }: ProjectCardProps) {
   return (
-    <article className="overflow-hidden rounded-[1.75rem] border border-slate-200 bg-white shadow-sm transition-transform duration-200 hover:-translate-y-1 dark:border-slate-800 dark:bg-slate-950">
+    <article className="overflow-hidden rounded-[1.75rem] border border-border-subtle bg-background-elevated shadow-sm transition-transform duration-200 hover:-translate-y-1">
       <div
         className={compact ? 'grid gap-0 lg:grid-cols-[0.95fr_1.05fr]' : 'grid gap-0 xl:grid-cols-[1fr_1.05fr]'}
       >
@@ -44,27 +44,27 @@ export function ProjectCard({
             <Badge variant="outline">{system.currentState}</Badge>
           </div>
 
-          <h3 className="mt-4 text-2xl font-semibold tracking-tight text-slate-900 dark:text-white">
+          <h3 className="mt-4 text-2xl font-semibold tracking-tight text-text-primary">
             {system.name}
           </h3>
-          <p className="mt-3 text-sm leading-7 text-slate-600 dark:text-slate-300 sm:text-base">
+          <p className="mt-3 text-sm leading-7 text-text-secondary sm:text-base">
             {system.summary}
           </p>
 
           <div className="mt-5 grid gap-3 sm:grid-cols-2">
-            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-900/70">
-              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
+            <div className="rounded-2xl border border-border-subtle bg-background-subtle p-4">
+              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-text-muted">
                 My Role
               </p>
-              <p className="mt-2 text-sm font-medium text-slate-800 dark:text-slate-200">
+              <p className="mt-2 text-sm font-medium text-text-primary">
                 {system.myRole}
               </p>
             </div>
-            <div className="rounded-2xl border border-slate-200 bg-slate-50 p-4 dark:border-slate-800 dark:bg-slate-900/70">
-              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-slate-500 dark:text-slate-400">
+            <div className="rounded-2xl border border-border-subtle bg-background-subtle p-4">
+              <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-text-muted">
                 Outcome
               </p>
-              <p className="mt-2 text-sm font-medium text-slate-800 dark:text-slate-200">
+              <p className="mt-2 text-sm font-medium text-text-primary">
                 {system.outcome}
               </p>
             </div>
@@ -80,7 +80,7 @@ export function ProjectCard({
 
           <Link
             href={href}
-            className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-primary-700 transition-colors hover:text-primary-600 dark:text-primary-300 dark:hover:text-primary-200"
+            className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-link-primary transition-colors hover:text-link-primary-hover"
           >
             Read case study
             <ArrowUpRight className="h-4 w-4" />
