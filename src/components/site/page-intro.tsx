@@ -31,11 +31,11 @@ export function PageIntro({
   return (
     <section
       className={cn(
-        'rounded-[2rem] border border-border-subtle bg-background-elevated px-6 py-10 shadow-sm sm:px-8 sm:py-12',
+        'rounded-[2rem] border border-border-subtle bg-background-elevated px-6 py-8 shadow-sm sm:px-8 sm:py-10',
         className
       )}
     >
-      <div className={cn('grid gap-10', aside && 'xl:grid-cols-[1.15fr_0.85fr] xl:items-start')}>
+      <div className={cn('grid gap-8', aside && 'xl:grid-cols-[1.15fr_0.85fr] xl:items-start')}>
         <div>
           {eyebrow ? (
             <p className="font-mono text-xs uppercase tracking-[0.22em] text-link-primary">

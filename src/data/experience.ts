@@ -30,6 +30,23 @@ export const experiences: Experience[] = [
     technologies: ['React', 'Vite', 'AWS Lightsail', 'Docker', 'GitHub Actions', 'Nginx', 'Route 53'],
   },
   {
+    id: 'vifg-treasurer',
+    company: 'VIFG Nonprofit',
+    companyUrl: 'https://www.vifg.org/home',
+    role: 'Treasurer',
+    location: 'White Bear Lake, MN',
+    startDate: 'Ongoing',
+    endDate: null,
+    description:
+      'Contribute to quarterly financial review, stewardship planning, and nonprofit oversight, helping support responsible operations and organizational accountability.',
+    highlights: [
+      'Participate in quarterly meetings focused on financial review, stewardship planning, and organizational accountability',
+      'Support oversight of nonprofit operations so the public-facing work stays tied to responsible internal decision-making',
+      'Bring the same expectation of follow-through, transparency, and operational care into both board service and technical delivery',
+    ],
+    technologies: ['Financial Review', 'Stewardship Planning', 'Nonprofit Oversight'],
+  },
+  {
     id: 'us-bank',
     company: 'U.S. Bank',
     companyUrl: 'https://www.usbank.com/',

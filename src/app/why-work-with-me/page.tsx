@@ -1,9 +1,10 @@
 import type { Metadata } from 'next'
-import { FileText } from 'lucide-react'
+import type { Experience } from '@/data/experience'
 import { DisclosurePanel } from '@/components/site/disclosure-panel'
 import { PageIntro } from '@/components/site/page-intro'
 import { SignalGrid } from '@/components/site/signal-grid'
 import { Badge } from '@/components/ui/badge'
+import { ExternalLinkAction } from '@/components/ui/external-link-action'
 import { SectionHeader } from '@/components/ui/section-header'
 import { certifications, education } from '@/data/education'
 import { experiences } from '@/data/experience'
@@ -18,8 +19,8 @@ export const metadata: Metadata = {
 
 export default function WhyWorkWithMePage() {
   return (
-    <div className="min-h-screen pb-16 pt-10 md:pt-12">
-      <div className="mx-auto max-w-7xl space-y-16 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen pb-12 pt-8 md:pt-10">
+      <div className="mx-auto max-w-7xl space-y-12 px-4 sm:px-6 lg:px-8">
         <PageIntro
           eyebrow="Why Work With Me"
           title="Credibility you can skim quickly."
@@ -39,6 +40,12 @@ export default function WhyWorkWithMePage() {
               My background includes enterprise software, security, infrastructure,
               automation, and hands-on delivery for a live production platform. That mix
               matters because the work usually crosses more than one layer of the system.
+            </p>
+            <p>
+              I also serve as Treasurer for the VIFG nonprofit, contributing to quarterly
+              financial review, stewardship planning, and oversight alongside the technical
+              delivery work. That role reinforces the same expectation I bring to client
+              work: responsible operations, clear accountability, and follow-through after launch.
             </p>
           </div>
 
@@ -71,11 +78,11 @@ export default function WhyWorkWithMePage() {
             subtitle="Open the roles you care about and skim the rest."
           />
           <div className="grid gap-5">
-            {experiences.slice(0, 5).map((experience, index) => (
+            {experiences.slice(0, 6).map((experience, index) => (
               <DisclosurePanel
                 key={experience.id}
                 title={`${experience.role} · ${experience.company}`}
-                summary={`${experience.startDate} to ${experience.endDate ?? 'Present'} · ${experience.description}`}
+                summary={`${formatExperiencePeriod(experience)} · ${experience.description}`}
                 defaultOpen={index === 0}
               >
                 <ul className="space-y-3">
@@ -150,23 +157,29 @@ export default function WhyWorkWithMePage() {
           </article>
 
           <article className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm">
-            <h2 className="text-xl font-semibold text-text-primary">Resume PDF</h2>
+            <div className="flex items-center justify-between gap-4">
+              <h2 className="text-xl font-semibold text-text-primary">Resume PDF</h2>
+              <ExternalLinkAction
+                href={resumeUrl}
+                iconOnly
+                ariaLabel="Open resume PDF in a new tab"
+              />
+            </div>
             <p className="mt-4 text-sm leading-7 text-text-secondary">
               The full PDF is still available if you want the complete timeline and
               traditional resume format. It stays secondary to the on-page summary.
             </p>
-            <a
-              href={resumeUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-5 inline-flex items-center gap-2 rounded-full border border-border-subtle bg-background-subtle px-4 py-2 text-sm font-medium text-text-secondary transition-colors hover:bg-background-elevated hover:text-text-primary"
-            >
-              <FileText className="h-4 w-4" />
-              Open Resume PDF
-            </a>
           </article>
         </section>
       </div>
     </div>
   )
+}
+
+function formatExperiencePeriod(experience: Experience) {
+  if (experience.startDate === 'Ongoing' && experience.endDate === null) {
+    return 'Current role'
+  }
+
+  return `${experience.startDate} to ${experience.endDate ?? 'Present'}`
 }

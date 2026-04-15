@@ -1,4 +1,3 @@
-import Image from 'next/image'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
@@ -16,10 +15,10 @@ export default function Home() {
     'Public site serving VIFG since 2020 with AWS hosting, repeatable releases, and accessibility-first delivery.'
 
   return (
-    <div className="pb-20">
+    <div className="pb-16">
       <section className="relative overflow-hidden border-b border-border-subtle/70 bg-[radial-gradient(circle_at_top,_rgba(114,125,115,0.16),_transparent_46%)]">
-        <div className="mx-auto max-w-7xl px-4 pb-14 pt-14 sm:px-6 md:pt-20 lg:px-8 lg:pb-16">
-          <div className="grid gap-8 lg:grid-cols-[1.08fr_0.92fr] lg:items-start">
+        <div className="mx-auto max-w-7xl px-4 pb-12 pt-12 sm:px-6 md:pt-16 lg:px-8 lg:pb-14">
+          <div className="grid gap-6 lg:grid-cols-[1.08fr_0.92fr] lg:items-start">
             <div>
               <p className="font-mono text-xs uppercase tracking-[0.22em] text-link-primary">
                 Workflow automation for small and midsized businesses
@@ -83,7 +82,7 @@ export default function Home() {
 
       <section className="section">
         <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <div className="grid gap-6 lg:grid-cols-[0.78fr_1.22fr] lg:items-start">
+          <div className="grid gap-5 lg:grid-cols-[0.86fr_1.14fr] lg:items-start">
             <div className="lg:pt-2">
               <p className="font-mono text-xs uppercase tracking-[0.22em] text-link-primary">
                 Proof
@@ -106,64 +105,44 @@ export default function Home() {
             </div>
 
             {featuredProduction ? (
-              <article className="overflow-hidden rounded-[1.75rem] border border-border-subtle bg-background-elevated shadow-sm">
-                <div className="grid gap-0 sm:grid-cols-[220px_1fr]">
-                  <div
-                    className={
-                      featuredProduction.visualSurface === 'dark'
-                        ? 'relative min-h-[190px] bg-slate-950'
-                        : 'relative min-h-[190px] bg-gradient-to-br from-background-subtle via-background-elevated to-background-subtle'
-                    }
-                  >
-                    <Image
-                      src={featuredProduction.image}
-                      alt={featuredProduction.imageAlt}
-                      fill
-                      className="object-contain p-5"
-                      sizes="(min-width: 1024px) 18rem, 100vw"
-                    />
-                  </div>
+              <article className="rounded-[1.5rem] border border-border-subtle bg-background-elevated p-5 shadow-sm sm:p-6">
+                <div className="flex flex-wrap items-center gap-2">
+                  <Badge variant="secondary">{featuredProduction.caseStudyStage}</Badge>
+                  <Badge variant="outline">Public since 2020</Badge>
+                </div>
+                <h3 className="mt-3 text-xl font-semibold tracking-tight text-text-primary sm:text-2xl">
+                  {featuredProduction.name}
+                </h3>
+                <p className="mt-2 text-sm leading-7 text-text-secondary sm:text-base">
+                  {featuredProduction.summary}
+                </p>
 
-                  <div className="p-5 sm:p-6">
-                    <div className="flex flex-wrap items-center gap-2">
-                      <Badge variant="secondary">{featuredProduction.caseStudyStage}</Badge>
-                      <Badge variant="outline">Public since 2020</Badge>
-                    </div>
-                    <h3 className="mt-3 text-xl font-semibold tracking-tight text-text-primary sm:text-2xl">
-                      {featuredProduction.name}
-                    </h3>
-                    <p className="mt-2 text-sm leading-7 text-text-secondary sm:text-base">
-                      {featuredProduction.summary}
+                <div className="mt-4 grid gap-3 sm:grid-cols-2">
+                  <div className="rounded-xl border border-border-subtle bg-background-subtle p-3">
+                    <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-text-muted">
+                      Role
                     </p>
-
-                    <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                      <div className="rounded-xl border border-border-subtle bg-background-subtle p-3">
-                        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-text-muted">
-                          Role
-                        </p>
-                        <p className="mt-1 text-sm font-medium text-text-primary">
-                          {featuredProduction.myRole}
-                        </p>
-                      </div>
-                      <div className="rounded-xl border border-border-subtle bg-background-subtle p-3">
-                        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-text-muted">
-                          Result
-                        </p>
-                        <p className="mt-1 text-sm font-medium text-text-primary">
-                          {featuredProductionResult}
-                        </p>
-                      </div>
-                    </div>
-
-                    <Link
-                      href={`/case-studies/${featuredProduction.id}`}
-                      className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-link-primary transition-colors hover:text-link-primary-hover"
-                    >
-                      Read case study
-                      <ArrowRight className="h-4 w-4" />
-                    </Link>
+                    <p className="mt-1 text-sm font-medium text-text-primary">
+                      {featuredProduction.myRole}
+                    </p>
+                  </div>
+                  <div className="rounded-xl border border-border-subtle bg-background-subtle p-3">
+                    <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-text-muted">
+                      Result
+                    </p>
+                    <p className="mt-1 text-sm font-medium text-text-primary">
+                      {featuredProductionResult}
+                    </p>
                   </div>
                 </div>
+
+                <Link
+                  href={`/case-studies/${featuredProduction.id}`}
+                  className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-link-primary transition-colors hover:text-link-primary-hover"
+                >
+                  Read case study
+                  <ArrowRight className="h-4 w-4" />
+                </Link>
               </article>
             ) : null}
           </div>
@@ -177,15 +156,15 @@ export default function Home() {
             subtitle="The trust story is simple: real delivery experience, clear communication, and systems that hold up after launch."
           />
 
-          <div className="grid gap-8 lg:grid-cols-[1fr_1fr] lg:items-start">
-            <div className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm">
+          <div className="grid gap-6 lg:grid-cols-[1fr_1fr] lg:items-start">
+            <div className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-5 shadow-sm sm:p-6">
               <h2 className="text-2xl font-semibold tracking-tight text-text-primary">
                 Real delivery experience
               </h2>
               <p className="mt-4 text-base leading-8 text-text-secondary">
                 The background behind this work includes Target, GE Aerospace,
                 Securian, and U.S. Bank, plus years of hands-on delivery for a live
-                nonprofit platform.
+                nonprofit platform and ongoing Treasurer oversight for the organization.
               </p>
               <div className="mt-5 flex flex-wrap gap-3">
                 {companySignals.map((company) => (
@@ -216,8 +195,8 @@ export default function Home() {
 
       <section className="section">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <div className="rounded-[2rem] border border-border-subtle bg-background-elevated p-8 shadow-sm sm:p-10">
-            <div className="grid gap-8 lg:grid-cols-[1fr_0.95fr] lg:items-start">
+          <div className="rounded-[2rem] border border-border-subtle bg-background-elevated p-6 shadow-sm sm:p-8">
+            <div className="grid gap-6 lg:grid-cols-[1fr_0.95fr] lg:items-start">
               <div>
                 <p className="font-mono text-xs uppercase tracking-[0.22em] text-link-primary">
                   Next step
@@ -244,7 +223,7 @@ export default function Home() {
                 {homepageConversionPoints.map((point) => (
                   <article
                     key={point.title}
-                    className="rounded-[1.5rem] border border-border-subtle bg-background-subtle px-5 py-5"
+                    className="rounded-[1.5rem] border border-border-subtle bg-background-subtle px-5 py-4"
                   >
                     <h3 className="text-lg font-semibold text-text-primary">{point.title}</h3>
                     <p className="mt-2 text-sm leading-7 text-text-secondary">

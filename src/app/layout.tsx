@@ -86,7 +86,7 @@ const personStructuredData = {
   url: 'https://dbraun.io',
   address: {
     '@type': 'PostalAddress',
-    addressLocality: 'Maple Grove',
+    addressLocality: 'White Bear Lake',
     addressRegion: 'MN',
     addressCountry: 'US',
   },

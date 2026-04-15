@@ -16,7 +16,7 @@ export function SectionHeader({
   className,
 }: SectionHeaderProps) {
   return (
-    <div className={cn('mb-12 md:mb-16', align === 'center' && 'text-center', className)}>
+    <div className={cn('mb-8 md:mb-10', align === 'center' && 'text-center', className)}>
       <Heading className="text-3xl font-semibold tracking-tight text-text-primary md:text-4xl">
         {title}
       </Heading>
