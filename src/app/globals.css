@@ -74,12 +74,13 @@ body {
   min-height: 100vh;
   color: var(--theme-text-secondary);
   background:
-    radial-gradient(circle at top, rgba(114, 125, 115, 0.12), transparent 38%),
+    radial-gradient(circle at top, rgba(114, 125, 115, 0.16), transparent 28%),
     linear-gradient(
       180deg,
-      var(--theme-background) 0%,
-      var(--theme-background-elevated) 46%,
-      var(--theme-background) 100%
+      #e4ebde 0%,
+      #eef2e4 28%,
+      var(--theme-background) 62%,
+      var(--theme-background-elevated) 100%
     );
   font-feature-settings: "rlig" 1, "calt" 1;
   text-rendering: optimizeLegibility;
@@ -109,7 +110,7 @@ summary::-webkit-details-marker {
 }
 
 .section {
-  @apply py-16 md:py-24;
+  @apply py-12 md:py-16;
 }
 
 .prose-link,

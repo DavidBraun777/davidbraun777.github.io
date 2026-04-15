@@ -57,7 +57,7 @@ export interface ContactPath {
 
 export const profile = {
   name: 'David Braun',
-  location: 'Maple Grove, Minnesota',
+  location: 'White Bear Lake, MN',
   title: 'Workflow automation and systems consulting for small and midsized businesses.',
   summary:
     'I help small and midsized businesses remove manual work, connect tools, and make operations run more smoothly.',

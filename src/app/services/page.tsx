@@ -19,8 +19,8 @@ export const metadata: Metadata = {
 
 export default function ServicesPage() {
   return (
-    <div className="min-h-screen pb-16 pt-10 md:pt-12">
-      <div className="mx-auto max-w-7xl space-y-16 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen pb-12 pt-8 md:pt-10">
+      <div className="mx-auto max-w-7xl space-y-12 px-4 sm:px-6 lg:px-8">
         <PageIntro
           eyebrow="Services"
           title="What you can hire me for."
@@ -44,7 +44,7 @@ export default function ServicesPage() {
               return (
                 <article
                   key={service.title}
-                  className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm"
+                  className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-5 shadow-sm sm:p-6"
                 >
                   <div className="inline-flex rounded-2xl bg-primary-50 p-3 text-primary-700 dark:bg-primary-950/60 dark:text-primary-200">
                     <Icon className="h-5 w-5" />
@@ -72,8 +72,8 @@ export default function ServicesPage() {
           </div>
         </section>
 
-        <section className="grid gap-8 lg:grid-cols-[1fr_1fr] lg:items-start">
-          <div className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm">
+        <section className="grid gap-6 lg:grid-cols-[1fr_1fr] lg:items-start">
+          <div className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-5 shadow-sm sm:p-6">
             <SectionHeader
               align="left"
               title="Good fit projects"
@@ -92,7 +92,7 @@ export default function ServicesPage() {
             </div>
           </div>
 
-          <div className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm">
+          <div className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-5 shadow-sm sm:p-6">
             <SectionHeader
               align="left"
               title="How work usually starts"
@@ -117,7 +117,7 @@ export default function ServicesPage() {
           </div>
         </section>
 
-        <section className="rounded-[1.75rem] border border-border-subtle bg-background-subtle p-8">
+        <section className="rounded-[1.75rem] border border-border-subtle bg-background-subtle p-6 sm:p-7">
           <h2 className="text-2xl font-semibold tracking-tight text-text-primary">
             Want proof before you reach out?
           </h2>

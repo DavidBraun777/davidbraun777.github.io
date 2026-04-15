@@ -1,11 +1,12 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
-import { ArrowRight, ArrowUpRight } from 'lucide-react'
+import { ArrowRight } from 'lucide-react'
 import { notFound } from 'next/navigation'
 import { PageIntro } from '@/components/site/page-intro'
 import { ProjectCard } from '@/components/site/project-card'
 import { Badge } from '@/components/ui/badge'
+import { ExternalLinkAction } from '@/components/ui/external-link-action'
 import { SectionHeader } from '@/components/ui/section-header'
 import { allSystems, getSystemById } from '@/data/systems'
 
@@ -54,8 +55,8 @@ export default async function CaseStudyDetailPage({ params }: Props) {
     .slice(0, 2)
 
   return (
-    <div className="min-h-screen pb-16 pt-10 md:pt-12">
-      <div className="mx-auto max-w-7xl space-y-16 px-4 sm:px-6 lg:px-8">
+    <div className="min-h-screen pb-12 pt-8 md:pt-10">
+      <div className="mx-auto max-w-7xl space-y-12 px-4 sm:px-6 lg:px-8">
         <PageIntro
           eyebrow={`${system.caseStudyStage} case study`}
           title={system.name}
@@ -197,15 +198,9 @@ export default async function CaseStudyDetailPage({ params }: Props) {
               This system also has a live public surface, which matters because delivery
               only counts when the software is actually in use.
             </p>
-            <a
-              href={system.externalUrl}
-              target="_blank"
-              rel="noopener noreferrer"
-              className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-link-primary transition-colors hover:text-link-primary-hover"
-            >
-              Visit live site
-              <ArrowUpRight className="h-4 w-4" />
-            </a>
+            <div className="mt-6">
+              <ExternalLinkAction href={system.externalUrl}>Visit live site</ExternalLinkAction>
+            </div>
           </section>
         ) : null}
 

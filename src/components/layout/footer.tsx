@@ -10,26 +10,27 @@ const footerLinks = [
 
 export function Footer() {
   const currentYear = new Date().getFullYear()
-  const linkClass = 'text-text-secondary transition-colors hover:text-text-primary'
+  const linkClass =
+    'text-primary-100/80 transition-colors hover:text-white dark:text-text-secondary dark:hover:text-text-primary'
 
   return (
-    <footer className="border-t border-border-subtle bg-background-subtle">
+    <footer className="border-t border-primary-800/40 bg-primary-900 text-primary-50 dark:border-border-subtle dark:bg-background-subtle dark:text-text-primary">
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:px-6 lg:grid-cols-[1.2fr_0.8fr_0.8fr] lg:px-8">
         <div>
-          <Link href="/" className="text-2xl font-semibold tracking-tight text-text-primary">
+          <Link href="/" className="text-2xl font-semibold tracking-tight text-primary-50 dark:text-text-primary">
             {profile.name}
           </Link>
-          <p className="mt-3 max-w-md text-sm leading-7 text-text-secondary">
+          <p className="mt-3 max-w-md text-sm leading-7 text-primary-100/82 dark:text-text-secondary">
             Consulting for businesses that need workflow automation, better system handoffs,
             and software that stays dependable after launch.
           </p>
-          <p className="mt-4 text-sm text-text-muted">
+          <p className="mt-4 text-sm text-primary-100/70 dark:text-text-muted">
             {profile.faithStatement}
           </p>
         </div>
 
         <div>
-          <h2 className="text-sm font-semibold uppercase tracking-[0.18em] text-text-muted">
+          <h2 className="text-sm font-semibold uppercase tracking-[0.18em] text-primary-100/68 dark:text-text-muted">
             Explore
           </h2>
           <ul className="mt-4 space-y-3 text-sm">
@@ -58,7 +59,7 @@ export function Footer() {
         </div>
 
         <div>
-          <h2 className="text-sm font-semibold uppercase tracking-[0.18em] text-text-muted">
+          <h2 className="text-sm font-semibold uppercase tracking-[0.18em] text-primary-100/68 dark:text-text-muted">
             Connect
           </h2>
           <ul className="mt-4 space-y-3 text-sm">
@@ -75,11 +76,11 @@ export function Footer() {
               </li>
             ))}
           </ul>
-          <p className="mt-6 text-sm text-text-muted">{profile.location}</p>
+          <p className="mt-6 text-sm text-primary-100/70 dark:text-text-muted">{profile.location}</p>
         </div>
       </div>
 
-      <div className="border-t border-border-subtle px-4 py-5 text-sm text-text-muted sm:px-6 lg:px-8">
+      <div className="border-t border-primary-800/40 px-4 py-5 text-sm text-primary-100/70 dark:border-border-subtle dark:text-text-muted sm:px-6 lg:px-8">
         <div className="mx-auto flex max-w-7xl flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
           <p>&copy; {currentYear} {profile.name}. All rights reserved.</p>
           <p>Built with Next.js, TypeScript, and a delivery-first approach.</p>

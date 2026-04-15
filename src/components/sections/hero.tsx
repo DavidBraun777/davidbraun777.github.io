@@ -134,7 +134,7 @@ export function Hero() {
             >
               <span className="inline-flex items-center gap-2 rounded-full border border-white/10 bg-white/6 px-3 py-1.5 backdrop-blur">
                 <MapPin className="h-4 w-4 text-primary-300" />
-                Maple Grove, Minnesota
+                White Bear Lake, MN
               </span>
               <span className="rounded-full border border-slate-200/70 bg-white/70 px-3 py-1 dark:border-slate-800 dark:bg-slate-900/70">
                 Open to full-time roles, consulting, and selected systems work
