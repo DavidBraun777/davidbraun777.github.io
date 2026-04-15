@@ -1,11 +1,14 @@
 import type { Metadata } from 'next'
+import { Suspense } from 'react'
 import localFont from 'next/font/local'
 import { ThemeProvider } from '@/providers/theme-provider'
 import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
 import { ScrollToTop } from '@/components/layout/scroll-to-top'
+import { GoogleAnalytics } from '@/components/analytics/google-analytics'
 import { profile } from '@/data/profile'
 import { socialLinks } from '@/data/social-links'
+import { absoluteUrl, siteUrl } from '@/lib/seo'
 import './globals.css'
 
 const inter = localFont({
@@ -21,7 +24,7 @@ const jetbrainsMono = localFont({
 })
 
 export const metadata: Metadata = {
-  metadataBase: new URL('https://dbraun.io'),
+  metadataBase: new URL(siteUrl),
   title: {
     default: 'David Braun | Workflow Automation and Systems Consulting',
     template: '%s | David Braun',
@@ -83,7 +86,7 @@ const personStructuredData = {
   '@context': 'https://schema.org',
   '@type': 'Person',
   name: profile.name,
-  url: 'https://dbraun.io',
+  url: siteUrl,
   address: {
     '@type': 'PostalAddress',
     addressLocality: 'White Bear Lake',
@@ -106,7 +109,7 @@ const personStructuredData = {
   contactPoint: {
     '@type': 'ContactPoint',
     contactType: 'professional inquiries',
-    url: 'https://dbraun.io/contact',
+    url: absoluteUrl('/contact'),
     availableLanguage: ['English'],
   },
   knowsAbout: [
@@ -119,6 +122,21 @@ const personStructuredData = {
   ],
 }
 
+const websiteStructuredData = {
+  '@context': 'https://schema.org',
+  '@type': 'WebSite',
+  name: 'dbraun.io',
+  url: siteUrl,
+  description:
+    'Workflow automation and systems consulting for small and midsized businesses that need less manual work and more dependable operations.',
+  author: {
+    '@type': 'Person',
+    name: profile.name,
+    url: siteUrl,
+  },
+  inLanguage: 'en-US',
+}
+
 export default function RootLayout({
   children,
 }: {
@@ -128,6 +146,9 @@ export default function RootLayout({
     <html lang="en" suppressHydrationWarning>
       <body className={`${inter.variable} ${jetbrainsMono.variable} font-sans`}>
         <ThemeProvider>
+          <Suspense fallback={null}>
+            <GoogleAnalytics />
+          </Suspense>
           <a
             href="#main-content"
             className="sr-only focus:not-sr-only focus:fixed focus:left-4 focus:top-4 focus:z-[100] focus:rounded-full focus:bg-slate-950 focus:px-4 focus:py-2 focus:text-white dark:focus:bg-white dark:focus:text-slate-950"
@@ -137,6 +158,10 @@ export default function RootLayout({
           <script
             type="application/ld+json"
             dangerouslySetInnerHTML={{ __html: JSON.stringify(personStructuredData) }}
+          />
+          <script
+            type="application/ld+json"
+            dangerouslySetInnerHTML={{ __html: JSON.stringify(websiteStructuredData) }}
           />
           <ScrollToTop />
           <Header />

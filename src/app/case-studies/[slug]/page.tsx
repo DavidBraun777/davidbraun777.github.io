@@ -9,6 +9,7 @@ import { Badge } from '@/components/ui/badge'
 import { ExternalLinkAction } from '@/components/ui/external-link-action'
 import { SectionHeader } from '@/components/ui/section-header'
 import { allSystems, getSystemById } from '@/data/systems'
+import { createPageMetadata, absoluteUrl } from '@/lib/seo'
 
 interface Props {
   params: Promise<{ slug: string }>
@@ -26,20 +27,13 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return { title: 'Case Study Not Found' }
   }
 
-  return {
+  return createPageMetadata({
     title: system.name,
     description: system.summary,
-    openGraph: {
-      title: `${system.name} | David Braun`,
-      description: system.summary,
-      images: [
-        {
-          url: system.image,
-          alt: system.imageAlt,
-        },
-      ],
-    },
-  }
+    path: `/case-studies/${slug}`,
+    image: system.image,
+    imageAlt: system.imageAlt,
+  })
 }
 
 export default async function CaseStudyDetailPage({ params }: Props) {
@@ -53,10 +47,32 @@ export default async function CaseStudyDetailPage({ params }: Props) {
   const relatedProjects = allSystems
     .filter((item) => item.id !== system.id && item.caseStudyStage === system.caseStudyStage)
     .slice(0, 2)
+  const breadcrumbStructuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Case Studies',
+        item: absoluteUrl('/case-studies'),
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: system.name,
+        item: absoluteUrl(`/case-studies/${slug}`),
+      },
+    ],
+  }
 
   return (
     <div className="min-h-screen pb-12 pt-8 md:pt-10">
       <div className="mx-auto max-w-7xl space-y-12 px-4 sm:px-6 lg:px-8">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbStructuredData) }}
+        />
         <PageIntro
           eyebrow={`${system.caseStudyStage} case study`}
           title={system.name}

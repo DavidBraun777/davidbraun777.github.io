@@ -1,12 +1,14 @@
 import type { Metadata } from 'next'
 import { Contact } from '@/components/sections/contact'
 import { PageIntro } from '@/components/site/page-intro'
+import { createPageMetadata } from '@/lib/seo'
 
-export const metadata: Metadata = {
+export const metadata: Metadata = createPageMetadata({
   title: 'Contact',
   description:
-    'Book a call about workflow automation, system integration, or operational software consulting.',
-}
+    'Start a consulting conversation about workflow automation, system integration, or operational software.',
+  path: '/contact',
+})
 
 export default function ContactPage() {
   return (

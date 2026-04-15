@@ -1,3 +1,4 @@
+import type { Metadata } from 'next'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
@@ -5,6 +6,14 @@ import { SignalGrid } from '@/components/site/signal-grid'
 import { SectionHeader } from '@/components/ui/section-header'
 import { companySignals, conversionPoints, homeSignals, profile } from '@/data/profile'
 import { productionSystems, researchSystems } from '@/data/systems'
+import { createPageMetadata } from '@/lib/seo'
+
+export const metadata: Metadata = createPageMetadata({
+  title: 'David Braun | Workflow Automation and Systems Consulting',
+  description:
+    'Workflow automation and systems consulting for small and midsized businesses that want less manual work, better handoffs, and more dependable operations.',
+  path: '/',
+})
 
 export default function Home() {
   const featuredProduction = productionSystems[0]

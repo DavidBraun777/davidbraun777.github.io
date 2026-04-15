@@ -6,6 +6,7 @@ import { MDXRemote } from 'next-mdx-remote/rsc'
 import { mdxComponents } from '@/components/blog/mdx-components'
 import { Badge } from '@/components/ui/badge'
 import { getAllPostSlugs, getPostBySlug } from '@/lib/mdx'
+import { createPageMetadata, absoluteUrl } from '@/lib/seo'
 
 interface Props {
   params: Promise<{ slug: string }>
@@ -23,18 +24,17 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     return { title: 'Post Not Found' }
   }
 
-  return {
+  return createPageMetadata({
     title: post.title,
     description: post.description,
-    openGraph: {
-      title: post.title,
-      description: post.description,
-      type: 'article',
-      publishedTime: post.date,
-      authors: [post.author],
-      tags: post.tags,
-    },
-  }
+    path: `/writing/${slug}`,
+    image: post.image,
+    imageAlt: post.title,
+    type: 'article',
+    publishedTime: post.date,
+    authors: [post.author],
+    tags: post.tags,
+  })
 }
 
 export default async function WritingPostPage({ params }: Props) {
@@ -50,10 +50,32 @@ export default async function WritingPostPage({ params }: Props) {
     month: 'long',
     day: 'numeric',
   })
+  const articleStructuredData = {
+    '@context': 'https://schema.org',
+    '@type': 'BreadcrumbList',
+    itemListElement: [
+      {
+        '@type': 'ListItem',
+        position: 1,
+        name: 'Writing',
+        item: absoluteUrl('/writing'),
+      },
+      {
+        '@type': 'ListItem',
+        position: 2,
+        name: post.title,
+        item: absoluteUrl(`/writing/${slug}`),
+      },
+    ],
+  }
 
   return (
     <article className="min-h-screen pb-16 pt-10 md:pt-12">
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
+        <script
+          type="application/ld+json"
+          dangerouslySetInnerHTML={{ __html: JSON.stringify(articleStructuredData) }}
+        />
         <Link
           href="/writing"
           className="inline-flex items-center gap-2 text-sm font-medium text-text-secondary transition-colors hover:text-link-primary"
