@@ -132,12 +132,13 @@ export function Contact({
       <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
         {showSectionHeader ? <SectionHeader title={title} subtitle={subtitle} /> : null}
 
-        <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr]">
+        <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr] lg:items-start">
           <motion.div
             initial={{ opacity: 1, x: -12 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.35, ease: 'easeOut' }}
+            className="lg:self-start"
           >
             <div className="rounded-[2rem] border border-border-subtle bg-background-elevated p-6 shadow-sm sm:p-8">
               <div className="max-w-3xl">
@@ -307,10 +308,10 @@ export function Contact({
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.35, ease: 'easeOut' }}
-            className="space-y-5"
+            className="space-y-5 lg:self-start"
           >
             <div className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-4 shadow-sm sm:p-5">
-              <div className="grid gap-5 sm:grid-cols-[168px_1fr] sm:items-center lg:grid-cols-1">
+              <div className="grid gap-5 sm:grid-cols-[168px_1fr] sm:items-start lg:grid-cols-1">
                 <div className="relative aspect-square overflow-hidden rounded-[1.5rem] border border-border-subtle bg-background-subtle">
                   <Image
                     src="/images/profile/Smolder.png"
