@@ -8,7 +8,7 @@ import { ExternalLinkAction } from '@/components/ui/external-link-action'
 import { SectionHeader } from '@/components/ui/section-header'
 import { certifications, education } from '@/data/education'
 import { experiences } from '@/data/experience'
-import { companySignals, credibilityPoints, profile, resumeHighlights } from '@/data/profile'
+import { companySignals, credibilityPoints, currentWorkReferences, profile, resumeHighlights } from '@/data/profile'
 import { resumeUrl } from '@/data/social-links'
 import { createPageMetadata } from '@/lib/seo'
 
@@ -44,6 +44,12 @@ export default function WhyWorkWithMePage() {
               matters because the work usually crosses more than one layer of the system.
             </p>
             <p>
+              Current public delivery work also includes time2move.io and
+              arklandscaping.net. They are real client surfaces and useful credibility
+              signals, but VIFG remains the strongest flagship proof because the
+              operational ownership is deeper and more visible.
+            </p>
+            <p>
               I also serve as Treasurer for the VIFG nonprofit, contributing to quarterly
               financial review, stewardship planning, and oversight alongside the technical
               delivery work. That role reinforces the same expectation I bring to client
@@ -68,6 +74,20 @@ export default function WhyWorkWithMePage() {
             <p className="mt-5 text-sm leading-7 text-text-secondary">
               {profile.faithStatement}
             </p>
+            <div className="mt-5 space-y-3">
+              <p className="text-sm font-semibold text-text-primary">Current public work</p>
+              {currentWorkReferences.map((reference) => (
+                <div key={reference.href} className="flex items-start justify-between gap-4">
+                  <div>
+                    <p className="text-sm font-medium text-text-primary">{reference.label}</p>
+                    <p className="mt-1 text-sm leading-7 text-text-secondary">
+                      {reference.description}
+                    </p>
+                  </div>
+                  <ExternalLinkAction href={reference.href} iconOnly ariaLabel={`Visit ${reference.label}`} />
+                </div>
+              ))}
+            </div>
           </div>
         </section>
 

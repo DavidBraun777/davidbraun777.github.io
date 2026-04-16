@@ -8,7 +8,7 @@ import { ProjectCard } from '@/components/site/project-card'
 import { Badge } from '@/components/ui/badge'
 import { ExternalLinkAction } from '@/components/ui/external-link-action'
 import { SectionHeader } from '@/components/ui/section-header'
-import { allSystems, getSystemById } from '@/data/systems'
+import { allSystems, getSystemById, type ProofSection } from '@/data/systems'
 import { createPageMetadata, absoluteUrl } from '@/lib/seo'
 
 interface Props {
@@ -114,21 +114,25 @@ export default async function CaseStudyDetailPage({ params }: Props) {
         />
 
         <section className="grid gap-8 xl:grid-cols-[1.05fr_0.95fr]">
-          <div
-            className={
-              system.visualSurface === 'dark'
-                ? 'relative min-h-[420px] overflow-hidden rounded-[2rem] border border-slate-200 bg-slate-950 dark:border-slate-800'
-                : 'relative min-h-[420px] overflow-hidden rounded-[2rem] border border-slate-200 bg-gradient-to-br from-slate-100 via-white to-slate-100 dark:border-slate-800 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950'
-            }
-          >
-            <Image
-              src={system.image}
-              alt={system.imageAlt}
-              fill
-              className="object-contain p-8"
-              sizes="(min-width: 1280px) 52vw, 100vw"
-            />
-          </div>
+          {system.image ? (
+            <div
+              className={
+                system.visualSurface === 'dark'
+                  ? 'relative min-h-[420px] overflow-hidden rounded-[2rem] border border-slate-200 bg-slate-950 dark:border-slate-800'
+                  : 'relative min-h-[420px] overflow-hidden rounded-[2rem] border border-slate-200 bg-gradient-to-br from-slate-100 via-white to-slate-100 dark:border-slate-800 dark:from-slate-950 dark:via-slate-900 dark:to-slate-950'
+              }
+            >
+              <Image
+                src={system.image}
+                alt={system.imageAlt ?? `${system.name} visual`}
+                fill
+                className="object-contain p-8"
+                sizes="(min-width: 1280px) 52vw, 100vw"
+              />
+            </div>
+          ) : (
+            <ProofSurfacePlaceholder name={system.name} sections={system.proofSections} />
+          )}
 
           <div className="space-y-5">
             <article className="rounded-[1.5rem] border border-border-subtle bg-background-elevated p-6 shadow-sm">
@@ -189,19 +193,27 @@ export default async function CaseStudyDetailPage({ params }: Props) {
               </article>
 
               <article className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm">
-                <h3 className="text-xl font-semibold text-text-primary">Supporting proof</h3>
+                <h3 className="text-xl font-semibold text-text-primary">Proof status</h3>
                 <p className="mt-4 text-sm leading-8 text-text-secondary">
-                  {system.evidenceSummary}
+                  This page separates what is already visible from what is still being
+                  prepared, so the proof layer can grow without pretending unfinished
+                  artifacts already exist.
                 </p>
-                <div className="mt-4 flex flex-wrap gap-2">
-                  {system.evidence.map((artifact) => (
-                    <Badge key={artifact} variant="primary">
-                      {artifact}
-                    </Badge>
-                  ))}
-                </div>
               </article>
             </div>
+          </div>
+        </section>
+
+        <section>
+          <SectionHeader
+            align="left"
+            title="Proof surfaces"
+            subtitle="Real artifacts stay visible. Missing artifacts are labeled directly so this page stays honest and ready for stronger proof later."
+          />
+          <div className="grid gap-6 lg:grid-cols-2">
+            {system.proofSections.map((section) => (
+              <ProofSectionCard key={section.id} section={section} />
+            ))}
           </div>
         </section>
 
@@ -244,6 +256,73 @@ export default async function CaseStudyDetailPage({ params }: Props) {
             <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
+      </div>
+    </div>
+  )
+}
+
+function ProofSectionCard({ section }: { section: ProofSection }) {
+  const title =
+    section.status === 'planned' ? `${section.title} (to be added)` : section.title
+
+  return (
+    <article className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm">
+      <div className="flex flex-wrap items-center gap-3">
+        <h3 className="text-xl font-semibold text-text-primary">{title}</h3>
+        <Badge variant={section.status === 'available' ? 'secondary' : 'outline'}>
+          {section.status === 'available' ? 'Available now' : 'In progress'}
+        </Badge>
+      </div>
+      <p className="mt-4 text-sm leading-8 text-text-secondary">{section.summary}</p>
+      <ul className="mt-5 space-y-3">
+        {section.items.map((item) => (
+          <li key={item} className="flex gap-3 text-sm leading-7 text-text-secondary">
+            <span className="mt-2 h-2 w-2 rounded-full bg-primary-500" />
+            <span>{item}</span>
+          </li>
+        ))}
+      </ul>
+    </article>
+  )
+}
+
+function ProofSurfacePlaceholder({
+  name,
+  sections,
+}: {
+  name: string
+  sections: ProofSection[]
+}) {
+  const previewSections = sections.slice(0, 2)
+
+  return (
+    <div className="flex min-h-[420px] flex-col justify-between rounded-[2rem] border border-border-subtle bg-background-subtle p-8">
+      <div>
+        <p className="font-mono text-xs uppercase tracking-[0.22em] text-link-primary">
+          In-progress proof surface
+        </p>
+        <h2 className="mt-4 text-3xl font-semibold tracking-tight text-text-primary">
+          {name} is under active development, with proof added as it becomes real.
+        </h2>
+        <p className="mt-4 max-w-2xl text-base leading-8 text-text-secondary">
+          This case study is structured to accept real walkthroughs, diagrams, and
+          operational artifacts later. Until those exist, the page stays text-led and
+          explicit about what is still in progress.
+        </p>
+      </div>
+
+      <div className="mt-8 grid gap-4 sm:grid-cols-2">
+        {previewSections.map((section) => (
+          <div
+            key={section.id}
+            className="rounded-[1.25rem] border border-border-subtle bg-background-elevated p-4"
+          >
+            <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-text-muted">
+              {section.status === 'planned' ? `${section.title} (planned)` : section.title}
+            </p>
+            <p className="mt-2 text-sm leading-7 text-text-secondary">{section.summary}</p>
+          </div>
+        ))}
       </div>
     </div>
   )
