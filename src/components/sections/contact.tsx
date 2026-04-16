@@ -1,6 +1,7 @@
 'use client'
 
 import { useEffect, useRef, useState } from 'react'
+import Image from 'next/image'
 import Link from 'next/link'
 import { motion } from 'framer-motion'
 import {
@@ -308,6 +309,38 @@ export function Contact({
             transition={{ duration: 0.35, ease: 'easeOut' }}
             className="space-y-5"
           >
+            <div className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-4 shadow-sm sm:p-5">
+              <div className="grid gap-5 sm:grid-cols-[168px_1fr] sm:items-center lg:grid-cols-1">
+                <div className="relative aspect-square overflow-hidden rounded-[1.5rem] border border-border-subtle bg-background-subtle">
+                  <Image
+                    src="/images/profile/Smolder.png"
+                    alt="Portrait of David Braun, the engineer behind the consulting work."
+                    fill
+                    className="object-cover"
+                    sizes="(min-width: 1024px) 320px, (min-width: 640px) 168px, 100vw"
+                    priority
+                  />
+                </div>
+
+                <div>
+                  <p className="font-mono text-xs uppercase tracking-[0.22em] text-link-primary">
+                    Who you&apos;ll work with
+                  </p>
+                  <h2 className="mt-3 text-xl font-semibold text-text-primary">
+                    Direct contact with the person doing the work.
+                  </h2>
+                  <p className="mt-3 text-sm leading-7 text-text-secondary">
+                    You&apos;ll be talking directly with David Braun, the person who
+                    scopes the problem, builds the system, and follows through after
+                    launch.
+                  </p>
+                  <p className="mt-3 text-sm leading-7 text-text-secondary">
+                    {profile.responseTime} If it is not a fit, I will say so directly.
+                  </p>
+                </div>
+              </div>
+            </div>
+
             <div className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm">
               <h2 className="text-xl font-semibold text-text-primary">Good fit if</h2>
               <div className="mt-5 space-y-3">
