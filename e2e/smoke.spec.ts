@@ -30,6 +30,12 @@ test.describe('Smoke tests', () => {
     await expect(page).toHaveTitle(/Writing/)
   })
 
+  test('case studies page shows the current in-progress flagship systems', async ({ page }) => {
+    await page.goto('/case-studies')
+    await expect(page.getByRole('heading', { name: /weatherforge/i })).toBeVisible()
+    await expect(page.getByRole('heading', { name: /^dgm$/i })).toBeVisible()
+  })
+
   test('homepage primary CTA goes to contact', async ({ page }) => {
     await page.goto('/')
     await page.getByRole('link', { name: /^book a call$/i }).first().click()

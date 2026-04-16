@@ -47,6 +47,12 @@ export interface ConversionPoint {
   icon: LucideIcon
 }
 
+export interface CurrentWorkReference {
+  label: string
+  href: string
+  description: string
+}
+
 export interface ContactPath {
   title: string
   description: string
@@ -154,7 +160,7 @@ export const servicesOffered: ServiceOffering[] = [
       'Leads get lost when calls, follow-up, and CRM updates depend on manual steps.',
     outcome:
       'Faster response, cleaner handoff, and fewer missed opportunities.',
-    example: 'StormIQ lead routing and CRM handoff.',
+    example: 'WeatherForge event intake feeding future StormIQ routing workflows.',
     icon: Sparkles,
   },
   {
@@ -163,7 +169,7 @@ export const servicesOffered: ServiceOffering[] = [
       'Important information is stuck across forms, inboxes, spreadsheets, CRMs, and internal tools.',
     outcome:
       'The right information gets where it needs to go without staff re-entering it.',
-    example: 'Lecture Stream pipeline and enterprise integration support.',
+    example: 'VIFG delivery infrastructure and current public-site support work.',
     icon: ArrowRight,
   },
   {
@@ -172,7 +178,7 @@ export const servicesOffered: ServiceOffering[] = [
       'Teams spend too much time routing requests, checking status, and pushing work to the next step.',
     outcome:
       'Routine work gets handled automatically so the team can focus on decisions that matter.',
-    example: 'DealerFlow notifications and operational workflow design.',
+    example: 'DGM orchestration layer for reviewable multi-step workflows.',
     icon: Workflow,
   },
   {
@@ -181,8 +187,26 @@ export const servicesOffered: ServiceOffering[] = [
       'A tool that looks good in a demo but breaks in real use creates more work than it saves.',
     outcome:
       'Delivery includes deployment and ongoing reliability so the system stays useful after launch.',
-    example: 'VIFG production platform on AWS with repeatable deployment.',
+    example: 'VIFG production platform on AWS plus ongoing public-site stewardship.',
     icon: Wrench,
+  },
+]
+
+export const currentWorkReferences: CurrentWorkReference[] = [
+  {
+    label: 'VIFG nonprofit platform',
+    href: 'https://www.vifg.org/home',
+    description: 'Production platform with ongoing hosting, deployment, and accessibility support.',
+  },
+  {
+    label: 'time2move.io',
+    href: 'https://time2move.io',
+    description: 'Current public client-site delivery work.',
+  },
+  {
+    label: 'arklandscaping.net',
+    href: 'https://arklandscaping.net',
+    description: 'Current public client-site delivery work.',
   },
 ]
 

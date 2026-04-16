@@ -124,9 +124,10 @@ export default function ServicesPage() {
             Want proof before you reach out?
           </h2>
           <p className="mt-4 max-w-2xl text-base leading-8 text-text-secondary">
-            Start with the VIFG production platform, then review DealerFlow and the rest
-            of the case studies. This page is about what you can hire me for. The proof
-            lives on the case studies page.
+            Start with the VIFG production platform, then review WeatherForge, DGM,
+            DealerFlow, and the rest of the case studies to see what is live, what is in
+            pilot, and what is still under active development. This page is about what
+            you can hire me for. The proof lives on the case studies page.
           </p>
           <Link
             href="/case-studies"

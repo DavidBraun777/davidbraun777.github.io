@@ -133,9 +133,10 @@ export function Contact({
 
         <div className="grid gap-10 lg:grid-cols-[1.1fr_0.9fr]">
           <motion.div
-            initial={{ opacity: 0, x: -30 }}
+            initial={{ opacity: 1, x: -12 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
+            transition={{ duration: 0.35, ease: 'easeOut' }}
           >
             <div className="rounded-[2rem] border border-border-subtle bg-background-elevated p-6 shadow-sm sm:p-8">
               <div className="max-w-3xl">
@@ -301,9 +302,10 @@ export function Contact({
           </motion.div>
 
           <motion.aside
-            initial={{ opacity: 0, x: 30 }}
+            initial={{ opacity: 1, x: 12 }}
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
+            transition={{ duration: 0.35, ease: 'easeOut' }}
             className="space-y-5"
           >
             <div className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm">

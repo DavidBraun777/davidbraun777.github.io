@@ -26,6 +26,7 @@ export const experiences: Experience[] = [
       'Built and maintained CI/CD pipeline with GitHub Actions for repeatable production deployments',
       'Managed DNS (Route 53), SSL/TLS provisioning, and host-level security configuration',
       'Treated accessibility as a system constraint: screen reader compatibility, keyboard navigation, and contrast requirements enforced throughout delivery',
+      'Current public delivery work also includes client-facing sites at time2move.io and arklandscaping.net',
     ],
     technologies: ['React', 'Vite', 'AWS Lightsail', 'Docker', 'GitHub Actions', 'Nginx', 'Route 53'],
   },

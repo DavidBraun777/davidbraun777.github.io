@@ -4,7 +4,7 @@ import { ArrowRight } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { SignalGrid } from '@/components/site/signal-grid'
 import { SectionHeader } from '@/components/ui/section-header'
-import { companySignals, conversionPoints, homeSignals, profile } from '@/data/profile'
+import { companySignals, conversionPoints, currentWorkReferences, homeSignals, profile } from '@/data/profile'
 import { productionSystems, researchSystems } from '@/data/systems'
 import { createPageMetadata } from '@/lib/seo'
 
@@ -104,9 +104,10 @@ export default function Home() {
                 Strongest public proof first.
               </h2>
               <p className="mt-4 max-w-xl text-base leading-8 text-text-secondary">
-                Start with the public production system. Pilot and R&amp;D work,
-                including {researchPreview}, stays on the case studies page so the
-                homepage remains a short proof preview.
+                Start with the public production system. After that, the current
+                in-progress focus is {researchPreview}, the systems being built as the
+                foundation for StormIQ. The deeper proof stays on the case studies page
+                so the homepage remains a short preview instead of a full portfolio.
               </p>
               <Link
                 href="/case-studies"
@@ -176,8 +177,9 @@ export default function Home() {
               </h2>
               <p className="mt-4 text-base leading-8 text-text-secondary">
                 The background behind this work includes Target, GE Aerospace,
-                Securian, and U.S. Bank, plus years of hands-on delivery for a live
-                nonprofit platform and ongoing Treasurer oversight for the organization.
+                Securian, and U.S. Bank, plus current public delivery work across VIFG,
+                time2move.io, and arklandscaping.net alongside ongoing Treasurer oversight
+                for the nonprofit.
               </p>
               <div className="mt-5 flex flex-wrap gap-3">
                 {companySignals.map((company) => (
@@ -187,6 +189,20 @@ export default function Home() {
                   >
                     {company}
                   </span>
+                ))}
+              </div>
+              <div className="mt-5 flex flex-wrap gap-4 text-sm text-text-secondary">
+                {currentWorkReferences.map((reference) => (
+                  <Link
+                    key={reference.href}
+                    href={reference.href}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="inline-flex items-center gap-2 text-link-primary transition-colors hover:text-link-primary-hover"
+                  >
+                    {reference.label}
+                    <ArrowRight className="h-3.5 w-3.5" />
+                  </Link>
                 ))}
               </div>
               <p className="mt-5 text-sm leading-7 text-text-secondary">

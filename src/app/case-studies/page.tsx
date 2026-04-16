@@ -56,7 +56,7 @@ export default function CaseStudiesPage() {
         <PageIntro
           eyebrow="Case Studies"
           title="A portfolio of production, pilot, and R&D work."
-          description="VIFG is the strongest public proof, but it is not the only project here. The rest of the work stays visible so you can see the full range: what is live, what is in pilot, and what is still earlier-stage."
+          description="VIFG is still the strongest public proof, but the rest of the work stays visible so you can see what is live, what is in pilot, and what is now under active development. Current build focus is moving toward WeatherForge and DGM as the systems underneath the broader StormIQ direction."
           actions={[{ label: 'Book a Call', href: '/contact' }]}
         />
 
@@ -151,7 +151,7 @@ export default function CaseStudiesPage() {
 
         <StageSection
           title="R&D"
-          subtitle="R&D work stays visible because it shows how I handle automation boundaries, validation, data movement, and system design before production rollout."
+          subtitle="R&D work stays visible because it shows how I handle automation boundaries, validation, data movement, and system design before production rollout. WeatherForge and DGM are the current build focus, with StormIQ positioned honestly as the broader direction they support."
           systems={researchSystems}
         />
 
