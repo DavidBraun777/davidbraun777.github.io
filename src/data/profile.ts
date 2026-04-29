@@ -66,7 +66,7 @@ export const profile = {
   location: 'White Bear Lake, MN',
   title: 'Workflow automation and systems consulting for small and midsized businesses.',
   summary:
-    'I help small and midsized businesses remove manual work, connect tools, and make operations run more smoothly.',
+    'I help small and midsized businesses reduce manual work by connecting lead flows, data movement, internal handoffs, and cloud-backed automation into dependable systems.',
   heroHeadline: 'Remove manual work from the workflows that keep slowing your business down.',
   heroDescription:
     'I design and build automation, integrations, and internal tools for businesses that are tired of re-entry, missed follow-up, and disconnected systems.',
