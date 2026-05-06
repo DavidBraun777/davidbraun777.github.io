@@ -36,7 +36,6 @@ export function SocialCard() {
           alignItems: 'stretch',
           gap: '40px',
           position: 'relative',
-          zIndex: 1,
         }}
       >
         <div
@@ -110,7 +109,7 @@ export function SocialCard() {
               alignItems: 'center',
             }}
           >
-            {['Lead Automation', 'System Integration', 'Operational Software'].map(
+            {['Lead Automation', 'System Integration', 'Data + AI Support'].map(
               (item) => (
                 <div
                   key={item}
@@ -182,7 +181,7 @@ export function SocialCard() {
             {[
               ['Ingest', 'voice, forms, uploads'],
               ['Orchestrate', 'queues, routing, policy'],
-              ['AI Layer', 'retrieval, generation, validation'],
+              ['AI/Data Layer', 'retrieval, dashboards, validation'],
               ['Deliver', 'dashboards, exports, workflows'],
             ].map(([title, detail], index) => (
               <div

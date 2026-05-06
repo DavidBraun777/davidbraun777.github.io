@@ -68,14 +68,14 @@ export function ProjectCard({
               variant="secondary"
               className="bg-primary-50 text-primary-700 dark:bg-primary-950/60 dark:text-primary-200"
             >
-              {system.caseStudyStage}
+              {system.contextLabel ?? system.caseStudyStage}
             </Badge>
             <Badge variant="outline">{system.currentState}</Badge>
             <Badge variant="outline">{system.themeTitle}</Badge>
           </div>
 
           <h3 className="mt-4 text-2xl font-semibold tracking-tight text-text-primary">
-            {system.name}
+            {system.displayTitle ?? system.name}
           </h3>
           <p className="mt-3 text-sm leading-7 text-text-secondary sm:text-base">
             {system.summary}

@@ -20,4 +20,4 @@ export const socialLinks: SocialLink[] = [
   },
 ]
 
-export const resumeUrl = '/Resume.pdf'
+export const resumeUrl = '/resume.pdf'

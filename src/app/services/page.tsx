@@ -12,10 +12,35 @@ const fitExamples = [
   'A useful system that needs to be built cleanly and kept reliable after launch.',
 ]
 
+const supportingCapabilities = [
+  'Dashboards and decision tools',
+  'Data pipelines and cleanup',
+  'Grounded AI assistants',
+  'Internal tools and API glue',
+]
+
+const proofExamples = [
+  {
+    name: 'VIFG Nonprofit Platform',
+    href: '/case-studies/vifg-nonprofit-platform',
+    label: 'production proof',
+  },
+  {
+    name: 'WeatherForge',
+    href: '/case-studies/weatherforge',
+    label: 'prototype dashboard example',
+  },
+  {
+    name: 'RAGeATM',
+    href: '/case-studies/rageatm',
+    label: 'academic RAG example',
+  },
+]
+
 export const metadata: Metadata = createPageMetadata({
   title: 'Services',
   description:
-    'Workflow automation, system integration, and operational software services for small and midsized businesses.',
+    'Workflow automation, system integration, operational software, dashboards, data pipelines, and practical AI support for small and midsized businesses.',
   path: '/services',
 })
 
@@ -26,7 +51,7 @@ export default function ServicesPage() {
         <PageIntro
           eyebrow="Services"
           title="What you can hire me for."
-          description="This page explains the kinds of problems I solve. If you want proof first, use the case studies page. If you already know the kind of help you need, start here."
+          description="This page explains the kinds of workflow, integration, automation, and dependable system problems I solve. AI, dashboards, and data pipelines are supporting tools when they make the workflow better."
           actions={[
             { label: 'Book a Call', href: '/contact' },
             { label: 'View Case Studies', href: '/case-studies', variant: 'secondary' },
@@ -37,7 +62,7 @@ export default function ServicesPage() {
           <SectionHeader
             align="left"
             title="Core services"
-            subtitle="Framed around business problems, not technical labels."
+            subtitle="Framed around business problems and outcomes before technical labels."
           />
           <div className="grid gap-5 md:grid-cols-2">
             {servicesOffered.map((service) => {
@@ -119,21 +144,67 @@ export default function ServicesPage() {
           </div>
         </section>
 
-        <section className="rounded-[1.75rem] border border-border-subtle bg-background-subtle p-6 sm:p-7">
-          <h2 className="text-2xl font-semibold tracking-tight text-text-primary">
-            Want proof before you reach out?
+        <section className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
+          <div className="rounded-[1.75rem] border border-border-subtle bg-background-subtle p-6 shadow-sm">
+            <h2 className="text-2xl font-semibold tracking-tight text-text-primary">
+              Supporting technical capabilities
+            </h2>
+            <p className="mt-4 text-sm leading-7 text-text-secondary">
+              These are tools inside the delivery work, not a replacement for workflow
+              analysis, integration discipline, and operational reliability.
+            </p>
+            <div className="mt-5 flex flex-wrap gap-2">
+              {supportingCapabilities.map((capability) => (
+                <span
+                  key={capability}
+                  className="rounded-full border border-border-subtle bg-background-elevated px-3 py-1.5 text-sm font-medium text-text-secondary"
+                >
+                  {capability}
+                </span>
+              ))}
+            </div>
+          </div>
+
+          <div className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm">
+            <h2 className="text-2xl font-semibold tracking-tight text-text-primary">
+              Supporting examples
+            </h2>
+            <p className="mt-4 text-sm leading-7 text-text-secondary">
+              Start with VIFG for public production proof. WeatherForge and RAGeATM are
+              technical examples with prototype or academic limits.
+            </p>
+            <div className="mt-5 grid gap-3">
+              {proofExamples.map((example) => (
+                <Link
+                  key={example.href}
+                  href={example.href}
+                  className="flex items-center justify-between gap-4 rounded-[1.25rem] border border-border-subtle bg-background-elevated p-4 text-sm font-medium text-text-primary transition-colors hover:border-border-strong"
+                >
+                  <span>
+                    {example.name}
+                    <span className="ml-2 text-text-secondary">({example.label})</span>
+                  </span>
+                  <ArrowRight className="h-4 w-4 text-link-primary" />
+                </Link>
+              ))}
+            </div>
+          </div>
+        </section>
+
+        <section className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 text-center shadow-sm sm:p-8">
+          <h2 className="text-3xl font-semibold tracking-tight text-text-primary">
+            Have a workflow or system to improve?
           </h2>
-          <p className="mt-4 max-w-2xl text-base leading-8 text-text-secondary">
-            Start with the VIFG production platform, then review WeatherForge, DGM,
-            DealerFlow, and the rest of the case studies to see what is live, what is in
-            pilot, and what is still under active development. This page is about what
-            you can hire me for. The proof lives on the case studies page.
+          <p className="mx-auto mt-4 max-w-2xl text-base leading-8 text-text-secondary">
+            Send the workflow, handoff, lead process, data movement, internal tool, or
+            AI-assisted workflow idea. I will help decide whether a small build or
+            technical review is the right first step.
           </p>
           <Link
-            href="/case-studies"
+            href="/contact"
             className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-link-primary transition-colors hover:text-link-primary-hover"
           >
-            Go to case studies
+            Book a Call
             <ArrowRight className="h-4 w-4" />
           </Link>
         </section>

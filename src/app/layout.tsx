@@ -30,7 +30,7 @@ export const metadata: Metadata = {
     template: '%s | David Braun',
   },
   description:
-    'Workflow automation, AI systems, and integration-focused consulting for small and midsized businesses that need less manual work and more dependable operations.',
+    'Workflow automation, AI systems, data pipelines, and integration-focused consulting for small and midsized businesses that need less manual work and more dependable operations.',
   keywords: [
     'Workflow Automation Consultant',
     'AI Systems Consultant',
@@ -39,6 +39,8 @@ export const metadata: Metadata = {
     'Data Pipelines',
     'Operational Software',
     'Systems Consulting',
+    'Dashboard Development',
+    'RAG Assistant',
     'Minnesota',
   ],
   authors: [{ name: profile.name }],
@@ -50,15 +52,15 @@ export const metadata: Metadata = {
     url: 'https://dbraun.io',
     title: 'David Braun | Workflow automation and systems consulting',
     description:
-      'Consulting for small and midsized businesses that need workflow automation, better system handoffs, and software that holds up in production.',
+      'Consulting for small and midsized businesses that need workflow automation, better system handoffs, practical AI/data support, and software that holds up in production.',
     siteName: 'dbraun.io',
     images: [
-        {
-          url: '/opengraph-image',
-          width: 1200,
-          height: 630,
-          alt: 'David Braun consulting site',
-        },
+      {
+        url: '/opengraph-image',
+        width: 1200,
+        height: 630,
+        alt: 'David Braun consulting site',
+      },
     ],
   },
   twitter: {
@@ -117,6 +119,9 @@ const personStructuredData = {
     'Software engineering',
     'Workflow automation',
     'System integration',
+    'Data engineering',
+    'Retrieval-Augmented Generation',
+    'Decision-support dashboards',
     'Cloud engineering',
     'Operational software',
   ],

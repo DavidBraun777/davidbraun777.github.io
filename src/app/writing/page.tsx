@@ -23,7 +23,7 @@ export default function WritingPage() {
         <PageIntro
           eyebrow="Writing"
           title="Notes, essays, and technical thinking behind the work."
-          description="The writing is about building systems that have to operate in practice: workflow architecture, AI boundaries, delivery constraints, and the engineering tradeoffs that matter once software leaves the demo phase."
+          description="The writing is about building systems that have to operate in practice: workflow architecture, AI boundaries, data movement, delivery constraints, and the engineering tradeoffs that matter once software leaves the demo phase."
           actions={[
             { label: 'View Case Studies', href: '/case-studies', variant: 'secondary' },
             { label: 'Contact', href: '/contact' },

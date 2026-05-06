@@ -6,21 +6,75 @@ export interface ProofSection {
   items: string[]
 }
 
+export interface CaseStudyMetric {
+  label: string
+  value: string
+  detail?: string
+}
+
+export interface ArchitectureStep {
+  label: string
+  detail: string
+}
+
+export interface RetrievalCapabilityLadderLevel {
+  level: number
+  systemType: string
+  compares: string
+  meaningCaptured: string
+  questionUnderQuestionAbility: string
+  personalContextAbility: string
+  realWorldGrounding: string
+  bestUseCase: string
+  fatalWeakness: string
+}
+
+export interface RetrievalCapabilityInterpretation {
+  method: string
+  meaning: string
+}
+
+export interface RetrievalCapabilityLadder {
+  title: string
+  summary: string
+  intro: string
+  safeClaim: string
+  guardrail: string
+  levels: RetrievalCapabilityLadderLevel[]
+  heuristicNote: string
+  interpretations: RetrievalCapabilityInterpretation[]
+  futureWork: string
+}
+
 export interface SystemCaseStudy {
   id: string
   name: string
+  displayTitle?: string
+  shortTitle?: string
   summary: string
+  oneSentenceOutcome?: string
+  contextLabel?: string
+  positioning?: string
   caseStudyStage: 'Production' | 'Pilot' | 'R&D'
   problem: string
   system: string
   systemHighlights: string[]
   stack: string[]
+  metrics?: CaseStudyMetric[]
+  architecture?: ArchitectureStep[]
+  dataSources?: string[]
+  dashboardViews?: string[]
+  realWorldRelevance?: string[]
+  limitations?: string[]
+  nextImprovements?: string[]
+  retrievalCapabilityLadder?: RetrievalCapabilityLadder
   currentState: string
   image?: string
   imageAlt?: string
   visualSurface?: 'dark' | 'light'
   visualAspect?: 'landscape' | 'portrait'
   externalUrl?: string
+  githubUrl?: string
   /** What I personally owned on this project */
   myRole: string
   /** The hardest engineering constraint the system had to solve */
@@ -51,71 +105,509 @@ export const systemThemes: SystemTheme[] = [
       {
         id: 'weatherforge',
         name: 'WeatherForge',
+        displayTitle: 'WeatherForge: Minnesota Severe Weather Risk Analytics Dashboard',
+        shortTitle: 'Minnesota Severe Weather Risk Analytics Dashboard',
         summary:
-          'Weather-triggered signal and routing system in active development to turn storm activity into usable operational input for StormIQ.',
+          'A Minnesota severe-weather analytics dashboard that turns large NOAA weather datasets into county-level risk views, cleaned analytics layers, and decision-support reporting surfaces.',
+        oneSentenceOutcome:
+          'Transformed large NOAA source data into Minnesota-focused storm-event records, station-day observations, county joins, and a Python Shiny + Plotly dashboard for severe-weather risk exploration.',
+        contextLabel: 'Prototype / Academic Project',
+        positioning:
+          'A data engineering and analytics dashboard project that transforms large NOAA weather datasets into county-level severe-weather risk insights for Minnesota.',
         caseStudyStage: 'R&D',
         problem:
-          'Storm-driven businesses lose time when weather events, territory relevance, and follow-up timing are all checked manually across maps, forecasts, and internal notes.',
+          'Public weather data is large, messy, and hard to use directly for decision support. NOAA archives contain valuable severe-weather and daily-observation records, but the raw files need filtering, cleaning, unit conversion, county joins, and clear dashboard views before they become useful for Minnesota risk analysis.',
         system:
-          'WeatherForge is being built as the event-signal layer that will feed StormIQ. The current direction centers on ingesting weather and geography signals, normalizing them into reviewable events, and handing those events to downstream qualification and routing workflows instead of asking operators to monitor conditions by hand.',
+          'I filtered, cleaned, transformed, and packaged NOAA Storm Events and GHCN-Daily data into Minnesota-focused analytics layers, then built dashboard views for statewide trends, county-level impacts, historical time progression, weather context, methods, and live-alert exploration.',
         systemHighlights: [
-          'Signal ingestion boundary for weather, geography, and event windows.',
-          'Normalization layer designed to turn raw event data into reviewable operational triggers.',
-          'Routing seam intended to pass vetted event signals into later qualification workflows.',
+          'Raw NOAA files filtered down to Minnesota severe-weather and station-observation records.',
+          'Cleaning and unit conversion steps produced reusable Parquet analytics layers.',
+          'County boundary and population joins support county-level risk comparison and normalized reporting.',
+          'Python Shiny and Plotly dashboard turns the curated data into exploratory decision-support views.',
         ],
-        stack: ['Python', 'FastAPI', 'Geospatial Processing', 'Event Routing', 'Workflow APIs'],
-        currentState: 'Active Build',
-        myRole: 'Sole architect and engineer building the system foundation',
+        stack: ['Python', 'Shiny', 'Plotly', 'Parquet', 'NOAA Storm Events', 'NOAA GHCN-Daily', 'GeoJSON'],
+        metrics: [
+          {
+            value: '~35 GB',
+            label: 'raw NOAA source archive',
+            detail: 'used in the working project',
+          },
+          {
+            value: '55,384',
+            label: 'cleaned Minnesota storm-event records',
+          },
+          {
+            value: '9,008,748',
+            label: 'Minnesota station-day weather observations',
+          },
+          {
+            value: '87',
+            label: 'Minnesota counties mapped',
+          },
+          {
+            value: '1950-06-15 through 2025-12-28',
+            label: 'storm-event range',
+          },
+          {
+            value: '1877-08-05 through 2026-03-22',
+            label: 'weather-observation range',
+          },
+        ],
+        architecture: [
+          {
+            label: 'Raw NOAA files',
+            detail: 'Storm Events and GHCN-Daily source files collected as the raw archive.',
+          },
+          {
+            label: 'Minnesota filtering',
+            detail: 'Records scoped to Minnesota events, counties, and station observations.',
+          },
+          {
+            label: 'Cleaning and unit conversion',
+            detail: 'Fields normalized, weather units converted, and records prepared for analysis.',
+          },
+          {
+            label: 'Parquet outputs',
+            detail: 'Curated analytics layers stored for faster dashboard and analysis use.',
+          },
+          {
+            label: 'County joins and population normalization',
+            detail: 'County boundaries and population anchors support mapped and normalized comparisons.',
+          },
+          {
+            label: 'Shiny and Plotly dashboard',
+            detail: 'Interactive views expose overview, county, temporal, methods, and alert surfaces.',
+          },
+        ],
+        dataSources: [
+          'NOAA Storm Events',
+          'NOAA GHCN-Daily',
+          'Minnesota county boundary GeoJSON',
+          'County population anchors',
+        ],
+        dashboardViews: [
+          'Overview',
+          'County Impacts',
+          'Weather Context',
+          'Time Progression',
+          'Statewide Trends',
+          'Methods/Pipeline',
+          'Live Alerts',
+        ],
+        realWorldRelevance: [
+          'Severe-weather awareness',
+          'County-level risk comparison',
+          'Public-data productization',
+          'Dashboard reporting',
+          'Executive summaries',
+        ],
+        limitations: [
+          'Pre-1996 NOAA Storm Events data is less complete.',
+          'Older records are biased toward better-monitored and more populated areas.',
+          'Same-day statewide weather averages are context, not exact event-local station readings.',
+          'The current version is Minnesota-focused.',
+          'This is a decision-support prototype, not a forecasting or actuarial model.',
+        ],
+        nextImprovements: [
+          'Add polished screenshot evidence from the dashboard views.',
+          'Document reproducible data refresh steps for the Parquet analytics layers.',
+          'Expand validation notes around county joins, population anchors, and historical-data caveats.',
+          'Explore additional states only after the Minnesota workflow is fully documented.',
+        ],
+        currentState: 'Applied dashboard prototype',
+        githubUrl: 'https://github.com/DavidBraun777/WeatherForge',
+        myRole: 'Sole builder for data pipeline, analytics layers, dashboard, and case-study documentation',
         coreConstraint:
-          'Signal quality: raw weather activity is noisy, so the system has to separate interesting operational events from background data before anything gets routed forward',
+          'Data trust: the dashboard has to make large public datasets usable while clearly labeling historical completeness issues and contextual weather averages.',
         outcome:
-          'System boundaries are defined for signal ingestion, normalization, territory relevance, and downstream routing; implementation is in progress',
+          'Curated 55,384 cleaned Minnesota storm-event records and 9,008,748 station-day observations into reusable Parquet layers and a Python Shiny + Plotly dashboard spanning all 87 Minnesota counties.',
         proofSections: [
           {
             id: 'walkthrough',
-            title: 'System Walkthrough',
-            status: 'planned',
+            title: 'Dashboard Views',
+            status: 'available',
             summary:
-              'A walkthrough is being prepared once the first usable end-to-end signal path is stable enough to show without hand-waving.',
+              'The project contains a dashboard structure with multiple decision-support views rather than a single static chart.',
             items: [
-              'Walkthrough video to be added after the first end-to-end signal capture and routing pass is stable.',
-              'Current state: architecture and workflow boundaries are defined, but the public walkthrough would still be premature.',
+              'Overview, County Impacts, Weather Context, Time Progression, Statewide Trends, Methods/Pipeline, and Live Alerts views.',
+              'Screenshot placeholders remain on the portfolio page until final dashboard captures are added.',
             ],
           },
           {
             id: 'architecture',
-            title: 'Architecture / Flow',
+            title: 'Architecture / Pipeline',
             status: 'available',
             summary:
-              'The current architecture direction is already clear even though the full artifact set is not published yet.',
+              'The pipeline runs from raw public archives through filtering, cleaning, Parquet outputs, county joins, and an interactive Shiny/Plotly surface.',
             items: [
-              'Event ingestion boundary for weather and geography inputs.',
-              'Normalization layer that converts raw signals into reviewable event objects.',
-              'Routing handoff planned to feed StormIQ qualification and downstream workflow logic.',
+              'Raw NOAA files -> Minnesota filtering -> cleaning/unit conversion -> Parquet outputs.',
+              'County joins and population normalization make county-level comparisons possible.',
+              'Shiny and Plotly expose the curated analytics layers through dashboard views.',
             ],
           },
           {
             id: 'operations',
-            title: 'Operational Surfaces',
+            title: 'Applied Decision-Support Surfaces',
             status: 'available',
             summary:
-              'The work is being shaped around reviewable operational surfaces rather than a hidden model-only flow.',
+              'The project demonstrates how public data can be productized into reporting surfaces without claiming forecasting or actuarial precision.',
             items: [
-              'Signal review surface for checking whether an event should advance.',
-              'Territory relevance and timing rules to prevent noisy triggers.',
-              'Downstream delivery seam designed for later lead or workflow handoff.',
+              'County-level severe-weather comparisons.',
+              'Historical trend and time-progression views.',
+              'Methods view that explains the data pipeline and caveats.',
             ],
           },
           {
             id: 'artifacts',
             title: 'Artifacts & Evidence',
-            status: 'planned',
+            status: 'available',
             summary:
-              'The page is ready for real artifacts, but they are not being claimed before they exist.',
+              'The case study uses verified project artifact counts and keeps limitations explicit.',
             items: [
-              'Lifecycle diagram in progress.',
-              'Signal review screenshots to be added once the interface is stable.',
-              'Operational trigger artifacts to be added after the first durable workflow run.',
+              '~35 GB raw NOAA source archive used in the working project.',
+              '55,384 cleaned Minnesota storm-event records and 9,008,748 station-day observations.',
+              'Public GitHub repository linked for code review.',
+            ],
+          },
+        ],
+      },
+      {
+        id: 'rageatm',
+        name: 'RAGeATM',
+        displayTitle: 'RAGeATM: Evidence-Bound Local RAG Assistant Prototype',
+        shortTitle: 'Evidence-Bound Retrieval-Augmented Generation Prototype',
+        summary:
+          'A small explainable Retrieval-Augmented Generation prototype that retrieves local evidence first, applies a relevance threshold, and refuses unsupported questions when the corpus does not justify an answer.',
+        oneSentenceOutcome:
+          'Built a local evidence-bound RAG prototype with 15 searchable chunks, a 15 × 772 TF-IDF matrix, thresholded retrieval, and a 7-question sanity benchmark covering useful answer/refusal behavior.',
+        contextLabel: 'Prototype / Academic Project',
+        positioning:
+          'A small explainable Retrieval-Augmented Generation prototype that demonstrates grounded answer behavior, retrieval thresholds, and refusal when local evidence is insufficient.',
+        caseStudyStage: 'R&D',
+        problem:
+          'AI assistants can hallucinate or answer unsupported questions when they respond without checking whether the available evidence actually supports the answer.',
+        system:
+          'I built a local RAG prototype that ingests text files, chunks them, indexes the chunks with TF-IDF, retrieves evidence with cosine similarity, checks a minimum relevance threshold, and only answers when the retrieved context clears that threshold. When the local evidence is insufficient, the assistant refuses instead of guessing.',
+        systemHighlights: [
+          'Local source documents are ingested and chunked into a searchable evidence set.',
+          'TF-IDF and cosine similarity retrieve the highest-scoring chunks for each query.',
+          'A minimum relevance threshold controls whether the assistant answers or refuses.',
+          'Offline retrieval-conditioned generation is the default, with optional OpenAI mode only when configured.',
+        ],
+        stack: ['Python', 'TF-IDF', 'Cosine Similarity', 'Local Retrieval', 'Threshold Refusal', 'Optional OpenAI Mode'],
+        metrics: [
+          {
+            value: '7',
+            label: 'local source documents',
+          },
+          {
+            value: '15',
+            label: 'searchable chunks',
+          },
+          {
+            value: '15 × 772',
+            label: 'TF-IDF matrix shape',
+          },
+          {
+            value: 'TF-IDF + cosine similarity',
+            label: 'retrieval method',
+          },
+          {
+            value: '0.12',
+            label: 'default minimum relevance threshold',
+          },
+          {
+            value: '7/7',
+            label: 'useful retrieval/refusal decisions on the small benchmark',
+          },
+        ],
+        architecture: [
+          {
+            label: 'data/raw text files',
+            detail: 'Seven local source documents provide the bounded knowledge corpus.',
+          },
+          {
+            label: 'ingestion',
+            detail: 'Text files are loaded into the prototype for local processing.',
+          },
+          {
+            label: 'chunking',
+            detail: 'Documents are split into 15 searchable chunks.',
+          },
+          {
+            label: 'TF-IDF index',
+            detail: 'The chunk corpus becomes a 15 × 772 TF-IDF matrix.',
+          },
+          {
+            label: 'cosine similarity retrieval',
+            detail: 'Queries retrieve top-k chunks by lexical similarity.',
+          },
+          {
+            label: 'threshold check',
+            detail: 'The assistant answers only when retrieved context clears the minimum relevance threshold.',
+          },
+          {
+            label: 'answer or refuse',
+            detail: 'In-domain questions are answered from local evidence; unsupported questions are refused.',
+          },
+        ],
+        realWorldRelevance: [
+          'Internal documentation assistants',
+          'Course assistants',
+          'Policy Q&A',
+          'Small-business knowledge assistants',
+          'Grounded AI patterns',
+        ],
+        limitations: [
+          'Small educational corpus.',
+          'Lexical TF-IDF retrieval, not neural embeddings.',
+          'No Chroma/vector database.',
+          'No persistent memory.',
+          'No agents/tools.',
+          'No voice/UI/deployment.',
+          'The 7/7 result is a sanity benchmark, not broad accuracy.',
+        ],
+        nextImprovements: [
+          'Add a lightweight UI for demonstrating answer/refusal behavior.',
+          'Compare TF-IDF retrieval against an embedding-based retriever on the same corpus.',
+          'Expand the benchmark beyond seven sanity-check questions.',
+          'Add richer citation display and evaluation logging before claiming broader quality.',
+        ],
+        retrievalCapabilityLadder: {
+          title: 'Future Work: Retrieval Capability Ladder',
+          summary:
+            'A staged view of how RAGeATM could grow from simple lexical retrieval into a more measurable, semantic, context-aware, and eventually multimodal research-assistant harness.',
+          intro:
+            'RAGeATM is currently best understood as a small but useful RAG prototype: enough to demonstrate retrieval, grounding, and evaluation discipline, but not yet a production research platform. The next work is not simply to make it bigger. The stronger path is to make retrieval more measurable, reproducible, semantic, and context-aware while avoiding overclaims about what current AI systems truly understand.',
+          safeClaim:
+            'TF-IDF and BM25 retrieve based primarily on lexical overlap, while embedding-based and LLM-assisted retrieval can better capture semantic similarity, paraphrase, and conceptual relevance. This makes them more capable of retrieving documents related to the user’s underlying intent, although they should not be described as fully understanding the ‘question beneath the question’ in a human sense.',
+          guardrail:
+            'LLMs can approximate deeper intent by modeling semantic context, conversational history, and inferred goals, but this remains probabilistic pattern-based reasoning rather than true human understanding.',
+          levels: [
+            {
+              level: 1,
+              systemType: 'Exact keyword search',
+              compares: 'Literal word/string overlap',
+              meaningCaptured: '5%',
+              questionUnderQuestionAbility: '0%',
+              personalContextAbility: '0%',
+              realWorldGrounding: '0%',
+              bestUseCase: 'Finding exact names, IDs, phrases, codes',
+              fatalWeakness: 'Misses anything phrased differently',
+            },
+            {
+              level: 2,
+              systemType: 'TF-IDF',
+              compares: 'Weighted term overlap',
+              meaningCaptured: '10-20%',
+              questionUnderQuestionAbility: '0-5%',
+              personalContextAbility: '0%',
+              realWorldGrounding: '0%',
+              bestUseCase: 'Simple document retrieval where vocabulary matches',
+              fatalWeakness: 'No real semantics; treats text as bag-of-words',
+            },
+            {
+              level: 3,
+              systemType: 'BM25',
+              compares: 'Improved keyword relevance with saturation/length normalization',
+              meaningCaptured: '20-35%',
+              questionUnderQuestionAbility: '5%',
+              personalContextAbility: '0%',
+              realWorldGrounding: '0%',
+              bestUseCase: 'Strong classic search baseline',
+              fatalWeakness: 'Still mostly lexical; synonyms and paraphrases are weak',
+            },
+            {
+              level: 4,
+              systemType: 'Static embeddings',
+              compares: 'Word/document vectors learned from language patterns',
+              meaningCaptured: '35-50%',
+              questionUnderQuestionAbility: '10-20%',
+              personalContextAbility: '0-5%',
+              realWorldGrounding: '0%',
+              bestUseCase: 'Finding semantically related text',
+              fatalWeakness: 'Limited context sensitivity',
+            },
+            {
+              level: 5,
+              systemType: 'Modern embedding models',
+              compares: 'Query/document meaning vectors',
+              meaningCaptured: '55-75%',
+              questionUnderQuestionAbility: '25-45%',
+              personalContextAbility: '5-15%',
+              realWorldGrounding: '0-5%',
+              bestUseCase: 'RAG retrieval, semantic search, paraphrase matching',
+              fatalWeakness: 'Can retrieve conceptually similar but wrong context',
+            },
+            {
+              level: 6,
+              systemType: 'Hybrid search',
+              compares: 'BM25 + embeddings',
+              meaningCaptured: '65-85%',
+              questionUnderQuestionAbility: '30-50%',
+              personalContextAbility: '5-15%',
+              realWorldGrounding: '0-5%',
+              bestUseCase: 'Serious RAG systems',
+              fatalWeakness: 'More complex; requires tuning and evaluation',
+            },
+            {
+              level: 7,
+              systemType: 'Reranked retrieval',
+              compares: 'Initial retrieval + LLM/cross-encoder relevance judgment',
+              meaningCaptured: '75-90%',
+              questionUnderQuestionAbility: '40-60%',
+              personalContextAbility: '10-20%',
+              realWorldGrounding: '0-5%',
+              bestUseCase: 'High-quality RAG retrieval',
+              fatalWeakness: 'Slower/costlier; still depends on retrieved candidates',
+            },
+            {
+              level: 8,
+              systemType: 'LLM reading retrieved context',
+              compares: 'Retrieved docs + generated reasoning',
+              meaningCaptured: '80-95% for answer synthesis',
+              questionUnderQuestionAbility: '50-70%',
+              personalContextAbility: '15-35%',
+              realWorldGrounding: '0-10%',
+              bestUseCase: 'Answering from documents with explanation',
+              fatalWeakness: 'Can hallucinate, overgeneralize, or sound more certain than it is',
+            },
+            {
+              level: 9,
+              systemType: 'LLM with memory/user profile',
+              compares: 'Query + history + user goals + documents',
+              meaningCaptured: '80-95%',
+              questionUnderQuestionAbility: '65-80%',
+              personalContextAbility: '50-75%',
+              realWorldGrounding: '5-15%',
+              bestUseCase: 'Personalized assistants, tutoring, coaching, project guidance',
+              fatalWeakness: 'Risk of assuming too much about the user',
+            },
+            {
+              level: 10,
+              systemType: 'Agentic AI with tools',
+              compares: 'Text + memory + documents + actions + external systems',
+              meaningCaptured: '85-95%',
+              questionUnderQuestionAbility: '70-85%',
+              personalContextAbility: '60-80%',
+              realWorldGrounding: '20-45%',
+              bestUseCase: 'Research assistants, workflow automation, coding agents',
+              fatalWeakness: 'Tool errors, bad planning, weak verification',
+            },
+            {
+              level: 11,
+              systemType: 'Multimodal grounded AI',
+              compares: 'Text + vision + audio + environment + actions',
+              meaningCaptured: '85-98%',
+              questionUnderQuestionAbility: '75-90%',
+              personalContextAbility: '70-85%',
+              realWorldGrounding: '50-75%',
+              bestUseCase: 'Real-world assistance, robotics, field analysis',
+              fatalWeakness: 'Still not human lived experience',
+            },
+            {
+              level: 12,
+              systemType: 'Human-level social/contextual understanding',
+              compares: 'Language + memory + embodiment + relationships + lived experience',
+              meaningCaptured: '95-100%',
+              questionUnderQuestionAbility: '90-100%',
+              personalContextAbility: '90-100%',
+              realWorldGrounding: '90-100%',
+              bestUseCase: 'Real relational discernment',
+              fatalWeakness: 'Current AI does not truly have this',
+            },
+          ],
+          heuristicNote:
+            'These percentages are heuristic gauges, not universal benchmark results. They are meant to communicate increasing capability scope, not claim exact measured performance.',
+          interpretations: [
+            {
+              method: 'TF-IDF',
+              meaning: 'These documents share important words with the query.',
+            },
+            {
+              method: 'BM25',
+              meaning: 'These documents share important words in a more search-optimized way.',
+            },
+            {
+              method: 'Embeddings',
+              meaning: 'These documents are conceptually close to the query.',
+            },
+            {
+              method: 'Hybrid retrieval',
+              meaning: 'These documents match both the words and the meaning.',
+            },
+            {
+              method: 'Reranking',
+              meaning:
+                'Of the retrieved documents, these are probably most relevant to the user’s actual question.',
+            },
+            {
+              method: 'LLM + memory',
+              meaning:
+                'Given this user’s history, goals, and wording, this may be what they are really asking.',
+            },
+            {
+              method: 'Grounded AI',
+              meaning:
+                'Given the person’s behavior, environment, constraints, and history, this is probably the deeper issue.',
+            },
+          ],
+          futureWork:
+            'The practical future work for RAGeATM is to climb this ladder carefully: first by improving reproducibility and evaluation, then by comparing lexical, embedding, hybrid, and reranked retrieval, then by testing whether memory, user goals, and multimodal inputs actually improve retrieval quality without creating unjustified confidence.',
+        },
+        currentState: 'Local RAG prototype',
+        githubUrl: 'https://github.com/DavidBraun777/RAGeATM',
+        myRole: 'Sole builder for ingestion, retrieval, thresholding, generation modes, and benchmark notes',
+        coreConstraint:
+          'Evidence boundary: the system has to refuse unsupported questions when local retrieval does not clear the relevance threshold.',
+        outcome:
+          'Indexed 7 local source documents into 15 searchable chunks and produced 7/7 useful retrieval/refusal decisions on a small sanity benchmark using TF-IDF + cosine similarity with a default 0.12 threshold.',
+        proofSections: [
+          {
+            id: 'walkthrough',
+            title: 'Demo Behavior',
+            status: 'available',
+            summary:
+              'The prototype demonstrates both grounded answers and explicit refusal when the local corpus does not support a question.',
+            items: [
+              'In-domain questions retrieve local context and answer from that evidence.',
+              'An out-of-domain question such as "What is the capital of France?" refuses because the local corpus does not support the answer.',
+            ],
+          },
+          {
+            id: 'architecture',
+            title: 'Architecture / Pipeline',
+            status: 'available',
+            summary:
+              'The flow is intentionally small and inspectable: local files become chunks, chunks become TF-IDF features, retrieval is thresholded, and generation depends on retrieved evidence.',
+            items: [
+              'data/raw text files -> ingestion -> chunking -> TF-IDF index.',
+              'Cosine similarity returns top-k local evidence.',
+              'Minimum relevance threshold decides whether to answer or refuse.',
+            ],
+          },
+          {
+            id: 'operations',
+            title: 'Grounding Controls',
+            status: 'available',
+            summary:
+              'The main applied lesson is the refusal boundary, not broad RAG accuracy.',
+            items: [
+              'Top-k retrieval with minimum relevance threshold.',
+              'Offline retrieval-conditioned generation by default.',
+              'Optional OpenAI mode only when configured.',
+            ],
+          },
+          {
+            id: 'artifacts',
+            title: 'Artifacts & Evidence',
+            status: 'available',
+            summary:
+              'The evidence is intentionally modest and quantified as a sanity benchmark.',
+            items: [
+              '7 local source documents, 15 searchable chunks, and 15 × 772 TF-IDF feature matrix.',
+              '7-question sanity benchmark with 7/7 useful retrieval/refusal decisions.',
+              'Public GitHub repository linked for code review.',
             ],
           },
         ],
@@ -606,8 +1098,10 @@ export const systemThemes: SystemTheme[] = [
       {
         id: 'vifg-nonprofit-platform',
         name: 'VIFG Nonprofit Platform',
+        shortTitle: 'Public production platform',
         summary:
           'Production platform and delivery stack supporting a nonprofit serving the visually impaired community.',
+        contextLabel: 'Public Production Proof',
         caseStudyStage: 'Production',
         problem:
           'Mission-driven organizations need dependable public systems, but production reliability and accessibility often get treated as separate concerns instead of one delivery problem.',
@@ -689,6 +1183,7 @@ export const systemThemes: SystemTheme[] = [
 const orderedSystemIds = [
   'vifg-nonprofit-platform',
   'weatherforge',
+  'rageatm',
   'dgm',
   'dealerflow',
   'stormiq',
