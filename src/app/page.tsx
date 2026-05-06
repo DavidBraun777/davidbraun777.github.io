@@ -2,9 +2,7 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
-import { SignalGrid } from '@/components/site/signal-grid'
-import { SectionHeader } from '@/components/ui/section-header'
-import { companySignals, conversionPoints, currentWorkReferences, homeSignals, profile } from '@/data/profile'
+import { profile } from '@/data/profile'
 import { productionSystems, researchSystems } from '@/data/systems'
 import { createPageMetadata } from '@/lib/seo'
 
@@ -15,17 +13,43 @@ export const metadata: Metadata = createPageMetadata({
   path: '/',
 })
 
+const primaryCtaClass =
+  'inline-flex items-center gap-2 rounded-full border border-primary-800/10 bg-primary-700 px-6 py-3 text-sm font-medium text-white shadow-[0_18px_40px_-26px_rgba(10,41,104,0.5)] transition-colors hover:bg-primary-800'
+
+const secondaryCtaClass =
+  'inline-flex items-center gap-2 rounded-full border border-border-subtle bg-background-elevated px-6 py-3 text-sm font-medium text-text-secondary transition-colors hover:bg-background-subtle hover:text-text-primary'
+
+const startingPoints = [
+  'Leads are coming in, but follow-up still depends on manual work.',
+  'Important information is copied between systems by hand.',
+  'The team is spending too much time routing requests and chasing updates.',
+]
+
+const capabilityAreas = [
+  {
+    title: 'Workflow automation',
+    description: 'Reduce repeated routing, status checks, follow-up, and manual handling.',
+  },
+  {
+    title: 'System integration',
+    description:
+      'Move the right information between forms, inboxes, CRMs, dashboards, and internal tools.',
+  },
+  {
+    title: 'Data movement',
+    description: 'Clean up operational data flows so reporting, handoffs, and decisions are less fragile.',
+  },
+  {
+    title: 'AI and dashboard support',
+    description: 'Use dashboards, data pipelines, or grounded assistants when they support the workflow.',
+  },
+]
+
 export default function Home() {
   const featuredProduction = productionSystems[0]
-  const researchPreview = researchSystems.slice(0, 2).map((system) => system.name).join(' and ')
-  const homepageTrustSignals = homeSignals.slice(0, 2)
-  const homepageConversionPoints = conversionPoints.slice(0, 3)
-  const featuredProductionResult =
-    'Public site serving VIFG since 2020 with AWS hosting, repeatable releases, and accessibility-first delivery.'
-  const primaryCtaClass =
-    'inline-flex items-center gap-2 rounded-full border border-primary-800/10 bg-primary-700 px-6 py-3 text-sm font-medium text-white shadow-[0_18px_40px_-26px_rgba(10,41,104,0.5)] transition-colors hover:bg-primary-800'
-  const secondaryCtaClass =
-    'inline-flex items-center gap-2 rounded-full border border-border-subtle bg-background-elevated px-6 py-3 text-sm font-medium text-text-secondary transition-colors hover:bg-background-subtle hover:text-text-primary'
+  const secondaryTechnicalProof = researchSystems.filter((system) =>
+    ['weatherforge', 'rageatm'].includes(system.id)
+  )
 
   return (
     <div className="pb-16">
@@ -47,17 +71,11 @@ export default function Home() {
               </p>
 
               <div className="mt-8 flex flex-wrap gap-3">
-                <Link
-                  href="/contact"
-                  className={primaryCtaClass}
-                >
+                <Link href="/contact" className={primaryCtaClass}>
                   Book a Call
                   <ArrowRight className="h-4 w-4" />
                 </Link>
-                <Link
-                  href="/services"
-                  className={secondaryCtaClass}
-                >
+                <Link href="/services" className={secondaryCtaClass}>
                   View Services
                   <ArrowRight className="h-4 w-4" />
                 </Link>
@@ -69,11 +87,7 @@ export default function Home() {
                 Common starting points
               </p>
               <div className="mt-5 space-y-3">
-                {[
-                  'Leads are coming in, but follow-up still depends on manual work.',
-                  'Important information is copied between systems by hand.',
-                  'The team is spending too much time routing requests and chasing updates.',
-                ].map((item) => (
+                {startingPoints.map((item) => (
                   <div
                     key={item}
                     className="rounded-2xl border border-border-subtle bg-background-subtle px-4 py-4 text-sm leading-7 text-text-secondary"
@@ -104,10 +118,9 @@ export default function Home() {
                 Strongest public proof first.
               </h2>
               <p className="mt-4 max-w-xl text-base leading-8 text-text-secondary">
-                Start with the public production system. After that, the current
-                in-progress focus is {researchPreview}, the systems being built as the
-                foundation for StormIQ. The deeper proof stays on the case studies page
-                so the homepage remains a short preview instead of a full portfolio.
+                Start with the public production system. The technical prototypes are
+                still available for review, but VIFG is the clearest proof of delivery,
+                accessibility ownership, and production stewardship.
               </p>
               <Link
                 href="/case-studies"
@@ -121,7 +134,9 @@ export default function Home() {
             {featuredProduction ? (
               <article className="rounded-[1.5rem] border border-border-subtle bg-background-elevated p-5 shadow-sm sm:p-6">
                 <div className="flex flex-wrap items-center gap-2">
-                  <Badge variant="secondary">{featuredProduction.caseStudyStage}</Badge>
+                  <Badge variant="secondary">
+                    {featuredProduction.contextLabel ?? featuredProduction.caseStudyStage}
+                  </Badge>
                   <Badge variant="outline">Public since 2020</Badge>
                 </div>
                 <h3 className="mt-3 text-xl font-semibold tracking-tight text-text-primary sm:text-2xl">
@@ -132,7 +147,7 @@ export default function Home() {
                 </p>
 
                 <div className="mt-4 grid gap-3 sm:grid-cols-2">
-                    <div className="rounded-xl border border-border-subtle bg-background-subtle p-3">
+                  <div className="rounded-xl border border-border-subtle bg-background-subtle p-3">
                     <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-text-secondary">
                       Role
                     </p>
@@ -145,7 +160,8 @@ export default function Home() {
                       Result
                     </p>
                     <p className="mt-1 text-sm font-medium text-text-primary">
-                      {featuredProductionResult}
+                      Public site serving VIFG since 2020 with AWS hosting,
+                      repeatable releases, and accessibility-first delivery.
                     </p>
                   </div>
                 </div>
@@ -164,103 +180,106 @@ export default function Home() {
       </section>
 
       <section className="section">
-        <div className="mx-auto max-w-7xl px-4 sm:px-6 lg:px-8">
-          <SectionHeader
-            title="Why clients hire me"
-            subtitle="The trust story is simple: real delivery experience, clear communication, and systems that hold up after launch."
-          />
-
-          <div className="grid gap-6 lg:grid-cols-[1fr_1fr] lg:items-start">
-            <div className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-5 shadow-sm sm:p-6">
-              <h2 className="text-2xl font-semibold tracking-tight text-text-primary">
-                Real delivery experience
-              </h2>
-              <p className="mt-4 text-base leading-8 text-text-secondary">
-                The background behind this work includes Target, GE Aerospace,
-                Securian, and U.S. Bank, plus current public delivery work across VIFG,
-                time2move.io, and arklandscaping.net alongside ongoing Treasurer oversight
-                for the nonprofit.
-              </p>
-              <div className="mt-5 flex flex-wrap gap-3">
-                {companySignals.map((company) => (
-                  <span
-                    key={company}
-                    className="rounded-full border border-border-subtle bg-background-subtle px-3 py-1.5 text-sm text-text-secondary"
-                  >
-                    {company}
-                  </span>
-                ))}
-              </div>
-              <div className="mt-5 flex flex-wrap gap-4 text-sm text-text-secondary">
-                {currentWorkReferences.map((reference) => (
-                  <Link
-                    key={reference.href}
-                    href={reference.href}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="inline-flex items-center gap-2 text-link-primary transition-colors hover:text-link-primary-hover"
-                  >
-                    {reference.label}
-                    <ArrowRight className="h-3.5 w-3.5" />
-                  </Link>
-                ))}
-              </div>
-              <p className="mt-5 text-sm leading-7 text-text-secondary">
-                {profile.faithStatement}
-              </p>
-              <Link
-                href="/why-work-with-me"
-                className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-link-primary transition-colors hover:text-link-primary-hover"
-              >
-                See background and resume details
-                <ArrowRight className="h-4 w-4" />
-              </Link>
-            </div>
-
-            <SignalGrid items={homepageTrustSignals} columns="two" headingLevel="h3" />
+        <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
+          <div className="mb-7">
+            <p className="font-mono text-xs uppercase tracking-[0.22em] text-link-primary">
+              What I build around the workflow
+            </p>
+            <h2 className="mt-3 text-3xl font-semibold tracking-tight text-text-primary">
+              Practical systems for messy operations.
+            </h2>
+            <p className="mt-4 max-w-3xl text-base leading-8 text-text-secondary">
+              Applied AI, dashboards, and data pipelines are available when they help the
+              workflow. They are not the top-level offer.
+            </p>
           </div>
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+            {capabilityAreas.map((area) => (
+              <article
+                key={area.title}
+                className="rounded-[1.25rem] border border-border-subtle bg-background-elevated p-5 shadow-sm"
+              >
+                <h3 className="text-lg font-semibold text-text-primary">{area.title}</h3>
+                <p className="mt-3 text-sm leading-7 text-text-secondary">
+                  {area.description}
+                </p>
+              </article>
+            ))}
+          </div>
+          <Link
+            href="/services"
+            className="mt-6 inline-flex items-center gap-2 text-sm font-medium text-link-primary transition-colors hover:text-link-primary-hover"
+          >
+            See services
+            <ArrowRight className="h-4 w-4" />
+          </Link>
         </div>
       </section>
 
       <section className="section">
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
-          <div className="rounded-[2rem] border border-border-subtle bg-background-elevated p-6 shadow-sm sm:p-8">
-            <div className="grid gap-6 lg:grid-cols-[1fr_0.95fr] lg:items-start">
+          <div className="rounded-[1.75rem] border border-border-subtle bg-background-subtle p-6 shadow-sm sm:p-7">
+            <div className="grid gap-6 lg:grid-cols-[0.9fr_1.1fr] lg:items-start">
               <div>
                 <p className="font-mono text-xs uppercase tracking-[0.22em] text-link-primary">
-                  Next step
+                  Secondary technical proof
                 </p>
-                <h2 className="mt-4 text-3xl font-semibold tracking-tight text-text-primary">
-                  Tell me about the workflow that needs to run better.
+                <h2 className="mt-3 text-3xl font-semibold tracking-tight text-text-primary">
+                  Prototype and academic examples stay labeled.
                 </h2>
-                <p className="mt-4 max-w-2xl text-base leading-8 text-text-secondary">
-                  The contact page starts with a short intake form so I can understand the
-                  problem before the conversation.
+                <p className="mt-4 text-base leading-8 text-text-secondary">
+                  WeatherForge and RAGeATM are useful technical evidence for data
+                  pipelines, dashboards, retrieval, and refusal boundaries. They are
+                  intentionally secondary to production proof.
                 </p>
-                <div className="mt-8">
-                  <Link
-                    href="/contact"
-                    className={primaryCtaClass}
-                  >
-                    Book a Call
-                    <ArrowRight className="h-4 w-4" />
-                  </Link>
-                </div>
               </div>
-
-              <div className="space-y-4">
-                {homepageConversionPoints.map((point) => (
-                  <article
-                    key={point.title}
-                    className="rounded-[1.5rem] border border-border-subtle bg-background-subtle px-5 py-4"
+              <div className="grid gap-3 sm:grid-cols-2">
+                {secondaryTechnicalProof.map((project) => (
+                  <Link
+                    key={project.id}
+                    href={`/case-studies/${project.id}`}
+                    className="group rounded-[1.25rem] border border-border-subtle bg-background-elevated p-5 shadow-sm transition-colors hover:border-border-strong hover:bg-background"
                   >
-                    <h3 className="text-lg font-semibold text-text-primary">{point.title}</h3>
+                    <span className="rounded-full border border-border-subtle bg-background-subtle px-3 py-1 text-xs font-medium text-text-secondary">
+                      {project.contextLabel ?? project.currentState}
+                    </span>
+                    <h3 className="mt-4 text-xl font-semibold text-text-primary">
+                      {project.name}
+                    </h3>
                     <p className="mt-2 text-sm leading-7 text-text-secondary">
-                      {point.description}
+                      {project.shortTitle ?? project.summary}
                     </p>
-                  </article>
+                    <span className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-link-primary group-hover:text-link-primary-hover">
+                      Read technical case study
+                      <ArrowRight className="h-4 w-4" />
+                    </span>
+                  </Link>
                 ))}
               </div>
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <section className="section">
+        <div className="mx-auto max-w-5xl px-4 sm:px-6 lg:px-8">
+          <div className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 text-center shadow-sm sm:p-8">
+            <p className="font-mono text-xs uppercase tracking-[0.22em] text-link-primary">
+              Next step
+            </p>
+            <h2 className="mx-auto mt-3 max-w-3xl text-3xl font-semibold tracking-tight text-text-primary">
+              Tell me about the workflow that needs to run better.
+            </h2>
+            <p className="mx-auto mt-4 max-w-2xl text-base leading-8 text-text-secondary">
+              Send the workflow, handoff, lead process, data movement, or internal
+              system problem. I will help decide whether a scoped build or review makes
+              sense.
+            </p>
+            <div className="mt-8">
+              <Link href="/contact" className={primaryCtaClass}>
+                Book a Call
+                <ArrowRight className="h-4 w-4" />
+              </Link>
             </div>
           </div>
         </div>

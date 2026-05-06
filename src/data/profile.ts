@@ -69,10 +69,10 @@ export const profile = {
     'I help small and midsized businesses reduce manual work by connecting lead flows, data movement, internal handoffs, and cloud-backed automation into dependable systems.',
   heroHeadline: 'Remove manual work from the workflows that keep slowing your business down.',
   heroDescription:
-    'I design and build automation, integrations, and internal tools for businesses that are tired of re-entry, missed follow-up, and disconnected systems.',
+    'I design and build automation, integrations, dashboards, internal tools, and AI-assisted workflow pieces for businesses that are tired of re-entry, missed follow-up, and disconnected systems.',
   audience:
-    'Best fit for owners and operators who need lead handling, internal workflows, or data movement to work with less manual effort.',
-  availability: 'Open for consulting projects, automation builds, and operational software work.',
+    'Best fit for owners and operators who need lead handling, internal workflows, data movement, or operational software to work with less manual effort.',
+  availability: 'Open for consulting projects, automation builds, integration work, and dependable operational software.',
   responseTime: 'I usually reply within one business day.',
   graduateStatus: "Master's student in Artificial Intelligence at the University of St. Thomas.",
   graduateProgram: 'Completing a Big Data certificate alongside the program.',
@@ -101,7 +101,7 @@ export const homeSignals: Signal[] = [
   },
   {
     title: 'Enterprise background',
-    value: 'Built inside large operating environments',
+    value: 'Software work in large operating environments',
     detail:
       'Experience across Target, GE Aerospace, Securian, and U.S. Bank shows up in stronger delivery, reliability, and communication.',
     icon: Building2,
@@ -110,14 +110,14 @@ export const homeSignals: Signal[] = [
     title: 'Automation focus',
     value: 'Manual work reduced through software',
     detail:
-      'The work consistently centers on removing repetitive routing, processing, and follow-up from business operations.',
+      'The work consistently centers on removing repetitive routing, processing, follow-up, and data movement from business operations.',
     icon: Workflow,
   },
   {
     title: 'System ownership',
     value: 'From architecture to deployment',
     detail:
-      'I work across software, data flow, infrastructure, automation, and handoff so the system holds up after launch.',
+      'I work across software, data flow, infrastructure, automation, dashboards, and handoff so the system holds up after launch.',
     icon: Blocks,
   },
 ]
@@ -160,7 +160,7 @@ export const servicesOffered: ServiceOffering[] = [
       'Leads get lost when calls, follow-up, and CRM updates depend on manual steps.',
     outcome:
       'Faster response, cleaner handoff, and fewer missed opportunities.',
-    example: 'WeatherForge event intake feeding future StormIQ routing workflows.',
+    example: 'Event intake, follow-up routing, and data capture that can support later StormIQ-style automation.',
     icon: Sparkles,
   },
   {
@@ -178,8 +178,17 @@ export const servicesOffered: ServiceOffering[] = [
       'Teams spend too much time routing requests, checking status, and pushing work to the next step.',
     outcome:
       'Routine work gets handled automatically so the team can focus on decisions that matter.',
-    example: 'DGM orchestration layer for reviewable multi-step workflows.',
+    example: 'DGM-style orchestration patterns for reviewable multi-step workflows.',
     icon: Workflow,
+  },
+  {
+    title: 'Data, dashboard, and AI support',
+    problem:
+      'Useful operational decisions depend on messy files, dashboards, documents, or AI helpers that need guardrails.',
+    outcome:
+      'Practical dashboards, data pipelines, or grounded assistants that support the workflow without becoming the whole strategy.',
+    example: 'WeatherForge and RAGeATM show the technical side of this work as prototype and academic proof.',
+    icon: Blocks,
   },
   {
     title: 'Long-term system reliability',
@@ -214,22 +223,22 @@ export const processPreview: ProcessStep[] = [
   {
     title: 'Discovery',
     description:
-      'Start with the workflow, the bottlenecks, and the manual work that is actually costing time or revenue.',
+      'Start with the workflow, the bottlenecks, the users, and the manual work that is actually costing time or revenue.',
   },
   {
     title: 'Design',
     description:
-      'Map the system, data movement, rules, edge cases, and handoffs before choosing what gets automated.',
+      'Map the system, data movement, rules, edge cases, AI/data boundaries if relevant, and handoffs before choosing what gets automated.',
   },
   {
     title: 'Build',
     description:
-      'Implement the workflow, integration, UI, and backend pieces needed to make the system usable in real work.',
+      'Implement the workflow, integration, UI, backend, dashboard, assistant, or internal tool needed to make the system usable in real work.',
   },
   {
     title: 'Deploy',
     description:
-      'Ship the operational version with hosting, security, observability, and release discipline in place.',
+      'Ship the operational version with hosting, security, observability, release discipline, and clear limitations in place.',
   },
   {
     title: 'Iterate',
@@ -252,7 +261,7 @@ export const credibilityPoints: CredibilityPoint[] = [
   {
     title: 'Hands-on delivery',
     description:
-      'I can scope the work, build it, ship it, and support it instead of handing off a slide deck.',
+      'I can scope the work, build it, ship it, document the limits, and support it instead of handing off a slide deck.',
   },
   {
     title: 'Values that travel into the work',
@@ -265,13 +274,13 @@ export const conversionPoints: ConversionPoint[] = [
   {
     title: 'Best fit',
     description:
-      'You already know a workflow, handoff, or lead process is wasting time.',
+      'You already know a workflow, handoff, lead process, data process, or internal system is wasting time.',
     icon: Sparkles,
   },
   {
     title: 'What happens next',
     description:
-      'The first call is used to understand the problem and decide whether a scoped build makes sense.',
+      'The first call is used to understand the problem and decide whether a scoped build or review makes sense.',
     icon: ArrowRight,
   },
   {
@@ -291,7 +300,7 @@ export const contactPaths: ContactPath[] = [
   {
     title: 'Book a call',
     description:
-      'Use this if you want to talk through a workflow problem, an integration need, or a system you want built.',
+      'Use this if you want to talk through a workflow problem, an integration need, a data movement issue, or a system you want built.',
     href: '/contact',
     label: 'Book a Call',
     icon: Mail,

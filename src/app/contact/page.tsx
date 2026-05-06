@@ -6,7 +6,7 @@ import { createPageMetadata } from '@/lib/seo'
 export const metadata: Metadata = createPageMetadata({
   title: 'Contact',
   description:
-    'Start a consulting conversation about workflow automation, system integration, or operational software.',
+    'Start a consulting conversation about workflow automation, system integration, operational software, data movement, or practical AI-assisted workflow support.',
   path: '/contact',
 })
 
@@ -17,7 +17,7 @@ export default function ContactPage() {
         <PageIntro
           eyebrow="Contact"
           title="Tell me about the workflow you want to improve."
-          description="Start with the intake form so I can understand the problem before we talk. If you prefer, you can still book a short call after."
+          description="Start with the intake form so I can understand the workflow, bottleneck, users, constraints, and desired outcome before we talk."
         />
       </div>
       <Contact

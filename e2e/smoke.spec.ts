@@ -30,16 +30,35 @@ test.describe('Smoke tests', () => {
     await expect(page).toHaveTitle(/Writing/)
   })
 
-  test('case studies page shows the current in-progress flagship systems', async ({ page }) => {
+  test('case studies page shows VIFG before secondary technical proof', async ({ page }) => {
     await page.goto('/case-studies')
+    await expect(page.getByRole('heading', { name: /featured public production proof/i })).toBeVisible()
+    await expect(page.getByRole('heading', { name: /vifg nonprofit platform/i }).first()).toBeVisible()
     await expect(page.getByRole('heading', { name: /weatherforge/i })).toBeVisible()
-    await expect(page.getByRole('heading', { name: /^dgm$/i })).toBeVisible()
+    await expect(page.getByRole('heading', { name: /rageatm/i })).toBeVisible()
+
+    const mainText = await page.locator('main').innerText()
+    expect(mainText.indexOf('VIFG Nonprofit Platform')).toBeLessThan(
+      mainText.indexOf('WeatherForge')
+    )
   })
 
   test('homepage primary CTA goes to contact', async ({ page }) => {
     await page.goto('/')
+    await expect(
+      page.getByRole('heading', {
+        name: /remove manual work from the workflows that keep slowing your business down/i,
+      })
+    ).toBeVisible()
     await page.getByRole('link', { name: /^book a call$/i }).first().click()
     await expect(page).toHaveURL(/\/contact$/)
+  })
+
+  test('contact path is workflow-first', async ({ page }) => {
+    await page.goto('/contact')
+    await expect(
+      page.getByRole('heading', { name: /tell me about the workflow you want to improve/i }).first()
+    ).toBeVisible()
   })
 
   test('legacy routes redirect to the new IA', async ({ page }) => {

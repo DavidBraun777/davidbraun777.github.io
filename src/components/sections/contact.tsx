@@ -36,10 +36,10 @@ const conversationTypeOptions = [
 ]
 
 const serviceOptions = [
-  { value: 'applied-ai', label: 'Lead automation' },
   { value: 'workflow-automation', label: 'Workflow automation' },
   { value: 'platform-infra', label: 'System integration' },
   { value: 'product-delivery', label: 'Operational software build' },
+  { value: 'applied-ai', label: 'Data, dashboard, or AI-assisted workflow' },
   { value: 'accessibility', label: 'Public-facing accessible system' },
   { value: 'other', label: 'Other' },
 ]
@@ -55,10 +55,11 @@ const fitPoints = [
   'A repeated workflow is taking too much manual effort.',
   'Important information has to move across multiple tools or systems.',
   'Leads or requests are slipping because follow-up is inconsistent.',
+  'Messy data, dashboards, or AI assistants need to support the workflow without creating new risk.',
 ]
 
 const nextStepPoints = [
-  'I review the workflow, bottleneck, and goal.',
+  'I review the workflow, bottleneck, users, constraints, and goal.',
   'If there is a fit, I follow up with a scoped next step.',
   'If there is not a fit, I will say so directly.',
 ]
@@ -67,7 +68,7 @@ export function Contact({
   calLink,
   showSectionHeader = true,
   title = 'Start with the intake form',
-  subtitle = 'Use the form to explain the workflow, the problem, and what better would look like.',
+  subtitle = 'Use the form to explain the workflow, the bottleneck, the users, and what better would look like.',
   sectionId = 'contact',
 }: ContactProps) {
   const [formStatus, setFormStatus] = useState<FormStatus>('idle')
@@ -138,7 +139,7 @@ export function Contact({
             whileInView={{ opacity: 1, x: 0 }}
             viewport={{ once: true }}
             transition={{ duration: 0.35, ease: 'easeOut' }}
-            className="lg:self-start"
+            className="space-y-5 lg:self-start"
           >
             <div className="rounded-[2rem] border border-border-subtle bg-background-elevated p-6 shadow-sm sm:p-8">
               <div className="max-w-3xl">
@@ -240,7 +241,7 @@ export function Contact({
                     <Textarea
                       id="contact-message"
                       label="What is happening now, and what do you want instead?"
-                      placeholder="Describe the workflow, what is breaking, and what outcome you want."
+                      placeholder="Describe the workflow, what is breaking, who uses it, any data or AI constraints, and what outcome you want."
                       rows={7}
                       value={formData.message}
                       onChange={(event) =>
@@ -301,6 +302,42 @@ export function Contact({
                 </div>
               </form>
             </div>
+
+            <div className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm">
+              <div className="flex items-start gap-4">
+                <div className="rounded-2xl bg-primary-50 p-3 text-primary-700 dark:bg-primary-950/60 dark:text-primary-200">
+                  <Calendar className="h-6 w-6" />
+                </div>
+                <div>
+                  <h2 className="text-xl font-semibold text-text-primary">
+                    Prefer a short call?
+                  </h2>
+                  <p className="mt-3 text-sm leading-7 text-text-secondary">
+                    If you would rather talk first, you can still book a short call. The
+                    form above is the better default because it gives me context.
+                  </p>
+                  <a
+                    href={calendlyUrl ?? `#${sectionId}-fields`}
+                    target={calendlyUrl ? '_blank' : undefined}
+                    rel={calendlyUrl ? 'noopener noreferrer' : undefined}
+                    className="mt-5 inline-flex items-center gap-2 rounded-full border border-border-subtle bg-background-subtle px-4 py-2 text-sm font-medium text-text-secondary transition-colors hover:bg-background-elevated hover:text-text-primary"
+                  >
+                    Optional: book a short call
+                    <ArrowUpRight className="h-4 w-4" />
+                  </a>
+                </div>
+              </div>
+            </div>
+
+            <article className="rounded-[1.5rem] border border-border-subtle bg-background-elevated p-5 shadow-sm">
+              <div className="inline-flex rounded-2xl bg-primary-50 p-3 text-primary-700 dark:bg-primary-950/60 dark:text-primary-200">
+                <Clock className="h-5 w-5" />
+              </div>
+              <h2 className="mt-4 text-lg font-semibold text-text-primary">Response time</h2>
+              <p className="mt-3 text-sm leading-7 text-text-secondary">
+                {profile.responseTime}
+              </p>
+            </article>
           </motion.div>
 
           <motion.aside
@@ -332,8 +369,8 @@ export function Contact({
                   </h2>
                   <p className="mt-3 text-sm leading-7 text-text-secondary">
                     You&apos;ll be talking directly with David Braun, the person who
-                    scopes the problem, builds the system, and follows through after
-                    launch.
+                    scopes the problem, builds the system, documents the limits, and
+                    follows through after launch.
                   </p>
                   <p className="mt-3 text-sm leading-7 text-text-secondary">
                     {profile.responseTime} If it is not a fit, I will say so directly.
@@ -372,43 +409,7 @@ export function Contact({
               </div>
             </div>
 
-            <div className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm">
-              <div className="flex items-start gap-4">
-                <div className="rounded-2xl bg-primary-50 p-3 text-primary-700 dark:bg-primary-950/60 dark:text-primary-200">
-                  <Calendar className="h-6 w-6" />
-                </div>
-                <div>
-                  <h2 className="text-xl font-semibold text-text-primary">
-                    Prefer a short call?
-                  </h2>
-                  <p className="mt-3 text-sm leading-7 text-text-secondary">
-                    If you would rather talk first, you can still book a short call. The
-                    form above is the better default because it gives me context.
-                  </p>
-                  <a
-                    href={calendlyUrl ?? `#${sectionId}-fields`}
-                    target={calendlyUrl ? '_blank' : undefined}
-                    rel={calendlyUrl ? 'noopener noreferrer' : undefined}
-                    className="mt-5 inline-flex items-center gap-2 rounded-full border border-border-subtle bg-background-subtle px-4 py-2 text-sm font-medium text-text-secondary transition-colors hover:bg-background-elevated hover:text-text-primary"
-                  >
-                    Optional: book a short call
-                    <ArrowUpRight className="h-4 w-4" />
-                  </a>
-                </div>
-              </div>
-            </div>
-
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-1">
-              <article className="rounded-[1.5rem] border border-border-subtle bg-background-elevated p-5 shadow-sm">
-                <div className="inline-flex rounded-2xl bg-primary-50 p-3 text-primary-700 dark:bg-primary-950/60 dark:text-primary-200">
-                  <Clock className="h-5 w-5" />
-                </div>
-                <h2 className="mt-4 text-lg font-semibold text-text-primary">Response time</h2>
-                <p className="mt-3 text-sm leading-7 text-text-secondary">
-                  {profile.responseTime}
-                </p>
-              </article>
-
               <article className="rounded-[1.5rem] border border-border-subtle bg-background-elevated p-5 shadow-sm">
                 <div className="inline-flex rounded-2xl bg-primary-50 p-3 text-primary-700 dark:bg-primary-950/60 dark:text-primary-200">
                   <FileText className="h-5 w-5" />

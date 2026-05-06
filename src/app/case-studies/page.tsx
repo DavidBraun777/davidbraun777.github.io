@@ -2,39 +2,56 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import { PageIntro } from '@/components/site/page-intro'
+import { TechTag } from '@/components/site/tech-tag'
 import { Badge } from '@/components/ui/badge'
 import { ExternalLinkAction } from '@/components/ui/external-link-action'
-import { pilotSystems, productionSystems, researchSystems, type FeaturedSystemCaseStudy } from '@/data/systems'
+import {
+  pilotSystems,
+  productionSystems,
+  researchSystems,
+  type FeaturedSystemCaseStudy,
+} from '@/data/systems'
 import { createPageMetadata } from '@/lib/seo'
 
 export const metadata: Metadata = createPageMetadata({
   title: 'Case Studies',
   description:
-    'Production, pilot, and R&D case studies showing workflow automation, system integration, and delivery work.',
+    'Production, pilot, prototype, and R&D case studies showing workflow automation, system integration, data systems, and delivery work.',
   path: '/case-studies',
 })
 
+function isPrototypeOrAcademic(system: FeaturedSystemCaseStudy) {
+  return (
+    system.contextLabel?.includes('Prototype') ||
+    system.currentState === 'Applied dashboard prototype' ||
+    system.currentState === 'Local RAG prototype' ||
+    system.currentState === 'Prototype'
+  )
+}
+
 function StageSection({
+  eyebrow,
   title,
   subtitle,
   systems,
 }: {
+  eyebrow: string
   title: string
   subtitle: string
   systems: FeaturedSystemCaseStudy[]
 }) {
+  if (systems.length === 0) {
+    return null
+  }
+
   return (
     <section className="space-y-5">
       <div>
         <p className="font-mono text-xs uppercase tracking-[0.22em] text-link-primary">
-          {title}
+          {eyebrow}
         </p>
         <h2 className="mt-3 text-3xl font-semibold tracking-tight text-text-primary">
-          {title === 'Production'
-            ? 'Live systems and verified delivery'
-            : title === 'Pilot'
-              ? 'Operational workflows being tested in the field'
-              : 'Early-stage systems with clear architecture and workflow logic'}
+          {title}
         </h2>
         <p className="mt-3 max-w-3xl text-base leading-8 text-text-secondary">{subtitle}</p>
       </div>
@@ -49,14 +66,16 @@ function StageSection({
 
 export default function CaseStudiesPage() {
   const featuredProduction = productionSystems[0]
+  const prototypeSystems = researchSystems.filter(isPrototypeOrAcademic)
+  const activeResearchSystems = researchSystems.filter((system) => !isPrototypeOrAcademic(system))
 
   return (
     <div className="min-h-screen pb-12 pt-8 md:pt-10">
       <div className="mx-auto max-w-7xl space-y-12 px-4 sm:px-6 lg:px-8">
         <PageIntro
           eyebrow="Case Studies"
-          title="A portfolio of production, pilot, and R&D work."
-          description="VIFG is still the strongest public proof, but the rest of the work stays visible so you can see what is live, what is in pilot, and what is now under active development. Current build focus is moving toward WeatherForge and DGM as the systems underneath the broader StormIQ direction."
+          title="A portfolio of production, pilot, prototype, and R&D work."
+          description="VIFG is still the strongest public proof. The rest of the work stays visible so you can see what is live, what is in pilot, what is a prototype or academic build, and what is still under active development."
           actions={[{ label: 'Book a Call', href: '/contact' }]}
         />
 
@@ -71,13 +90,15 @@ export default function CaseStudiesPage() {
               </h2>
               <p className="mt-3 max-w-3xl text-base leading-8 text-text-secondary">
                 VIFG leads because it is the clearest public example of long-term delivery,
-                accessibility ownership, and operational responsibility.
+                accessibility ownership, operational responsibility, and production stewardship.
               </p>
             </div>
 
             <article className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm sm:p-7">
               <div className="flex flex-wrap items-center gap-2">
-                <Badge variant="secondary">{featuredProduction.caseStudyStage}</Badge>
+                <Badge variant="secondary">
+                  {featuredProduction.contextLabel ?? featuredProduction.caseStudyStage}
+                </Badge>
                 <Badge variant="outline">{featuredProduction.currentState}</Badge>
                 <Badge variant="outline">Featured proof</Badge>
               </div>
@@ -93,7 +114,7 @@ export default function CaseStudiesPage() {
 
                   <div className="mt-5 grid gap-4 sm:grid-cols-2">
                     <div className="rounded-[1.25rem] border border-border-subtle bg-background-subtle p-4">
-                      <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-text-muted">
+                      <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-text-secondary">
                         Problem
                       </p>
                       <p className="mt-2 text-sm leading-7 text-text-secondary">
@@ -101,7 +122,7 @@ export default function CaseStudiesPage() {
                       </p>
                     </div>
                     <div className="rounded-[1.25rem] border border-border-subtle bg-background-subtle p-4">
-                      <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-text-muted">
+                      <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-text-secondary">
                         Result
                       </p>
                       <p className="mt-2 text-sm leading-7 text-text-secondary">
@@ -122,8 +143,8 @@ export default function CaseStudiesPage() {
                     Public-facing proof
                   </p>
                   <p className="mt-3 text-sm leading-7 text-text-secondary">
-                    Live site at vifg.org/home, backed by repeatable deployment, accessibility
-                    support, and ongoing nonprofit operational stewardship.
+                    Live site at vifg.org/home, backed by repeatable deployment,
+                    accessibility support, and ongoing nonprofit operational stewardship.
                   </p>
                   <div className="mt-5 flex flex-wrap gap-4">
                     <Link
@@ -133,7 +154,9 @@ export default function CaseStudiesPage() {
                       Read full case study
                       <ArrowRight className="h-4 w-4" />
                     </Link>
-                    <ExternalLinkAction href={featuredProduction.externalUrl ?? 'https://www.vifg.org/home'}>
+                    <ExternalLinkAction
+                      href={featuredProduction.externalUrl ?? 'https://www.vifg.org/home'}
+                    >
                       Visit live site
                     </ExternalLinkAction>
                   </div>
@@ -144,15 +167,24 @@ export default function CaseStudiesPage() {
         ) : null}
 
         <StageSection
-          title="Pilot"
+          eyebrow="Pilot / client-facing"
+          title="Operational workflows being tested in the field"
           subtitle="Pilot systems show where real workflows are already moving through the software, even if the product is not yet at full production maturity."
           systems={pilotSystems}
         />
 
         <StageSection
-          title="R&D"
-          subtitle="R&D work stays visible because it shows how I handle automation boundaries, validation, data movement, and system design before production rollout. WeatherForge and DGM are the current build focus, with StormIQ positioned honestly as the broader direction they support."
-          systems={researchSystems}
+          eyebrow="Prototype / academic"
+          title="Technical proof with honest limits"
+          subtitle="Prototype and academic work stays visible for technical review, but it does not outrank public production proof. WeatherForge and RAGeATM belong here until they have production usage evidence."
+          systems={prototypeSystems}
+        />
+
+        <StageSection
+          eyebrow="R&D / active build"
+          title="Early-stage systems with clear architecture and workflow logic"
+          subtitle="R&D work shows how automation boundaries, validation, data movement, and system design are handled before production rollout. DGM and StormIQ stay positioned as active build direction, not finished products."
+          systems={activeResearchSystems}
         />
 
         <div>
@@ -173,7 +205,7 @@ function CaseStudyCard({ system }: { system: FeaturedSystemCaseStudy }) {
   return (
     <article className="rounded-[1.5rem] border border-border-subtle bg-background-elevated p-5 shadow-sm">
       <div className="flex flex-wrap items-center gap-2">
-        <Badge variant="secondary">{system.caseStudyStage}</Badge>
+        <Badge variant="secondary">{system.contextLabel ?? system.caseStudyStage}</Badge>
         <Badge variant="outline">{system.currentState}</Badge>
         <Badge variant="outline">{system.themeTitle}</Badge>
       </div>
@@ -181,24 +213,15 @@ function CaseStudyCard({ system }: { system: FeaturedSystemCaseStudy }) {
       <h3 className="mt-4 text-xl font-semibold tracking-tight text-text-primary">
         {system.name}
       </h3>
-      <p className="mt-2 text-sm leading-7 text-text-secondary">{system.summary}</p>
+      <p className="mt-3 text-sm leading-7 text-text-secondary">{system.summary}</p>
 
-      <div className="mt-4 grid gap-3 sm:grid-cols-2">
-        <div className="rounded-[1.15rem] border border-border-subtle bg-background-subtle p-3">
-          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-text-muted">
-            Problem
-          </p>
-          <p className="mt-2 text-sm leading-7 text-text-secondary">{system.problem}</p>
-        </div>
-        <div className="rounded-[1.15rem] border border-border-subtle bg-background-subtle p-3">
-          <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-text-muted">
-            Result
-          </p>
-          <p className="mt-2 text-sm leading-7 text-text-secondary">{system.outcome}</p>
-        </div>
+      <div className="mt-5 flex flex-wrap gap-2">
+        {system.stack.slice(0, 5).map((item) => (
+          <TechTag key={item}>{item}</TechTag>
+        ))}
       </div>
 
-      <div className="mt-4 flex flex-wrap gap-4">
+      <div className="mt-5 flex flex-wrap gap-4">
         <Link
           href={`/case-studies/${system.id}`}
           className="inline-flex items-center gap-2 text-sm font-medium text-link-primary transition-colors hover:text-link-primary-hover"

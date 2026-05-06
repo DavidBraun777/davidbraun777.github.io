@@ -55,6 +55,12 @@ export default function WhyWorkWithMePage() {
               delivery work. That role reinforces the same expectation I bring to client
               work: responsible operations, clear accountability, and follow-through after launch.
             </p>
+            <p>
+              Graduate AI work and technical prototypes such as WeatherForge and RAGeATM
+              support the consulting work, but they do not replace production proof. When
+              a project is academic, a small benchmark, or a local prototype, I label it
+              that way.
+            </p>
           </div>
 
           <div className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm">

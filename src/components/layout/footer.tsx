@@ -21,8 +21,8 @@ export function Footer() {
             {profile.name}
           </Link>
           <p className="mt-3 max-w-md text-sm leading-7 text-[var(--theme-frame-text-muted)]">
-            Consulting for businesses that need workflow automation, better system handoffs,
-            and software that stays dependable after launch.
+            Consulting for businesses that need workflow automation, better system
+            handoffs, and software that stays dependable after launch.
           </p>
           <p className="mt-4 text-sm text-[var(--theme-frame-text-muted)]">
             {profile.faithStatement}
