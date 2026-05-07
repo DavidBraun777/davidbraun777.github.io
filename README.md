@@ -33,6 +33,7 @@ bounded facts, not by making stronger claims.
 
 - [Current State Reassessment](docs/dbraun-current-state-reassessment.md)
 - [Elite Audit - 2026-04-15](docs/audits/elite-audit-2026-04-15.md)
+- [Security and Code Analysis](docs/security-and-analysis.md)
 
 ## Stack
 
@@ -123,6 +124,17 @@ npm run build
 npm run size-check
 npx playwright test e2e/smoke.spec.ts e2e/a11y.spec.ts --project=chromium
 ```
+
+## Security and Analysis
+
+The repo uses GitHub CI, CodeQL, Dependabot alerts/security updates,
+Dependabot malware alerting, SonarQube Cloud / SonarCloud analysis, and Vercel
+preview deployment checks as separate signals. SonarCloud runs on pull requests
+and pushes to `master`; it requires `SONAR_TOKEN` in both Actions secrets and
+Dependabot secrets for Dependabot-originated pull requests.
+
+See [Security and Code Analysis](docs/security-and-analysis.md) for setup notes
+and the post-merge SonarCloud verification checklist.
 
 ## Proof and Honesty Rules
 

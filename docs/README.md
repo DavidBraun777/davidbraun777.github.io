@@ -23,6 +23,9 @@ the planned business website for People's Connection LLC.
 - `execution-playbook.md`
   - Positioning framework for David Braun as a systems thinker/operator
   - 12-week build plan and first-day checklist
+- `security-and-analysis.md`
+  - Current GitHub CI, CodeQL, Dependabot, SonarCloud, and Vercel check stack
+  - SonarCloud setup notes and post-merge verification checklist
 - `niches/`
   - Niche execution playbooks tied to current portfolio credibility
   - Selection framework, per-niche blueprints, and 90-day roadmap
