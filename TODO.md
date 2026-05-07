@@ -25,6 +25,8 @@ operational details from David. Do not invent proof.
 ## P2 Technical Polish
 
 - [ ] Broaden Playwright coverage beyond the current smoke/a11y suite when it catches real deployment risk.
+- [ ] After PR #86 merges, verify the SonarCloud `master` push analysis, Quality Gate, and security hotspots in SonarQube Cloud.
+- [ ] Keep SonarCloud out of required branch protection until it has a few stable runs on normal and Dependabot pull requests.
 - [ ] Add Service or CreativeWork schema only where it maps to real pages and proof.
 - [ ] Add a simple privacy page if GA/contact intake remain live.
 - [ ] Formalize screenshot/diagram naming and placement after the first new proof pack exists.
@@ -38,6 +40,8 @@ operational details from David. Do not invent proof.
 - [ ] Publish more thought-leadership only after proof density improves.
 - [ ] Add testimonials only if they are real, specific, and strong.
 - [ ] Do non-essential UI polish only when attached to a real buyer-facing improvement.
+- [ ] Consider Sonar coverage reporting later if tests produce `coverage/lcov.info`.
+- [ ] Consider OSSF Scorecard or OSV Scanner later; do not add either until current CI/security signals are stable.
 
 ## Done / Retired
 
