@@ -9,7 +9,7 @@ export default function nextConfig(phase: string): NextConfig {
     "style-src 'self' 'unsafe-inline'",
     "img-src 'self' data: blob: https:",
     "font-src 'self'",
-    "connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com https://www.googletagmanager.com" + (isDev ? ' http: ws: wss:' : ''),
+    "connect-src 'self' https://www.google-analytics.com https://region1.google-analytics.com https://www.googletagmanager.com https://www.google.com" + (isDev ? ' http: ws: wss:' : ''),
     "frame-ancestors 'none'",
     "form-action 'self'",
     "base-uri 'self'",

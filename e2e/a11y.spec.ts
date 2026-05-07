@@ -16,32 +16,30 @@ async function waitForClientHydration(page: Page) {
   await expect(page.locator('header')).toBeVisible()
 }
 
+const axePageChecks = [
+  { label: 'homepage', path: '/' },
+  { label: 'writing page', path: '/writing' },
+  { label: 'services page', path: '/services' },
+  { label: 'case studies page', path: '/case-studies' },
+] as const
+
 test.describe('Accessibility', () => {
   test.beforeEach(async ({ page }) => {
     await page.emulateMedia({ reducedMotion: 'reduce' })
   })
 
-  test('homepage has no critical or serious a11y violations', async ({ page }) => {
-    await page.goto('/')
-    await waitForClientHydration(page)
-    await expect(page.getByRole('heading', { level: 1 }).first()).toBeVisible()
-    const results = await new AxeBuilder({ page }).analyze()
-    const violations = results.violations.filter(
-      (v) => v.impact === 'critical' || v.impact === 'serious'
-    )
-    expect(violations, formatViolations(violations)).toEqual([])
-  })
-
-  test('writing page has no critical or serious a11y violations', async ({ page }) => {
-    await page.goto('/writing')
-    await waitForClientHydration(page)
-    await expect(page.getByRole('heading', { level: 1 }).first()).toBeVisible()
-    const results = await new AxeBuilder({ page }).analyze()
-    const violations = results.violations.filter(
-      (v) => v.impact === 'critical' || v.impact === 'serious'
-    )
-    expect(violations, formatViolations(violations)).toEqual([])
-  })
+  for (const { label, path } of axePageChecks) {
+    test(`${label} has no critical or serious a11y violations`, async ({ page }) => {
+      await page.goto(path)
+      await waitForClientHydration(page)
+      await expect(page.getByRole('heading', { level: 1 }).first()).toBeVisible()
+      const results = await new AxeBuilder({ page }).analyze()
+      const violations = results.violations.filter(
+        (v) => v.impact === 'critical' || v.impact === 'serious'
+      )
+      expect(violations, formatViolations(violations)).toEqual([])
+    })
+  }
 
   test('contact form inputs have associated labels', async ({ page }) => {
     await page.goto('/contact')

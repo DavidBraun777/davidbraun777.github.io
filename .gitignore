@@ -57,6 +57,7 @@ node_modules/
 ms-playwright/
 playwright-report/
 test-results/
+.playwright-mcp/
 
 # macOS system junk
 Library/
