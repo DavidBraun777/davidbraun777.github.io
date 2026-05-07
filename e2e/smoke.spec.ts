@@ -61,6 +61,26 @@ test.describe('Smoke tests', () => {
     ).toBeVisible()
   })
 
+  test('why work with me resume link points to the static PDF', async ({ page }) => {
+    await page.goto('/why-work-with-me')
+
+    const resumeLink = page.getByRole('link', { name: /open resume pdf in a new tab/i })
+    await expect(resumeLink).toBeVisible()
+    await expect(resumeLink).toHaveAttribute('href', '/resume.pdf')
+    await expect(resumeLink).toHaveAttribute('target', '_blank')
+
+    const rel = await resumeLink.getAttribute('rel')
+    expect(rel).toContain('noopener')
+    expect(rel).toContain('noreferrer')
+  })
+
+  test('resume PDF static asset is served', async ({ request }) => {
+    const response = await request.get('/resume.pdf')
+
+    expect(response.status()).toBe(200)
+    expect(response.headers()['content-type']).toContain('application/pdf')
+  })
+
   test('legacy routes redirect to the new IA', async ({ page }) => {
     await page.goto('/blog')
     await expect(page).toHaveURL(/\/writing$/)
