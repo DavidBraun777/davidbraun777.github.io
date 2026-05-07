@@ -19,11 +19,11 @@ jobs:
 
     steps:
       - name: Checkout
-        uses: de0fac2e4500dabe0009e67214ff5f5447ce83dd # actions/checkout@v6
+        uses: actions/checkout@de0fac2e4500dabe0009e67214ff5f5447ce83dd # actions/checkout@v6
         with:
           fetch-depth: 0
 
       - name: SonarQube Cloud Scan
-        uses: c7ee0f9df90b7aa20e8dcf9695dcfe2e7da5b4f2 # SonarSource/sonarqube-scan-action@v7
+        uses: SonarSource/sonarqube-scan-action@c7ee0f9df90b7aa20e8dcf9695dcfe2e7da5b4f2 # SonarSource/sonarqube-scan-action@v7
         env:
           SONAR_TOKEN: ${{ secrets.SONAR_TOKEN }}
