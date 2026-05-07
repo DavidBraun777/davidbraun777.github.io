@@ -1,4 +1,21 @@
-import { test, expect } from '@playwright/test'
+import { test, expect, type Page } from '@playwright/test'
+
+const keyBuyerRoutes = ['/', '/contact', '/case-studies'] as const
+
+function trackConsoleErrors(page: Page) {
+  const errors: string[] = []
+
+  page.on('console', (message) => {
+    if (message.type() === 'error') {
+      errors.push(message.text())
+    }
+  })
+  page.on('pageerror', (error) => {
+    errors.push(error.message)
+  })
+
+  return errors
+}
 
 test.describe('Smoke tests', () => {
   test('homepage loads and shows hero section', async ({ page }) => {
@@ -98,6 +115,8 @@ test.describe('Smoke tests', () => {
     expect(csp).toBeDefined()
     expect(csp).toContain("script-src")
     expect(csp).toContain("'unsafe-inline'")
+    expect(csp).toContain('https://www.googletagmanager.com')
+    expect(csp).toContain('https://www.google.com')
   })
 
   test('security headers are present', async ({ page }) => {
@@ -112,5 +131,33 @@ test.describe('Smoke tests', () => {
   test('404 page works', async ({ page }) => {
     const response = await page.goto('/this-page-does-not-exist')
     expect(response?.status()).toBe(404)
+  })
+
+  test('key buyer pages do not emit browser console errors', async ({ page }) => {
+    const errors = trackConsoleErrors(page)
+
+    for (const route of keyBuyerRoutes) {
+      await page.goto(route)
+      await expect(page.locator('main')).toBeVisible()
+      await expect(page.getByRole('heading', { level: 1 }).first()).toBeVisible()
+      await page.waitForTimeout(250)
+    }
+
+    expect(errors).toEqual([])
+  })
+
+  test('key buyer pages render on a mobile viewport', async ({ page }) => {
+    await page.setViewportSize({ width: 390, height: 844 })
+
+    for (const route of keyBuyerRoutes) {
+      await page.goto(route)
+      await expect(page.locator('main')).toBeVisible()
+      await expect(page.getByRole('heading', { level: 1 }).first()).toBeVisible()
+
+      const hasHorizontalOverflow = await page.evaluate(
+        () => document.documentElement.scrollWidth > window.innerWidth + 1
+      )
+      expect(hasHorizontalOverflow).toBe(false)
+    }
   })
 })

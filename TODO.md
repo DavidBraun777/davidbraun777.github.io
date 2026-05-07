@@ -1,61 +1,53 @@
-# dbraun.io Improvement Backlog
+# dbraun.io TODO
 
-## Purpose
+This backlog separates true launch checks from proof work, optional polish, and
+retired recommendations. Do not use it as a redesign queue.
 
-This file tracks the remaining work needed to move dbraun.io from its current strong state into a penultimate, near-final version that is harder for skeptical engineers, hiring managers, and technical founders to dismiss.
+## P0 Launch Blockers
 
-It is intentionally biased toward proof, trust, and systems credibility rather than cosmetic churn.
+- [ ] Verify the live contact form end to end with one controlled production submission.
+- [ ] Decide whether Google Analytics should collect now. If yes, verify no browser console block; if no, keep `NEXT_PUBLIC_GA_ID` unset.
+- [ ] Before dependency/security work, verify with Node 20 and a clean `npm ci` environment so local drift does not hide lockfile issues.
 
-## Priority legend
+## P1 Buyer/Portfolio Improvements
 
-- `P0` = highest ROI
-- `P1` = major supporting work
-- `P2` = useful professional polish
-- `P3` = optional / low-leverage
+Proof-pack work below requires real artifacts, facts, screenshots, logs, diagrams, or
+operational details from David. Do not invent proof.
 
-## P0 - Proof / Trust / Elite-bar blockers
+- [ ] Add a DealerFlow proof pack: walkthrough GIF/video, lifecycle diagram, notification/queue artifact, and bounded pilot facts.
+- [ ] Add VIFG bounded operational facts: release cadence, maintenance scope, accessibility evidence, traffic/user range, uptime window, or equivalent defensible facts.
+- [ ] Add one real VIFG artifact beyond the deployment diagram.
+- [ ] Add WeatherForge dashboard screenshots and reproducible data-refresh/validation notes.
+- [ ] Add a small RAGeATM demo surface or terminal/log proof, then mirror the retrieval ladder into the RAGeATM GitHub README/docs.
+- [ ] Human-review ownership, status, and production/pilot/prototype wording line by line.
+- [ ] Re-check public proof links monthly: VIFG, time2move, arklandscaping, WeatherForge GitHub, RAGeATM GitHub, resume PDF.
 
-| Status | Task | Why it matters | Execution | Estimated portfolio / hiring-signal uplift |
-|--------|------|----------------|-----------|-------------------------------------------|
-| [ ] | Add at least one real artifact to each flagship project | Artifacts are the fastest path from "well-described" to "obviously real." Screenshots, diagrams, logs, traces, or operator UI make trust immediate. | Needs you for the real artifacts; AI can help format, crop, label, and place them | +8% to +15% |
-| [ ] | Add truthful metrics or bounded operational facts to top projects | Serious reviewers trust concrete facts such as deployment scope, traffic bands, latency bands, usage volume, or operating constraints more than adjectives. | Needs you for the facts; AI can help word them conservatively | +6% to +12% |
-| [ ] | Build one heavyweight case study for the strongest flagship project | One deep case study can raise the credibility of the entire site by showing problem, architecture, constraints, workflow, failure handling, and outcome in one place. | Joint effort; AI can structure and draft, but you need the real details and artifacts | +5% to +10% |
-| [ ] | Confirm live/demo URLs and project-state truthfulness | Project labels lose trust quickly if they drift from reality. A clean truth-pass prevents accidental overclaiming. | Needs you to verify status and accessibility; AI can update the copy afterward | +3% to +6% |
-| [ ] | Human-review ownership wording line by line | This is the safest way to keep strong language without slipping into claims you would not want to defend in an interview. | Needs you; AI can flag risky lines and propose softer alternatives | +3% to +6% |
+## P2 Technical Polish
 
-## P1 - High-value supporting improvements
+- [ ] Broaden Playwright coverage beyond the current smoke/a11y suite when it catches real deployment risk.
+- [ ] Add Service or CreativeWork schema only where it maps to real pages and proof.
+- [ ] Add a simple privacy page if GA/contact intake remain live.
+- [ ] Formalize screenshot/diagram naming and placement after the first new proof pack exists.
+- [ ] Remove any future generated browser/tool logs from Git tracking and keep them ignored.
 
-| Status | Task | Why it matters | Execution | Estimated portfolio / hiring-signal uplift |
-|--------|------|----------------|-----------|-------------------------------------------|
-| [ ] | Expand blog cross-linking to flagship systems | Cross-links make the blog feel like engineering depth that supports the systems, not detached content marketing. | AI can do most; you should review final links and framing | +2% to +5% |
-| [ ] | Add structured data / schema where useful | Better structured metadata can improve search clarity and make the site feel more complete as a professional artifact. | AI can do most; you verify relevance | +1% to +3% |
-| [ ] | Verify production headers, contact form behavior, and deployed live behavior after push | Local correctness is not enough; production verification catches hosting-level differences that reviewers will actually experience. | Needs you to run live checks after deploy; AI can provide the checklist | +2% to +4% |
-| [ ] | Create or formalize a screenshot / diagram asset pipeline | A repeatable way to capture and update visuals makes future proof updates much easier and less ad hoc. | Joint effort; AI can define file conventions and lightweight scripts | +2% to +4% |
+## P3 Backlog / Later
 
-## P2 - Professional polish
+- [ ] Build the separate People's Connection LLC site only when offers, pricing, CRM, and cross-domain measurement are ready.
+- [ ] Use the niche playbooks after one current proof pack is complete.
+- [ ] Add blog cross-links to case studies when the linked case studies have stronger artifacts.
+- [ ] Publish more thought-leadership only after proof density improves.
+- [ ] Add testimonials only if they are real, specific, and strong.
+- [ ] Do non-essential UI polish only when attached to a real buyer-facing improvement.
 
-| Status | Task | Why it matters | Execution | Estimated portfolio / hiring-signal uplift |
-|--------|------|----------------|-----------|-------------------------------------------|
-| [ ] | Add a privacy page if needed | Useful if analytics, contact flows, or scheduling links become more formal and you want the site to read as more production-complete. | AI can draft; you decide whether it is actually needed | +1% to +2% |
-| [ ] | Add lightweight analytics | Helpful for understanding what people actually click, but not a core trust builder by itself. | AI can implement; you choose the tool and consent stance | +1% to +3% |
-| [ ] | Add testimonials only if they are real and strong | Good testimonials help, but weak or vague ones are worse than none. | Needs you to source and approve them; AI can format them | +2% to +4% |
-| [ ] | Add more case-study visuals where they genuinely improve clarity | Additional visuals can help scannability once the first round of proof artifacts is in place. | Joint effort; AI can place and label them | +1% to +4% |
+## Done / Retired
 
-## P3 - Nice-to-have
-
-| Status | Task | Why it matters | Execution | Estimated portfolio / hiring-signal uplift |
-|--------|------|----------------|-----------|-------------------------------------------|
-| [ ] | Run extra content experiments | Optional once the trust layer is already strong; not a substitute for real proof. | Joint effort | +0% to +2% |
-| [ ] | Publish more thought-leadership posts | Useful after the core proof gap is addressed, but low ROI before that. | AI can help draft; you need real opinions and edits | +1% to +3% |
-| [ ] | Apply non-essential UI polish | Small UX refinements can help finish quality, but they do not solve the main elite-bar blocker. | AI can do most | +0% to +2% |
-
-## Definition of penultimate state
-
-dbraun.io reaches its penultimate state when:
-
-- the site is already strong in engineering quality and design
-- every flagship project has visible proof
-- the strongest projects show clear ownership, constraints, and outcomes
-- one flagship has a deep case study
-- no obvious overclaims remain
-- future gains are mostly incremental, not structural
+- [x] VIFG restored as first public production proof.
+- [x] Workflow-first homepage/contact/services framing restored.
+- [x] Primary CTA restored to `Book a Call`.
+- [x] Resume URL fixed to `/resume.pdf`.
+- [x] Case-study index restored to production/pilot/prototype/R&D hierarchy.
+- [x] WeatherForge and RAGeATM kept secondary and honestly labeled.
+- [x] RAGeATM retrieval ladder added collapsed by default with overclaim guardrails.
+- [x] Header, footer, metadata, and social card restored to workflow automation consulting.
+- [x] Old live-vs-local restoration recommendations retired as historical context.
+- [x] Lightweight Playwright coverage added for console errors, mobile rendering, and additional axe scans.

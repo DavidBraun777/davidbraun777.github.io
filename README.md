@@ -1,40 +1,37 @@
 # dbraun.io
 
-Consulting-focused website for David Braun. The site is built to do two things at once without pretending they are the same thing:
-
-- present credible public proof of real delivery work
-- show the direction of serious systems currently under active development
+Consulting-focused website for David Braun. The site is a workflow automation
+and systems consulting portfolio, not a generic personal homepage.
 
 **Live site:** [dbraun.io](https://dbraun.io)
 
-## Current positioning
+## Current Positioning
 
-This is no longer a generic portfolio site.
+dbraun.io presents practical workflow automation, system integration, data
+movement, and operational software work for small and midsized businesses. It
+also keeps enough engineering detail to remain credible to technical reviewers.
 
-It is a consulting-capable systems site for workflow automation, system integration, and operational software work, with enough proof and engineering signal to remain credible to hiring managers and technical reviewers.
+The current proof hierarchy is intentional:
 
-Current public proof and delivery work:
+- [VIFG nonprofit platform](https://www.vifg.org/home) is the strongest public
+  production proof.
+- [time2move.io](https://time2move.io) and [arklandscaping.net](https://arklandscaping.net)
+  are public delivery examples.
+- `DealerFlow`, where shown, should be treated cautiously as pilot/proof work
+  unless stronger artifacts and bounded pilot facts are added.
+- `WeatherForge` is secondary technical proof. It should not be described as a
+  production client system unless real deployment proof is added.
+- `RAGeATM` is secondary academic/technical proof for retrieval and augmentation
+  work. It should not be framed as production consulting delivery.
+- `DGM` and `StormIQ`, where present, represent active or planned system
+  direction rather than finished production products.
 
-- [VIFG nonprofit platform](https://www.vifg.org/home)
-- [time2move.io](https://time2move.io)
-- [arklandscaping.net](https://arklandscaping.net)
+The site should become more convincing by adding real proof artifacts and
+bounded facts, not by making stronger claims.
 
-Current in-progress systems shaping the next proof layer:
+## Latest Audit Baseline
 
-- `WeatherForge`
-- `DGM`
-
-Those systems are being positioned as real in-progress builds that will become part of the broader `StormIQ` direction. They are intentionally not presented as finished or deployed products before the proof exists.
-
-## Current proof posture
-
-- `VIFG` is still the strongest public production proof.
-- `DealerFlow` remains visible as pilot work, but it is not the current flagship priority.
-- `WeatherForge` and `DGM` now have case-study structure in place so walkthroughs, diagrams, operational surfaces, and artifacts can be added later without redesigning the site.
-- `StormIQ` is framed honestly as the broader system direction these builds support, not as a finished flagship pretending to be more proven than it is.
-
-## Latest audit baseline
-
+- [Current State Reassessment](docs/dbraun-current-state-reassessment.md)
 - [Elite Audit - 2026-04-15](docs/audits/elite-audit-2026-04-15.md)
 
 ## Stack
@@ -52,69 +49,90 @@ Those systems are being positioned as real in-progress builds that will become p
 | Testing | [Vitest](https://vitest.dev/), [Playwright](https://playwright.dev/) |
 | Deployment | [Vercel](https://vercel.com/) |
 
-## Local development
+## Local Development
 
 ### Prerequisites
 
-- Node.js 20.9 or later
+- Node.js 20 from `.nvmrc` (`package.json` requires `>=20.9.0`)
 - npm
 
-### Install and run
+### Install and Run
 
 ```bash
-git clone https://github.com/DavidBraun777/davidbraun777.github.io.git
-cd davidbraun777.github.io
-npm install
+nvm use
+npm ci
 npm run dev
 ```
 
 Open [http://localhost:3000](http://localhost:3000).
 
-## Environment variables
+## Environment Variables
 
-Create `.env.local` in the repo root:
+Create `.env.local` in the repo root. Do not commit real values.
 
 ```env
-# Email configuration (required in production)
+# Required in production for contact form delivery
 RESEND_API_KEY=re_xxxxxxxxxxxxx
 
-# Optional: recipient override for contact form submissions
-CONTACT_EMAIL=your-email@example.com
+# Preferred contact-form recipient
+CONTACT_NOTIFICATION_EMAIL=you@example.com
 
-# Optional: secondary scheduling link shown on the contact page
+# Legacy recipient fallback supported by code if CONTACT_NOTIFICATION_EMAIL is unset
+# CONTACT_EMAIL=you@example.com
+
+# Optional sender identity; CONTACT_FROM_EMAIL must be verified in Resend
+CONTACT_FROM_EMAIL=contact@dbraun.io
+CONTACT_FROM_NAME=dbraun.io Contact
+
+# Optional scheduling link shown on the contact page
 CAL_LINK=https://calendly.com/your-handle/intro-call
 
-# Optional: distributed rate limiting
+# Optional distributed rate limiting; set both or neither
 UPSTASH_REDIS_REST_URL=https://your-instance.upstash.io
 UPSTASH_REDIS_REST_TOKEN=your-token
 
-# Optional: GA4 measurement ID override
-NEXT_PUBLIC_GA_ID=G-XXXXXXXXXX
+# Optional Google Analytics 4 measurement ID; leave unset to disable GA
+# NEXT_PUBLIC_GA_ID=G-XXXXXXXXXX
 ```
 
 Notes:
 
-- The contact form returns a `500` if `RESEND_API_KEY` is missing.
-- If `CAL_LINK` is set, the contact page shows a secondary optional call link. The form remains the primary contact path.
-- If Upstash variables are not set, the app falls back to in-memory rate limiting.
+- `RESEND_API_KEY` is required for the contact API to send mail in production.
+- `CONTACT_NOTIFICATION_EMAIL` is the preferred recipient variable.
+- `CONTACT_EMAIL` remains supported as a fallback for older deployments.
+- `CONTACT_FROM_EMAIL` defaults to `contact@dbraun.io`; if changed, the address
+  or domain must be verified in Resend.
+- `CONTACT_FROM_NAME` defaults to `dbraun.io Contact`.
+- If `CAL_LINK` is set, the contact page shows a secondary optional call link.
+- If both Upstash variables are set, distributed rate limiting is used. Without
+  them, the app falls back to in-memory rate limiting.
+- Google Analytics loads only when `NEXT_PUBLIC_GA_ID` is set. Leaving it unset
+  disables GA without code changes.
 
-## Validation
+## Verification
 
-Run the full local validation set:
+Use Node 20 and a clean install for verification:
 
 ```bash
+nvm use
+npm ci
 npm run lint
 npm test
+npx tsc --noEmit
 npm run build
+npm run size-check
 npx playwright test e2e/smoke.spec.ts e2e/a11y.spec.ts --project=chromium
 ```
 
-## Notes on proof and honesty
+## Proof and Honesty Rules
 
 This repo intentionally separates:
 
-- what is already real and visible
-- what is real but still under active development
-- what still needs stronger artifacts before it should be treated as flagship proof
+- real public production proof
+- public delivery examples
+- pilot/prototype work
+- academic or technical proof
+- planned system direction
 
-That constraint matters. The site should get more convincing over time because more real evidence gets added, not because the copy gets more aggressive.
+Do not add invented outcomes, testimonials, screenshots, metrics, or artifacts.
+If a project needs stronger proof, add the real artifact or leave a TODO.
