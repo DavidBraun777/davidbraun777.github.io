@@ -24,7 +24,7 @@ export const skillCategories: SkillCategory[] = [
     id: 'programming',
     name: 'Programming',
     icon: Code2,
-    skills: ['Java', 'Python', 'JavaScript', 'TypeScript', 'Kotlin', 'SQL', 'Shell Scripting'],
+    skills: ['Java', 'Python', 'JavaScript', 'TypeScript', 'Kotlin', 'SQL', 'Swift', 'Shell Scripting'],
   },
   {
     id: 'ai-machine-learning',
@@ -35,7 +35,8 @@ export const skillCategories: SkillCategory[] = [
       'Conversational AI workflows',
       'Retrieval and knowledge workflows',
       'Prompt and system design',
-      'Automation-oriented AI integration',
+      'Model evaluation and MLOps',
+      'OpenAI Codex and Claude Code workflows',
     ],
   },
   {
@@ -46,41 +47,87 @@ export const skillCategories: SkillCategory[] = [
       'Spring',
       'Spring Boot',
       'Node.js',
+      'Express',
+      'Fastify',
+      'FastAPI',
       'REST APIs',
       'Microservices',
       'Swagger/OpenAPI',
+      'BullMQ job workers',
       'Nginx',
     ],
   },
   {
     id: 'frontend',
-    name: 'Frontend',
+    name: 'Frontend & Mobile',
     icon: Layers,
-    skills: ['React', 'Angular', 'Vite', 'TypeScript web applications'],
+    skills: ['React', 'Next.js', 'React Native', 'Expo', 'Angular', 'Astro', 'Vite', 'TypeScript web applications'],
   },
   {
     id: 'cloud-infrastructure',
     name: 'Cloud & Infrastructure',
     icon: Cloud,
-    skills: ['AWS (EC2, S3, Lambda, RDS, Route 53, Lightsail)', 'OpenShift', 'Firebase', 'Linux deployment environments'],
+    skills: [
+      'AWS (EKS, ECR, EC2, S3, Lambda, RDS, DynamoDB, Route 53, Lightsail, CloudFront)',
+      'GCP Artifact Registry',
+      'Firebase Authentication, Functions, and Hosting',
+      'Azure DevOps and Azure Functions',
+      'Linux deployment environments',
+    ],
   },
   {
     id: 'devops-platform',
     name: 'DevOps & Platform Engineering',
     icon: GitBranch,
-    skills: ['Docker', 'Kubernetes', 'Terraform', 'Ansible', 'GitHub Actions', 'Git', 'CI/CD Pipelines'],
+    skills: [
+      'GitHub Actions',
+      'CircleCI',
+      'Jenkins',
+      'Docker',
+      'Kubernetes',
+      'kubectl',
+      'Helm',
+      'OpenShift',
+      'Ansible',
+      'AWS CloudFormation',
+      'Terraform (historical use)',
+      'Git',
+      'CI/CD pipeline design',
+    ],
   },
   {
     id: 'databases-data-systems',
     name: 'Databases & Data Systems',
     icon: Database,
-    skills: ['PostgreSQL', 'MySQL', 'MongoDB', 'Relational schema design', 'Database management'],
+    skills: [
+      'PostgreSQL',
+      'Supabase',
+      'MySQL',
+      'MongoDB',
+      'Redis',
+      'DynamoDB',
+      'Apache Kafka',
+      'Parquet data pipelines',
+      'Relational schema design',
+    ],
   },
   {
     id: 'security-engineering',
-    name: 'Security Engineering',
+    name: 'Security & Quality Engineering',
     icon: Shield,
-    skills: ['OAuth2', 'JWT', 'SSL/TLS', 'CSRF protection', 'SAST', 'DAST'],
+    skills: [
+      'OAuth2',
+      'JWT',
+      'SSL/TLS',
+      'CSRF protection',
+      'SAST',
+      'DAST',
+      'CodeQL',
+      'SonarCloud',
+      'Dependency auditing',
+      'Playwright end-to-end testing',
+      'Accessibility validation',
+    ],
   },
   {
     id: 'systems-architecture',
@@ -88,9 +135,11 @@ export const skillCategories: SkillCategory[] = [
     icon: Network,
     skills: [
       'Distributed services',
-      'Workflow automation systems',
+      'Event-driven pipelines',
+      'Workflow and job orchestration',
       'API-first platform design',
       'Serverless patterns',
+      'Monorepo and shared-schema design',
       'Infrastructure-backed web systems',
     ],
   },
@@ -98,12 +147,12 @@ export const skillCategories: SkillCategory[] = [
     id: 'tools',
     name: 'Tools',
     icon: Wrench,
-    skills: ['Linux', 'Postman', 'Proxmox', 'VS Code', 'IntelliJ IDEA', 'macOS', 'Windows', 'AVA'],
+    skills: ['Linux', 'Postman', 'Proxmox', 'OpenAI Codex', 'Claude Code', 'VS Code', 'IntelliJ IDEA', 'macOS', 'Windows', 'AVA'],
   },
 ]
 
 export const otherSkills = {
-  workingStyle: ['Agile', 'DevOps', 'Full-stack delivery'],
+  workingStyle: ['Agile', 'DevOps', 'Full-stack delivery', 'Platform modernization', 'Distributed-team collaboration'],
   additional: ['Sign Language (Fluent)'],
 }
 
@@ -114,19 +163,19 @@ export interface PositioningTrack {
 
 export const positioningTracks: PositioningTrack[] = [
   {
+    title: 'Full Stack & Platform Engineer',
+    description:
+      'Best fit for work that combines application development, APIs, cloud infrastructure, CI/CD, security, and production operations into one delivery responsibility.',
+  },
+  {
     title: 'AI Systems Engineer',
     description:
-      'Best fit for work that combines backend services, workflow automation, infrastructure, and AI-enabled product logic into one operating system.',
+      'Strongest where backend services, workflow automation, infrastructure, and AI-enabled product logic must operate as a maintainable system.',
   },
   {
     title: 'Applied AI Engineer',
     description:
-      'Strongest when AI is part of a grounded workflow such as retrieval, guided intake, summarization, or decision support.',
-  },
-  {
-    title: 'Platform Engineer',
-    description:
-      'Comfortable owning the APIs, deployment workflows, cloud infrastructure, and operational tooling that keep products reliable.',
+      'Strongest when AI supports a grounded workflow such as retrieval, guided intake, summarization, evaluation, or decision support.',
   },
 ]
 
