@@ -203,9 +203,17 @@ export default function ResearchPage() {
                 key={affiliation.id}
                 className="rounded-[1.5rem] border border-border-subtle bg-background-elevated p-5 shadow-sm"
               >
-                <h3 className="text-base font-semibold text-text-primary">
-                  {affiliation.organization}
-                </h3>
+                <div className="flex items-start justify-between gap-4">
+                  <h3 className="min-w-0 flex-1 text-base font-semibold text-text-primary">
+                    {affiliation.organization}
+                  </h3>
+                  <ExternalLinkAction
+                    href={affiliation.url}
+                    className="shrink-0"
+                    iconOnly
+                    ariaLabel={'Visit ' + affiliation.organization}
+                  />
+                </div>
                 <p className="mt-2 text-sm text-text-secondary">{affiliation.role}</p>
                 {affiliation.location ? (
                   <p className="mt-1 text-sm text-text-muted">{affiliation.location}</p>
@@ -215,13 +223,6 @@ export default function ResearchPage() {
                     {affiliation.startDate} to {affiliation.endDate}
                   </p>
                 ) : null}
-                <div className="mt-4">
-                  <ExternalLinkAction
-                    href={affiliation.url}
-                    iconOnly
-                    ariaLabel={'Visit ' + affiliation.organization}
-                  />
-                </div>
               </article>
             ))}
           </div>

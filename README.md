@@ -15,8 +15,10 @@ The current proof hierarchy is intentional:
 
 - [VIFG nonprofit platform](https://www.vifg.org/home) is the strongest public
   production proof.
-- [time2move.io](https://time2move.io) and [arklandscaping.net](https://arklandscaping.net)
-  are public delivery examples.
+- [arklandscaping.net](https://arklandscaping.net) is a current public delivery
+  example.
+- `time2move.io` is a paused client project retained as past delivery evidence;
+  do not describe it as currently live.
 - `DealerFlow`, where shown, should be treated cautiously as pilot/proof work
   unless stronger artifacts and bounded pilot facts are added.
 - `WeatherForge` is secondary technical proof. It should not be described as a

@@ -65,6 +65,7 @@ export const profile = {
   name: 'David Braun',
   location: 'White Bear Lake, MN',
   title: 'Workflow automation and systems consulting for small and midsized businesses.',
+  professionalIdentity: 'AI Systems Engineer · Full-Stack & Platform Engineer · Researcher',
   summary:
     'I help small and midsized businesses reduce manual work by connecting lead flows, data movement, internal handoffs, and cloud-backed automation into dependable systems.',
   heroHeadline: 'Remove manual work from the workflows that keep slowing your business down.',
@@ -209,11 +210,6 @@ export const currentWorkReferences: CurrentWorkReference[] = [
     label: 'VIFG nonprofit platform',
     href: 'https://www.vifg.org/home',
     description: 'Production platform with ongoing hosting, deployment, and accessibility support.',
-  },
-  {
-    label: 'time2move.io',
-    href: 'https://time2move.io',
-    description: 'Current public client-site delivery work.',
   },
   {
     label: 'arklandscaping.net',

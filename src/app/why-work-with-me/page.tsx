@@ -46,10 +46,10 @@ export default function WhyWorkWithMePage() {
               matters because the work usually crosses more than one layer of the system.
             </p>
             <p>
-              Current public delivery work also includes time2move.io and
-              arklandscaping.net. They are real client surfaces and useful credibility
-              signals, but VIFG remains the strongest flagship proof because the
-              operational ownership is deeper and more visible.
+              Current public delivery work includes arklandscaping.net. Past client
+              delivery has also included time2move.io, which is currently paused. VIFG
+              remains the strongest flagship proof because the operational ownership is
+              deeper and more visible.
             </p>
             <p>
               I also serve as Treasurer for the VIFG nonprofit, contributing to quarterly
