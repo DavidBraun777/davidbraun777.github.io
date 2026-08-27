@@ -54,6 +54,7 @@
     "eslint-config-next": "^16.2.5",
     "eslint-plugin-react": "^7.37.5",
     "eslint-plugin-react-hooks": "^7.0.1",
+    "happy-dom": "^20.11.10",
     "postcss": "^8.5.14",
     "rehype-highlight": "^7.0.2",
     "remark-gfm": "^4.0.1",

@@ -125,6 +125,34 @@ describe('POST /api/contact', () => {
     )
   })
 
+  it('ignores an invalid submission ID for idempotency and observability', async () => {
+    const invalidSubmissionId = 'not-a-valid-submission-id'
+    const logSpy = vi.spyOn(console, 'log').mockImplementation(() => {})
+
+    try {
+      const res = await POST(
+        createRequest(validBody, {
+          'x-contact-submission-id': invalidSubmissionId,
+        })
+      )
+
+      expect(res.status).toBe(200)
+      expect(mockSend).toHaveBeenCalledWith(expect.any(Object), undefined)
+
+      const submissionLog = logSpy.mock.calls
+        .map(([message]) => JSON.parse(String(message)))
+        .find((entry) => entry.event === 'contact_submission')
+
+      expect(submissionLog).toEqual(
+        expect.objectContaining({ event: 'contact_submission', status: 200 })
+      )
+      expect(submissionLog).not.toHaveProperty('submission_id')
+      expect(JSON.stringify(submissionLog)).not.toContain(invalidSubmissionId)
+    } finally {
+      logSpy.mockRestore()
+    }
+  })
+
   it('escapes HTML in email payload', async () => {
     const xssBody = {
       ...validBody,

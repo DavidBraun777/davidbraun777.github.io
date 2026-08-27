@@ -1,6 +1,6 @@
 'use client'
 
-import { useEffect, useRef, useCallback } from 'react'
+import { useCallback, useEffect, useRef, useState } from 'react'
 import gsap from 'gsap'
 import { ScrollTrigger } from 'gsap/ScrollTrigger'
 
@@ -33,8 +33,8 @@ export function useGSAP<T extends HTMLElement = HTMLDivElement>() {
     cleanup()
 
     // Create new context scoped to our container
-    contextRef.current = gsap.context(() => {
-      callback(contextRef.current!)
+    contextRef.current = gsap.context((context) => {
+      callback(context)
     }, containerRef)
   }, [cleanup])
 
@@ -54,21 +54,25 @@ export function useGSAP<T extends HTMLElement = HTMLDivElement>() {
  * Hook to check if user prefers reduced motion
  */
 export function useReducedMotion(): boolean {
-  const ref = useRef(false)
+  const [reducedMotion, setReducedMotion] = useState(false)
 
   useEffect(() => {
+    if (typeof window === 'undefined' || typeof window.matchMedia !== 'function') {
+      return
+    }
+
     const mediaQuery = window.matchMedia('(prefers-reduced-motion: reduce)')
-    ref.current = mediaQuery.matches
+    setReducedMotion(mediaQuery.matches)
 
     const handler = (e: MediaQueryListEvent) => {
-      ref.current = e.matches
+      setReducedMotion(e.matches)
     }
 
     mediaQuery.addEventListener('change', handler)
     return () => mediaQuery.removeEventListener('change', handler)
   }, [])
 
-  return ref.current
+  return reducedMotion
 }
 
 /**
@@ -79,7 +83,7 @@ export function getMotionConfig(reducedMotion: boolean) {
   return {
     duration: reducedMotion ? 0 : 0.6,
     y: reducedMotion ? 0 : 16,
-    scale: reducedMotion ? 1 : 1,
+    scale: 1,
     stagger: reducedMotion ? 0 : 0.1,
     ease: 'power2.out',
   }
