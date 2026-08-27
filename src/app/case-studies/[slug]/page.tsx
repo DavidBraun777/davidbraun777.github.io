@@ -114,6 +114,7 @@ export default async function CaseStudyDetailPage({ params }: Readonly<Props>) {
 
           <div className="grid gap-5">
             <NarrativeCard title="Problem" body={system.problem} />
+            <NarrativeCard title="Core Constraint" body={system.coreConstraint} />
             <NarrativeCard title="Solution / What I Built" body={system.system} />
             <NarrativeCard title="Results" body={system.outcome} />
           </div>
@@ -656,14 +657,6 @@ function FallbackArchitecture({
             {highlight}
           </div>
         ))}
-      </div>
-      <div className="mt-6 rounded-[1.5rem] border border-border-subtle bg-background-subtle p-5">
-        <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-text-muted">
-          Core constraint
-        </p>
-        <p className="mt-3 text-sm leading-7 text-text-secondary">
-          {system.coreConstraint}
-        </p>
       </div>
     </article>
   )

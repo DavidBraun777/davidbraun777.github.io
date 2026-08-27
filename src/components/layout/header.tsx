@@ -4,6 +4,7 @@ import { useEffect, useState } from 'react'
 import Link from 'next/link'
 import { Menu, X } from 'lucide-react'
 import { usePathname } from 'next/navigation'
+import { northStarIdentity } from '@/data/career-story'
 import { primaryNavigation, profile } from '@/data/profile'
 import { cn } from '@/lib/utils'
 import { ThemeToggle } from '@/components/site/theme-toggle'
@@ -44,7 +45,7 @@ export function Header() {
               {profile.name}
             </span>
             <span className="text-sm text-[var(--theme-frame-text-muted)]">
-              Workflow automation and systems consulting
+              {northStarIdentity}
             </span>
           </Link>
         </div>

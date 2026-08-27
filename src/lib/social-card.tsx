@@ -1,5 +1,7 @@
+import { northStarIdentity, northStarValueProposition } from '@/data/career-story'
+
 export const socialCardAlt =
-  'Workflow automation and systems consulting for businesses that need less manual work'
+  'David Braun | AI Systems / Platform Architect - secure, deployable operational systems'
 
 export function SocialCard() {
   return (
@@ -79,14 +81,14 @@ export function SocialCard() {
             >
               <div
                 style={{
-                  fontSize: '70px',
+                  fontSize: '60px',
                   fontWeight: 700,
                   lineHeight: 1.02,
                   color: '#f8fafc',
                   display: 'flex',
                 }}
               >
-                Workflow Automation Consulting
+                {northStarIdentity}
               </div>
               <div
                 style={{
@@ -96,7 +98,7 @@ export function SocialCard() {
                   display: 'flex',
                 }}
               >
-                Systems that remove manual work and hold up after launch.
+                {northStarValueProposition}
               </div>
             </div>
           </div>
@@ -109,7 +111,7 @@ export function SocialCard() {
               alignItems: 'center',
             }}
           >
-            {['Lead Automation', 'System Integration', 'Data + AI Support'].map(
+            {['AI + Data', 'Platform + Cloud', 'Evaluation + Operations'].map(
               (item) => (
                 <div
                   key={item}
@@ -179,10 +181,10 @@ export function SocialCard() {
 
           <div style={{ display: 'flex', flexDirection: 'column', gap: '14px' }}>
             {[
-              ['Ingest', 'voice, forms, uploads'],
-              ['Orchestrate', 'queues, routing, policy'],
-              ['AI/Data Layer', 'retrieval, dashboards, validation'],
-              ['Deliver', 'dashboards, exports, workflows'],
+              ['Capability', 'models, retrieval, data'],
+              ['Application', 'interfaces, APIs, workflows'],
+              ['Platform', 'cloud, security, observability'],
+              ['Operations', 'evaluation, handoff, ownership'],
             ].map(([title, detail], index) => (
               <div
                 key={title}

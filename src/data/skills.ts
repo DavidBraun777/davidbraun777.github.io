@@ -11,6 +11,12 @@ import {
   Wrench,
   type LucideIcon,
 } from 'lucide-react'
+import { northStarIdentity } from '@/data/career-story'
+
+export {
+  architectureSkillLayers,
+  fullTimeRoleFamilies as relatedRoleFamilies,
+} from '@/data/career-story'
 
 export interface SkillCategory {
   id: string
@@ -163,21 +169,13 @@ export interface PositioningTrack {
 
 export const positioningTracks: PositioningTrack[] = [
   {
-    title: 'Full Stack & Platform Engineer',
+    title: northStarIdentity,
     description:
-      'Best fit for work that combines application development, APIs, cloud infrastructure, CI/CD, security, and production operations into one delivery responsibility.',
-  },
-  {
-    title: 'AI Systems Engineer',
-    description:
-      'Strongest where backend services, workflow automation, infrastructure, and AI-enabled product logic must operate as a maintainable system.',
-  },
-  {
-    title: 'Applied AI Engineer',
-    description:
-      'Strongest when AI supports a grounded workflow such as retrieval, guided intake, summarization, evaluation, or decision support.',
+      'Primary professional synthesis for work that connects AI and data capabilities to applications, APIs, workflows, cloud infrastructure, security, evaluation, observability, and production operations.',
   },
 ]
+
+export const relatedRoleHeading = 'Roles where this background maps well'
 
 export interface FocusArea {
   title: string

@@ -10,6 +10,12 @@ import {
   Workflow,
   Wrench,
 } from 'lucide-react'
+import {
+  northStarIdentity,
+  northStarStatement,
+  northStarValueProposition,
+  professionalAvailability,
+} from '@/data/career-story'
 
 export interface NavigationItem {
   label: string
@@ -64,16 +70,15 @@ export interface ContactPath {
 export const profile = {
   name: 'David Braun',
   location: 'White Bear Lake, MN',
-  title: 'Workflow automation and systems consulting for small and midsized businesses.',
-  professionalIdentity: 'AI Systems Engineer · Full-Stack & Platform Engineer · Researcher',
-  summary:
-    'I help small and midsized businesses reduce manual work by connecting lead flows, data movement, internal handoffs, and cloud-backed automation into dependable systems.',
-  heroHeadline: 'Remove manual work from the workflows that keep slowing your business down.',
+  title: northStarIdentity,
+  professionalIdentity: northStarIdentity,
+  summary: northStarStatement,
+  heroHeadline: northStarValueProposition,
   heroDescription:
-    'I design and build automation, integrations, dashboards, internal tools, and AI-assisted workflow pieces for businesses that are tired of re-entry, missed follow-up, and disconnected systems.',
+    'I connect AI and data capabilities to the applications, APIs, workflows, cloud platforms, security controls, evaluation, observability, and human handoffs required for real use.',
   audience:
-    'Best fit for owners and operators who need lead handling, internal workflows, data movement, or operational software to work with less manual effort.',
-  availability: 'Open for consulting projects, automation builds, integration work, and dependable operational software.',
+    'Best fit when software, cloud infrastructure, data, automation, and AI need to operate as one dependable system.',
+  availability: professionalAvailability,
   responseTime: 'I usually reply within one business day.',
   graduateStatus:
     'Master of Science in Artificial Intelligence student at the University of St. Thomas.',
@@ -159,49 +164,49 @@ export const resumeHighlights: Signal[] = [
 
 export const servicesOffered: ServiceOffering[] = [
   {
-    title: 'Lead automation',
+    title: 'AI Systems Architecture & Integration',
     problem:
-      'Leads get lost when calls, follow-up, and CRM updates depend on manual steps.',
+      'An AI or data capability has value, but it is isolated from the applications, workflow, controls, and people needed for dependable use.',
     outcome:
-      'Faster response, cleaner handoff, and fewer missed opportunities.',
-    example: 'Event intake, follow-up routing, and data capture that can support later StormIQ-style automation.',
+      'A bounded architecture that connects capability, workflow, evaluation, and human handoff.',
+    example: 'Retrieval, grounded assistants, APIs, and operational integrations with explicit system boundaries.',
     icon: Sparkles,
   },
   {
-    title: 'System integration',
+    title: 'Platform & Cloud Architecture',
     problem:
-      'Important information is stuck across forms, inboxes, spreadsheets, CRMs, and internal tools.',
+      'A useful application needs a secure, repeatable path from development through deployment and ongoing operation.',
     outcome:
-      'The right information gets where it needs to go without staff re-entering it.',
-    example: 'VIFG delivery infrastructure and current public-site support work.',
-    icon: ArrowRight,
+      'Cloud infrastructure, delivery paths, and ownership boundaries that hold up after launch.',
+    example: 'VIFG production delivery on AWS plus enterprise platform and infrastructure experience.',
+    icon: Wrench,
   },
   {
-    title: 'Workflow automation',
+    title: 'Workflow & Data Orchestration',
     problem:
-      'Teams spend too much time routing requests, checking status, and pushing work to the next step.',
+      'Work and data get stuck across forms, files, inboxes, services, queues, and manual handoffs.',
     outcome:
-      'Routine work gets handled automatically so the team can focus on decisions that matter.',
-    example: 'DGM-style orchestration patterns for reviewable multi-step workflows.',
+      'Reviewable flows that move state and information while keeping decisions and exceptions visible.',
+    example: 'DGM-style multi-step orchestration, API integration, queues, persistence, and data pipelines.',
     icon: Workflow,
   },
   {
-    title: 'Data, dashboard, and AI support',
+    title: 'Reliability, Security & Evaluation',
     problem:
-      'Useful operational decisions depend on messy files, dashboards, documents, or AI helpers that need guardrails.',
+      'A system works in a demo but its security, failure behavior, evidence quality, or operating limits are unclear.',
     outcome:
-      'Practical dashboards, data pipelines, or grounded assistants that support the workflow without becoming the whole strategy.',
-    example: 'WeatherForge and RAGeATM show the technical side of this work as prototype and academic proof.',
-    icon: Blocks,
+      'Explicit access boundaries, validation, tests, observability, and evaluation criteria.',
+    example: 'Enterprise security work, production quality gates, and RAGeATM refusal and grounding evaluation.',
+    icon: ShieldCheck,
   },
   {
-    title: 'Long-term system reliability',
+    title: 'Operational Software',
     problem:
-      'A tool that looks good in a demo but breaks in real use creates more work than it saves.',
+      'An operational need crosses product, data, infrastructure, and support boundaries that a single feature cannot solve.',
     outcome:
-      'Delivery includes deployment and ongoing reliability so the system stays useful after launch.',
-    example: 'VIFG production platform on AWS plus ongoing public-site stewardship.',
-    icon: Wrench,
+      'A deployable system with clear interfaces, delivery ownership, documentation, and a practical path to maintenance.',
+    example: 'Applications, dashboards, integrations, and automation designed around the real operating workflow.',
+    icon: Blocks,
   },
 ]
 

@@ -6,6 +6,11 @@ import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
 import { ScrollToTop } from '@/components/layout/scroll-to-top'
 import { GoogleAnalytics } from '@/components/analytics/google-analytics'
+import {
+  canonicalSeoDescription,
+  northStarIdentity,
+  northStarStatement,
+} from '@/data/career-story'
 import { profile } from '@/data/profile'
 import { researchAreas } from '@/data/research'
 import { socialLinks } from '@/data/social-links'
@@ -27,21 +32,23 @@ const jetbrainsMono = localFont({
 export const metadata: Metadata = {
   metadataBase: new URL(siteUrl),
   title: {
-    default: 'David Braun | Workflow Automation and Systems Consulting',
+    default: `David Braun | ${northStarIdentity}`,
     template: '%s | David Braun',
   },
-  description:
-    'Workflow automation, AI systems, data pipelines, and integration-focused consulting for small and midsized businesses that need less manual work and more dependable operations.',
+  description: canonicalSeoDescription,
   keywords: [
-    'Workflow Automation Consultant',
-    'AI Systems Consultant',
+    'AI Systems Architect',
+    'AI Platform Architect',
+    'AI Systems Engineering',
+    'AI Platform Engineering',
+    'Platform Architecture',
     'System Integration',
     'Workflow Automation',
     'Data Pipelines',
+    'Cloud Engineering',
+    'AI Evaluation',
     'Operational Software',
-    'Systems Consulting',
-    'Dashboard Development',
-    'RAG Assistant',
+    'Retrieval-Augmented Generation',
     'Minnesota',
   ],
   authors: [{ name: profile.name }],
@@ -51,24 +58,22 @@ export const metadata: Metadata = {
     type: 'website',
     locale: 'en_US',
     url: 'https://dbraun.io',
-    title: 'David Braun | Workflow automation and systems consulting',
-    description:
-      'Consulting for small and midsized businesses that need workflow automation, better system handoffs, practical AI/data support, and software that holds up in production.',
+    title: `David Braun | ${northStarIdentity}`,
+    description: canonicalSeoDescription,
     siteName: 'dbraun.io',
     images: [
       {
         url: '/opengraph-image',
         width: 1200,
         height: 630,
-        alt: 'David Braun consulting site',
+        alt: `David Braun | ${northStarIdentity}`,
       },
     ],
   },
   twitter: {
     card: 'summary_large_image',
-    title: 'David Braun | Workflow automation and systems consulting',
-    description:
-      'Workflow automation, AI systems, and integration-focused consulting for businesses that want less manual work.',
+    title: `David Braun | ${northStarIdentity}`,
+    description: canonicalSeoDescription,
     images: ['/twitter-image'],
   },
   robots: {
@@ -90,6 +95,7 @@ const personStructuredData = {
   '@type': 'Person',
   name: profile.name,
   url: siteUrl,
+  description: northStarStatement,
   address: {
     '@type': 'PostalAddress',
     addressLocality: 'White Bear Lake',
@@ -117,6 +123,8 @@ const personStructuredData = {
   },
   knowsAbout: Array.from(new Set([
     'Artificial Intelligence',
+    'AI systems architecture',
+    'AI platform engineering',
     'Software engineering',
     'Workflow automation',
     'System integration',
@@ -134,8 +142,7 @@ const websiteStructuredData = {
   '@type': 'WebSite',
   name: 'dbraun.io',
   url: siteUrl,
-  description:
-    'Workflow automation and systems consulting for small and midsized businesses that need less manual work and more dependable operations.',
+  description: canonicalSeoDescription,
   author: {
     '@type': 'Person',
     name: profile.name,
