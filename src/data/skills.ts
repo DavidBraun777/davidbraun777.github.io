@@ -11,9 +11,12 @@ import {
   Wrench,
   type LucideIcon,
 } from 'lucide-react'
-import { fullTimeRoleFamilies, northStarIdentity } from '@/data/career-story'
+import { northStarIdentity } from '@/data/career-story'
 
-export { architectureSkillLayers } from '@/data/career-story'
+export {
+  architectureSkillLayers,
+  fullTimeRoleFamilies as relatedRoleFamilies,
+} from '@/data/career-story'
 
 export interface SkillCategory {
   id: string
@@ -173,8 +176,6 @@ export const positioningTracks: PositioningTrack[] = [
 ]
 
 export const relatedRoleHeading = 'Roles where this background maps well'
-
-export const relatedRoleFamilies = fullTimeRoleFamilies
 
 export interface FocusArea {
   title: string

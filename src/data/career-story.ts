@@ -1,22 +1,20 @@
+type ResearchCollection =
+  | 'acceptedConferencePapers'
+  | 'peerReviewedPublications'
+  | 'conferenceAbstracts'
+
 export type CareerEvidenceRef =
-  | { kind: 'experience'; id: string }
-  | { kind: 'education'; id: string }
-  | {
-      kind: 'research'
-      collection:
-        | 'acceptedConferencePapers'
-        | 'peerReviewedPublications'
-        | 'conferenceAbstracts'
-      id: string
-    }
-  | { kind: 'system'; id: string }
+  | `experience:${string}`
+  | `education:${string}`
+  | `research:${ResearchCollection}:${string}`
+  | `system:${string}`
 
 export interface CareerStoryStage {
   id: string
   label: string
   evidence: string
   meaning: string
-  references: CareerEvidenceRef[]
+  references: readonly CareerEvidenceRef[]
 }
 
 export interface ArchitectureLayer {
@@ -75,79 +73,69 @@ export const architectureLayers: ArchitectureLayer[] = [
   },
 ]
 
-export const careerStoryStages: CareerStoryStage[] = [
-  {
-    id: 'scientific-computational-foundation',
-    label: 'Scientific and computational foundation',
-    evidence:
-      'Mathematics, physics, and computer science training led to magnetometer analysis in IDL and Python, two 2017 AGU abstracts, and a 2018 peer-reviewed JGR: Space Physics paper.',
-    meaning:
-      'Evidence quality, reproducibility, and careful interpretation became part of the engineering approach from the beginning.',
-    references: [
-      { kind: 'education', id: 'augsburg' },
-      { kind: 'experience', id: 'space-physics' },
-      {
-        kind: 'research',
-        collection: 'peerReviewedPublications',
-        id: 'emic-wave-events',
-      },
-    ],
-  },
-  {
-    id: 'enterprise-software-systems',
-    label: 'Enterprise software systems',
-    evidence:
-      'Application and platform work expanded across e-commerce, React, Kotlin microservices, Kubernetes delivery, and modernization in large operating environments.',
-    meaning:
-      'The work grew from features into the interfaces, services, repositories, and delivery paths that make software operable at enterprise scale.',
-    references: [
-      { kind: 'experience', id: 'graphic-systems' },
-      { kind: 'experience', id: 'target' },
-    ],
-  },
-  {
-    id: 'security-platform-engineering',
-    label: 'Security and platform engineering',
-    evidence:
-      'Work at GE Aerospace and Securian covered application security, API hardening, OpenShift, Ansible, AWS infrastructure, Kubernetes support, and workflow automation.',
-    meaning:
-      'Security, infrastructure, automation, and reliability became design inputs rather than post-build concerns.',
-    references: [
-      { kind: 'experience', id: 'ge-aviation' },
-      { kind: 'experience', id: 'securian' },
-    ],
-  },
-  {
-    id: 'production-ownership',
-    label: 'End-to-end production ownership',
-    evidence:
-      'Founder and Principal Software Engineer work spans architecture, application development, infrastructure, deployment, security, and support. VIFG is the clearest public proof, live since 2020.',
-    meaning:
-      'Architecture decisions are tested against deployment, accessibility, maintenance, and the people responsible after launch.',
-    references: [
-      { kind: 'experience', id: 'peoples-connection' },
-      { kind: 'system', id: 'vifg-nonprofit-platform' },
-    ],
-  },
-  {
-    id: 'ai-data-specialization',
-    label: 'AI and data specialization',
-    evidence:
-      'Graduate AI and Big Data study, accepted retrieval research, and bounded WeatherForge and RAGeATM prototypes extend the foundation into data engineering, grounding, evaluation, and refusal behavior.',
-    meaning:
-      'AI is treated as one capability inside a larger production system, with evidence and limits kept explicit.',
-    references: [
-      { kind: 'education', id: 'ust' },
-      {
-        kind: 'research',
-        collection: 'acceptedConferencePapers',
-        id: 'urarina-hybrid-retrieval',
-      },
-      { kind: 'system', id: 'weatherforge' },
-      { kind: 'system', id: 'rageatm' },
-    ],
-  },
+type CareerStoryStageDefinition = readonly [
+  id: string,
+  label: string,
+  evidence: string,
+  meaning: string,
+  references: readonly CareerEvidenceRef[],
 ]
+
+const careerStoryStageDefinitions = [
+  [
+    'scientific-computational-foundation',
+    'Scientific and computational foundation',
+    'Mathematics, physics, and computer science training led to magnetometer analysis in IDL and Python, two 2017 AGU abstracts, and a 2018 peer-reviewed JGR: Space Physics paper.',
+    'Evidence quality, reproducibility, and careful interpretation became part of the engineering approach from the beginning.',
+    [
+      'education:augsburg',
+      'experience:space-physics',
+      'research:peerReviewedPublications:emic-wave-events',
+    ],
+  ],
+  [
+    'enterprise-software-systems',
+    'Enterprise software systems',
+    'Application and platform work expanded across e-commerce, React, Kotlin microservices, Kubernetes delivery, and modernization in large operating environments.',
+    'The work grew from features into the interfaces, services, repositories, and delivery paths that make software operable at enterprise scale.',
+    ['experience:graphic-systems', 'experience:target'],
+  ],
+  [
+    'security-platform-engineering',
+    'Security and platform engineering',
+    'Work at GE Aerospace and Securian covered application security, API hardening, OpenShift, Ansible, AWS infrastructure, Kubernetes support, and workflow automation.',
+    'Security, infrastructure, automation, and reliability became design inputs rather than post-build concerns.',
+    ['experience:ge-aviation', 'experience:securian'],
+  ],
+  [
+    'production-ownership',
+    'End-to-end production ownership',
+    'Founder and Principal Software Engineer work spans architecture, application development, infrastructure, deployment, security, and support. VIFG is the clearest public proof, live since 2020.',
+    'Architecture decisions are tested against deployment, accessibility, maintenance, and the people responsible after launch.',
+    ['experience:peoples-connection', 'system:vifg-nonprofit-platform'],
+  ],
+  [
+    'ai-data-specialization',
+    'AI and data specialization',
+    'Graduate AI and Big Data study, accepted retrieval research, and bounded WeatherForge and RAGeATM prototypes extend the foundation into data engineering, grounding, evaluation, and refusal behavior.',
+    'AI is treated as one capability inside a larger production system, with evidence and limits kept explicit.',
+    [
+      'education:ust',
+      'research:acceptedConferencePapers:urarina-hybrid-retrieval',
+      'system:weatherforge',
+      'system:rageatm',
+    ],
+  ],
+] as const satisfies readonly CareerStoryStageDefinition[]
+
+export const careerStoryStages: CareerStoryStage[] =
+  careerStoryStageDefinitions.map(([id, label, evidence, meaning, references]) => ({
+    id,
+    label,
+    evidence,
+    meaning,
+    references,
+  }))
 
 export const fullTimeRoleFamilies = [
   'AI Systems / Platform Architect',
