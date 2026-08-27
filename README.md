@@ -61,7 +61,7 @@ bounded facts, not by making stronger claims.
 
 ```bash
 nvm use
-npm ci
+npm ci --ignore-scripts
 npm run dev
 ```
 
@@ -116,13 +116,15 @@ Use Node 20 and a clean install for verification:
 
 ```bash
 nvm use
-npm ci
+npm ci --ignore-scripts
 npm run lint
+npm run typecheck
+npm run test:coverage
 npm test
-npx tsc --noEmit
 npm run build
 npm run size-check
-npx playwright test e2e/smoke.spec.ts e2e/a11y.spec.ts --project=chromium
+npm run e2e:install
+npm run e2e
 ```
 
 ## Security and Analysis
@@ -130,11 +132,12 @@ npx playwright test e2e/smoke.spec.ts e2e/a11y.spec.ts --project=chromium
 The repo uses GitHub CI, CodeQL, Dependabot alerts/security updates,
 Dependabot malware alerting, SonarQube Cloud / SonarCloud analysis, and Vercel
 preview deployment checks as separate signals. SonarCloud runs on pull requests
-and pushes to `master`; it requires `SONAR_TOKEN` in both Actions secrets and
-Dependabot secrets for Dependabot-originated pull requests.
+and pushes to `master`; CI supplies its validated `coverage/lcov.info` artifact.
+It requires `SONAR_TOKEN` in both Actions secrets and Dependabot secrets for
+Dependabot-originated pull requests.
 
 See [Security and Code Analysis](docs/security-and-analysis.md) for setup notes
-and the post-merge SonarCloud verification checklist.
+and the remote SonarCloud verification checklist.
 
 ## Proof and Honesty Rules
 
