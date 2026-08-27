@@ -40,29 +40,39 @@ function isAllowedLocalDevOrigin(origin: string): boolean {
   }
 }
 
-function isAllowedOrigin(request: Request): boolean {
-  const origin = request.headers.get('origin')
-  if (origin && ALLOWED_ORIGINS.has(origin)) return true
-  if (origin && isAllowedLocalDevOrigin(origin)) return true
+function isAllowedOriginValue(origin: string, vercelUrl?: string): boolean {
+  const isVercelPreviewOrigin = Boolean(
+    vercelUrl && origin === `https://${vercelUrl}`
+  )
 
-  // Accept Vercel preview deployments (*.vercel.app)
+  return (
+    ALLOWED_ORIGINS.has(origin) ||
+    isAllowedLocalDevOrigin(origin) ||
+    isVercelPreviewOrigin
+  )
+}
+
+function getRefererOrigin(request: Request): string | null {
+  const referer = request.headers.get('referer')
+  if (!referer) return null
+
+  try {
+    return new URL(referer).origin
+  } catch {
+    return null
+  }
+}
+
+function isAllowedOrigin(request: Request): boolean {
   const vercelUrl = process.env.VERCEL_URL
-  if (origin && vercelUrl && origin === `https://${vercelUrl}`) return true
+  const origin = request.headers.get('origin')
+  if (origin && isAllowedOriginValue(origin, vercelUrl)) return true
 
   // Fallback: check Referer header (some clients omit Origin on same-origin)
-  const referer = request.headers.get('referer')
-  if (referer) {
-    try {
-      const refererOrigin = new URL(referer).origin
-      if (ALLOWED_ORIGINS.has(refererOrigin)) return true
-      if (isAllowedLocalDevOrigin(refererOrigin)) return true
-      if (vercelUrl && refererOrigin === `https://${vercelUrl}`) return true
-    } catch {
-      // malformed Referer: reject
-    }
-  }
-
-  return false
+  const refererOrigin = getRefererOrigin(request)
+  return (
+    refererOrigin !== null && isAllowedOriginValue(refererOrigin, vercelUrl)
+  )
 }
 
 function getSubmissionId(request: Request): string | null {

@@ -45,6 +45,7 @@ describe('POST /api/contact', () => {
     vi.stubEnv('CONTACT_NOTIFICATION_EMAIL', 'owner@example.com')
     vi.stubEnv('CONTACT_FROM_EMAIL', 'contact@dbraun.io')
     vi.stubEnv('CONTACT_FROM_NAME', 'dbraun.io Contact')
+    vi.stubEnv('VERCEL_URL', '')
     // Ensure Upstash is never used in unit tests, regardless of env
     vi.stubEnv('UPSTASH_REDIS_REST_URL', '')
     vi.stubEnv('UPSTASH_REDIS_REST_TOKEN', '')
@@ -280,6 +281,17 @@ describe('POST /api/contact', () => {
     expect(res.status).toBe(200)
   })
 
+  it('accepts the configured Vercel preview origin', async () => {
+    vi.stubEnv('VERCEL_URL', 'portfolio-preview.vercel.app')
+
+    const res = await POST(
+      createRequest(validBody, {
+        origin: 'https://portfolio-preview.vercel.app',
+      })
+    )
+    expect(res.status).toBe(200)
+  })
+
   it('accepts localhost origins on non-default dev ports', async () => {
     const res = await POST(
       createRequest(validBody, { origin: 'http://localhost:3001' })
@@ -299,5 +311,35 @@ describe('POST /api/contact', () => {
     })
     const res = await POST(req)
     expect(res.status).toBe(200)
+  })
+
+  it('accepts the configured Vercel preview referer when origin is missing', async () => {
+    vi.stubEnv('VERCEL_URL', 'portfolio-preview.vercel.app')
+
+    const req = new Request('http://localhost:3000/api/contact', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-real-ip': '127.0.0.1',
+        'referer': 'https://portfolio-preview.vercel.app/contact',
+      },
+      body: JSON.stringify(validBody),
+    })
+    const res = await POST(req)
+    expect(res.status).toBe(200)
+  })
+
+  it('rejects a malformed referer when origin is missing', async () => {
+    const req = new Request('http://localhost:3000/api/contact', {
+      method: 'POST',
+      headers: {
+        'Content-Type': 'application/json',
+        'x-real-ip': '127.0.0.1',
+        'referer': 'not-a-valid-url',
+      },
+      body: JSON.stringify(validBody),
+    })
+    const res = await POST(req)
+    expect(res.status).toBe(403)
   })
 })
