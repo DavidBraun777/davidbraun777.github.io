@@ -2,6 +2,7 @@ import { test, expect, type Page } from '@playwright/test'
 
 const keyBuyerRoutes = [
   '/',
+  '/services',
   '/contact',
   '/case-studies',
   '/research',
@@ -14,6 +15,8 @@ const aguProfileUrl =
   'https://www.agu.org/user-profile?cstkey=BF392314-D7E6-40A7-ACDF-DC1318123068'
 const credlyUrl =
   'https://www.credly.com/badges/9e9d0587-054e-44d4-9ab7-66bc451c85d2/public_url'
+const previousPrimaryIdentity =
+  'AI Systems Engineer · Full-Stack & Platform Engineer · Researcher'
 
 function trackConsoleErrors(page: Page) {
   const errors: string[] = []
@@ -33,15 +36,53 @@ function trackConsoleErrors(page: Page) {
 test.describe('Smoke tests', () => {
   test('homepage loads and shows hero section', async ({ page }) => {
     await page.goto('/')
-    await expect(page).toHaveTitle(/David Braun/)
-    // Hero section should be visible
+    const canonicalDescription =
+      'David Braun is an AI Systems / Platform Architect who takes AI and data capabilities into secure, deployable, measurable operational systems.'
+
+    await expect(page).toHaveTitle('David Braun | AI Systems / Platform Architect')
     const main = page.locator('main')
     await expect(main).toBeVisible()
     await expect(
-      main.getByText('AI Systems Engineer · Full-Stack & Platform Engineer · Researcher', {
+      main.getByRole('heading', {
+        level: 1,
+        name: 'AI Systems / Platform Architect',
         exact: true,
       })
     ).toBeVisible()
+    await expect(
+      main.getByText(previousPrimaryIdentity, { exact: true })
+    ).toHaveCount(0)
+    await expect(page.locator('meta[name="description"]')).toHaveAttribute(
+      'content',
+      canonicalDescription
+    )
+    await expect(page.locator('meta[property="og:title"]')).toHaveAttribute(
+      'content',
+      'David Braun | AI Systems / Platform Architect'
+    )
+    await expect(page.locator('meta[property="og:description"]')).toHaveAttribute(
+      'content',
+      canonicalDescription
+    )
+    await expect(page.locator('meta[name="twitter:title"]')).toHaveAttribute(
+      'content',
+      'David Braun | AI Systems / Platform Architect'
+    )
+    await expect(page.locator('meta[name="twitter:description"]')).toHaveAttribute(
+      'content',
+      canonicalDescription
+    )
+    await expect(page.locator('meta[property="og:image"]')).toHaveAttribute(
+      'content',
+      /\/opengraph-image/
+    )
+    await expect(page.locator('meta[name="twitter:image"]')).toHaveAttribute(
+      'content',
+      /\/twitter-image/
+    )
+    await expect(
+      main.getByRole('link', { name: 'For Employers & Partners', exact: true })
+    ).toHaveAttribute('href', '/why-work-with-me')
   })
 
   test('navigation links are present', async ({ page }) => {
@@ -83,6 +124,12 @@ test.describe('Smoke tests', () => {
       page.getByRole('heading', { name: /^peer-reviewed publications$/i })
     ).toBeVisible()
     await expect(page.getByRole('heading', { name: /^conference abstracts$/i })).toBeVisible()
+    await expect(
+      page.getByRole('heading', { name: 'How research informs systems work', exact: true })
+    ).toBeVisible()
+    await expect(
+      page.getByText(/it is not presented as full machine translation/i).first()
+    ).toBeVisible()
 
     const orcidLink = page.getByRole('link', { name: /view orcid record/i })
     await expect(orcidLink).toHaveAttribute('href', orcidUrl)
@@ -152,8 +199,13 @@ test.describe('Smoke tests', () => {
       .allTextContents()
     const records = structuredData.map((content) => JSON.parse(content))
     const person = records.find((record) => record['@type'] === 'Person')
+    const website = records.find((record) => record['@type'] === 'WebSite')
 
     expect(person).toBeDefined()
+    expect(person.jobTitle).toBeUndefined()
+    expect(person.description).toBe(
+      'I design the systems around AI and data, including applications, APIs, workflows, cloud infrastructure, security, evaluation, observability, and human handoff, so they can operate reliably in production.'
+    )
     expect(person.sameAs).toEqual(
       expect.arrayContaining([
         'https://github.com/DavidBraun777',
@@ -165,6 +217,8 @@ test.describe('Smoke tests', () => {
     expect(person.knowsAbout).toEqual(
       expect.arrayContaining([
         'Software engineering',
+        'AI systems architecture',
+        'AI platform engineering',
         'Workflow automation',
         'Data engineering',
         'Information Retrieval',
@@ -175,6 +229,10 @@ test.describe('Smoke tests', () => {
         'Magnetospheric Physics',
         'Space Weather',
       ])
+    )
+    expect(website).toBeDefined()
+    expect(website.description).toBe(
+      'David Braun is an AI Systems / Platform Architect who takes AI and data capabilities into secure, deployable, measurable operational systems.'
     )
   })
 
@@ -208,9 +266,10 @@ test.describe('Smoke tests', () => {
   test('homepage primary CTA goes to contact', async ({ page }) => {
     await page.goto('/')
     await expect(
-      page.getByRole('heading', {
-        name: /remove manual work from the workflows that keep slowing your business down/i,
-      })
+      page.getByText(
+        'Turn AI and data capabilities into secure, deployable systems that hold up in production.',
+        { exact: true }
+      )
     ).toBeVisible()
     await page.getByRole('link', { name: /^book a call$/i }).first().click()
     await expect(page).toHaveURL(/\/contact$/)
@@ -238,6 +297,20 @@ test.describe('Smoke tests', () => {
 
   test('why work with me shows corrected credential links and research path', async ({ page }) => {
     await page.goto('/why-work-with-me')
+
+    for (const stage of [
+      'Scientific and computational foundation',
+      'Enterprise software systems',
+      'Security and platform engineering',
+      'End-to-end production ownership',
+      'AI and data specialization',
+    ]) {
+      await expect(page.getByRole('heading', { name: stage, exact: true })).toBeVisible()
+    }
+    await expect(
+      page.getByRole('heading', { name: 'Full-Time / Embedded', exact: true })
+    ).toBeVisible()
+    await expect(page.getByRole('heading', { name: 'Consulting', exact: true })).toBeVisible()
 
     const currentWork = page.getByText('Current public work', { exact: true }).locator('..')
     await expect(currentWork).not.toContainText('time2move.io')
@@ -322,6 +395,7 @@ test.describe('Smoke tests', () => {
       await page.goto(route)
       await expect(page.locator('main')).toBeVisible()
       await expect(page.getByRole('heading', { level: 1 }).first()).toBeVisible()
+      await expect(page.getByText(previousPrimaryIdentity, { exact: true })).toHaveCount(0)
     }
 
     expect(errors).toEqual([])

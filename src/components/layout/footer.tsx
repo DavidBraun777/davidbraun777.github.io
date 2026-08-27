@@ -1,4 +1,5 @@
 import Link from 'next/link'
+import { northStarIdentity } from '@/data/career-story'
 import { primaryNavigation, profile } from '@/data/profile'
 import { resumeUrl, socialLinks } from '@/data/social-links'
 
@@ -20,9 +21,12 @@ export function Footer() {
           <Link href="/" className="text-2xl font-semibold tracking-tight text-[var(--theme-frame-text)]">
             {profile.name}
           </Link>
+          <p className="mt-2 text-sm font-medium text-[var(--theme-frame-text)]">
+            {northStarIdentity}
+          </p>
           <p className="mt-3 max-w-md text-sm leading-7 text-[var(--theme-frame-text-muted)]">
-            Consulting for businesses that need workflow automation, better system
-            handoffs, and software that stays dependable after launch.
+            Designing the applications, workflows, cloud platforms, security controls,
+            evaluation, and operating paths around AI and data capabilities.
           </p>
           <p className="mt-4 text-sm text-[var(--theme-frame-text-muted)]">
             {profile.faithStatement}

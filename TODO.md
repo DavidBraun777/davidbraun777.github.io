@@ -46,12 +46,15 @@ operational details from David. Do not invent proof.
 ## Done / Retired
 
 - [x] VIFG restored as first public production proof.
-- [x] Workflow-first homepage/contact/services framing restored.
+- [x] Workflow-first homepage/contact/services framing completed during an earlier
+  positioning phase; the homepage and services framing is now superseded by the
+  AI Systems / Platform Architect north star while contact remains a consulting path.
 - [x] Primary CTA restored to `Book a Call`.
 - [x] Resume URL fixed to `/resume.pdf`.
 - [x] Case-study index restored to production/pilot/prototype/R&D hierarchy.
 - [x] WeatherForge and RAGeATM kept secondary and honestly labeled.
 - [x] RAGeATM retrieval ladder added collapsed by default with overclaim guardrails.
-- [x] Header, footer, metadata, and social card restored to workflow automation consulting.
+- [x] Header, footer, metadata, and social card aligned during the earlier consulting
+  phase; they are now superseded by the AI Systems / Platform Architect identity.
 - [x] Old live-vs-local restoration recommendations retired as historical context.
 - [x] Lightweight Playwright coverage added for console errors, mobile rendering, and additional axe scans.

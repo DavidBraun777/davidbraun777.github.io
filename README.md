@@ -1,17 +1,47 @@
 # dbraun.io
 
-Consulting-focused website for David Braun. The site is a workflow automation
-and systems consulting portfolio, not a generic personal homepage.
+Professional portfolio for David Braun, organized around a single systems-level
+identity while retaining consulting, delivery, enterprise, and research proof.
 
 **Live site:** [dbraun.io](https://dbraun.io)
 
-## Current Positioning
+## Professional North Star
 
-dbraun.io presents practical workflow automation, system integration, data
-movement, and operational software work for small and midsized businesses. It
-also keeps enough engineering detail to remain credible to technical reviewers.
+**Primary identity:** AI Systems / Platform Architect
 
-The current proof hierarchy is intentional:
+**North-star statement:** A systems-level engineer who can take AI/data
+capabilities and turn them into secure, deployable, measurable operational
+systems.
+
+The identity synthesizes software, APIs, workflows, data, cloud infrastructure,
+security, evaluation, observability, and operational ownership. These are layers
+of one professional story, not competing titles. Workflow automation, system
+integration, operational software, and SMB consulting remain valid commercial
+applications of the broader identity.
+
+This is David's current professional positioning, not a retroactive employer
+title. Preserve historical job titles and describe role scope with evidence.
+Future website changes should strengthen the north star through deployed systems,
+bounded outcomes, architecture artifacts, and verifiable technical decisions.
+
+## Evidence Ladder
+
+Use this order when deciding what should receive the most emphasis:
+
+1. Production systems with real operational ownership
+2. Measured business, user, or reliability outcomes
+3. Architecture and platform artifacts
+4. Production AI/data systems with evaluation
+5. Enterprise engineering evidence
+6. Research and reproducibility
+7. Credentials and memberships
+8. Technology lists
+
+Higher-level evidence should dominate lower-level evidence. A real deployed
+system is more persuasive than ten technology badges, and a measured outcome is
+more persuasive than a vague claim.
+
+The current project evidence remains deliberately classified:
 
 - [VIFG nonprofit platform](https://www.vifg.org/home) is the strongest public
   production proof.
@@ -28,8 +58,170 @@ The current proof hierarchy is intentional:
 - `DGM` and `StormIQ`, where present, represent active or planned system
   direction rather than finished production products.
 
-The site should become more convincing by adding real proof artifacts and
-bounded facts, not by making stronger claims.
+## What Is Still Missing
+
+This is an evidence roadmap, not a list of claims. Check an item only after the
+artifact or outcome exists and can be represented truthfully.
+
+### Production AI Proof
+
+- [ ] One genuinely deployed AI/retrieval/data system used in a real workflow
+- [ ] Real evaluation dataset
+- [ ] Retrieval/model quality metrics
+- [ ] Acceptance, refusal, and error behavior
+- [ ] Latency measurements
+- [ ] Cost measurements where relevant
+- [ ] Production monitoring
+- [ ] Real operational or user outcome
+
+### Platform Architecture Proof
+
+- [ ] High-quality architecture diagram for at least one flagship system
+- [ ] Design/RFC-style explanation of major architecture choices
+- [ ] Alternatives considered
+- [ ] Tradeoff analysis
+- [ ] Infrastructure-as-code evidence where appropriate
+- [ ] Environment and deployment architecture
+- [ ] Failure-mode analysis
+- [ ] Capacity and performance considerations
+
+### Reliability & Operations Proof
+
+- [ ] Logs, metrics, or traces examples
+- [ ] Defined SLI/SLO where a real system warrants it
+- [ ] Incident or failure lesson documented
+- [ ] Recovery and degradation strategy
+- [ ] Load or performance evidence where meaningful
+- [ ] Cost/reliability tradeoff example
+
+### AI Evaluation Proof
+
+- [ ] Regression evaluation
+- [ ] Grounding or hallucination measurement
+- [ ] Retrieval benchmark
+- [ ] Failure taxonomy
+- [ ] Model/system comparison where relevant
+- [ ] Human-review boundary documented
+
+### Security Architecture Proof
+
+- [ ] Threat model for a real system
+- [ ] Authentication and authorization design
+- [ ] Data classification or sensitive-data handling
+- [ ] Security-boundary diagram
+- [ ] Concrete remediation or hardening case study
+
+### Business / Client Outcome Proof
+
+- [ ] Before/after workflow measurement
+- [ ] Manual effort reduced
+- [ ] Time saved
+- [ ] Reliability improved
+- [ ] Adoption or use evidence
+- [ ] Revenue or conversion evidence only when verified
+- [ ] Real testimonials only with permission
+
+### Technical Leadership Proof
+
+Add these only when they are real; do not manufacture leadership artifacts.
+
+- [ ] Architecture RFC
+- [ ] Design review
+- [ ] Mentoring evidence
+- [ ] Cross-team technical decision
+- [ ] Migration plan
+- [ ] Standards or process improvement
+- [ ] Technical leadership outcome
+
+### Research Proof
+
+- [ ] IEEE proceedings/Xplore link when available
+- [ ] DOI when available
+- [ ] arXiv/preprint if actually published
+- [ ] Reproducibility instructions
+- [ ] Public code/data where allowed
+- [ ] Evaluation artifacts
+- [ ] Citation/profile synchronization
+- [ ] Additional peer-reviewed work as it occurs
+
+### Professional Identity Hygiene
+
+- [ ] Synchronize `resume.pdf` with the AI Systems / Platform Architect
+  positioning once an editable resume source is available
+- [ ] Synchronize LinkedIn
+- [ ] Synchronize ORCID
+- [ ] Synchronize the GitHub profile
+- [ ] Review dead and live project links periodically
+- [ ] Label paused projects accurately
+- [ ] Update expired credentials
+- [ ] Update completed degrees immediately
+
+## Claim Upgrade Rules
+
+### Production AI
+
+Do not call a prototype "production AI" until it is genuinely deployed into a
+real operational workflow.
+
+### Architect
+
+The AI Systems / Platform Architect identity must increasingly be backed by
+architecture artifacts, cross-layer decisions, deployed systems,
+security/reliability evidence, and measurable outcomes. It is professional
+positioning, not a fabricated historical appointment.
+
+### Staff / Principal
+
+Do not self-assign Staff or Principal seniority. Let employment history, scope,
+and evidence justify future seniority.
+
+### Scale
+
+Do not claim scale without measured evidence.
+
+### Outcomes
+
+Do not replace evidence with adjectives. Prefer a verified, bounded measure such
+as "40% reduction in manual processing" over "highly efficient automation."
+
+### Technology Lists
+
+Do not promote a technology into a headline merely because it was used once.
+The site should increasingly explain what was designed, why it was designed that
+way, which tradeoff was made, and what happened.
+
+## Growth Priority
+
+1. Stronger production proof
+2. One production-quality AI system
+3. Measured outcomes
+4. Architecture and RFC artifacts
+5. Reliability and observability evidence
+6. Security architecture evidence
+7. Research reproducibility
+8. Technical leadership evidence
+9. New technologies or certifications
+10. Cosmetic website polish
+
+Do not spend significant time polishing the website when stronger real-world
+evidence can be created instead.
+
+## Career Filter
+
+Prefer opportunities that increase systems-level ownership across AI/data,
+software, infrastructure, security, reliability, and operations. Good future
+opportunities should ideally strengthen at least two or three of:
+
+- AI/data
+- software architecture
+- platform/cloud
+- security
+- reliability
+- operations
+- technical leadership
+- measurable outcomes
+
+This keeps future work compounding toward the professional north star.
 
 ## Latest Audit Baseline
 

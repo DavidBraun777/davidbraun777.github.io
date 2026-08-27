@@ -2,14 +2,14 @@ import type { Metadata } from 'next'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
+import { architectureLayers, canonicalSeoDescription } from '@/data/career-story'
 import { profile } from '@/data/profile'
 import { productionSystems, researchSystems } from '@/data/systems'
 import { createPageMetadata } from '@/lib/seo'
 
 export const metadata: Metadata = createPageMetadata({
-  title: 'David Braun | Workflow Automation and Systems Consulting',
-  description:
-    'Workflow automation and systems consulting for small and midsized businesses that want less manual work, better handoffs, and more dependable operations.',
+  title: 'David Braun | AI Systems / Platform Architect',
+  description: canonicalSeoDescription,
   path: '/',
 })
 
@@ -19,30 +19,13 @@ const primaryCtaClass =
 const secondaryCtaClass =
   'inline-flex items-center gap-2 rounded-full border border-border-subtle bg-background-elevated px-6 py-3 text-sm font-medium text-text-secondary transition-colors hover:bg-background-subtle hover:text-text-primary'
 
-const startingPoints = [
-  'Leads are coming in, but follow-up still depends on manual work.',
-  'Important information is copied between systems by hand.',
-  'The team is spending too much time routing requests and chasing updates.',
-]
-
-const capabilityAreas = [
-  {
-    title: 'Workflow automation',
-    description: 'Reduce repeated routing, status checks, follow-up, and manual handling.',
-  },
-  {
-    title: 'System integration',
-    description:
-      'Move the right information between forms, inboxes, CRMs, dashboards, and internal tools.',
-  },
-  {
-    title: 'Data movement',
-    description: 'Clean up operational data flows so reporting, handoffs, and decisions are less fragile.',
-  },
-  {
-    title: 'AI and dashboard support',
-    description: 'Use dashboards, data pipelines, or grounded assistants when they support the workflow.',
-  },
+const systemBoundary = [
+  'Models, retrieval, and data',
+  'Applications and APIs',
+  'Workflow and orchestration',
+  'Cloud and platform delivery',
+  'Security, evaluation, and observability',
+  'Operational ownership and human handoff',
 ]
 
 export default function Home() {
@@ -58,15 +41,15 @@ export default function Home() {
           <div className="grid gap-6 lg:grid-cols-[1.08fr_0.92fr] lg:items-start">
             <div>
               <p className="font-mono text-xs uppercase tracking-[0.22em] text-link-primary">
-                Workflow automation for small and midsized businesses
-              </p>
-              <p className="mt-3 text-sm font-medium tracking-wide text-text-secondary sm:text-base">
-                {profile.professionalIdentity}
+                AI systems · platform architecture · operational software
               </p>
               <h1 className="mt-3 max-w-4xl text-5xl font-semibold tracking-tight text-text-primary sm:text-6xl">
-                {profile.heroHeadline}
+                {profile.professionalIdentity}
               </h1>
-              <p className="mt-6 max-w-3xl text-xl leading-8 text-text-primary sm:text-2xl">
+              <p className="mt-6 max-w-4xl text-2xl font-medium leading-9 text-text-primary sm:text-3xl">
+                {profile.heroHeadline}
+              </p>
+              <p className="mt-5 max-w-3xl text-lg leading-8 text-text-secondary sm:text-xl">
                 {profile.summary}
               </p>
               <p className="mt-4 max-w-3xl text-base leading-8 text-text-secondary sm:text-lg">
@@ -78,8 +61,8 @@ export default function Home() {
                   Book a Call
                   <ArrowRight className="h-4 w-4" />
                 </Link>
-                <Link href="/services" className={secondaryCtaClass}>
-                  View Services
+                <Link href="/why-work-with-me" className={secondaryCtaClass}>
+                  For Employers &amp; Partners
                   <ArrowRight className="h-4 w-4" />
                 </Link>
               </div>
@@ -87,22 +70,28 @@ export default function Home() {
 
             <aside className="rounded-[2rem] border border-border-subtle bg-background-elevated p-6 shadow-sm sm:p-8">
               <p className="font-mono text-xs uppercase tracking-[0.22em] text-link-primary">
-                Common starting points
+                The system boundary
               </p>
-              <div className="mt-5 space-y-3">
-                {startingPoints.map((item) => (
-                  <div
+              <p className="mt-4 text-sm leading-7 text-text-secondary">
+                The model is one layer. Production value depends on the full path around it.
+              </p>
+              <ol className="mt-5 space-y-3">
+                {systemBoundary.map((item, index) => (
+                  <li
                     key={item}
-                    className="rounded-2xl border border-border-subtle bg-background-subtle px-4 py-4 text-sm leading-7 text-text-secondary"
+                    className="flex items-center gap-3 rounded-2xl border border-border-subtle bg-background-subtle px-4 py-3 text-sm leading-7 text-text-secondary"
                   >
-                    {item}
-                  </div>
+                    <span className="flex h-7 w-7 shrink-0 items-center justify-center rounded-full bg-primary-50 font-mono text-xs font-semibold text-primary-700 dark:bg-primary-950/60 dark:text-primary-200">
+                      {index + 1}
+                    </span>
+                    <span>{item}</span>
+                  </li>
                 ))}
-              </div>
+              </ol>
               <div className="mt-6 rounded-[1.5rem] border border-border-subtle bg-background-subtle px-5 py-5">
-                <p className="text-sm font-semibold text-text-primary">Outcome</p>
+                <p className="text-sm font-semibold text-text-primary">Current availability</p>
                 <p className="mt-2 text-sm leading-7 text-text-primary">
-                  Less manual work, cleaner handoffs, and systems people can rely on.
+                  {profile.availability}
                 </p>
               </div>
             </aside>
@@ -186,26 +175,39 @@ export default function Home() {
         <div className="mx-auto max-w-6xl px-4 sm:px-6 lg:px-8">
           <div className="mb-7">
             <p className="font-mono text-xs uppercase tracking-[0.22em] text-link-primary">
-              What I build around the workflow
+              What I architect
             </p>
             <h2 className="mt-3 text-3xl font-semibold tracking-tight text-text-primary">
-              Practical systems for messy operations.
+              Five connected layers from capability to operation.
             </h2>
             <p className="mt-4 max-w-3xl text-base leading-8 text-text-secondary">
-              Applied AI, dashboards, and data pipelines are available when they help the
-              workflow. They are not the top-level offer.
+              I work across the boundaries that turn an AI or data capability into
+              software people can deploy, observe, evaluate, and trust within its limits.
             </p>
           </div>
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
-            {capabilityAreas.map((area) => (
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+            {architectureLayers.map((area, index) => (
               <article
                 key={area.title}
                 className="rounded-[1.25rem] border border-border-subtle bg-background-elevated p-5 shadow-sm"
               >
-                <h3 className="text-lg font-semibold text-text-primary">{area.title}</h3>
+                <p className="font-mono text-xs font-semibold text-link-primary">
+                  0{index + 1}
+                </p>
+                <h3 className="mt-3 text-lg font-semibold text-text-primary">{area.title}</h3>
                 <p className="mt-3 text-sm leading-7 text-text-secondary">
                   {area.description}
                 </p>
+                <div className="mt-4 flex flex-wrap gap-2">
+                  {area.examples.map((example) => (
+                    <span
+                      key={example}
+                      className="rounded-full border border-border-subtle bg-background-subtle px-2.5 py-1 text-xs text-text-secondary"
+                    >
+                      {example}
+                    </span>
+                  ))}
+                </div>
               </article>
             ))}
           </div>

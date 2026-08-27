@@ -10,6 +10,13 @@ import { ExternalLinkAction } from '@/components/ui/external-link-action'
 import { SectionHeader } from '@/components/ui/section-header'
 import { certifications, education } from '@/data/education'
 import { experiences } from '@/data/experience'
+import {
+  careerStoryStages,
+  consultingEngagements,
+  fullTimeRoleFamilies,
+  northStarIdentity,
+  synthesisBoundary,
+} from '@/data/career-story'
 import { companySignals, credibilityPoints, currentWorkReferences, profile, resumeHighlights } from '@/data/profile'
 import { resumeUrl } from '@/data/social-links'
 import { createPageMetadata } from '@/lib/seo'
@@ -17,7 +24,7 @@ import { createPageMetadata } from '@/lib/seo'
 export const metadata: Metadata = createPageMetadata({
   title: 'Why Work With Me',
   description:
-    'Background, delivery experience, and credibility for businesses that need workflow automation and dependable systems.',
+    'The career through-line, delivery evidence, and best-fit roles behind David Braun\'s AI systems and platform architecture work.',
   path: '/why-work-with-me',
 })
 
@@ -27,18 +34,106 @@ export default function WhyWorkWithMePage() {
       <div className="mx-auto max-w-7xl space-y-12 px-4 sm:px-6 lg:px-8">
         <PageIntro
           eyebrow="Why Work With Me"
-          title="Credibility you can skim quickly."
-          description="This page is here to answer the practical buyer questions: have you done real work, can you handle the delivery, and what kind of person will I be working with?"
-          actions={[{ label: 'Book a Call', href: '/contact' }]}
+          title="A systems career that now converges around AI and platform architecture."
+          description="The north-star identity is a synthesis of scientific computing, enterprise software, security and platform engineering, production ownership, and current AI and data specialization. The evidence below keeps each chapter and maturity level explicit."
+          actions={[
+            { label: 'Book a Call', href: '/contact' },
+            { label: 'View Case Studies', href: '/case-studies', variant: 'secondary' },
+          ]}
         />
+
+        <section>
+          <SectionHeader
+            align="left"
+            title="Career through-line"
+            subtitle="Five cumulative chapters that overlap and build on one another. They are not replacements for the historical role titles shown below."
+          />
+          <div className="grid gap-4 lg:grid-cols-5">
+            {careerStoryStages.map((stage, index) => (
+              <article
+                key={stage.id}
+                className="rounded-[1.5rem] border border-border-subtle bg-background-elevated p-5 shadow-sm"
+              >
+                <p className="font-mono text-xs font-semibold text-link-primary">
+                  Chapter {index + 1}
+                </p>
+                <h3 className="mt-3 text-lg font-semibold leading-7 text-text-primary">
+                  {stage.label}
+                </h3>
+                <p className="mt-4 text-sm leading-7 text-text-secondary">
+                  <span className="font-semibold text-text-primary">Evidence:</span>{' '}
+                  {stage.evidence}
+                </p>
+                <p className="mt-3 text-sm leading-7 text-text-secondary">
+                  <span className="font-semibold text-text-primary">What it adds:</span>{' '}
+                  {stage.meaning}
+                </p>
+              </article>
+            ))}
+          </div>
+          <div className="mt-5 rounded-[1.5rem] border border-primary-300/70 bg-primary-50/60 p-5 dark:border-primary-900 dark:bg-primary-950/30">
+            <p className="font-mono text-xs uppercase tracking-[0.18em] text-link-primary">
+              Current synthesis
+            </p>
+            <p className="mt-2 text-xl font-semibold text-text-primary">
+              {northStarIdentity}
+            </p>
+            <p className="mt-2 max-w-4xl text-sm leading-7 text-text-secondary">
+              {synthesisBoundary}
+            </p>
+          </div>
+        </section>
+
+        <section>
+          <SectionHeader
+            align="left"
+            title="Best-fit roles and engagements"
+            subtitle="Two practical ways to work together: embedded roles and scoped architecture or engineering partnerships."
+          />
+          <div className="grid gap-5 lg:grid-cols-2">
+            <article className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm">
+              <h3 className="text-xl font-semibold text-text-primary">
+                Full-Time / Embedded
+              </h3>
+              <p className="mt-3 text-sm leading-7 text-text-secondary">
+                Roles where this background maps well:
+              </p>
+              <ul className="mt-4 grid gap-3 sm:grid-cols-2">
+                {fullTimeRoleFamilies.map((role) => (
+                  <li
+                    key={role}
+                    className="rounded-xl border border-border-subtle bg-background-subtle px-4 py-3 text-sm font-medium text-text-primary"
+                  >
+                    {role}
+                  </li>
+                ))}
+              </ul>
+            </article>
+            <article className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm">
+              <h3 className="text-xl font-semibold text-text-primary">Consulting</h3>
+              <p className="mt-3 text-sm leading-7 text-text-secondary">
+                Focused architecture and engineering engagements:
+              </p>
+              <ul className="mt-4 grid gap-3 sm:grid-cols-2">
+                {consultingEngagements.map((engagement) => (
+                  <li
+                    key={engagement}
+                    className="rounded-xl border border-border-subtle bg-background-subtle px-4 py-3 text-sm font-medium text-text-primary"
+                  >
+                    {engagement}
+                  </li>
+                ))}
+              </ul>
+            </article>
+          </div>
+        </section>
 
         <section className="grid gap-8 lg:grid-cols-[1.05fr_0.95fr]">
           <div className="space-y-5 text-base leading-8 text-text-secondary">
             <p>
-              I work best when the real problem is not just “build this feature,” but
-              “make this part of the business run better.” That usually means cleaning up
-              handoffs, reducing manual work, and building something that still works
-              after launch.
+              I work best when the problem crosses system boundaries: an AI or data
+              capability must connect to applications, infrastructure, security,
+              evaluation, observability, and the people responsible after launch.
             </p>
             <p>
               My background includes enterprise software, security, infrastructure,
@@ -114,7 +209,7 @@ export default function WhyWorkWithMePage() {
           <SectionHeader
             align="left"
             title="Credibility highlights"
-            subtitle="Quick signals that summarize the delivery background behind the consulting work."
+            subtitle="Quick signals that summarize the delivery background behind the systems work."
           />
           <SignalGrid items={resumeHighlights} columns="two" headingLevel="h3" />
         </section>

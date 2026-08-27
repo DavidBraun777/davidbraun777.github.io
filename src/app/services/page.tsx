@@ -7,16 +7,18 @@ import { processPreview, servicesOffered } from '@/data/profile'
 import { createPageMetadata } from '@/lib/seo'
 
 const fitExamples = [
-  'A lead process that still depends on manual follow-up.',
-  'Internal work that gets stuck between forms, spreadsheets, inboxes, and CRMs.',
-  'A useful system that needs to be built cleanly and kept reliable after launch.',
+  'An AI or data capability needs a production architecture around it.',
+  'A workflow crosses applications, APIs, files, queues, and human handoffs.',
+  'A useful system needs secure deployment, evaluation, and clear operating ownership.',
 ]
 
 const supportingCapabilities = [
-  'Dashboards and decision tools',
-  'Data pipelines and cleanup',
-  'Grounded AI assistants',
-  'Internal tools and API glue',
+  'Grounded AI and retrieval',
+  'Applications and APIs',
+  'Cloud and platform delivery',
+  'Data and orchestration',
+  'Security and evaluation',
+  'Operations and handoff',
 ]
 
 const proofExamples = [
@@ -40,7 +42,7 @@ const proofExamples = [
 export const metadata: Metadata = createPageMetadata({
   title: 'Services',
   description:
-    'Workflow automation, system integration, operational software, dashboards, data pipelines, and practical AI support for small and midsized businesses.',
+    'AI systems architecture, platform and cloud architecture, workflow orchestration, reliability, security, evaluation, and operational software.',
   path: '/services',
 })
 
@@ -50,8 +52,8 @@ export default function ServicesPage() {
       <div className="mx-auto max-w-7xl space-y-12 px-4 sm:px-6 lg:px-8">
         <PageIntro
           eyebrow="Services"
-          title="What you can hire me for."
-          description="This page explains the kinds of workflow, integration, automation, and dependable system problems I solve. AI, dashboards, and data pipelines are supporting tools when they make the workflow better."
+          title="Architecture and engineering for systems that have to work beyond the demo."
+          description="I help connect AI and data capabilities to applications, workflows, cloud platforms, security controls, evaluation, and operating ownership. Engagements stay framed around the business problem and the evidence needed to call the result successful."
           actions={[
             { label: 'Book a Call', href: '/contact' },
             { label: 'View Case Studies', href: '/case-studies', variant: 'secondary' },
@@ -62,7 +64,7 @@ export default function ServicesPage() {
           <SectionHeader
             align="left"
             title="Core services"
-            subtitle="Framed around business problems and outcomes before technical labels."
+            subtitle="Five connected areas, each framed around the problem, delivery boundary, and operational outcome."
           />
           <div className="grid gap-5 md:grid-cols-2">
             {servicesOffered.map((service) => {
@@ -104,7 +106,7 @@ export default function ServicesPage() {
             <SectionHeader
               align="left"
               title="Good fit projects"
-              subtitle="This is usually a fit when one of these is already causing friction."
+              subtitle="This is usually a fit when one of these system boundaries is already causing friction."
               className="mb-8"
             />
             <div className="space-y-3">
@@ -123,7 +125,7 @@ export default function ServicesPage() {
             <SectionHeader
               align="left"
               title="How work usually starts"
-              subtitle="Simple, scoped, and tied to the workflow that needs to improve."
+              subtitle="Simple, scoped, and tied to the system behavior that needs to improve."
               className="mb-8"
             />
             <div className="space-y-5">
@@ -150,8 +152,8 @@ export default function ServicesPage() {
               Supporting technical capabilities
             </h2>
             <p className="mt-4 text-sm leading-7 text-text-secondary">
-              These are tools inside the delivery work, not a replacement for workflow
-              analysis, integration discipline, and operational reliability.
+              These are layers inside the delivery work. The architecture connects them
+              around a measurable workflow, explicit limits, and operational reliability.
             </p>
             <div className="mt-5 flex flex-wrap gap-2">
               {supportingCapabilities.map((capability) => (
@@ -193,12 +195,12 @@ export default function ServicesPage() {
 
         <section className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 text-center shadow-sm sm:p-8">
           <h2 className="text-3xl font-semibold tracking-tight text-text-primary">
-            Have a workflow or system to improve?
+            Have an AI, data, platform, or workflow system to improve?
           </h2>
           <p className="mx-auto mt-4 max-w-2xl text-base leading-8 text-text-secondary">
-            Send the workflow, handoff, lead process, data movement, internal tool, or
-            AI-assisted workflow idea. I will help decide whether a small build or
-            technical review is the right first step.
+            Send the capability, workflow, platform boundary, data movement, or
+            operational constraint. I will help decide whether architecture review,
+            integration work, or a scoped build is the right first step.
           </p>
           <Link
             href="/contact"

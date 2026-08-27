@@ -3,6 +3,7 @@ import { PageIntro } from '@/components/site/page-intro'
 import { Badge } from '@/components/ui/badge'
 import { ExternalLinkAction } from '@/components/ui/external-link-action'
 import { SectionHeader } from '@/components/ui/section-header'
+import { researchToSystemsPractices } from '@/data/career-story'
 import {
   acceptedConferencePapers,
   conferenceAbstracts,
@@ -27,7 +28,7 @@ export default function ResearchPage() {
         <PageIntro
           eyebrow="Research"
           title="Research across artificial intelligence, language, and physical systems."
-          description="David Braun is an artificial intelligence researcher and systems engineer pursuing a Master of Science in Artificial Intelligence at the University of St. Thomas. His current work includes hybrid information retrieval for Urarina–Spanish archival material."
+          description="Research informs how I evaluate evidence, retrieval quality, uncertainty, and system limits. Current work includes hybrid information retrieval for Urarina–Spanish archival material while I pursue a Master of Science in Artificial Intelligence at the University of St. Thomas."
           actions={researchProfileLinks.map((profile, index) => ({
             label: profile.actionLabel,
             href: profile.url,
@@ -73,6 +74,34 @@ export default function ResearchPage() {
               peer-reviewed paper in the Journal of Geophysical Research: Space Physics.
             </p>
           </article>
+        </section>
+
+        <section>
+          <SectionHeader
+            align="left"
+            title="How research informs systems work"
+            subtitle="Research is supporting evidence for disciplined system design, not a substitute for production proof."
+          />
+          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
+            {researchToSystemsPractices.map((practice) => (
+              <article
+                key={practice.title}
+                className="rounded-[1.5rem] border border-border-subtle bg-background-elevated p-5 shadow-sm"
+              >
+                <h3 className="text-lg font-semibold text-text-primary">
+                  {practice.title}
+                </h3>
+                <p className="mt-3 text-sm leading-7 text-text-secondary">
+                  {practice.description}
+                </p>
+              </article>
+            ))}
+          </div>
+          <p className="mt-5 max-w-4xl text-sm leading-7 text-text-secondary">
+            The Urarina work is retrieval and alignment research over archival material.
+            It is not presented as full machine translation, and accepted conference
+            work remains listed separately from formally published research.
+          </p>
         </section>
 
         <section>
