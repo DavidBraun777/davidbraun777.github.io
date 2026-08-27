@@ -7,7 +7,7 @@ retired recommendations. Do not use it as a redesign queue.
 
 - [ ] Verify the live contact form end to end with one controlled production submission.
 - [ ] Decide whether Google Analytics should collect now. If yes, verify no browser console block; if no, keep `NEXT_PUBLIC_GA_ID` unset.
-- [ ] Before dependency/security work, verify with Node 20 and a clean `npm ci` environment so local drift does not hide lockfile issues.
+- [ ] Before dependency/security work, verify with Node 20 and a clean `npm ci --ignore-scripts` environment so local drift does not hide lockfile issues.
 
 ## P1 Buyer/Portfolio Improvements
 
@@ -25,7 +25,7 @@ operational details from David. Do not invent proof.
 ## P2 Technical Polish
 
 - [ ] Broaden Playwright coverage beyond the current smoke/a11y suite when it catches real deployment risk.
-- [ ] After PR #86 merges, verify the SonarCloud `master` push analysis, Quality Gate, and security hotspots in SonarQube Cloud.
+- [ ] Confirm the integrated Sonar job remains the sole scan path on normal and Dependabot pull requests while retaining LCOV import and explicit test classification.
 - [ ] Keep SonarCloud out of required branch protection until it has a few stable runs on normal and Dependabot pull requests.
 - [ ] Add Service or CreativeWork schema only where it maps to real pages and proof.
 - [ ] Add a simple privacy page if GA/contact intake remain live.
@@ -40,7 +40,7 @@ operational details from David. Do not invent proof.
 - [ ] Publish more thought-leadership only after proof density improves.
 - [ ] Add testimonials only if they are real, specific, and strong.
 - [ ] Do non-essential UI polish only when attached to a real buyer-facing improvement.
-- [ ] Consider Sonar coverage reporting later if tests produce `coverage/lcov.info`.
+- [ ] Revisit CPD exclusions and New Code configuration only after the repaired Sonar measurement pipeline has a trustworthy baseline.
 - [ ] Consider OSSF Scorecard or OSV Scanner later; do not add either until current CI/security signals are stable.
 
 ## Done / Retired

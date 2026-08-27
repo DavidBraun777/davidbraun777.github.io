@@ -10,8 +10,12 @@
     "build": "next build",
     "start": "next start",
     "lint": "eslint .",
+    "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
+    "test:coverage": "vitest run --coverage",
+    "e2e": "playwright test --project=chromium",
+    "e2e:install": "playwright install --with-deps chromium",
     "size-check": "node scripts/check-bundle-size.mjs"
   },
   "dependencies": {
@@ -44,6 +48,7 @@
     "@types/node": "^25.6.0",
     "@types/react": "^19.2.14",
     "@types/react-dom": "^19.2.3",
+    "@vitest/coverage-v8": "4.1.5",
     "autoprefixer": "^10.5.0",
     "eslint": "^9.39.2",
     "eslint-config-next": "^16.2.5",
