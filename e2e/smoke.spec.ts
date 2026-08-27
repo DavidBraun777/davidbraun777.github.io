@@ -35,7 +35,13 @@ test.describe('Smoke tests', () => {
     await page.goto('/')
     await expect(page).toHaveTitle(/David Braun/)
     // Hero section should be visible
-    await expect(page.locator('main')).toBeVisible()
+    const main = page.locator('main')
+    await expect(main).toBeVisible()
+    await expect(
+      main.getByText('AI Systems Engineer · Full-Stack & Platform Engineer · Researcher', {
+        exact: true,
+      })
+    ).toBeVisible()
   })
 
   test('navigation links are present', async ({ page }) => {
@@ -91,6 +97,30 @@ test.describe('Smoke tests', () => {
     await expect(doiLink).toHaveAttribute('target', '_blank')
 
     for (const link of [orcidLink, aguLink, doiLink]) {
+      const rel = await link.getAttribute('rel')
+      expect(rel).toContain('noopener')
+      expect(rel).toContain('noreferrer')
+    }
+
+    const affiliationLinks = [
+      {
+        name: 'Visit Institute of Electrical and Electronics Engineers',
+        href: 'https://www.ieee.org/',
+      },
+      {
+        name: 'Visit Association for Computing Machinery',
+        href: 'https://www.acm.org/',
+      },
+      {
+        name: 'Visit Toastmasters International',
+        href: 'https://www.toastmasters.org/',
+      },
+    ]
+
+    for (const affiliation of affiliationLinks) {
+      const link = page.getByRole('link', { name: affiliation.name, exact: true })
+      await expect(link).toHaveAttribute('href', affiliation.href)
+      await expect(link).toHaveAttribute('target', '_blank')
       const rel = await link.getAttribute('rel')
       expect(rel).toContain('noopener')
       expect(rel).toContain('noreferrer')
@@ -208,6 +238,17 @@ test.describe('Smoke tests', () => {
 
   test('why work with me shows corrected credential links and research path', async ({ page }) => {
     await page.goto('/why-work-with-me')
+
+    const currentWork = page.getByText('Current public work', { exact: true }).locator('..')
+    await expect(currentWork).not.toContainText('time2move.io')
+    await expect(
+      currentWork.getByRole('link', { name: 'Visit arklandscaping.net', exact: true })
+    ).toHaveAttribute('href', 'https://arklandscaping.net')
+    await expect(
+      page.getByText(
+        /past client delivery has also included time2move\.io, which is currently paused/i
+      )
+    ).toBeVisible()
 
     await expect(
       page.getByRole('link', { name: /review research and publications/i })

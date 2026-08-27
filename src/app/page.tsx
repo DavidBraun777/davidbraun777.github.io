@@ -60,7 +60,10 @@ export default function Home() {
               <p className="font-mono text-xs uppercase tracking-[0.22em] text-link-primary">
                 Workflow automation for small and midsized businesses
               </p>
-              <h1 className="mt-4 max-w-4xl text-5xl font-semibold tracking-tight text-text-primary sm:text-6xl">
+              <p className="mt-3 text-sm font-medium tracking-wide text-text-secondary sm:text-base">
+                {profile.professionalIdentity}
+              </p>
+              <h1 className="mt-3 max-w-4xl text-5xl font-semibold tracking-tight text-text-primary sm:text-6xl">
                 {profile.heroHeadline}
               </h1>
               <p className="mt-6 max-w-3xl text-xl leading-8 text-text-primary sm:text-2xl">

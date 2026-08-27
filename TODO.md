@@ -20,7 +20,7 @@ operational details from David. Do not invent proof.
 - [ ] Add WeatherForge dashboard screenshots and reproducible data-refresh/validation notes.
 - [ ] Add a small RAGeATM demo surface or terminal/log proof, then mirror the retrieval ladder into the RAGeATM GitHub README/docs.
 - [ ] Human-review ownership, status, and production/pilot/prototype wording line by line.
-- [ ] Re-check public proof links monthly: VIFG, time2move, arklandscaping, WeatherForge GitHub, RAGeATM GitHub, resume PDF.
+- [ ] Re-check current public proof links monthly: VIFG, arklandscaping, WeatherForge GitHub, RAGeATM GitHub, resume PDF.
 
 ## P2 Technical Polish
 

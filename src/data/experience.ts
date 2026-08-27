@@ -26,7 +26,7 @@ export const experiences: Experience[] = [
       'Own the production VIFG platform across React, Docker, Nginx, AWS Lightsail, Route 53, SSL/TLS, accessibility validation, and ongoing support',
       'Built GitHub Actions workflows for testing, security and dependency checks, Docker publishing to Amazon ECR, and repeatable AWS deployments',
       'Delivered a QR-based wedding media platform, primarily provisioned with AWS CloudFormation, that enabled guests to upload photos and videos to Amazon S3 with Google Photos integration',
-      'Current delivery work includes full-stack and platform systems for time2move.io, ARK Landscaping, Outerly, 3C1S, and other client or partner initiatives',
+      'Client and partner delivery has included time2move.io, ARK Landscaping, Outerly, 3C1S, and other initiatives',
     ],
     technologies: [
       'React',
