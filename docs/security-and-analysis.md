@@ -62,11 +62,10 @@ Primary CI
                                                                   -> validate + scan
 ```
 
-The standalone `.github/workflows/sonarcloud.yml` remains automatic during the
-migration because the replacement cannot be proven locally without GitHub and
-`SONAR_TOKEN`. A verification push may therefore scan twice. Remove the
-standalone workflow promptly after the integrated Sonar job succeeds, then
-confirm subsequent commits produce exactly one scan.
+The legacy standalone Sonar workflow was removed after the integrated job
+proved that it downloads, validates, and imports the CI-generated LCOV report.
+The isolated job in `.github/workflows/ci.yml` is now the sole scanner entry
+point.
 
 ## Remote Verification
 
@@ -77,8 +76,7 @@ After pushing the CI repair:
 3. Confirm `src/__tests__` and `e2e` are classified as tests, not main source.
 4. Confirm new-code coverage reflects the imported report.
 5. Re-measure duplication before considering any CPD exclusion.
-6. After the replacement job succeeds, remove the standalone workflow and
-   confirm the integrated Sonar job runs exactly once.
+6. Confirm each pull request update produces exactly one integrated Sonar scan.
 7. Keep SonarCloud out of required branch protection until normal and Dependabot
    pull requests have produced several stable, trustworthy runs.
 

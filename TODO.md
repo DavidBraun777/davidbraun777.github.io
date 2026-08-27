@@ -25,8 +25,7 @@ operational details from David. Do not invent proof.
 ## P2 Technical Polish
 
 - [ ] Broaden Playwright coverage beyond the current smoke/a11y suite when it catches real deployment risk.
-- [ ] Verify the integrated Sonar job imports `coverage/lcov.info`, classifies tests correctly, and reports a truthful coverage baseline.
-- [ ] After the integrated Sonar job succeeds remotely, remove the standalone Sonar workflow and confirm subsequent commits scan exactly once.
+- [ ] Confirm the integrated Sonar job remains the sole scan path on normal and Dependabot pull requests while retaining LCOV import and explicit test classification.
 - [ ] Keep SonarCloud out of required branch protection until it has a few stable runs on normal and Dependabot pull requests.
 - [ ] Add Service or CreativeWork schema only where it maps to real pages and proof.
 - [ ] Add a simple privacy page if GA/contact intake remain live.
