@@ -21,6 +21,8 @@ const axePageChecks = [
   { label: 'writing page', path: '/writing' },
   { label: 'services page', path: '/services' },
   { label: 'case studies page', path: '/case-studies' },
+  { label: 'research page', path: '/research' },
+  { label: 'why work with me page', path: '/why-work-with-me' },
 ] as const
 
 test.describe('Accessibility', () => {

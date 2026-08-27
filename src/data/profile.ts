@@ -74,8 +74,10 @@ export const profile = {
     'Best fit for owners and operators who need lead handling, internal workflows, data movement, or operational software to work with less manual effort.',
   availability: 'Open for consulting projects, automation builds, integration work, and dependable operational software.',
   responseTime: 'I usually reply within one business day.',
-  graduateStatus: "Master's student in Artificial Intelligence at the University of St. Thomas.",
-  graduateProgram: 'Completing a Big Data certificate alongside the program.',
+  graduateStatus:
+    'Master of Science in Artificial Intelligence student at the University of St. Thomas.',
+  graduateProgram:
+    'Completing a Graduate Certificate in Big Data alongside the degree program.',
   graduation: 'Expected graduation: December 2026.',
   faithStatement:
     'My faith shapes how I work: honest communication, clear commitments, stewardship, and respect for the people who have to live with the system after launch.',
@@ -85,6 +87,7 @@ export const primaryNavigation: NavigationItem[] = [
   { label: 'Home', href: '/' },
   { label: 'Services', href: '/services' },
   { label: 'Case Studies', href: '/case-studies' },
+  { label: 'Research', href: '/research' },
   { label: 'Why Work With Me', href: '/why-work-with-me' },
   { label: 'Contact', href: '/contact' },
 ]

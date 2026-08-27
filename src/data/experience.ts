@@ -3,6 +3,7 @@ export interface Experience {
   company: string
   companyUrl?: string
   role: string
+  department?: string
   location: string
   startDate: string
   endDate: string | null
@@ -43,6 +44,22 @@ export const experiences: Experience[] = [
       'Route 53',
       'Redis',
     ],
+  },
+  {
+    id: 'ust-support',
+    company: 'University of St. Thomas',
+    companyUrl: 'https://www.stthomas.edu/',
+    role: 'Graduate Tutor / Computer Systems Support',
+    department: 'Department of Software Engineering and Data Science',
+    location: 'Saint Paul, Minnesota',
+    startDate: 'December 2025',
+    endDate: null,
+    description:
+      'Graduate tutoring and computer systems support within the Department of Software Engineering and Data Science.',
+    highlights: [
+      'Support graduate tutoring and computer systems needs within the department',
+    ],
+    technologies: ['Graduate Tutoring', 'Computer Systems Support'],
   },
   {
     id: 'vifg-treasurer',
@@ -194,12 +211,14 @@ export const experiences: Experience[] = [
     location: 'Minneapolis, MN',
     startDate: 'May 2016',
     endDate: 'August 2017',
-    description: 'Analyzed space physics data and contributed to published research on Ultra-Low-Frequency Wave Investigations.',
+    description:
+      'Analyzed satellite and ground-based magnetometer data for magnetospheric-physics research, contributing to studies of EMIC wave events and space weather.',
     highlights: [
-      'Edited IDL programs for further analysis of space events',
-      'Analyzed terabytes of data for papers published with co-authorship in professional journals',
-      'Published works on topics including Ultra-Low-Frequency Wave Investigations',
+      'Used IDL and Python to ingest, transform, and analyze scientific data from satellite and ground-based magnetometer observations',
+      'Generated line plots and FFT-based spectral visualizations and spectrograms for large scientific datasets',
+      'Manually reviewed large volumes of resulting visualizations to identify candidate and anomalous events for research-team analysis',
+      'Contributed analysis used in conference research and the 2018 peer-reviewed JGR: Space Physics paper',
     ],
-    technologies: ['IDL', 'Data Analysis', 'Research'],
+    technologies: ['IDL', 'Python', 'FFT', 'Magnetometer Data', 'Space Weather'],
   },
 ]

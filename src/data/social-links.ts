@@ -1,4 +1,4 @@
-import { Github, Linkedin } from 'lucide-react'
+import { BadgeCheck, Earth, Github, Linkedin } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
 export interface SocialLink {
@@ -17,6 +17,16 @@ export const socialLinks: SocialLink[] = [
     name: 'LinkedIn',
     url: 'https://linkedin.com/in/david-braun777',
     icon: Linkedin,
+  },
+  {
+    name: 'ORCID',
+    url: 'https://orcid.org/0009-0003-9821-8349',
+    icon: BadgeCheck,
+  },
+  {
+    name: 'AGU Profile',
+    url: 'https://www.agu.org/user-profile?cstkey=BF392314-D7E6-40A7-ACDF-DC1318123068',
+    icon: Earth,
   },
 ]
 
