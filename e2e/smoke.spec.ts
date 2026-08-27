@@ -281,7 +281,6 @@ test.describe('Smoke tests', () => {
       await page.goto(route)
       await expect(page.locator('main')).toBeVisible()
       await expect(page.getByRole('heading', { level: 1 }).first()).toBeVisible()
-      await page.waitForTimeout(250)
     }
 
     expect(errors).toEqual([])
