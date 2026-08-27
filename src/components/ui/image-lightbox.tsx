@@ -40,7 +40,7 @@ export function ImageLightbox({
   sizes,
   thumb,
   onOpenChange,
-}: ImageLightboxProps) {
+}: Readonly<ImageLightboxProps>) {
   const [open, setOpen] = useState(false)
   const [zoomIndex, setZoomIndex] = useState(0)
   const [isMobile, setIsMobile] = useState(false)
@@ -69,15 +69,16 @@ export function ImageLightbox({
     setZoomIndex((current) => (current + 1) % zoomSteps.length)
   }
 
-  const imageFrameStyle =
-    visualAspect === 'portrait'
-      ? {
-          width:
-            zoomStep.scale === 1
-              ? 'min(100%, 640px)'
-              : `${Math.round((isMobile ? 520 : 640) * zoomStep.scale)}px`,
-        }
-      : { width: `${Math.round(zoomStep.scale * 100)}%` }
+  let imageFrameWidth = `${Math.round(zoomStep.scale * 100)}%`
+  if (visualAspect === 'portrait') {
+    if (zoomStep.scale === 1) {
+      imageFrameWidth = 'min(100%, 640px)'
+    } else {
+      const portraitBaseWidth = isMobile ? 520 : 640
+      imageFrameWidth = `${Math.round(portraitBaseWidth * zoomStep.scale)}px`
+    }
+  }
+  const imageFrameStyle = { width: imageFrameWidth }
 
   return (
     <Dialog.Root open={open} onOpenChange={handleOpenChange}>
