@@ -2,9 +2,9 @@ import { cn } from '@/lib/utils'
 import type { CaseStudyMetric } from '@/data/systems'
 
 interface MetricCardProps {
-  metric: CaseStudyMetric
-  compact?: boolean
-  className?: string
+  readonly metric: CaseStudyMetric
+  readonly compact?: boolean
+  readonly className?: string
 }
 
 export function MetricCard({ metric, compact = false, className }: MetricCardProps) {

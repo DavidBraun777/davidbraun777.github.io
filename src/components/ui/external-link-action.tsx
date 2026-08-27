@@ -16,7 +16,7 @@ export function ExternalLinkAction({
   className,
   iconOnly = false,
   ariaLabel,
-}: ExternalLinkActionProps) {
+}: Readonly<ExternalLinkActionProps>) {
   if (iconOnly) {
     return (
       <a

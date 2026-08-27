@@ -70,7 +70,7 @@ export function Contact({
   title = 'Start with the intake form',
   subtitle = 'Use the form to explain the workflow, the bottleneck, the users, and what better would look like.',
   sectionId = 'contact',
-}: ContactProps) {
+}: Readonly<ContactProps>) {
   const [formStatus, setFormStatus] = useState<FormStatus>('idle')
   const resetTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined)
   const [formData, setFormData] = useState({

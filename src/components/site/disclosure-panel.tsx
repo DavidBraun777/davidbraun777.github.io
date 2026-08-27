@@ -13,7 +13,7 @@ export function DisclosurePanel({
   summary,
   children,
   defaultOpen = false,
-}: DisclosurePanelProps) {
+}: Readonly<DisclosurePanelProps>) {
   return (
     <details
       className="group rounded-[1.5rem] border border-border-subtle bg-background-elevated p-5 shadow-sm"

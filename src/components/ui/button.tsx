@@ -41,7 +41,7 @@ export function Button({
   disabled,
   type = 'button',
   onClick,
-}: ButtonProps) {
+}: Readonly<ButtonProps>) {
   return (
     <button
       type={type}

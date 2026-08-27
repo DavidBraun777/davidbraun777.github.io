@@ -14,7 +14,7 @@ export function SectionHeader({
   align = 'center',
   as: Heading = 'h2',
   className,
-}: SectionHeaderProps) {
+}: Readonly<SectionHeaderProps>) {
   return (
     <div className={cn('mb-8 md:mb-10', align === 'center' && 'text-center', className)}>
       <Heading className="text-3xl font-semibold tracking-tight text-text-primary md:text-4xl">

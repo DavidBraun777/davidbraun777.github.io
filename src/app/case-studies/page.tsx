@@ -34,12 +34,12 @@ function StageSection({
   title,
   subtitle,
   systems,
-}: {
+}: Readonly<{
   eyebrow: string
   title: string
   subtitle: string
   systems: FeaturedSystemCaseStudy[]
-}) {
+}>) {
   if (systems.length === 0) {
     return null
   }
@@ -201,7 +201,7 @@ export default function CaseStudiesPage() {
   )
 }
 
-function CaseStudyCard({ system }: { system: FeaturedSystemCaseStudy }) {
+function CaseStudyCard({ system }: Readonly<{ system: FeaturedSystemCaseStudy }>) {
   return (
     <article className="rounded-[1.5rem] border border-border-subtle bg-background-elevated p-5 shadow-sm">
       <div className="flex flex-wrap items-center gap-2">
