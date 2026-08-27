@@ -6,6 +6,10 @@ export interface Education {
   degree: string
   field: string
   secondaryCredential?: string
+  secondaryCredentialUrl?: string
+  secondaryCredentialStartDate?: string
+  secondaryCredentialEndDate?: string
+  secondaryCredentialInProgress?: boolean
   startDate: string
   endDate: string | null
   description?: string
@@ -19,13 +23,19 @@ export const education: Education[] = [
     institution: 'University of St. Thomas',
     institutionUrl: 'https://www.stthomas.edu/',
     programUrl: 'https://software.stthomas.edu/degree/masters/artificial-intelligence/',
-    degree: "Master's",
+    degree: 'Master of Science',
     field: 'Artificial Intelligence',
-    secondaryCredential: 'Big Data certificate',
+    secondaryCredential: 'Graduate Certificate in Big Data',
+    secondaryCredentialUrl:
+      'https://software.stthomas.edu/degree/certificates/data-engineering/index.html',
+    secondaryCredentialStartDate: 'September 2024',
+    secondaryCredentialEndDate: 'December 2026',
+    secondaryCredentialInProgress: true,
     startDate: 'September 2024',
     endDate: 'December 2026',
     inProgress: true,
-    description: 'Focusing on applied AI, cloud computing, and machine learning.',
+    description:
+      'Degree in progress with expected completion in December 2026, focused on applied artificial intelligence, cloud computing, and machine learning.',
     coursework: [
       'Cloud Computing',
       'Machine Learning',
@@ -37,11 +47,12 @@ export const education: Education[] = [
     id: 'augsburg',
     institution: 'Augsburg University',
     institutionUrl: 'https://www.augsburg.edu/',
-    degree: 'Bachelor of Science',
-    field: 'Computer Science | Mathematics | Physics',
-    startDate: '2016',
-    endDate: 'May 2020',
-    description: 'Built a strong foundation in computer science fundamentals, mathematical reasoning, and physical sciences.',
+    degree: 'Bachelor of Science (B.S.)',
+    field: 'Mathematics, Physics, and Computer Science',
+    startDate: 'June 2014',
+    endDate: 'May 2019',
+    description:
+      'One Bachelor of Science degree with majors in Mathematics, Physics, and Computer Science.',
   },
 ]
 
@@ -50,6 +61,7 @@ export interface Certification {
   name: string
   issuer: string
   issueDate: string
+  expirationDate?: string
   credentialUrl?: string
   badgeImage: string
 }
@@ -58,9 +70,11 @@ export const certifications: Certification[] = [
   {
     id: 'aws-cloud-practitioner',
     name: 'AWS Certified Cloud Practitioner',
-    issuer: 'Pearson VUE',
-    issueDate: 'March 2024',
-    credentialUrl: 'https://cp.certmetrics.com/amazon/en/public/verify/credential/da3147d6ca7f4f2e8dc37ab632224a3f',
+    issuer: 'Amazon Web Services (AWS)',
+    issueDate: 'April 2024',
+    expirationDate: 'April 2027',
+    credentialUrl:
+      'https://www.credly.com/badges/9e9d0587-054e-44d4-9ab7-66bc451c85d2/public_url',
     badgeImage: '/images/certifications/aws-certified-cloud-practitioner.png',
   },
 ]

@@ -1,5 +1,7 @@
 import type { Metadata } from 'next'
 import type { Experience } from '@/data/experience'
+import Link from 'next/link'
+import { ArrowRight } from 'lucide-react'
 import { DisclosurePanel } from '@/components/site/disclosure-panel'
 import { PageIntro } from '@/components/site/page-intro'
 import { SignalGrid } from '@/components/site/signal-grid'
@@ -55,12 +57,23 @@ export default function WhyWorkWithMePage() {
               delivery work. That role reinforces the same expectation I bring to client
               work: responsible operations, clear accountability, and follow-through after launch.
             </p>
-            <p>
-              Graduate AI work and technical prototypes such as WeatherForge and RAGeATM
-              support the consulting work, but they do not replace production proof. When
-              a project is academic, a small benchmark, or a local prototype, I label it
-              that way.
-            </p>
+            <div>
+              <p>
+                Graduate AI research in information retrieval, retrieval-augmented
+                generation, and multimodal methods for low-resource-language archives
+                strengthens the technical foundation behind the applied systems work. That
+                record includes accepted IEEE LA-CCI 2026 work and earlier peer-reviewed
+                space-physics research. It supports how I evaluate evidence, retrieval
+                quality, and system limits, but it does not replace production proof.
+              </p>
+              <Link
+                href="/research"
+                className="mt-4 inline-flex items-center gap-2 text-sm font-medium text-link-primary transition-colors hover:text-link-primary-hover"
+              >
+                Review research and publications
+                <ArrowRight className="h-4 w-4" />
+              </Link>
+            </div>
           </div>
 
           <div className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm">
@@ -113,13 +126,17 @@ export default function WhyWorkWithMePage() {
             subtitle="Open the roles you care about and skim the rest."
           />
           <div className="grid gap-5">
-            {experiences.slice(0, 6).map((experience, index) => (
+            {experiences.slice(0, 7).map((experience, index) => (
               <DisclosurePanel
                 key={experience.id}
                 title={`${experience.role} · ${experience.company}`}
                 summary={`${formatExperiencePeriod(experience)} · ${experience.description}`}
                 defaultOpen={index === 0}
               >
+                <p className="mb-4 text-sm text-text-muted">
+                  {experience.department ? `${experience.department} · ` : ''}
+                  {experience.location}
+                </p>
                 <ul className="space-y-3">
                   {experience.highlights.map((highlight) => (
                     <li
@@ -170,12 +187,36 @@ export default function WhyWorkWithMePage() {
                   </h3>
                   <p className="mt-1 text-sm font-medium text-link-primary">{item.institution}</p>
                   <p className="mt-1 text-sm text-text-muted">
-                    {item.startDate} to {item.endDate ?? 'Present'}
+                    {item.inProgress ? 'In progress · ' : ''}
+                    {item.startDate} to {item.inProgress ? 'expected ' : ''}
+                    {item.endDate ?? 'Present'}
                   </p>
+                  {item.programUrl ? (
+                    <div className="mt-2">
+                      <ExternalLinkAction href={item.programUrl}>
+                        View degree program
+                      </ExternalLinkAction>
+                    </div>
+                  ) : null}
                   {item.secondaryCredential ? (
-                    <p className="mt-2 text-sm leading-7 text-text-secondary">
-                      Additional credential: {item.secondaryCredential}.
-                    </p>
+                    <div className="mt-3">
+                      <p className="text-sm font-medium text-text-primary">
+                        {item.secondaryCredential}
+                      </p>
+                      <p className="mt-1 text-sm leading-7 text-text-secondary">
+                        {item.secondaryCredentialInProgress ? 'In progress · ' : ''}
+                        {item.secondaryCredentialStartDate ?? item.startDate} to{' '}
+                        {item.secondaryCredentialInProgress ? 'expected ' : ''}
+                        {item.secondaryCredentialEndDate ?? item.endDate ?? 'Present'}
+                      </p>
+                      {item.secondaryCredentialUrl ? (
+                        <div className="mt-2">
+                          <ExternalLinkAction href={item.secondaryCredentialUrl}>
+                            View certificate program
+                          </ExternalLinkAction>
+                        </div>
+                      ) : null}
+                    </div>
                   ) : null}
                 </article>
               ))}
@@ -184,8 +225,16 @@ export default function WhyWorkWithMePage() {
                 <div key={item.id}>
                   <h3 className="text-base font-semibold text-text-primary">{item.name}</h3>
                   <p className="mt-1 text-sm leading-7 text-text-secondary">
-                    {item.issuer} · {item.issueDate}
+                    {item.issuer} · Issued {item.issueDate}
+                    {item.expirationDate ? ` · Expires ${item.expirationDate}` : ''}
                   </p>
+                  {item.credentialUrl ? (
+                    <div className="mt-2">
+                      <ExternalLinkAction href={item.credentialUrl}>
+                        Verify on Credly
+                      </ExternalLinkAction>
+                    </div>
+                  ) : null}
                 </div>
               ))}
             </div>

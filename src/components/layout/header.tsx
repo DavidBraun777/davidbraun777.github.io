@@ -49,7 +49,7 @@ export function Header() {
           </Link>
         </div>
 
-        <nav className="hidden items-center gap-1 lg:flex" aria-label="Primary">
+        <nav className="hidden items-center gap-1 xl:flex" aria-label="Primary">
           {primaryNavigation.map((item) => {
             const active = isActive(pathname, item.href)
 
@@ -59,7 +59,7 @@ export function Header() {
                 href={item.href}
                 aria-current={active ? 'page' : undefined}
                 className={cn(
-                  'rounded-full px-4 py-2 text-sm font-medium transition-colors',
+                  'whitespace-nowrap rounded-full px-4 py-2 text-sm font-medium transition-colors',
                   active
                     ? 'bg-[var(--theme-frame-overlay-strong)] text-[var(--theme-frame-text)]'
                     : 'text-[var(--theme-frame-text-muted)] hover:bg-[var(--theme-frame-overlay)] hover:text-[var(--theme-frame-text)]'
@@ -71,7 +71,7 @@ export function Header() {
           })}
         </nav>
 
-        <div className="hidden items-center gap-3 lg:flex">
+        <div className="hidden items-center gap-3 xl:flex">
           <ThemeToggle />
           <Link
             href="/contact"
@@ -81,7 +81,7 @@ export function Header() {
           </Link>
         </div>
 
-        <div className="flex items-center gap-2 lg:hidden">
+        <div className="flex items-center gap-2 xl:hidden">
           <ThemeToggle />
           <button
             type="button"
@@ -99,7 +99,7 @@ export function Header() {
       {menuOpen ? (
         <div
           id="mobile-navigation"
-          className="border-t border-[var(--theme-frame-border)] bg-[var(--theme-frame-bg-solid)] px-4 py-4 shadow-lg lg:hidden"
+          className="border-t border-[var(--theme-frame-border)] bg-[var(--theme-frame-bg-solid)] px-4 py-4 shadow-lg xl:hidden"
         >
           <nav className="flex flex-col gap-2" aria-label="Mobile">
             {primaryNavigation.map((item) => {

@@ -20,13 +20,18 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.85,
     },
     {
-      url: `${baseUrl}/why-work-with-me`,
-      changeFrequency: 'monthly' as const,
+      url: `${baseUrl}/case-studies`,
+      changeFrequency: 'weekly' as const,
       priority: 0.9,
     },
     {
-      url: `${baseUrl}/case-studies`,
-      changeFrequency: 'weekly' as const,
+      url: `${baseUrl}/research`,
+      changeFrequency: 'monthly' as const,
+      priority: 0.8,
+    },
+    {
+      url: `${baseUrl}/why-work-with-me`,
+      changeFrequency: 'monthly' as const,
       priority: 0.9,
     },
     {

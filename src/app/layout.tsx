@@ -7,6 +7,7 @@ import { Footer } from '@/components/layout/footer'
 import { ScrollToTop } from '@/components/layout/scroll-to-top'
 import { GoogleAnalytics } from '@/components/analytics/google-analytics'
 import { profile } from '@/data/profile'
+import { researchAreas } from '@/data/research'
 import { socialLinks } from '@/data/social-links'
 import { absoluteUrl, siteUrl } from '@/lib/seo'
 import './globals.css'
@@ -114,17 +115,18 @@ const personStructuredData = {
     url: absoluteUrl('/contact'),
     availableLanguage: ['English'],
   },
-  knowsAbout: [
-    'Artificial intelligence',
+  knowsAbout: Array.from(new Set([
+    'Artificial Intelligence',
     'Software engineering',
     'Workflow automation',
     'System integration',
     'Data engineering',
-    'Retrieval-Augmented Generation',
+    'Retrieval-Augmented Generation (RAG)',
     'Decision-support dashboards',
     'Cloud engineering',
     'Operational software',
-  ],
+    ...researchAreas,
+  ])),
 }
 
 const websiteStructuredData = {
