@@ -19,7 +19,7 @@ export function MobileSectionDisclosure({
   closeLabel = 'Hide details',
   children,
   className,
-}: MobileSectionDisclosureProps) {
+}: Readonly<MobileSectionDisclosureProps>) {
   const [open, setOpen] = useState(false)
 
   return (

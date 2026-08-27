@@ -7,8 +7,8 @@
  * Usage: node scripts/check-bundle-size.mjs
  */
 
-import { readdirSync, statSync, existsSync } from 'fs'
-import { join } from 'path'
+import { readdirSync, statSync, existsSync } from 'node:fs'
+import { join } from 'node:path'
 
 const BUDGET_KB = 1500
 

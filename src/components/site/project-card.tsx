@@ -14,7 +14,7 @@ export function ProjectCard({
   system,
   href = `/case-studies/${system.id}`,
   compact = false,
-}: ProjectCardProps) {
+}: Readonly<ProjectCardProps>) {
   const visualPreview =
     system.proofSections.find((section) => section.id === 'architecture') ??
     system.proofSections[0]

@@ -13,8 +13,8 @@ const statuses = [
 ]
 
 interface CurrentStatusProps {
-  className?: string
-  compact?: boolean
+  readonly className?: string
+  readonly compact?: boolean
 }
 
 export function CurrentStatus({ className, compact = false }: CurrentStatusProps) {

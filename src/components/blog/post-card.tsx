@@ -5,8 +5,8 @@ import { Badge } from '@/components/ui/badge'
 import type { BlogPostMeta } from '@/lib/mdx'
 
 interface PostCardProps {
-  post: BlogPostMeta
-  index?: number
+  readonly post: BlogPostMeta
+  readonly index?: number
 }
 
 export function PostCard({ post, index = 0 }: PostCardProps) {

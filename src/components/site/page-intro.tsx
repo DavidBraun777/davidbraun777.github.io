@@ -33,7 +33,7 @@ export function PageIntro({
   actions = [],
   aside,
   className,
-}: PageIntroProps) {
+}: Readonly<PageIntroProps>) {
   return (
     <section
       className={cn(

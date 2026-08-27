@@ -10,7 +10,7 @@ export function SignalGrid({
   items,
   columns = 'four',
   headingLevel: Heading = 'h3',
-}: SignalGridProps) {
+}: Readonly<SignalGridProps>) {
   return (
     <div
       className={

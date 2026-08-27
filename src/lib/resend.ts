@@ -9,7 +9,7 @@ export interface ContactEmailConfig {
 
 function readEnv(name: string): string | undefined {
   const value = process.env[name]?.trim()
-  return value ? value : undefined
+  return value || undefined
 }
 
 function requireEnv(name: string): string {

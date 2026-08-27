@@ -6,7 +6,7 @@ interface TechTagProps {
   className?: string
 }
 
-export function TechTag({ children, className }: TechTagProps) {
+export function TechTag({ children, className }: Readonly<TechTagProps>) {
   return (
     <Badge
       variant="outline"

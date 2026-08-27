@@ -1,7 +1,7 @@
 import { ImageResponse } from 'next/og'
-import { SocialCard, socialCardAlt } from '@/lib/social-card'
+import { SocialCard } from '@/lib/social-card'
 
-export const alt = socialCardAlt
+export { socialCardAlt as alt } from '@/lib/social-card'
 export const size = {
   width: 1200,
   height: 630,

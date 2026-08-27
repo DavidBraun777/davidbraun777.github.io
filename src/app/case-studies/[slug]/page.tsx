@@ -53,7 +53,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   })
 }
 
-export default async function CaseStudyDetailPage({ params }: Props) {
+export default async function CaseStudyDetailPage({ params }: Readonly<Props>) {
   const { slug } = await params
   const system = getSystemById(slug)
 
@@ -290,9 +290,9 @@ export default async function CaseStudyDetailPage({ params }: Props) {
 
 function RetrievalCapabilityLadderSection({
   ladder,
-}: {
+}: Readonly<{
   ladder: RetrievalCapabilityLadder
-}) {
+}>) {
   return (
     <section>
       <DisclosurePanel title={ladder.title} summary={ladder.summary}>
@@ -330,7 +330,9 @@ function RetrievalCapabilityLadderSection({
   )
 }
 
-function CapabilityLadderTable({ ladder }: { ladder: RetrievalCapabilityLadder }) {
+function CapabilityLadderTable({
+  ladder,
+}: Readonly<{ ladder: RetrievalCapabilityLadder }>) {
   return (
     <div className="overflow-x-auto rounded-[1.25rem] border border-border-subtle">
       <table className="min-w-[1180px] divide-y divide-border-subtle text-left text-sm">
@@ -390,7 +392,9 @@ function CapabilityLadderTable({ ladder }: { ladder: RetrievalCapabilityLadder }
   )
 }
 
-function InterpretationTable({ ladder }: { ladder: RetrievalCapabilityLadder }) {
+function InterpretationTable({
+  ladder,
+}: Readonly<{ ladder: RetrievalCapabilityLadder }>) {
   return (
     <div className="mt-4 overflow-x-auto rounded-[1.25rem] border border-border-subtle">
       <table className="min-w-[620px] divide-y divide-border-subtle text-left text-sm">
@@ -450,7 +454,9 @@ function getRelatedProjects(system: FeaturedSystemCaseStudy) {
     .slice(0, 2)
 }
 
-function RelatedCaseStudyCard({ system }: { system: FeaturedSystemCaseStudy }) {
+function RelatedCaseStudyCard({
+  system,
+}: Readonly<{ system: FeaturedSystemCaseStudy }>) {
   return (
     <article className="rounded-[1.5rem] border border-border-subtle bg-background-elevated p-5 shadow-sm">
       <div className="flex flex-wrap items-center gap-2">
@@ -475,7 +481,9 @@ function RelatedCaseStudyCard({ system }: { system: FeaturedSystemCaseStudy }) {
   )
 }
 
-function ProofLinkSection({ system }: { system: FeaturedSystemCaseStudy }) {
+function ProofLinkSection({
+  system,
+}: Readonly<{ system: FeaturedSystemCaseStudy }>) {
   let title = 'Live Proof'
   let description =
     'This system has a live public surface, which matters because delivery only counts when the software is actually in use.'
@@ -515,7 +523,9 @@ function ProofLinkSection({ system }: { system: FeaturedSystemCaseStudy }) {
   )
 }
 
-function CaseStudyAtAGlance({ system }: { system: FeaturedSystemCaseStudy }) {
+function CaseStudyAtAGlance({
+  system,
+}: Readonly<{ system: FeaturedSystemCaseStudy }>) {
   return (
     <div className="rounded-[1.75rem] border border-border-subtle bg-background-subtle p-6">
       <p className="font-mono text-xs uppercase tracking-[0.22em] text-link-primary">
@@ -530,7 +540,10 @@ function CaseStudyAtAGlance({ system }: { system: FeaturedSystemCaseStudy }) {
   )
 }
 
-function AtAGlanceItem({ label, value }: { label: string; value: string }) {
+function AtAGlanceItem({
+  label,
+  value,
+}: Readonly<{ label: string; value: string }>) {
   return (
     <div className="rounded-2xl border border-border-subtle bg-background-elevated px-4 py-3">
       <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-text-muted">
@@ -541,7 +554,7 @@ function AtAGlanceItem({ label, value }: { label: string; value: string }) {
   )
 }
 
-function ProjectVisual({ system }: { system: FeaturedSystemCaseStudy }) {
+function ProjectVisual({ system }: Readonly<{ system: FeaturedSystemCaseStudy }>) {
   if (system.image) {
     return (
       <div
@@ -595,7 +608,10 @@ function ProjectVisual({ system }: { system: FeaturedSystemCaseStudy }) {
   )
 }
 
-function NarrativeCard({ title, body }: { title: string; body: string }) {
+function NarrativeCard({
+  title,
+  body,
+}: Readonly<{ title: string; body: string }>) {
   return (
     <article className="rounded-[1.5rem] border border-border-subtle bg-background-elevated p-6 shadow-sm">
       <h2 className="text-lg font-semibold text-text-primary">{title}</h2>
@@ -604,7 +620,7 @@ function NarrativeCard({ title, body }: { title: string; body: string }) {
   )
 }
 
-function ArchitectureFlow({ steps }: { steps: ArchitectureStep[] }) {
+function ArchitectureFlow({ steps }: Readonly<{ steps: ArchitectureStep[] }>) {
   return (
     <ol className="grid gap-4 lg:grid-cols-3">
       {steps.map((step, index) => (
@@ -625,7 +641,9 @@ function ArchitectureFlow({ steps }: { steps: ArchitectureStep[] }) {
   )
 }
 
-function FallbackArchitecture({ system }: { system: FeaturedSystemCaseStudy }) {
+function FallbackArchitecture({
+  system,
+}: Readonly<{ system: FeaturedSystemCaseStudy }>) {
   return (
     <article className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm">
       <h3 className="text-xl font-semibold text-text-primary">Key system pieces</h3>
@@ -651,7 +669,7 @@ function FallbackArchitecture({ system }: { system: FeaturedSystemCaseStudy }) {
   )
 }
 
-function ProofSectionCard({ section }: { section: ProofSection }) {
+function ProofSectionCard({ section }: Readonly<{ section: ProofSection }>) {
   const title =
     section.status === 'planned' ? `${section.title} (to be added)` : section.title
 
@@ -680,11 +698,11 @@ function DetailList({
   title,
   items,
   className,
-}: {
+}: Readonly<{
   title: string
   items: string[]
   className?: string
-}) {
+}>) {
   return (
     <div className={className}>
       <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-text-muted">

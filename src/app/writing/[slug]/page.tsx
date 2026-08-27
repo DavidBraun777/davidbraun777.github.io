@@ -37,7 +37,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
   })
 }
 
-export default async function WritingPostPage({ params }: Props) {
+export default async function WritingPostPage({ params }: Readonly<Props>) {
   const { slug } = await params
   const post = getPostBySlug(slug)
 
