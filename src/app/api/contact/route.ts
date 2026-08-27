@@ -71,6 +71,12 @@ function getSubmissionId(request: Request): string | null {
   return SUBMISSION_ID_REGEX.test(rawValue) ? rawValue : null
 }
 
+function getIdempotencyOptions(submissionId: string | null) {
+  return submissionId
+    ? { idempotencyKey: `contact-form/${submissionId}` }
+    : undefined
+}
+
 function logRequest(
   status: number,
   start: number,
@@ -268,9 +274,7 @@ export async function POST(request: Request) {
         replyTo: sanitized.email,
         tags: [{ name: 'source', value: 'contact-form' }],
       },
-      submissionId
-        ? { idempotencyKey: `contact-form/${submissionId}` }
-        : undefined
+      getIdempotencyOptions(submissionId)
     )
 
     if (error) {

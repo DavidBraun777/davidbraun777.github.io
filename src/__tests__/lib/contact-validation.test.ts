@@ -55,6 +55,12 @@ describe('isValidEmail', () => {
     expect(isValidEmail('user@domain')).toBe(false)
   })
 
+  it('accepts an email at the 254-character limit', () => {
+    const atLimit = `${'a'.repeat(242)}@example.com`
+    expect(atLimit).toHaveLength(254)
+    expect(isValidEmail(atLimit)).toBe(true)
+  })
+
   it('rejects emails over 254 characters', () => {
     const long = 'a'.repeat(245) + '@example.com'
     expect(isValidEmail(long)).toBe(false)
@@ -103,48 +109,90 @@ describe('validateContactForm', () => {
 
   it('accepts valid input', () => {
     const result = validateContactForm(validBody)
-    expect(result.valid).toBe(true)
-    if (result.valid) {
-      expect(result.data.name).toBe('Test User')
+    expect(result).toEqual({ valid: true, data: validBody })
+  })
+
+  it.each([null, undefined, 'not-an-object', 42])(
+    'rejects a non-object request body: %j',
+    (body) => {
+      expect(validateContactForm(body)).toEqual({
+        valid: false,
+        error: 'Invalid request body',
+      })
     }
+  )
+
+  it.each([
+    ['name', '   ', 'Name is required'],
+    ['email', '', 'Email is required'],
+    ['subject', null, 'Subject is required'],
+    ['message', 42, 'Message is required'],
+  ] as const)('rejects invalid required field %s', (field, value, error) => {
+    expect(validateContactForm({ ...validBody, [field]: value })).toEqual({
+      valid: false,
+      error,
+    })
   })
 
-  it('rejects null body', () => {
-    const result = validateContactForm(null)
-    expect(result.valid).toBe(false)
+  it('preserves required-field precedence over length errors', () => {
+    expect(
+      validateContactForm({
+        ...validBody,
+        name: 'a'.repeat(101),
+        email: '',
+      })
+    ).toEqual({ valid: false, error: 'Email is required' })
   })
 
-  it('rejects missing name', () => {
-    const result = validateContactForm({ ...validBody, name: '' })
-    expect(result.valid).toBe(false)
-  })
-
-  it('rejects missing email', () => {
-    const result = validateContactForm({ ...validBody, email: '' })
-    expect(result.valid).toBe(false)
-  })
-
-  it('rejects missing message', () => {
-    const result = validateContactForm({ ...validBody, message: '' })
-    expect(result.valid).toBe(false)
+  it('trims required text fields in validated data', () => {
+    expect(
+      validateContactForm({
+        ...validBody,
+        name: '  Test User  ',
+        subject: '  Test Subject  ',
+        message: '  Hello, this is a test message.  ',
+      })
+    ).toEqual({ valid: true, data: validBody })
   })
 
   it('rejects invalid email format', () => {
     const result = validateContactForm({ ...validBody, email: 'not-an-email' })
-    expect(result.valid).toBe(false)
-    if (!result.valid) {
-      expect(result.error).toContain('email')
-    }
+    expect(result).toEqual({ valid: false, error: 'Invalid email address' })
   })
 
-  it('rejects name over 100 characters', () => {
-    const result = validateContactForm({ ...validBody, name: 'a'.repeat(101) })
-    expect(result.valid).toBe(false)
+  it('applies strict email validation before trimming', () => {
+    expect(
+      validateContactForm({ ...validBody, email: ' test@example.com ' })
+    ).toEqual({ valid: false, error: 'Invalid email address' })
   })
 
-  it('rejects message over 2000 characters', () => {
-    const result = validateContactForm({ ...validBody, message: 'a'.repeat(2001) })
-    expect(result.valid).toBe(false)
+  it('accepts required text fields at their exact length limits', () => {
+    const result = validateContactForm({
+      ...validBody,
+      name: 'a'.repeat(100),
+      subject: 'b'.repeat(200),
+      message: 'c'.repeat(2000),
+    })
+    expect(result.valid).toBe(true)
+  })
+
+  it('applies length limits before trimming required text', () => {
+    expect(
+      validateContactForm({ ...validBody, name: ` ${'a'.repeat(100)} ` })
+    ).toEqual({
+      valid: false,
+      error: 'Name must be 100 characters or less',
+    })
+  })
+
+  it.each([
+    ['name', 101, 'Name must be 100 characters or less'],
+    ['subject', 201, 'Subject must be 200 characters or less'],
+    ['message', 2001, 'Message must be 2,000 characters or less'],
+  ] as const)('rejects %s over its length limit', (field, length, error) => {
+    expect(
+      validateContactForm({ ...validBody, [field]: 'a'.repeat(length) })
+    ).toEqual({ valid: false, error })
   })
 
   it('accepts valid optional dropdown fields', () => {
@@ -162,12 +210,15 @@ describe('validateContactForm', () => {
     }
   })
 
-  it('rejects invalid dropdown values', () => {
-    const result = validateContactForm({
-      ...validBody,
-      projectType: 'hacking',
+  it.each([
+    ['projectType', 'hacking', 'Invalid project type'],
+    ['serviceNeeded', null, 'Invalid service type'],
+    ['urgency', ' ', 'Invalid urgency level'],
+  ] as const)('rejects invalid optional field %s', (field, value, error) => {
+    expect(validateContactForm({ ...validBody, [field]: value })).toEqual({
+      valid: false,
+      error,
     })
-    expect(result.valid).toBe(false)
   })
 
   it('ignores empty string optional fields', () => {
@@ -177,9 +228,6 @@ describe('validateContactForm', () => {
       serviceNeeded: '',
       urgency: '',
     })
-    expect(result.valid).toBe(true)
-    if (result.valid) {
-      expect(result.data.projectType).toBeUndefined()
-    }
+    expect(result).toEqual({ valid: true, data: validBody })
   })
 })

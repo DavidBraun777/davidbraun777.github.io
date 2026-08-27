@@ -78,83 +78,149 @@ export function sanitizeEmail(email: string): string {
   return email.trim().slice(0, 254).replace(/[\x00-\x1f\x7f]/g, '')
 }
 
+type ValidationError = Extract<ValidationResult, { valid: false }>
+type RequiredFieldResult =
+  | { valid: true; value: string }
+  | ValidationError
+type OptionalFieldResult<T extends string> =
+  | { valid: true; value?: T }
+  | ValidationError
+type OptionalFieldKey = 'projectType' | 'serviceNeeded' | 'urgency'
+
+function validationError(error: string): ValidationError {
+  return { valid: false, error }
+}
+
+function validateRequiredText(
+  value: unknown,
+  error: string
+): RequiredFieldResult {
+  if (!value || typeof value !== 'string' || value.trim().length === 0) {
+    return validationError(error)
+  }
+
+  return { valid: true, value }
+}
+
+function validateRequiredEmail(value: unknown): RequiredFieldResult {
+  if (!value || typeof value !== 'string') {
+    return validationError('Email is required')
+  }
+
+  return { valid: true, value }
+}
+
+function validateRequiredFieldLengths(
+  name: string,
+  subject: string,
+  message: string
+): ValidationError | undefined {
+  if (name.length > 100) {
+    return validationError('Name must be 100 characters or less')
+  }
+  if (subject.length > 200) {
+    return validationError('Subject must be 200 characters or less')
+  }
+  if (message.length > 2000) {
+    return validationError('Message must be 2,000 characters or less')
+  }
+
+  return undefined
+}
+
+function validateOptionalSelection<T extends string>(
+  value: unknown,
+  allowedValues: readonly T[],
+  error: string
+): OptionalFieldResult<T> {
+  if (value === undefined || value === '') {
+    return { valid: true }
+  }
+  if (
+    typeof value !== 'string' ||
+    !(allowedValues as readonly string[]).includes(value)
+  ) {
+    return validationError(error)
+  }
+
+  return { valid: true, value: value as T }
+}
+
+function toOptionalField<K extends OptionalFieldKey>(
+  key: K,
+  value: ContactFormData[K]
+): Partial<Pick<ContactFormData, K>> {
+  if (value === undefined) return {}
+  return { [key]: value } as Pick<ContactFormData, K>
+}
+
 /** Validate all contact form fields. Returns validated data or error string. */
 export function validateContactForm(body: unknown): ValidationResult {
   if (!body || typeof body !== 'object') {
-    return { valid: false, error: 'Invalid request body' }
+    return validationError('Invalid request body')
   }
 
   const { name, email, subject, message, projectType, serviceNeeded, urgency } =
     body as Record<string, unknown>
 
   // Required fields: type + presence
-  if (!name || typeof name !== 'string' || name.trim().length === 0) {
-    return { valid: false, error: 'Name is required' }
-  }
-  if (!email || typeof email !== 'string') {
-    return { valid: false, error: 'Email is required' }
-  }
-  if (!subject || typeof subject !== 'string' || subject.trim().length === 0) {
-    return { valid: false, error: 'Subject is required' }
-  }
-  if (!message || typeof message !== 'string' || message.trim().length === 0) {
-    return { valid: false, error: 'Message is required' }
-  }
+  const nameResult = validateRequiredText(name, 'Name is required')
+  if (!nameResult.valid) return nameResult
+
+  const emailResult = validateRequiredEmail(email)
+  if (!emailResult.valid) return emailResult
+
+  const subjectResult = validateRequiredText(subject, 'Subject is required')
+  if (!subjectResult.valid) return subjectResult
+
+  const messageResult = validateRequiredText(message, 'Message is required')
+  if (!messageResult.valid) return messageResult
 
   // Length checks
-  if (name.length > 100) {
-    return { valid: false, error: 'Name must be 100 characters or less' }
-  }
-  if (subject.length > 200) {
-    return { valid: false, error: 'Subject must be 200 characters or less' }
-  }
-  if (message.length > 2000) {
-    return { valid: false, error: 'Message must be 2,000 characters or less' }
-  }
+  const lengthError = validateRequiredFieldLengths(
+    nameResult.value,
+    subjectResult.value,
+    messageResult.value
+  )
+  if (lengthError) return lengthError
 
   // Email format
-  if (!isValidEmail(email)) {
-    return { valid: false, error: 'Invalid email address' }
-  }
-
-  // Build validated data
-  const data: ContactFormData = {
-    name: name.trim(),
-    email: email.trim(),
-    subject: subject.trim(),
-    message: message.trim(),
+  if (!isValidEmail(emailResult.value)) {
+    return validationError('Invalid email address')
   }
 
   // Optional dropdown validation (allowlist)
-  if (projectType !== undefined && projectType !== '') {
-    if (
-      typeof projectType !== 'string' ||
-      !(PROJECT_TYPES as readonly string[]).includes(projectType)
-    ) {
-      return { valid: false, error: 'Invalid project type' }
-    }
-    data.projectType = projectType as ProjectType
-  }
+  const projectTypeResult = validateOptionalSelection(
+    projectType,
+    PROJECT_TYPES,
+    'Invalid project type'
+  )
+  if (!projectTypeResult.valid) return projectTypeResult
 
-  if (serviceNeeded !== undefined && serviceNeeded !== '') {
-    if (
-      typeof serviceNeeded !== 'string' ||
-      !(SERVICE_TYPES as readonly string[]).includes(serviceNeeded)
-    ) {
-      return { valid: false, error: 'Invalid service type' }
-    }
-    data.serviceNeeded = serviceNeeded as ServiceType
-  }
+  const serviceNeededResult = validateOptionalSelection(
+    serviceNeeded,
+    SERVICE_TYPES,
+    'Invalid service type'
+  )
+  if (!serviceNeededResult.valid) return serviceNeededResult
 
-  if (urgency !== undefined && urgency !== '') {
-    if (
-      typeof urgency !== 'string' ||
-      !(URGENCY_LEVELS as readonly string[]).includes(urgency)
-    ) {
-      return { valid: false, error: 'Invalid urgency level' }
-    }
-    data.urgency = urgency as UrgencyLevel
-  }
+  const urgencyResult = validateOptionalSelection(
+    urgency,
+    URGENCY_LEVELS,
+    'Invalid urgency level'
+  )
+  if (!urgencyResult.valid) return urgencyResult
 
-  return { valid: true, data }
+  return {
+    valid: true,
+    data: {
+      name: nameResult.value.trim(),
+      email: emailResult.value.trim(),
+      subject: subjectResult.value.trim(),
+      message: messageResult.value.trim(),
+      ...toOptionalField('projectType', projectTypeResult.value),
+      ...toOptionalField('serviceNeeded', serviceNeededResult.value),
+      ...toOptionalField('urgency', urgencyResult.value),
+    },
+  }
 }
