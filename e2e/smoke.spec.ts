@@ -11,6 +11,8 @@ const keyBuyerRoutes = [
 ] as const
 
 const orcidUrl = 'https://orcid.org/0009-0003-9821-8349'
+const googleScholarUrl =
+  'https://scholar.google.com/citations?user=9CqMwqMAAAAJ&hl=en'
 const aguProfileUrl =
   'https://www.agu.org/user-profile?cstkey=BF392314-D7E6-40A7-ACDF-DC1318123068'
 const credlyUrl =
@@ -135,6 +137,12 @@ test.describe('Smoke tests', () => {
     await expect(orcidLink).toHaveAttribute('href', orcidUrl)
     await expect(orcidLink).toHaveAttribute('target', '_blank')
 
+    const googleScholarLink = page.getByRole('link', {
+      name: /view google scholar profile/i,
+    })
+    await expect(googleScholarLink).toHaveAttribute('href', googleScholarUrl)
+    await expect(googleScholarLink).toHaveAttribute('target', '_blank')
+
     const aguLink = page.getByRole('link', { name: /view agu profile/i })
     await expect(aguLink).toHaveAttribute('href', aguProfileUrl)
     await expect(aguLink).toHaveAttribute('target', '_blank')
@@ -143,7 +151,7 @@ test.describe('Smoke tests', () => {
     await expect(doiLink).toHaveAttribute('href', 'https://doi.org/10.1029/2018JA025505')
     await expect(doiLink).toHaveAttribute('target', '_blank')
 
-    for (const link of [orcidLink, aguLink, doiLink]) {
+    for (const link of [orcidLink, googleScholarLink, aguLink, doiLink]) {
       const rel = await link.getAttribute('rel')
       expect(rel).toContain('noopener')
       expect(rel).toContain('noreferrer')
@@ -186,6 +194,9 @@ test.describe('Smoke tests', () => {
       'href',
       orcidUrl
     )
+    await expect(
+      footer.getByRole('link', { name: /^google scholar$/i })
+    ).toHaveAttribute('href', googleScholarUrl)
     await expect(footer.getByRole('link', { name: /^agu profile$/i })).toHaveAttribute(
       'href',
       aguProfileUrl
@@ -211,6 +222,7 @@ test.describe('Smoke tests', () => {
         'https://github.com/DavidBraun777',
         'https://linkedin.com/in/david-braun777',
         orcidUrl,
+        googleScholarUrl,
         aguProfileUrl,
       ])
     )
@@ -248,6 +260,9 @@ test.describe('Smoke tests', () => {
     await researchLink.click()
     await expect(page).toHaveURL(/\/research$/)
     await expect(mobileNavigation).toHaveCount(0)
+    await expect(
+      page.getByRole('link', { name: /view google scholar profile/i })
+    ).toHaveAttribute('href', googleScholarUrl)
   })
 
   test('case studies page shows VIFG before secondary technical proof', async ({ page }) => {
