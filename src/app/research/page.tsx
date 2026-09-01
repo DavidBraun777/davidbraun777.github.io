@@ -32,6 +32,7 @@ export default function ResearchPage() {
           actions={researchProfileLinks.map((profile, index) => ({
             label: profile.actionLabel,
             href: profile.url,
+            icon: profile.icon,
             external: true,
             variant: index === 0 ? 'primary' : 'secondary',
           }))}

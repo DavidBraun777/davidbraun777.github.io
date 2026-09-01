@@ -1,9 +1,11 @@
+import type { LucideIcon } from 'lucide-react'
 import { socialLinks } from '@/data/social-links'
 
 export interface ResearchProfileLink {
   name: string
   actionLabel: string
   url: string
+  icon: LucideIcon
 }
 
 export interface AcceptedConferencePaper {
@@ -58,15 +60,18 @@ export const researchAreas = [
   'Space Weather',
 ]
 
-const researchProfileNames = new Set(['ORCID', 'AGU Profile'])
-
-export const researchProfileLinks: ResearchProfileLink[] = socialLinks
-  .filter((link) => researchProfileNames.has(link.name))
-  .map((link) => ({
-    name: link.name,
-    actionLabel: link.name === 'ORCID' ? 'View ORCID Record' : 'View AGU Profile',
-    url: link.url,
-  }))
+export const researchProfileLinks: ResearchProfileLink[] = socialLinks.flatMap((link) =>
+  link.researchActionLabel
+    ? [
+        {
+          name: link.name,
+          actionLabel: link.researchActionLabel,
+          url: link.url,
+          icon: link.icon,
+        },
+      ]
+    : []
+)
 
 export const acceptedConferencePapers: AcceptedConferencePaper[] = [
   {
