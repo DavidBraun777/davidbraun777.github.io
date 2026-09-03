@@ -119,7 +119,7 @@ const careerStoryStageDefinitions = [
   [
     'ai-data-specialization',
     'AI and data specialization',
-    'Graduate AI and Big Data study, accepted retrieval research, and bounded WeatherForge and RAGeATM prototypes extend the foundation into data engineering, grounding, evaluation, and refusal behavior.',
+    'Graduate AI and Big Data study, accepted retrieval research, my lead implementation work on the collaborative WeatherForge academic project, and the bounded RAGeATM prototype extend the foundation into data engineering, grounding, evaluation, and refusal behavior.',
     'AI is treated as one capability inside a larger production system, with evidence and limits kept explicit.',
     [
       'education:ust',

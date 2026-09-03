@@ -58,6 +58,7 @@ export interface SystemCaseStudy {
   caseStudyStage: 'Production' | 'Pilot' | 'R&D'
   problem: string
   system: string
+  solutionTitle?: string
   systemHighlights: string[]
   stack: string[]
   metrics?: CaseStudyMetric[]
@@ -108,17 +109,18 @@ export const systemThemes: SystemTheme[] = [
         displayTitle: 'WeatherForge: Minnesota Severe Weather Risk Analytics Dashboard',
         shortTitle: 'Minnesota Severe Weather Risk Analytics Dashboard',
         summary:
-          'A Minnesota severe-weather analytics dashboard that turns large NOAA weather datasets into county-level risk views, cleaned analytics layers, and decision-support reporting surfaces.',
+          'A collaborative University of St. Thomas SEIS 745 project in which David Braun served as lead developer and primary implementer, turning large NOAA weather datasets into county-level risk views and decision-support reporting.',
         oneSentenceOutcome:
-          'Transformed large NOAA source data into Minnesota-focused storm-event records, station-day observations, county joins, and a Python Shiny + Plotly dashboard for severe-weather risk exploration.',
+          'David Braun led implementation and wrote more than 90% of the application code across the Minnesota-focused NOAA data pipeline, analytics layers, and Python Shiny + Plotly dashboard.',
         contextLabel: 'Prototype / Academic Project',
         positioning:
-          'A data engineering and analytics dashboard project that transforms large NOAA weather datasets into county-level severe-weather risk insights for Minnesota.',
+          'WeatherForge originated as a collaborative University of St. Thomas SEIS 745 project with Odin Lee and Jannah ElNemr. David Braun served as the lead developer and primary implementer, writing more than 90% of the application code, while the project as a whole was completed collaboratively by the three-person team.',
         caseStudyStage: 'R&D',
         problem:
           'Public weather data is large, messy, and hard to use directly for decision support. NOAA archives contain valuable severe-weather and daily-observation records, but the raw files need filtering, cleaning, unit conversion, county joins, and clear dashboard views before they become useful for Minnesota risk analysis.',
         system:
-          'I filtered, cleaned, transformed, and packaged NOAA Storm Events and GHCN-Daily data into Minnesota-focused analytics layers, then built dashboard views for statewide trends, county-level impacts, historical time progression, weather context, methods, and live-alert exploration.',
+          'As lead developer and primary implementer, I wrote more than 90% of the WeatherForge application code across its data pipeline, analytics, and dashboard layers. My implementation work included filtering, cleaning, transforming, and packaging NOAA Storm Events and GHCN-Daily data into Minnesota-focused analytics layers and developing dashboard views for statewide trends, county-level impacts, historical time progression, weather context, methods, and live-alert exploration.',
+        solutionTitle: 'Solution / Implementation',
         systemHighlights: [
           'Raw NOAA files filtered down to Minnesota severe-weather and station-observation records.',
           'Cleaning and unit conversion steps produced reusable Parquet analytics layers.',
@@ -216,11 +218,11 @@ export const systemThemes: SystemTheme[] = [
         ],
         currentState: 'Applied dashboard prototype',
         githubUrl: 'https://github.com/DavidBraun777/WeatherForge',
-        myRole: 'Sole builder for data pipeline, analytics layers, dashboard, and case-study documentation',
+        myRole: 'Lead developer and primary implementer',
         coreConstraint:
           'Data trust: the dashboard has to make large public datasets usable while clearly labeling historical completeness issues and contextual weather averages.',
         outcome:
-          'Curated 55,384 cleaned Minnesota storm-event records and 9,008,748 station-day observations into reusable Parquet layers and a Python Shiny + Plotly dashboard spanning all 87 Minnesota counties.',
+          'I led implementation of the code that curated 55,384 cleaned Minnesota storm-event records and 9,008,748 station-day observations into reusable Parquet layers and a Python Shiny + Plotly dashboard spanning all 87 Minnesota counties.',
         proofSections: [
           {
             id: 'walkthrough',
@@ -688,16 +690,16 @@ export const systemThemes: SystemTheme[] = [
         id: 'stormiq',
         name: 'StormIQ',
         summary:
-          'Broader lead-automation direction being built on top of WeatherForge and DGM rather than treated as a finished standalone system.',
+          'Broader lead-automation direction informed by the collaborative WeatherForge academic project and the DGM architecture rather than presented as a finished standalone system.',
         caseStudyStage: 'R&D',
         problem:
           'Lead generation teams lose momentum when signal detection, qualification, call handling, and CRM handoff are split across disconnected tools and manual follow-up.',
         system:
-          'StormIQ is the larger workflow direction these systems support. WeatherForge is being built as the event-signal layer, DGM is being built as the orchestration layer, and StormIQ brings those layers together with qualification, decisioning, and CRM handoff so the final workflow is reviewable instead of brittle.',
+          'StormIQ is a proposed larger workflow direction. It uses the collaborative WeatherForge academic project as a reference for an event-signal layer and DGM as a reference for orchestration, then defines how qualification, decisioning, and CRM handoff could fit together. No integrated WeatherForge-DGM product is claimed here.',
         systemHighlights: [
-          'WeatherForge is the upstream signal engine for storm and territory relevance.',
-          'DGM is the orchestration layer for state, branching, and human-review seams.',
-          'StormIQ is the umbrella workflow tying signal, qualification, and downstream handoff together.',
+          'The collaborative WeatherForge academic project provides a reference pattern for storm and territory signals.',
+          'DGM provides an orchestration reference for state, branching, and human-review seams.',
+          'StormIQ is the proposed umbrella workflow tying signal, qualification, and downstream handoff together.',
         ],
         stack: ['Python', 'FastAPI', 'Workflow Orchestration', 'Queue-backed Jobs', 'CRM Integrations'],
         currentState: 'Architecture in Progress',
@@ -710,16 +712,16 @@ export const systemThemes: SystemTheme[] = [
         coreConstraint:
           'System coherence: the umbrella workflow has to stay honest about what is real today while still defining how signal, orchestration, and downstream actions will fit together',
         outcome:
-          'StormIQ is now framed as a serious in-progress program direction, with WeatherForge and DGM acting as the concrete systems under active development',
+          'StormIQ is framed as an in-progress program direction; WeatherForge and DGM are reference projects, not evidence of a current integrated product.',
         proofSections: [
           {
             id: 'walkthrough',
             title: 'System Walkthrough',
             status: 'planned',
             summary:
-              'A full StormIQ walkthrough is intentionally deferred until the WeatherForge and DGM layers are mature enough to show as one believable system.',
+              'A full StormIQ walkthrough is intentionally deferred until the intended signal and orchestration layers operate together as one believable system.',
             items: [
-              'Umbrella walkthrough to be added after the core WeatherForge and DGM flows are operating together.',
+              'Umbrella walkthrough to be added after the intended signal and orchestration flows are operating together.',
               'Current proof is the system direction and architecture boundary, not a finished product claim.',
             ],
           },
@@ -730,7 +732,7 @@ export const systemThemes: SystemTheme[] = [
             summary:
               'The architecture direction is real now: a system composed of upstream signal handling, orchestration, validation, and downstream delivery.',
             items: [
-              'WeatherForge feeds structured event signals into the broader workflow.',
+              'WeatherForge\'s collaborative academic artifacts inform the proposed structured event-signal layer.',
               'DGM handles state, branching, and reviewable orchestration.',
               'StormIQ binds signal, qualification, and CRM handoff into one operator-facing system.',
             ],
@@ -754,7 +756,7 @@ export const systemThemes: SystemTheme[] = [
             summary:
               'Artifacts will be added as the underlying systems stabilize. This page is ready for them without pretending they already exist.',
             items: [
-              'Updated umbrella architecture diagram to be added after WeatherForge and DGM artifacts are finalized.',
+              'Updated umbrella architecture diagram to be added after the intended signal and orchestration boundaries are finalized.',
               'End-to-end workflow evidence to be added once the integrated path is running reliably.',
             ],
           },

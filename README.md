@@ -51,8 +51,12 @@ The current project evidence remains deliberately classified:
   do not describe it as currently live.
 - `DealerFlow`, where shown, should be treated cautiously as pilot/proof work
   unless stronger artifacts and bounded pilot facts are added.
-- `WeatherForge` is secondary technical proof. It should not be described as a
-  production client system unless real deployment proof is added.
+- `WeatherForge` is a collaborative University of St. Thomas SEIS 745 project on
+  which David served as lead developer and primary implementer, writing more than
+  90% of the application code. Do not describe the academic project as exclusively
+  solo, but do not treat its collaborative status as evidence of equal implementation
+  contribution. State individual contributions where established, and do not describe
+  it as a production client system unless deployment evidence is added.
 - `RAGeATM` is secondary academic/technical proof for retrieval and augmentation
   work. It should not be framed as production consulting delivery.
 - `DGM` and `StormIQ`, where present, represent active or planned system

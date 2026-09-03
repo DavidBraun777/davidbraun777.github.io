@@ -26,7 +26,7 @@ interface Props {
 
 const caseStudyDescriptions: Record<string, string> = {
   weatherforge:
-    'WeatherForge is a Minnesota severe-weather analytics dashboard built from NOAA Storm Events and GHCN-Daily data, with 55K+ storm records and 9M+ weather observations.',
+    'WeatherForge is a collaborative University of St. Thomas SEIS 745 project completed by David Braun, Odin Lee, and Jannah ElNemr. David served as lead developer and primary implementer, writing more than 90% of the application code.',
   rageatm:
     'RAGeATM is an evidence-bound Retrieval-Augmented Generation prototype using TF-IDF, cosine retrieval, and threshold refusal to demonstrate grounded AI behavior.',
 }
@@ -115,7 +115,10 @@ export default async function CaseStudyDetailPage({ params }: Readonly<Props>) {
           <div className="grid gap-5">
             <NarrativeCard title="Problem" body={system.problem} />
             <NarrativeCard title="Core Constraint" body={system.coreConstraint} />
-            <NarrativeCard title="Solution / What I Built" body={system.system} />
+            <NarrativeCard
+              title={system.solutionTitle ?? 'Solution / What I Built'}
+              body={system.system}
+            />
             <NarrativeCard title="Results" body={system.outcome} />
           </div>
         </section>
