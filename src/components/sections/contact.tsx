@@ -17,21 +17,29 @@ import { SectionHeader } from '@/components/ui/section-header'
 import { Button } from '@/components/ui/button'
 import { Input, Select, Textarea } from '@/components/ui/input'
 import { profile } from '@/data/profile'
+import {
+  parseInquiryType,
+  type InquiryType,
+  type ServiceType,
+  type UrgencyLevel,
+} from '@/lib/contact-validation'
 
 type FormStatus = 'idle' | 'loading' | 'success' | 'error'
 
 interface ContactProps {
   calLink?: string
+  initialInquiryType?: InquiryType
   showSectionHeader?: boolean
   title?: string
   subtitle?: string
   sectionId?: string
 }
 
-const conversationTypeOptions = [
-  { value: 'consulting', label: 'Workflow automation project' },
-  { value: 'build', label: 'New system or internal tool' },
-  { value: 'architecture', label: 'System integration or reliability review' },
+const inquiryTypeOptions = [
+  { value: 'employment', label: 'Employment / Engineering Role' },
+  { value: 'consulting', label: 'Consulting / Project' },
+  { value: 'research', label: 'Research Collaboration' },
+  { value: 'speaking', label: 'Speaking / Professional' },
   { value: 'other', label: 'Other' },
 ]
 
@@ -45,47 +53,153 @@ const serviceOptions = [
 ]
 
 const urgencyOptions = [
-  { value: 'exploring', label: 'Researching options' },
-  { value: 'this-quarter', label: 'Need it this quarter' },
-  { value: 'this-month', label: 'Need it this month' },
-  { value: 'urgent', label: 'Urgent' },
+  { value: 'exploring', label: 'Exploring / no fixed date' },
+  { value: 'this-quarter', label: 'Within the next three months' },
+  { value: 'this-month', label: 'Within the next month' },
+  { value: 'urgent', label: 'Time-sensitive' },
 ]
 
-const fitPoints = [
-  'A repeated workflow is taking too much manual effort.',
-  'Important information has to move across multiple tools or systems.',
-  'Leads or requests are slipping because follow-up is inconsistent.',
-  'Messy data, dashboards, or AI assistants need to support the workflow without creating new risk.',
+interface InquiryCopy {
+  heading: string
+  guidance: string
+  organizationLabel: string
+  organizationPlaceholder: string
+  subjectLabel: string
+  subjectPlaceholder: string
+  messageLabel: string
+  messagePlaceholder: string
+}
+
+const defaultInquiryCopy: InquiryCopy = {
+  heading: 'What would you like to discuss?',
+  guidance: 'Select an inquiry type so I can route the conversation appropriately.',
+  organizationLabel: 'Organization (optional)',
+  organizationPlaceholder: 'Company, institution, or organization',
+  subjectLabel: 'Subject',
+  subjectPlaceholder: 'A short summary of your inquiry',
+  messageLabel: 'What context would help me understand the inquiry?',
+  messagePlaceholder: 'Share the opportunity, relevant background, timing, and what a useful next step would look like.',
+}
+
+const inquiryCopy: Record<InquiryType, InquiryCopy> = {
+  employment: {
+    heading: 'Tell me about the engineering opportunity.',
+    guidance: 'Helpful context includes the company, role, employment type, team, and hiring timeline.',
+    organizationLabel: 'Company (optional)',
+    organizationPlaceholder: 'Company or organization',
+    subjectLabel: 'Role or opportunity',
+    subjectPlaceholder: 'Example: Senior platform engineering role',
+    messageLabel: 'What should I know about the role and team?',
+    messagePlaceholder: 'Share the role, employment type, team context, hiring process, timeline, and any useful links.',
+  },
+  consulting: {
+    heading: 'Tell me about the system or workflow.',
+    guidance: 'Helpful context includes the current problem, users, integrations, constraints, timeline, and approximate scope.',
+    organizationLabel: 'Organization (optional)',
+    organizationPlaceholder: 'Company or organization',
+    subjectLabel: 'System or workflow problem',
+    subjectPlaceholder: 'Example: automate lead follow-up across forms and our CRM',
+    messageLabel: 'What is happening now, and what do you want instead?',
+    messagePlaceholder: 'Describe the workflow, what is breaking, who uses it, relevant data or AI constraints, timeline, and desired outcome.',
+  },
+  research: {
+    heading: 'Tell me about the research collaboration.',
+    guidance: 'Helpful context includes the institution, research topic, collaboration type, and relevant paper or project.',
+    organizationLabel: 'Institution or organization (optional)',
+    organizationPlaceholder: 'University, lab, or organization',
+    subjectLabel: 'Research topic or collaboration',
+    subjectPlaceholder: 'Example: hybrid retrieval evaluation collaboration',
+    messageLabel: 'What research context and collaboration would be useful?',
+    messagePlaceholder: 'Share the topic, collaboration type, relevant paper or project, expected contribution, and timing.',
+  },
+  speaking: {
+    heading: 'Tell me about the speaking opportunity.',
+    guidance: 'Helpful context includes the organization, audience, topic, format, date, and location or platform.',
+    organizationLabel: 'Organization (optional)',
+    organizationPlaceholder: 'Event host or organization',
+    subjectLabel: 'Event or topic',
+    subjectPlaceholder: 'Example: applied AI systems panel',
+    messageLabel: 'What should I know about the event?',
+    messagePlaceholder: 'Share the audience, topic, format, date, location or platform, and what you would like me to contribute.',
+  },
+  other: {
+    ...defaultInquiryCopy,
+    heading: 'Tell me what you have in mind.',
+    guidance: 'Share the organization, context, timing, and the next step you are proposing.',
+  },
+}
+
+interface ContactFormState {
+  name: string
+  email: string
+  inquiryType: InquiryType | ''
+  organization: string
+  subject: string
+  message: string
+  serviceNeeded: ServiceType | ''
+  urgency: UrgencyLevel | ''
+}
+
+function createInitialFormData(
+  initialInquiryType?: InquiryType
+): ContactFormState {
+  return {
+    name: '',
+    email: '',
+    inquiryType: initialInquiryType ?? '',
+    organization: '',
+    subject: '',
+    message: '',
+    serviceNeeded: '',
+    urgency: '',
+  }
+}
+
+const helpfulContextPoints = [
+  'The company, institution, organization, team, or audience involved.',
+  'The role, system, research topic, event, or other opportunity.',
+  'Any timing, constraints, or links that would help me prepare.',
+  'What a useful next step would look like for you.',
 ]
 
 const nextStepPoints = [
-  'I review the workflow, bottleneck, users, constraints, and goal.',
-  'If there is a fit, I follow up with a scoped next step.',
+  'I review the inquiry, context, constraints, and goal.',
+  'If there is a fit, I follow up with a useful next step.',
   'If there is not a fit, I will say so directly.',
 ]
 
 export function Contact({
   calLink,
+  initialInquiryType,
   showSectionHeader = true,
-  title = 'Start with the intake form',
-  subtitle = 'Use the form to explain the workflow, the bottleneck, the users, and what better would look like.',
+  title = 'Start with the inquiry form',
+  subtitle = 'Choose the kind of conversation, then share enough context for a useful next step.',
   sectionId = 'contact',
 }: Readonly<ContactProps>) {
   const [formStatus, setFormStatus] = useState<FormStatus>('idle')
   const resetTimerRef = useRef<ReturnType<typeof setTimeout>>(undefined)
-  const [formData, setFormData] = useState({
-    name: '',
-    email: '',
-    subject: '',
-    message: '',
-    projectType: '',
-    serviceNeeded: '',
-    urgency: '',
-  })
+  const [formData, setFormData] = useState<ContactFormState>(() =>
+    createInitialFormData(initialInquiryType)
+  )
+  const selectedInquiryCopy = formData.inquiryType
+    ? inquiryCopy[formData.inquiryType]
+    : defaultInquiryCopy
   const calendlyUrl =
     typeof calLink === 'string' && /^https?:\/\//i.test(calLink.trim())
       ? calLink.trim()
       : null
+
+  const handleInquiryTypeChange = (
+    event: React.ChangeEvent<HTMLSelectElement>
+  ) => {
+    const inquiryType = parseInquiryType(event.target.value) ?? ''
+    setFormData((current) => ({
+      ...current,
+      inquiryType,
+      serviceNeeded:
+        inquiryType === 'consulting' ? current.serviceNeeded : '',
+    }))
+  }
 
   const handleSubmit = async (event: React.FormEvent) => {
     event.preventDefault()
@@ -104,15 +218,7 @@ export function Contact({
 
       if (response.ok) {
         setFormStatus('success')
-        setFormData({
-          name: '',
-          email: '',
-          subject: '',
-          message: '',
-          projectType: '',
-          serviceNeeded: '',
-          urgency: '',
-        })
+        setFormData(createInitialFormData(initialInquiryType))
       } else {
         setFormStatus('error')
       }
@@ -144,18 +250,41 @@ export function Contact({
             <div className="rounded-[2rem] border border-border-subtle bg-background-elevated p-6 shadow-sm sm:p-8">
               <div className="max-w-3xl">
                 <p className="font-mono text-xs uppercase tracking-[0.22em] text-link-primary">
-                  Project intake
+                  Professional inquiry
                 </p>
                 <h2 className="mt-4 text-3xl font-semibold tracking-tight text-text-primary">
-                  Tell me about the workflow you want to improve.
+                  {selectedInquiryCopy.heading}
                 </h2>
                 <p className="mt-4 text-base leading-8 text-text-secondary">
-                  The form is the main starting point. It gives me the context I need
-                  before we talk.
+                  The form is the main starting point. A few focused details help me
+                  prepare before we talk.
                 </p>
               </div>
 
               <form id={`${sectionId}-fields`} onSubmit={handleSubmit} className="mt-8 space-y-6">
+                <div className="rounded-[1.5rem] border border-border-subtle bg-background-subtle p-5">
+                  <h3 className="text-lg font-semibold text-text-primary">Start here</h3>
+                  <div className="mt-5">
+                    <Select
+                      id="contact-inquiry-type"
+                      label="Inquiry type"
+                      placeholder="Select one"
+                      options={inquiryTypeOptions}
+                      value={formData.inquiryType}
+                      onChange={handleInquiryTypeChange}
+                      aria-describedby="contact-inquiry-guidance"
+                      required
+                    />
+                    <p
+                      id="contact-inquiry-guidance"
+                      aria-live="polite"
+                      className="mt-3 text-sm leading-7 text-text-secondary"
+                    >
+                      {selectedInquiryCopy.guidance}
+                    </p>
+                  </div>
+                </div>
+
                 <div className="rounded-[1.5rem] border border-border-subtle bg-background-subtle p-5">
                   <h3 className="text-lg font-semibold text-text-primary">Contact details</h3>
                   <div className="mt-5 grid gap-6 sm:grid-cols-2">
@@ -167,6 +296,7 @@ export function Contact({
                       value={formData.name}
                       onChange={(event) => setFormData({ ...formData, name: event.target.value })}
                       maxLength={100}
+                      autoComplete="name"
                       required
                     />
                     <Input
@@ -179,19 +309,34 @@ export function Contact({
                         setFormData({ ...formData, email: event.target.value })
                       }
                       maxLength={254}
+                      autoComplete="email"
                       required
                     />
+                    <div className="sm:col-span-2">
+                      <Input
+                        id="contact-organization"
+                        label={selectedInquiryCopy.organizationLabel}
+                        type="text"
+                        placeholder={selectedInquiryCopy.organizationPlaceholder}
+                        value={formData.organization}
+                        onChange={(event) =>
+                          setFormData({ ...formData, organization: event.target.value })
+                        }
+                        maxLength={150}
+                        autoComplete="organization"
+                      />
+                    </div>
                   </div>
                 </div>
 
                 <div className="rounded-[1.5rem] border border-border-subtle bg-background-subtle p-5">
-                  <h3 className="text-lg font-semibold text-text-primary">Project basics</h3>
+                  <h3 className="text-lg font-semibold text-text-primary">Inquiry basics</h3>
                   <div className="mt-5 space-y-6">
                     <Input
                       id="contact-subject"
-                      label="What do you need help with?"
+                      label={selectedInquiryCopy.subjectLabel}
                       type="text"
-                      placeholder="Example: automate lead follow-up across forms and our CRM"
+                      placeholder={selectedInquiryCopy.subjectPlaceholder}
                       value={formData.subject}
                       onChange={(event) =>
                         setFormData({ ...formData, subject: event.target.value })
@@ -200,35 +345,33 @@ export function Contact({
                       required
                     />
 
-                    <div className="grid gap-4 sm:grid-cols-3">
-                      <Select
-                        id="contact-project-type"
-                        label="Project type"
-                        placeholder="Select one"
-                        options={conversationTypeOptions}
-                        value={formData.projectType}
-                        onChange={(event) =>
-                          setFormData({ ...formData, projectType: event.target.value })
-                        }
-                      />
-                      <Select
-                        id="contact-service"
-                        label="Primary need"
-                        placeholder="Select one"
-                        options={serviceOptions}
-                        value={formData.serviceNeeded}
-                        onChange={(event) =>
-                          setFormData({ ...formData, serviceNeeded: event.target.value })
-                        }
-                      />
+                    <div className="grid gap-4 sm:grid-cols-2">
+                      {formData.inquiryType === 'consulting' ? (
+                        <Select
+                          id="contact-service"
+                          label="Primary need (optional)"
+                          placeholder="Select one"
+                          options={serviceOptions}
+                          value={formData.serviceNeeded}
+                          onChange={(event) =>
+                            setFormData({
+                              ...formData,
+                              serviceNeeded: event.target.value as ServiceType | '',
+                            })
+                          }
+                        />
+                      ) : null}
                       <Select
                         id="contact-urgency"
-                        label="Timeline"
+                        label="Timing (optional)"
                         placeholder="Select one"
                         options={urgencyOptions}
                         value={formData.urgency}
                         onChange={(event) =>
-                          setFormData({ ...formData, urgency: event.target.value })
+                          setFormData({
+                            ...formData,
+                            urgency: event.target.value as UrgencyLevel | '',
+                          })
                         }
                       />
                     </div>
@@ -236,12 +379,12 @@ export function Contact({
                 </div>
 
                 <div className="rounded-[1.5rem] border border-border-subtle bg-background-subtle p-5">
-                  <h3 className="text-lg font-semibold text-text-primary">Project details</h3>
+                  <h3 className="text-lg font-semibold text-text-primary">Additional context</h3>
                   <div className="mt-5">
                     <Textarea
                       id="contact-message"
-                      label="What is happening now, and what do you want instead?"
-                      placeholder="Describe the workflow, what is breaking, who uses it, any data or AI constraints, and what outcome you want."
+                      label={selectedInquiryCopy.messageLabel}
+                      placeholder={selectedInquiryCopy.messagePlaceholder}
                       rows={7}
                       value={formData.message}
                       onChange={(event) =>
@@ -258,7 +401,7 @@ export function Contact({
                     <div>
                       <p className="text-sm font-semibold text-text-primary">After you send it</p>
                       <p className="mt-1 text-sm leading-7 text-text-secondary">
-                        {profile.responseTime} Project details stay private.
+                        {profile.responseTime} Inquiry details stay private.
                       </p>
                     </div>
                     <Button
@@ -267,7 +410,7 @@ export function Contact({
                       className="w-full rounded-xl px-5 sm:w-auto"
                       isLoading={formStatus === 'loading'}
                     >
-                      Send
+                      Send inquiry
                       <ArrowRight className="h-4 w-4" />
                     </Button>
                   </div>
@@ -352,7 +495,7 @@ export function Contact({
                 <div className="relative aspect-square overflow-hidden rounded-[1.5rem] border border-border-subtle bg-background-subtle">
                   <Image
                     src="/images/profile/Smolder.png"
-                    alt="Portrait of David Braun, the engineer behind the consulting work."
+                    alt="Portrait of David Braun."
                     fill
                     className="object-cover"
                     sizes="(min-width: 1024px) 320px, (min-width: 640px) 168px, 100vw"
@@ -365,12 +508,12 @@ export function Contact({
                     Who you&apos;ll work with
                   </p>
                   <h2 className="mt-3 text-xl font-semibold text-text-primary">
-                    Direct contact with the person doing the work.
+                    Direct contact with David Braun.
                   </h2>
                   <p className="mt-3 text-sm leading-7 text-text-secondary">
-                    You&apos;ll be talking directly with David Braun, the person who
-                    scopes the problem, builds the system, documents the limits, and
-                    follows through after launch.
+                    You&apos;ll be talking directly with me about the role, project,
+                    research collaboration, speaking opportunity, or other professional
+                    inquiry you select.
                   </p>
                   <p className="mt-3 text-sm leading-7 text-text-secondary">
                     {profile.responseTime} If it is not a fit, I will say so directly.
@@ -380,9 +523,9 @@ export function Contact({
             </div>
 
             <div className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm">
-              <h2 className="text-xl font-semibold text-text-primary">Good fit if</h2>
+              <h2 className="text-xl font-semibold text-text-primary">Helpful context</h2>
               <div className="mt-5 space-y-3">
-                {fitPoints.map((point) => (
+                {helpfulContextPoints.map((point) => (
                   <div
                     key={point}
                     className="rounded-2xl border border-border-subtle bg-background-subtle px-4 py-3 text-sm leading-7 text-text-secondary"
@@ -434,7 +577,7 @@ function LinkHint() {
     <div className="text-sm text-text-secondary">
       <span className="font-medium text-text-primary">Need background first?</span>{' '}
       <Link
-        href="/why-work-with-me"
+        href="/experience"
         className="text-link-primary transition-colors hover:text-link-primary-hover"
       >
         See experience and resume details

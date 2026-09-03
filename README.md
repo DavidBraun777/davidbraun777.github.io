@@ -7,7 +7,7 @@ identity while retaining consulting, delivery, enterprise, and research proof.
 
 ## Professional North Star
 
-**Primary identity:** AI Systems / Platform Architect
+**Primary identity:** AI Systems & Platform Engineer
 
 **North-star statement:** A systems-level engineer who can take AI/data
 capabilities and turn them into secure, deployable, measurable operational
@@ -146,8 +146,8 @@ Add these only when they are real; do not manufacture leadership artifacts.
 
 ### Professional Identity Hygiene
 
-- [ ] Synchronize `resume.pdf` with the AI Systems / Platform Architect
-  positioning once an editable resume source is available
+- [x] Version the current resume as `David-J-Braun-Resume-2026.pdf` and align it
+  with the AI Systems & Platform Engineer positioning
 - [ ] Synchronize LinkedIn
 - [ ] Synchronize ORCID
 - [ ] Synchronize the GitHub profile
@@ -163,12 +163,12 @@ Add these only when they are real; do not manufacture leadership artifacts.
 Do not call a prototype "production AI" until it is genuinely deployed into a
 real operational workflow.
 
-### Architect
+### Architecture
 
-The AI Systems / Platform Architect identity must increasingly be backed by
+The AI Systems & Platform Engineer identity must increasingly be backed by
 architecture artifacts, cross-layer decisions, deployed systems,
-security/reliability evidence, and measurable outcomes. It is professional
-positioning, not a fabricated historical appointment.
+security/reliability evidence, and measurable outcomes. Architecture remains a
+legitimate capability; it is not a fabricated historical appointment.
 
 ### Staff / Principal
 

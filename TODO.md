@@ -48,13 +48,14 @@ operational details from David. Do not invent proof.
 - [x] VIFG restored as first public production proof.
 - [x] Workflow-first homepage/contact/services framing completed during an earlier
   positioning phase; the homepage and services framing is now superseded by the
-  AI Systems / Platform Architect north star while contact remains a consulting path.
+  AI Systems & Platform Engineer north star while contact remains a consulting path.
 - [x] Primary CTA restored to `Book a Call`.
-- [x] Resume URL fixed to `/resume.pdf`.
+- [x] Resume versioned at `/David-J-Braun-Resume-2026.pdf`, with `/resume.pdf`
+  preserved as a permanent compatibility redirect.
 - [x] Case-study index restored to production/pilot/prototype/R&D hierarchy.
 - [x] WeatherForge and RAGeATM kept secondary and honestly labeled.
 - [x] RAGeATM retrieval ladder added collapsed by default with overclaim guardrails.
 - [x] Header, footer, metadata, and social card aligned during the earlier consulting
-  phase; they are now superseded by the AI Systems / Platform Architect identity.
+  phase; they are now superseded by the AI Systems & Platform Engineer identity.
 - [x] Old live-vs-local restoration recommendations retired as historical context.
 - [x] Lightweight Playwright coverage added for console errors, mobile rendering, and additional axe scans.

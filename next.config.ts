@@ -64,17 +64,27 @@ export default function nextConfig(phase: string): NextConfig {
       return [
         {
           source: '/about',
-          destination: '/why-work-with-me',
+          destination: '/experience',
           permanent: true,
         },
         {
           source: '/resume',
-          destination: '/why-work-with-me',
+          destination: '/experience',
           permanent: true,
         },
         {
           source: '/background',
-          destination: '/why-work-with-me',
+          destination: '/experience',
+          permanent: true,
+        },
+        {
+          source: '/why-work-with-me',
+          destination: '/experience',
+          permanent: true,
+        },
+        {
+          source: '/resume.pdf',
+          destination: '/David-J-Braun-Resume-2026.pdf',
           permanent: true,
         },
         {

@@ -1,146 +1,93 @@
-# IA and Sitemap: Portfolio + People's Connection LLC
+# dbraun.io Information Architecture
 
-This document defines an implementation-ready information architecture for:
+This document records the implemented information architecture for `dbraun.io`.
+The site supports three professional goals without splitting into separate public
+funnels:
 
-- `dbraun.io` (personal authority and trust)
-- `business-domain.com` (People's Connection LLC commercial engine)
+1. Employment opportunities for AI systems, platform, and software engineering.
+2. Qualified consulting leads for People's Connection LLC.
+3. Research inquiries and collaborations.
 
-Replace `business-domain.com` with your final production domain.
+## Primary Navigation
 
-## 1) Domain Responsibilities
-
-### `dbraun.io` (Portfolio)
-
-Primary job:
-
-- Establish David Braun as a high-agency builder, strategist, and operator.
-- Demonstrate proof through projects, writing, and outcomes.
-- Route qualified commercial intent to People's Connection LLC.
-
-### `business-domain.com` (Business)
-
-Primary job:
-
-- Convert service demand into booked calls, paid discovery, and deals.
-- Present offers, process, outcomes, and buying path.
-- Operate marketing, sales, and service clarity at scale.
-
-## 2) Portfolio IA (`dbraun.io`)
-
-## Global Navigation
-
-1. About
-2. Work (Projects)
-3. Insights (Blog)
-4. Case Studies (Summary)
-5. Contact
-6. Work With People's Connection LLC (primary cross-link CTA)
-
-## Sitemap (Portfolio)
-
-```text
-/
-|-- /about
-|-- /work
-|   |-- /work/[project-slug]
-|-- /insights
-|   |-- /insights/[post-slug]
-|-- /case-studies
-|   |-- /case-studies/[summary-slug]
-|-- /work-with-peoples-connection
-|-- /contact
-|-- /now (optional)
-|-- /speaking (optional)
-|-- /resume
-```
-
-## Page Purpose and CTAs (Portfolio)
-
-| Page | Primary Goal | Primary CTA | Secondary CTA |
-| --- | --- | --- | --- |
-| Home | Fast trust and positioning | Work with People's Connection LLC | View projects |
-| About | Narrative and point of view | See case studies | Read insights |
-| Work | Technical credibility | Discuss similar build | Read related case study |
-| Insights | Authority and SEO | Book strategy call | Subscribe |
-| Case study summary | Outcome proof | View full business case study | Contact David |
-| Work with People's Connection LLC | Route intent | Go to business site offer page | Book call |
-
-## 3) Business IA (`business-domain.com`)
-
-## Global Navigation
-
-1. Services
-2. Solutions
+1. Home
+2. Services
 3. Case Studies
-4. Process
-5. Pricing
-6. Resources
-7. About (Founder + company)
-8. Book Discovery Call (primary CTA)
+4. Research
+5. Experience
+6. Contact
 
-## Sitemap (Business)
+The canonical professional identity across these routes is **AI Systems & Platform
+Engineer**. Architecture remains a capability, not a retroactive employment title.
+
+## Canonical Sitemap
 
 ```text
 /
 |-- /services
-|   |-- /services/[service-slug]
-|-- /solutions
-|   |-- /solutions/[problem-slug]
-|-- /industries
-|   |-- /industries/[industry-slug]
 |-- /case-studies
-|   |-- /case-studies/[full-case-slug]
-|-- /pricing
-|-- /process
-|-- /book
-|-- /paid-discovery
-|-- /resources
-|   |-- /resources/[guide-slug]
-|-- /about
-|   |-- /about/founder (links to dbraun.io/about)
+|   |-- /case-studies/[system-id]
+|-- /research
+|-- /experience
+|   |-- /experience/career-story
+|-- /approach/evidence
+|-- /writing
+|   |-- /writing/[slug]
 |-- /contact
-|-- /legal/privacy
-|-- /legal/terms
+|-- /David-J-Braun-Resume-2026.pdf
 ```
 
-## Page Purpose and CTAs (Business)
+The career-story and evidence-standards pages are deeper supporting routes. They
+are linked contextually but intentionally omitted from primary navigation.
 
-| Page | Primary Goal | Primary CTA | Secondary CTA |
-| --- | --- | --- | --- |
-| Home | Clarify offer and outcome | Book discovery | View services |
-| Services | Explain capabilities by package | Start paid discovery | Book call |
-| Solutions | Match pain to solution | Book call | Read case study |
-| Case studies | Prove outcomes | Start project intake | Book call |
-| Pricing | Pre-qualify and reduce sales friction | Start paid discovery | Contact |
-| Process | De-risk engagement | Book call | Download process PDF |
-| About | Human trust and founder credibility | Book call | Visit founder portfolio |
+## Page Roles and Conversion Paths
 
-## 4) Cross-Domain Link Endpoints
-
-Implement these links first:
-
-| Source | Target | Intent |
+| Page | Primary purpose | Primary path |
 | --- | --- | --- |
-| `dbraun.io/work-with-peoples-connection` | `business-domain.com/services` | Service handoff |
-| `dbraun.io/case-studies/[summary]` | `business-domain.com/case-studies/[full]` | Deep proof handoff |
-| `dbraun.io/insights/[post]` | `business-domain.com/solutions/[problem]` | Insight -> offer handoff |
-| `business-domain.com/about/founder` | `dbraun.io/about` | Founder trust |
-| `business-domain.com/case-studies/[full]` | `dbraun.io/work/[project]` | Technical depth proof |
+| Home | Establish positioning, proof, and audience paths | View Work / Contact Me |
+| Services | Explain purchasable consulting engagements | Discuss a Project |
+| Case Studies | Show maturity-labeled engineering proof | Discuss a similar workflow |
+| Research | Present accepted and published research accurately | Discuss Research |
+| Experience | Provide a concise professional record | Discuss a Role |
+| Career Story | Preserve the deeper five-chapter through-line | Experience / Evidence Standards |
+| Evidence Standards | Explain maturity, claim, and review discipline | Case Studies / Research |
+| Contact | Route all professional inquiry types through one form | Send inquiry |
 
-Use UTM on every cross-domain CTA:
+## Contact Intents
 
-- `utm_source=portfolio`
-- `utm_medium=referral`
-- `utm_campaign=cross_domain_handoff`
+The single `/contact` route supports these query parameters and preselected
+inquiry types:
 
-## 5) Tomorrow-Build Starter Scope
+- `/contact?type=employment`
+- `/contact?type=consulting`
+- `/contact?type=research`
 
-If you want to start tomorrow with minimal risk, build these first:
+Speaking and other professional inquiries use the same form selector without a
+separate public route.
 
-1. `business-domain.com/` (hero + services snapshot + primary CTA)
-2. `business-domain.com/services`
-3. `business-domain.com/book`
-4. `business-domain.com/about/founder`
-5. `dbraun.io/work-with-peoples-connection`
+## Permanent Redirects
 
-Everything else can layer in after these five pages are live.
+Legacy aliases resolve directly to the current canonical destination:
+
+| Source | Destination |
+| --- | --- |
+| `/why-work-with-me` | `/experience` |
+| `/about` | `/experience` |
+| `/background` | `/experience` |
+| `/resume` | `/experience` |
+| `/resume.pdf` | `/David-J-Braun-Resume-2026.pdf` |
+| `/projects` | `/case-studies` |
+| `/projects/[slug]` | `/case-studies/[slug]` |
+| `/blog` | `/writing` |
+| `/blog/[slug]` | `/writing/[slug]` |
+| `/systems` | `/case-studies` |
+
+Aliases are not sitemap entries and must not emit obsolete canonical metadata.
+
+## Evidence Hierarchy
+
+Primary pages show proof and retain visible Production, Pilot, and R&D labels.
+The rationale behind those labels, research publication status, limitations,
+AI-assisted work, and quality evidence lives on `/approach/evidence`. This keeps
+the main visitor journey concise while preserving claim discipline for readers
+who want the deeper standard.

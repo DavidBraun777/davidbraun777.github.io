@@ -22,7 +22,10 @@ const axePageChecks = [
   { label: 'services page', path: '/services' },
   { label: 'case studies page', path: '/case-studies' },
   { label: 'research page', path: '/research' },
-  { label: 'why work with me page', path: '/why-work-with-me' },
+  { label: 'contact page', path: '/contact?type=research' },
+  { label: 'experience page', path: '/experience' },
+  { label: 'career story page', path: '/experience/career-story' },
+  { label: 'evidence standards page', path: '/approach/evidence' },
 ] as const
 
 test.describe('Accessibility', () => {
@@ -49,8 +52,16 @@ test.describe('Accessibility', () => {
     const contactSection = page.locator('#contact-form')
     await contactSection.scrollIntoViewIfNeeded()
 
-    // All required fields should have a label element
-    for (const id of ['contact-name', 'contact-email', 'contact-subject', 'contact-message']) {
+    // Every visible input should have an associated label element.
+    for (const id of [
+      'contact-inquiry-type',
+      'contact-name',
+      'contact-email',
+      'contact-organization',
+      'contact-subject',
+      'contact-urgency',
+      'contact-message',
+    ]) {
       const input = contactSection.locator(`#${id}`)
       await expect(input).toBeVisible()
       const label = contactSection.locator(`label[for="${id}"]`)
@@ -70,6 +81,7 @@ test.describe('Accessibility', () => {
     await form.scrollIntoViewIfNeeded()
 
     // Fill required fields
+    await page.selectOption('#contact-inquiry-type', 'employment')
     await page.fill('#contact-name', 'Test User')
     await page.fill('#contact-email', 'test@example.com')
     await page.fill('#contact-subject', 'Test Subject')
@@ -96,6 +108,7 @@ test.describe('Accessibility', () => {
     await form.scrollIntoViewIfNeeded()
 
     // Fill required fields
+    await page.selectOption('#contact-inquiry-type', 'research')
     await page.fill('#contact-name', 'Test User')
     await page.fill('#contact-email', 'test@example.com')
     await page.fill('#contact-subject', 'Test Subject')

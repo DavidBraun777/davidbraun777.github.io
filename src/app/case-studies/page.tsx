@@ -187,12 +187,19 @@ export default function CaseStudiesPage() {
           systems={activeResearchSystems}
         />
 
-        <div>
+        <div className="flex flex-wrap gap-x-8 gap-y-4">
           <Link
-            href="/contact"
+            href="/contact?type=consulting"
             className="inline-flex items-center gap-2 text-sm font-medium text-link-primary transition-colors hover:text-link-primary-hover"
           >
             Need to talk through a similar workflow?
+            <ArrowRight className="h-4 w-4" />
+          </Link>
+          <Link
+            href="/approach/evidence"
+            className="inline-flex items-center gap-2 text-sm font-medium text-link-primary transition-colors hover:text-link-primary-hover"
+          >
+            How I label and verify technical work
             <ArrowRight className="h-4 w-4" />
           </Link>
         </div>

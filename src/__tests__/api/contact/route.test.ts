@@ -31,8 +31,15 @@ function createRequest(
 const validBody = {
   name: 'Test User',
   email: 'test@example.com',
+  inquiryType: 'employment',
   subject: 'Test Subject',
   message: 'Hello, this is a test message.',
+}
+const legacyBody = {
+  name: validBody.name,
+  email: validBody.email,
+  subject: validBody.subject,
+  message: validBody.message,
 }
 
 describe('POST /api/contact', () => {
@@ -188,16 +195,17 @@ describe('POST /api/contact', () => {
 
   it('validates optional dropdown fields', async () => {
     const res = await POST(
-      createRequest({ ...validBody, projectType: 'invalid-type' })
+      createRequest({ ...validBody, inquiryType: 'invalid-type' })
     )
     expect(res.status).toBe(400)
   })
 
-  it('accepts valid optional dropdown fields and includes them in email', async () => {
+  it('includes canonical inquiry context and optional fields in email', async () => {
     const res = await POST(
       createRequest({
         ...validBody,
-        projectType: 'consulting',
+        inquiryType: 'consulting',
+        organization: 'Example Company',
         serviceNeeded: 'platform-infra',
         urgency: 'this-quarter',
       })
@@ -205,10 +213,26 @@ describe('POST /api/contact', () => {
     expect(res.status).toBe(200)
     expect(mockSend).toHaveBeenCalledOnce()
     const callArgs = mockSend.mock.calls[0][0]
-    expect(callArgs.html).toContain('Project Type')
+    expect(callArgs.html).toContain('Inquiry Type')
     expect(callArgs.html).toContain('consulting')
+    expect(callArgs.html).toContain('Organization')
+    expect(callArgs.html).toContain('Example Company')
     expect(callArgs.html).toContain('Service Needed')
     expect(callArgs.html).toContain('platform-infra')
+    expect(callArgs.text).toContain('Inquiry Type: consulting')
+    expect(callArgs.text).toContain('Organization: Example Company')
+  })
+
+  it('accepts a legacy projectType and normalizes it in email', async () => {
+    const res = await POST(
+      createRequest({ ...legacyBody, projectType: 'full-time' })
+    )
+
+    expect(res.status).toBe(200)
+    const callArgs = mockSend.mock.calls[0][0]
+    expect(callArgs.html).toContain('Inquiry Type')
+    expect(callArgs.html).toContain('employment')
+    expect(callArgs.html).not.toContain('Project Type')
   })
 
   it('uses x-real-ip for rate limiting over x-forwarded-for', async () => {

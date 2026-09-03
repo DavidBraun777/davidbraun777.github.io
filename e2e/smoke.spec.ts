@@ -6,15 +6,15 @@ const keyBuyerRoutes = [
   '/contact',
   '/case-studies',
   '/research',
-  '/why-work-with-me',
+  '/experience',
+  '/experience/career-story',
+  '/approach/evidence',
   '/writing',
 ] as const
 
 const orcidUrl = 'https://orcid.org/0009-0003-9821-8349'
 const googleScholarUrl =
   'https://scholar.google.com/citations?user=9CqMwqMAAAAJ&hl=en'
-const scopusUrl =
-  'https://www.scopus.com/inward/authorDetails.url?authorID=57197365260&partnerID=MN8TOARS'
 const aguProfileUrl =
   'https://www.agu.org/user-profile?cstkey=BF392314-D7E6-40A7-ACDF-DC1318123068'
 const credlyUrl =
@@ -41,15 +41,15 @@ test.describe('Smoke tests', () => {
   test('homepage loads and shows hero section', async ({ page }) => {
     await page.goto('/')
     const canonicalDescription =
-      'David Braun is an AI Systems / Platform Architect who takes AI and data capabilities into secure, deployable, measurable operational systems.'
+      'David Braun is an AI Systems & Platform Engineer building secure, deployable applications, APIs, workflows, cloud infrastructure, and applied AI systems.'
 
-    await expect(page).toHaveTitle('David Braun | AI Systems / Platform Architect')
+    await expect(page).toHaveTitle('David Braun | AI Systems & Platform Engineer')
     const main = page.locator('main')
     await expect(main).toBeVisible()
     await expect(
       main.getByRole('heading', {
         level: 1,
-        name: 'AI Systems / Platform Architect',
+        name: 'AI Systems & Platform Engineer',
         exact: true,
       })
     ).toBeVisible()
@@ -62,7 +62,7 @@ test.describe('Smoke tests', () => {
     )
     await expect(page.locator('meta[property="og:title"]')).toHaveAttribute(
       'content',
-      'David Braun | AI Systems / Platform Architect'
+      'David Braun | AI Systems & Platform Engineer'
     )
     await expect(page.locator('meta[property="og:description"]')).toHaveAttribute(
       'content',
@@ -70,7 +70,7 @@ test.describe('Smoke tests', () => {
     )
     await expect(page.locator('meta[name="twitter:title"]')).toHaveAttribute(
       'content',
-      'David Braun | AI Systems / Platform Architect'
+      'David Braun | AI Systems & Platform Engineer'
     )
     await expect(page.locator('meta[name="twitter:description"]')).toHaveAttribute(
       'content',
@@ -85,8 +85,8 @@ test.describe('Smoke tests', () => {
       /\/twitter-image/
     )
     await expect(
-      main.getByRole('link', { name: 'For Employers & Partners', exact: true })
-    ).toHaveAttribute('href', '/why-work-with-me')
+      main.getByRole('link', { name: 'View Experience', exact: true })
+    ).toHaveAttribute('href', '/experience')
   })
 
   test('navigation links are present', async ({ page }) => {
@@ -97,7 +97,7 @@ test.describe('Smoke tests', () => {
     await expect(header.getByRole('link', { name: /^services$/i })).toBeVisible()
     await expect(header.getByRole('link', { name: /case studies/i })).toBeVisible()
     await expect(header.getByRole('link', { name: /^research$/i })).toBeVisible()
-    await expect(header.getByRole('link', { name: /why work with me/i })).toBeVisible()
+    await expect(header.getByRole('link', { name: /^experience$/i })).toBeVisible()
     await expect(header.getByRole('link', { name: /^contact$/i })).toBeVisible()
     await expect(header.getByRole('link', { name: /projects/i })).toHaveCount(0)
   })
@@ -130,11 +130,14 @@ test.describe('Smoke tests', () => {
     await expect(page.getByRole('heading', { name: /^book chapters$/i })).toHaveCount(0)
     await expect(page.getByRole('heading', { name: /^conference abstracts$/i })).toBeVisible()
     await expect(
-      page.getByRole('heading', { name: 'How research informs systems work', exact: true })
-    ).toBeVisible()
-    await expect(
       page.getByText(/it is not presented as full machine translation/i).first()
     ).toBeVisible()
+    await expect(
+      page.getByRole('link', { name: /how i label and verify technical work/i })
+    ).toHaveAttribute('href', '/approach/evidence')
+    await expect(
+      page.getByRole('link', { name: /^discuss research$/i })
+    ).toHaveAttribute('href', '/contact?type=research')
 
     const orcidLink = page.getByRole('link', { name: /view orcid record/i })
     await expect(orcidLink).toHaveAttribute('href', orcidUrl)
@@ -146,9 +149,8 @@ test.describe('Smoke tests', () => {
     await expect(googleScholarLink).toHaveAttribute('href', googleScholarUrl)
     await expect(googleScholarLink).toHaveAttribute('target', '_blank')
 
-    const scopusLink = page.getByRole('link', { name: /view scopus profile/i })
-    await expect(scopusLink).toHaveAttribute('href', scopusUrl)
-    await expect(scopusLink).toHaveAttribute('target', '_blank')
+    await expect(page.getByRole('link', { name: /view scopus profile/i })).toHaveCount(0)
+    await expect(page.locator('main')).not.toContainText('Scopus')
 
     const aguLink = page.getByRole('link', { name: /view agu profile/i })
     await expect(aguLink).toHaveAttribute('href', aguProfileUrl)
@@ -173,21 +175,19 @@ test.describe('Smoke tests', () => {
     await expect(jgrArticle).toContainText(/REPT and MagEIS/i)
     await expect(jgrArticle).toContainText(/Van Allen Probes/i)
 
-    const identityClarification = page.locator(
-      'aside[aria-label="Author identity clarification"]'
-    )
-    await expect(identityClarification).toContainText(/different researcher/i)
-    await expect(identityClarification).toContainText(
-      /Laboratory for Atmospheric and Space Physics/i
-    )
-    await expect(identityClarification).toContainText(/University of Colorado Boulder/i)
+    const main = page.locator('main')
+    await expect(
+      page.locator('aside[aria-label="Author identity clarification"]')
+    ).toHaveCount(0)
+    await expect(main).not.toContainText('different researcher')
+    await expect(main).not.toContainText('Laboratory for Atmospheric and Space Physics')
+    await expect(main).not.toContainText('University of Colorado Boulder')
 
     await expect(jgrDoiLink).toHaveAttribute('target', '_blank')
 
     for (const link of [
       orcidLink,
       googleScholarLink,
-      scopusLink,
       aguLink,
       jgrDoiLink,
     ]) {
@@ -236,13 +236,17 @@ test.describe('Smoke tests', () => {
     await expect(
       footer.getByRole('link', { name: /^google scholar$/i })
     ).toHaveAttribute('href', googleScholarUrl)
-    await expect(footer.getByRole('link', { name: /^scopus$/i })).toHaveAttribute(
-      'href',
-      scopusUrl
-    )
+    await expect(footer.getByRole('link', { name: /^scopus$/i })).toHaveCount(0)
     await expect(footer.getByRole('link', { name: /^agu profile$/i })).toHaveAttribute(
       'href',
       aguProfileUrl
+    )
+    await expect(footer).toContainText(
+      'And whatsoever ye do, do it heartily, as to the Lord, and not unto men;'
+    )
+    await expect(footer).toContainText('Colossians 3:23 (KJV)')
+    await expect(footer).toContainText(
+      'My faith shapes how I work: honest communication, clear commitments, stewardship, and respect for the people who have to live with the system after launch.'
     )
   })
 
@@ -256,9 +260,9 @@ test.describe('Smoke tests', () => {
     const website = records.find((record) => record['@type'] === 'WebSite')
 
     expect(person).toBeDefined()
-    expect(person.jobTitle).toBeUndefined()
+    expect(person.jobTitle).toBe('AI Systems & Platform Engineer')
     expect(person.description).toBe(
-      'I design the systems around AI and data, including applications, APIs, workflows, cloud infrastructure, security, evaluation, observability, and human handoff, so they can operate reliably in production.'
+      'I build the production systems around AI and data, including applications, APIs, workflows, cloud infrastructure, security, evaluation, observability, and operational handoff.'
     )
     expect(person.sameAs).toEqual(
       expect.arrayContaining([
@@ -266,9 +270,11 @@ test.describe('Smoke tests', () => {
         'https://www.linkedin.com/in/david-braun777/',
         orcidUrl,
         googleScholarUrl,
-        scopusUrl,
         aguProfileUrl,
       ])
+    )
+    expect(person.sameAs).not.toEqual(
+      expect.arrayContaining([expect.stringContaining('scopus.com')])
     )
     expect(person.knowsAbout).toEqual(
       expect.arrayContaining([
@@ -288,7 +294,7 @@ test.describe('Smoke tests', () => {
     )
     expect(website).toBeDefined()
     expect(website.description).toBe(
-      'David Braun is an AI Systems / Platform Architect who takes AI and data capabilities into secure, deployable, measurable operational systems.'
+      'David Braun is an AI Systems & Platform Engineer building secure, deployable applications, APIs, workflows, cloud infrastructure, and applied AI systems.'
     )
   })
 
@@ -322,7 +328,7 @@ test.describe('Smoke tests', () => {
     )
   })
 
-  test('homepage primary CTA goes to contact', async ({ page }) => {
+  test('homepage primary actions lead to work and the shared contact page', async ({ page }) => {
     await page.goto('/')
     await expect(
       page.getByText(
@@ -330,89 +336,106 @@ test.describe('Smoke tests', () => {
         { exact: true }
       )
     ).toBeVisible()
-    await page.getByRole('link', { name: /^book a call$/i }).first().click()
+    await expect(page.getByRole('link', { name: /^view work$/i })).toHaveAttribute(
+      'href',
+      '/case-studies'
+    )
+    await page.getByRole('link', { name: /^contact me$/i }).first().click()
     await expect(page).toHaveURL(/\/contact$/)
   })
 
-  test('contact path is workflow-first', async ({ page }) => {
-    await page.goto('/contact')
+  test('contact supports typed inquiry preselection without duplicating the form', async ({ page }) => {
+    const expectedTypeLabels = [
+      'Select one',
+      'Employment / Engineering Role',
+      'Consulting / Project',
+      'Research Collaboration',
+      'Speaking / Professional',
+      'Other',
+    ]
+
+    await page.goto('/contact?type=employment')
     await expect(
-      page.getByRole('heading', { name: /tell me about the workflow you want to improve/i }).first()
+      page.getByRole('heading', { name: /start a focused conversation/i })
     ).toBeVisible()
+
+    const inquiryType = page.locator('#contact-inquiry-type')
+    await expect(inquiryType).toHaveValue('employment')
+    await expect(inquiryType.locator('option')).toHaveText(expectedTypeLabels)
+    await expect(page.locator('#contact-inquiry-guidance')).toContainText(
+      /company, role, employment type/i
+    )
+    await expect(page.locator('#contact-service')).toHaveCount(0)
+
+    for (const type of ['consulting', 'research', 'speaking', 'other']) {
+      await page.goto(`/contact?type=${type}`)
+      await expect(page.locator('#contact-inquiry-type')).toHaveValue(type)
+    }
+
+    await expect(page.locator('#contact-service')).toHaveCount(0)
+    await page.goto('/contact?type=consulting')
+    await expect(page.locator('#contact-service')).toBeVisible()
+
+    await page.goto('/contact?type=invalid')
+    await expect(page.locator('#contact-inquiry-type')).toHaveValue('')
   })
 
-  test('why work with me resume link points to the static PDF', async ({ page }) => {
-    await page.goto('/why-work-with-me')
+  test('experience resume link points to the versioned PDF', async ({ page }) => {
+    await page.goto('/experience')
 
-    const resumeLink = page.getByRole('link', { name: /open resume pdf in a new tab/i })
+    const resumeLink = page.getByRole('link', { name: /^view resume pdf$/i })
     await expect(resumeLink).toBeVisible()
-    await expect(resumeLink).toHaveAttribute('href', '/resume.pdf')
+    await expect(resumeLink).toHaveAttribute(
+      'href',
+      '/David-J-Braun-Resume-2026.pdf'
+    )
     await expect(resumeLink).toHaveAttribute('target', '_blank')
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
+      'href',
+      'https://dbraun.io/experience'
+    )
 
     const rel = await resumeLink.getAttribute('rel')
     expect(rel).toContain('noopener')
     expect(rel).toContain('noreferrer')
   })
 
-  test('why work with me shows corrected credential links and research path', async ({ page }) => {
-    await page.goto('/why-work-with-me')
+  test('experience shows current role, chronology, credentials, and deeper paths', async ({ page }) => {
+    await page.goto('/experience')
 
-    for (const stage of [
-      'Scientific and computational foundation',
-      'Enterprise software systems',
-      'Security and platform engineering',
-      'End-to-end production ownership',
-      'AI and data specialization',
-    ]) {
-      await expect(page.getByRole('heading', { name: stage, exact: true })).toBeVisible()
-    }
+    await expect(page.getByRole('heading', { name: /^career highlights$/i })).toBeVisible()
+    await expect(page.getByText('50+ repositories', { exact: true })).toBeVisible()
+    await expect(page.getByText('Approximately 40%', { exact: true })).toBeVisible()
     await expect(
-      page.getByRole('heading', { name: 'Full-Time / Embedded', exact: true })
-    ).toBeVisible()
-    await expect(page.getByRole('heading', { name: 'Consulting', exact: true })).toBeVisible()
+      page.getByRole('link', { name: /^discuss a role$/i }).first()
+    ).toHaveAttribute('href', '/contact?type=employment')
+    await expect(
+      page.getByRole('link', { name: /read the full career through-line/i })
+    ).toHaveAttribute('href', '/experience/career-story')
 
-    const currentWork = page.getByText('Current public work', { exact: true }).locator('..')
-    await expect(currentWork).not.toContainText('time2move.io')
-    await expect(
-      currentWork.getByRole('link', { name: 'Visit arklandscaping.net', exact: true })
-    ).toHaveAttribute('href', 'https://arklandscaping.net')
-    await expect(
-      page.getByText(
-        /past client delivery has also included time2move\.io, which is currently paused/i
-      )
-    ).toBeVisible()
-
-    await expect(
-      page.getByRole('link', { name: /review research and publications/i })
-    ).toHaveAttribute('href', '/research')
     const ustRole = page
       .getByRole('heading', {
-        name: 'Graduate Tutor / Computer Systems Support · University of St. Thomas',
+        name: 'Graduate Tutor / Computer Systems Support',
         exact: true,
       })
-      .locator('xpath=ancestor::details')
+      .locator('xpath=ancestor::article')
+    await expect(ustRole).toContainText('University of St. Thomas')
     await expect(ustRole).toContainText('December 2025 to Present')
-    await ustRole.locator('summary').click()
-    await expect(
-      ustRole.getByText(
-        'Department of Software Engineering and Data Science · Saint Paul, Minnesota',
-        { exact: true }
-      )
-    ).toBeVisible()
+    await expect(ustRole).toContainText(
+      'Department of Software Engineering and Data Science · Saint Paul, Minnesota'
+    )
+
     const ustEducation = page
       .getByRole('heading', {
         name: 'Master of Science in Artificial Intelligence',
         exact: true,
       })
       .locator('xpath=ancestor::article')
+    await expect(ustEducation).toContainText(
+      'Department of Software Engineering and Data Science · Saint Paul, Minnesota'
+    )
     await expect(
-      ustEducation.getByText(
-        'Department of Software Engineering and Data Science · Saint Paul, Minnesota',
-        { exact: true }
-      )
-    ).toBeVisible()
-    await expect(
-      page.getByRole('heading', { name: 'Graduate Certificate in Big Data', exact: true })
+      page.getByText('Graduate Certificate in Big Data', { exact: true })
     ).toBeVisible()
     await expect(
       ustEducation.getByText('September 2024 to expected December 2026')
@@ -436,26 +459,102 @@ test.describe('Smoke tests', () => {
     await expect(page.getByText(/target corporation/i).first()).toBeVisible()
   })
 
-  test('sitemap includes research', async ({ request }) => {
+  test('career story preserves the five-chapter narrative off the primary navigation', async ({ page }) => {
+    await page.goto('/experience/career-story')
+
+    for (const stage of [
+      'Scientific and computational foundation',
+      'Enterprise software systems',
+      'Security and platform engineering',
+      'End-to-end production ownership',
+      'AI and data specialization',
+    ]) {
+      await expect(page.getByRole('heading', { name: stage, exact: true })).toBeVisible()
+    }
+    await expect(
+      page.getByRole('heading', { name: 'Engineering roles', exact: true })
+    ).toBeVisible()
+    await expect(
+      page.getByRole('heading', { name: 'Consulting engagements', exact: true })
+    ).toBeVisible()
+    await expect(
+      page.getByRole('link', { name: /how i label and verify technical work/i })
+    ).toHaveAttribute('href', '/approach/evidence')
+  })
+
+  test('services exposes three scoped offers and the planning disclaimer', async ({ page }) => {
+    await page.goto('/services')
+
+    for (const offer of [
+      'Architecture & Workflow Review',
+      'Scoped System / Automation Build',
+      'Ongoing Platform Stewardship',
+    ]) {
+      await expect(page.getByRole('heading', { name: offer, exact: true })).toBeVisible()
+    }
+    await expect(page.getByText('$1,500–$3,000', { exact: true })).toBeVisible()
+    await expect(page.getByText('$5,000–$25,000+', { exact: true })).toBeVisible()
+    await expect(page.getByText('$750–$3,000+/month', { exact: true })).toBeVisible()
+    await expect(
+      page.getByText(
+        'Every engagement is scoped individually. These ranges are planning guides, not fixed quotes. Final pricing depends on scope, integrations, data quality, security requirements, urgency, and ongoing support. Fixed-price, milestone, hourly, and retainer arrangements may be used depending on the project.',
+        { exact: true }
+      )
+    ).toBeVisible()
+    await expect(
+      page.getByRole('link', { name: /^discuss a project$/i }).first()
+    ).toHaveAttribute('href', '/contact?type=consulting')
+  })
+
+  test('evidence standards holds maturity, research, and quality policy', async ({ page }) => {
+    await page.goto('/approach/evidence')
+
+    await expect(
+      page.getByRole('heading', { name: 'Engineering & Evidence Standards', exact: true })
+    ).toBeVisible()
+    await expect(page.getByRole('heading', { name: /^maturity labels$/i })).toBeVisible()
+    await expect(
+      page.getByRole('heading', { name: /ai-assisted engineering and human review/i })
+    ).toBeVisible()
+    await expect(page.getByRole('heading', { name: /^quality evidence$/i })).toBeVisible()
+    await expect(page.getByText(/acceptance is meaningful/i)).toBeVisible()
+  })
+
+  test('sitemap contains canonical IA and omits the retired route', async ({ request }) => {
     const response = await request.get('/sitemap.xml')
 
     expect(response.status()).toBe(200)
-    expect(await response.text()).toContain('<loc>https://dbraun.io/research</loc>')
+    const body = await response.text()
+    expect(body).toContain('<loc>https://dbraun.io/research</loc>')
+    expect(body).toContain('<loc>https://dbraun.io/experience</loc>')
+    expect(body).toContain('<loc>https://dbraun.io/experience/career-story</loc>')
+    expect(body).toContain('<loc>https://dbraun.io/approach/evidence</loc>')
+    expect(body).not.toContain('<loc>https://dbraun.io/why-work-with-me</loc>')
   })
 
-  test('resume PDF static asset is served', async ({ request }) => {
-    const response = await request.get('/resume.pdf')
+  test('versioned resume is served and the former PDF URL redirects', async ({ request }) => {
+    const response = await request.get('/David-J-Braun-Resume-2026.pdf')
 
     expect(response.status()).toBe(200)
     expect(response.headers()['content-type']).toContain('application/pdf')
+
+    const redirect = await request.get('/resume.pdf', { maxRedirects: 0 })
+    expect(redirect.status()).toBe(308)
+    expect(redirect.headers().location).toMatch(/\/David-J-Braun-Resume-2026\.pdf$/)
   })
 
-  test('legacy routes redirect to the new IA', async ({ page }) => {
+  test('legacy routes redirect directly to the new IA', async ({ page, request }) => {
     await page.goto('/blog')
     await expect(page).toHaveURL(/\/writing$/)
 
-    await page.goto('/background')
-    await expect(page).toHaveURL(/\/why-work-with-me$/)
+    for (const alias of ['/about', '/background', '/resume', '/why-work-with-me']) {
+      const response = await request.get(alias, { maxRedirects: 0 })
+      expect(response.status()).toBe(308)
+      expect(response.headers().location).toMatch(/\/experience$/)
+    }
+
+    await page.goto('/why-work-with-me')
+    await expect(page).toHaveURL(/\/experience$/)
 
     await page.goto('/projects')
     await expect(page).toHaveURL(/\/case-studies$/)
@@ -510,6 +609,47 @@ test.describe('Smoke tests', () => {
         () => document.documentElement.scrollWidth > window.innerWidth + 1
       )
       expect(hasHorizontalOverflow).toBe(false)
+    }
+  })
+
+  test('rendered internal links resolve and external URLs are syntactically valid', async ({
+    page,
+    request,
+  }) => {
+    const internalLinks = new Set<string>()
+    const obsoleteInternalPaths = new Set([
+      '/about',
+      '/background',
+      '/resume',
+      '/resume.pdf',
+      '/why-work-with-me',
+    ])
+
+    for (const route of keyBuyerRoutes) {
+      await page.goto(route)
+      const hrefs = await page.locator('a[href]').evaluateAll((links) =>
+        links.map((link) => link.getAttribute('href')).filter(Boolean) as string[]
+      )
+
+      for (const href of hrefs) {
+        if (/^https?:\/\//i.test(href)) {
+          const url = new URL(href)
+          expect(['http:', 'https:']).toContain(url.protocol)
+          expect(url.hostname.length).toBeGreaterThan(0)
+          continue
+        }
+
+        if (href.startsWith('/')) {
+          const url = new URL(href, 'https://dbraun.io')
+          expect(obsoleteInternalPaths.has(url.pathname)).toBe(false)
+          internalLinks.add(`${url.pathname}${url.search}`)
+        }
+      }
+    }
+
+    for (const href of internalLinks) {
+      const response = await request.get(href)
+      expect(response.status(), `${href} should resolve`).toBeLessThan(400)
     }
   })
 

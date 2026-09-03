@@ -1,4 +1,4 @@
-import { BadgeCheck, Database, Earth, Github, GraduationCap, Linkedin } from 'lucide-react'
+import { BadgeCheck, Earth, Github, GraduationCap, Linkedin } from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
 export interface SocialLink {
@@ -32,12 +32,6 @@ export const socialLinks: SocialLink[] = [
     researchActionLabel: 'View Google Scholar Profile',
   },
   {
-    name: 'Scopus',
-    url: 'https://www.scopus.com/inward/authorDetails.url?authorID=57197365260&partnerID=MN8TOARS',
-    icon: Database,
-    researchActionLabel: 'View Scopus Profile',
-  },
-  {
     name: 'AGU Profile',
     url: 'https://www.agu.org/user-profile?cstkey=BF392314-D7E6-40A7-ACDF-DC1318123068',
     icon: Earth,
@@ -45,4 +39,4 @@ export const socialLinks: SocialLink[] = [
   },
 ]
 
-export const resumeUrl = '/resume.pdf'
+export const resumeUrl = '/David-J-Braun-Resume-2026.pdf'

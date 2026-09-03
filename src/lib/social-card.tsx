@@ -1,7 +1,7 @@
 import { northStarIdentity, northStarValueProposition } from '@/data/career-story'
 
 export const socialCardAlt =
-  'David Braun | AI Systems / Platform Architect - secure, deployable operational systems'
+  `David Braun | ${northStarIdentity} - secure, deployable operational systems`
 
 export function SocialCard() {
   return (

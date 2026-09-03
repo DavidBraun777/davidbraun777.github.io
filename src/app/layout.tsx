@@ -37,8 +37,9 @@ export const metadata: Metadata = {
   },
   description: canonicalSeoDescription,
   keywords: [
-    'AI Systems Architect',
-    'AI Platform Architect',
+    'AI Systems & Platform Engineer',
+    'AI Systems Engineer',
+    'AI Platform Engineer',
     'AI Systems Engineering',
     'AI Platform Engineering',
     'Platform Architecture',
@@ -94,6 +95,7 @@ const personStructuredData = {
   '@context': 'https://schema.org',
   '@type': 'Person',
   name: profile.name,
+  jobTitle: northStarIdentity,
   url: siteUrl,
   description: northStarStatement,
   address: {
