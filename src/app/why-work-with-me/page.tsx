@@ -158,11 +158,13 @@ export default function WhyWorkWithMePage() {
                 generation, and multimodal methods for low-resource-language archives
                 strengthens the technical foundation behind the applied systems work. That
                 record includes accepted IEEE LA-CCI 2026 work and earlier space-physics
-                research associated with REPT aboard the Radiation Belt Storm Probes / Van
-                Allen Probes, AGU conference outputs, and peer-reviewed work in Space Science
-                Reviews and the Journal of Geophysical Research: Space Physics. It supports
-                how I evaluate evidence, retrieval quality, and system limits, but it does not
-                replace production proof.
+                research at Augsburg University that resulted in two 2017 AGU conference
+                outputs and a 2018 Journal of Geophysical Research: Space Physics article.
+                That collaborative study used spacecraft and ground observations, including
+                REPT and MagEIS data from NASA&apos;s Van Allen Probes; those instruments are
+                the study&apos;s data context, not a claim of instrument-team participation. It
+                supports how I evaluate evidence, retrieval quality, and system limits, but it
+                does not replace production proof.
               </p>
               <Link
                 href="/research"

@@ -125,9 +125,9 @@ test.describe('Smoke tests', () => {
       page.getByRole('heading', { name: /^accepted conference paper$/i })
     ).toBeVisible()
     await expect(
-      page.getByRole('heading', { name: /^peer-reviewed publications$/i })
+      page.getByRole('heading', { name: /^peer-reviewed journal article$/i })
     ).toBeVisible()
-    await expect(page.getByRole('heading', { name: /^book chapters$/i })).toBeVisible()
+    await expect(page.getByRole('heading', { name: /^book chapters$/i })).toHaveCount(0)
     await expect(page.getByRole('heading', { name: /^conference abstracts$/i })).toBeVisible()
     await expect(
       page.getByRole('heading', { name: 'How research informs systems work', exact: true })
@@ -162,19 +162,27 @@ test.describe('Smoke tests', () => {
       'a[href="https://doi.org/10.1007/978-1-4899-7433-4_11"]'
     )
 
-    const reptArticle = page.locator('article').filter({ has: reptArticleDoiLink })
-    await expect(reptArticle).toContainText('Peer-reviewed journal article')
-    await expect(reptArticle).toContainText('Space Science Reviews')
-    await expect(reptArticle).toContainText('2013')
+    await expect(jgrDoiLink).toHaveCount(1)
+    await expect(reptArticleDoiLink).toHaveCount(0)
+    await expect(reptChapterDoiLink).toHaveCount(0)
 
-    const reptChapter = page.locator('article').filter({ has: reptChapterDoiLink })
-    await expect(reptChapter).toContainText('Book chapter')
-    await expect(reptChapter).toContainText('Van Allen Probes Mission')
-    await expect(reptChapter).toContainText('2014')
+    const jgrArticle = page.locator('article').filter({ has: jgrDoiLink })
+    await expect(jgrArticle).toContainText('Peer-reviewed journal article')
+    await expect(jgrArticle).toContainText('D. J. Braun')
+    await expect(jgrArticle).toContainText('Augsburg University')
+    await expect(jgrArticle).toContainText(/REPT and MagEIS/i)
+    await expect(jgrArticle).toContainText(/Van Allen Probes/i)
 
-    for (const doiLink of [jgrDoiLink, reptArticleDoiLink, reptChapterDoiLink]) {
-      await expect(doiLink).toHaveAttribute('target', '_blank')
-    }
+    const identityClarification = page.locator(
+      'aside[aria-label="Author identity clarification"]'
+    )
+    await expect(identityClarification).toContainText(/different researcher/i)
+    await expect(identityClarification).toContainText(
+      /Laboratory for Atmospheric and Space Physics/i
+    )
+    await expect(identityClarification).toContainText(/University of Colorado Boulder/i)
+
+    await expect(jgrDoiLink).toHaveAttribute('target', '_blank')
 
     for (const link of [
       orcidLink,
@@ -182,8 +190,6 @@ test.describe('Smoke tests', () => {
       scopusLink,
       aguLink,
       jgrDoiLink,
-      reptArticleDoiLink,
-      reptChapterDoiLink,
     ]) {
       const rel = await link.getAttribute('rel')
       expect(rel).toContain('noopener')

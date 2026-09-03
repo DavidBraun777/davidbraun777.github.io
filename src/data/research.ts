@@ -18,27 +18,31 @@ export interface AcceptedConferencePaper {
   areas: string[]
 }
 
+// Publisher-verified authored works only. Instrument or background references need
+// a separate model so their DOIs cannot enter David Braun's publication inventory.
+export const verifiedAuthoredWorkIdentities = {
+  'https://doi.org/10.1029/2018JA025505': {
+    bylineName: 'D. J. Braun',
+    affiliation:
+      'Department of Physics, Augsburg University, Minneapolis, MN, USA',
+  },
+} as const
+
+export type VerifiedAuthoredDoiUrl = keyof typeof verifiedAuthoredWorkIdentities
+
+export type VerifiedAuthoredWorkIdentity =
+  (typeof verifiedAuthoredWorkIdentities)[VerifiedAuthoredDoiUrl]
+
 export interface PeerReviewedPublication {
   id: string
   title: string
   authors: string
   journal: string
   year: string
-  doiUrl: string
-  webOfScienceId?: string
-  scopusEid?: string
-  issns?: string[]
-}
-
-export interface BookChapter {
-  id: string
-  title: string
-  authors: string
-  book: string
-  year: string
-  doiUrl: string
-  scopusEid: string
-  isbns: string[]
+  doiUrl: VerifiedAuthoredDoiUrl
+  verifiedIdentity: VerifiedAuthoredWorkIdentity
+  studyContext: string
+  webOfScienceId: string
 }
 
 export interface ConferenceAbstract {
@@ -71,14 +75,10 @@ export const researchAreas = [
   'Computational Linguistics',
   'Magnetospheric Physics',
   "Earth's Radiation Belts",
-  'Energetic-Particle Instrumentation',
   'Magnetometer Data Analysis',
   'Electromagnetic Ion Cyclotron (EMIC) Waves',
   'Space Weather',
 ]
-
-const reptAuthors =
-  'D. N. Baker, S. G. Kanekal, V. C. Hoxie, S. Batiste, M. Bolton, X. Li, S. R. Elkington, S. Monk, R. Reukauf, S. Steg, J. Westfall, C. Belting, B. Bolton, D. Braun, B. Cervelli, K. Hubbell, M. Kien, S. Knappmiller, S. Wade, B. Lamprecht, K. Stevens, J. Wallace, A. Yehle, H. E. Spence, R. Friedel'
 
 export const researchProfileLinks: ResearchProfileLink[] = socialLinks.flatMap((link) =>
   link.researchActionLabel
@@ -121,32 +121,11 @@ export const peerReviewedPublications: PeerReviewedPublication[] = [
     journal: 'Journal of Geophysical Research: Space Physics',
     year: '2018',
     doiUrl: 'https://doi.org/10.1029/2018JA025505',
+    verifiedIdentity:
+      verifiedAuthoredWorkIdentities['https://doi.org/10.1029/2018JA025505'],
+    studyContext:
+      "The collaborative study incorporated radiation-belt electron observations from REPT and MagEIS aboard NASA's Van Allen Probes, together with EMIC-wave observations and other data sources. This is instrumentation and data context for the study, not a claim of instrument development.",
     webOfScienceId: 'WOS:000445731300021',
-  },
-  {
-    id: 'rept-rbsp-instrument',
-    title:
-      "The Relativistic Electron-Proton Telescope (REPT) instrument on board the Radiation Belt Storm Probes (RBSP) spacecraft: Characterization of earth's radiation belt high-energy particle populations",
-    authors: reptAuthors,
-    journal: 'Space Science Reviews',
-    year: '2013',
-    doiUrl: 'https://doi.org/10.1007/s11214-012-9950-9',
-    scopusEid: '2-s2.0-84888645914',
-    issns: ['0038-6308', '1572-9672'],
-  },
-]
-
-export const bookChapters: BookChapter[] = [
-  {
-    id: 'rept-van-allen-probes-mission',
-    title:
-      "The Relativistic Electron-Proton Telescope (REPT) Instrument on Board the Radiation Belt Storm Probes (RBSP) Spacecraft: Characterization of earth's radiation belt high-energy particle populations",
-    authors: reptAuthors,
-    book: 'Van Allen Probes Mission',
-    year: '2014',
-    doiUrl: 'https://doi.org/10.1007/978-1-4899-7433-4_11',
-    scopusEid: '2-s2.0-84929746054',
-    isbns: ['1489974334', '9781489974327', '9781489974334'],
   },
 ]
 

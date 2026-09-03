@@ -6,7 +6,6 @@ import { SectionHeader } from '@/components/ui/section-header'
 import { researchToSystemsPractices } from '@/data/career-story'
 import {
   acceptedConferencePapers,
-  bookChapters,
   conferenceAbstracts,
   peerReviewedPublications,
   professionalAffiliations,
@@ -70,13 +69,17 @@ export default function ResearchPage() {
               Magnetospheric physics and space weather
             </h3>
             <p className="mt-4 text-sm leading-7 text-text-secondary">
-              Earlier space-physics work spanned energetic-particle instrumentation and
-              Earth&apos;s radiation belts, including the REPT instrument aboard the
-              Radiation Belt Storm Probes (RBSP), later named the Van Allen Probes. It
-              also involved satellite and ground-based magnetometer data for studies of
-              electromagnetic ion cyclotron waves and space weather. Work with
-              large-scale scientific data led through systems engineering to current AI
-              and information-retrieval research.
+              At Augsburg University, I contributed to research on electromagnetic ion
+              cyclotron (EMIC) waves and magnetospheric dynamics using observations from
+              multiple spacecraft and ground-based instruments. The resulting collaborative
+              2018 Journal of Geophysical Research: Space Physics study combined EMIC-wave
+              observations with radiation-belt measurements from REPT and MagEIS aboard
+              NASA&apos;s Van Allen Probes to examine relativistic and ultrarelativistic
+              electron flux behavior. REPT and MagEIS are part of the study&apos;s scientific
+              data context; this site does not claim that I developed those instruments or
+              authored the earlier REPT instrument publication. Work with large-scale
+              scientific data led through systems engineering to current AI and
+              information-retrieval research.
             </p>
           </article>
         </section>
@@ -162,8 +165,8 @@ export default function ResearchPage() {
         <section>
           <SectionHeader
             align="left"
-            title="Peer-Reviewed Publications"
-            subtitle="Published journal research with a verified DOI."
+            title="Peer-Reviewed Journal Article"
+            subtitle="Published journal research with a DOI, byline, and affiliation verified against the publisher record."
           />
           <div className="grid gap-5">
             {peerReviewedPublications.map((publication) => (
@@ -184,21 +187,23 @@ export default function ResearchPage() {
                 <p className="mt-2 text-sm leading-7 text-text-secondary">
                   <cite>{publication.journal}</cite>
                 </p>
-                {publication.webOfScienceId ? (
-                  <p className="mt-1 font-mono text-xs text-text-muted">
-                    Web of Science: {publication.webOfScienceId}
+                <p className="mt-1 font-mono text-xs text-text-muted">
+                  Web of Science: {publication.webOfScienceId}
+                </p>
+                <div className="mt-5 rounded-2xl border border-border-subtle bg-background-subtle p-4">
+                  <p className="font-mono text-xs uppercase tracking-[0.18em] text-link-primary">
+                    Verified authored identity
                   </p>
-                ) : null}
-                {publication.scopusEid ? (
-                  <p className="mt-1 font-mono text-xs text-text-muted">
-                    Scopus EID: {publication.scopusEid}
+                  <p className="mt-2 text-sm font-semibold text-text-primary">
+                    {publication.verifiedIdentity.bylineName}
                   </p>
-                ) : null}
-                {publication.issns ? (
-                  <p className="mt-1 font-mono text-xs text-text-muted">
-                    ISSNs: {publication.issns.join(' / ')}
+                  <p className="mt-1 text-sm leading-6 text-text-secondary">
+                    {publication.verifiedIdentity.affiliation}
                   </p>
-                ) : null}
+                </div>
+                <p className="mt-5 text-sm leading-7 text-text-secondary">
+                  {publication.studyContext}
+                </p>
                 <div className="mt-5">
                   <ExternalLinkAction href={publication.doiUrl}>
                     View DOI record
@@ -207,47 +212,20 @@ export default function ResearchPage() {
               </article>
             ))}
           </div>
-        </section>
-
-        <section>
-          <SectionHeader
-            align="left"
-            title="Book Chapters"
-            subtitle="Published chapters are listed separately from journal articles and conference outputs."
-          />
-          <div className="grid gap-5">
-            {bookChapters.map((chapter) => (
-              <article
-                key={chapter.id}
-                className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm"
-              >
-                <div className="flex flex-wrap items-center gap-2">
-                  <Badge variant="secondary">Book chapter</Badge>
-                  <Badge variant="outline">{chapter.year}</Badge>
-                </div>
-                <h3 className="mt-4 text-2xl font-semibold tracking-tight text-text-primary">
-                  {chapter.title}
-                </h3>
-                <p className="mt-3 text-sm font-medium text-text-primary">
-                  {chapter.authors}
-                </p>
-                <p className="mt-2 text-sm leading-7 text-text-secondary">
-                  In <cite>{chapter.book}</cite>
-                </p>
-                <p className="mt-1 font-mono text-xs text-text-muted">
-                  Scopus EID: {chapter.scopusEid}
-                </p>
-                <p className="mt-1 font-mono text-xs text-text-muted">
-                  ISBNs: {chapter.isbns.join(' / ')}
-                </p>
-                <div className="mt-5">
-                  <ExternalLinkAction href={chapter.doiUrl}>
-                    View DOI record
-                  </ExternalLinkAction>
-                </div>
-              </article>
-            ))}
-          </div>
+          <aside
+            aria-label="Author identity clarification"
+            className="mt-5 rounded-[1.5rem] border border-primary-300/70 bg-primary-50/60 p-5 text-sm leading-7 text-text-secondary dark:border-primary-900 dark:bg-primary-950/30"
+          >
+            <span className="font-semibold text-text-primary">
+              Author identity clarification:
+            </span>{' '}
+            David J. Braun of Augsburg University coauthored this 2018 EMIC study,
+            which incorporated REPT observations. The D. Braun affiliated with the
+            Laboratory for Atmospheric and Space Physics at the University of Colorado
+            Boulder on the earlier REPT instrument publication is a different researcher.
+            That 2013 article and its 2014 book-chapter version are not part of this
+            publication record.
+          </aside>
         </section>
 
         <section>
