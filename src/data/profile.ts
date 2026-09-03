@@ -94,7 +94,7 @@ export const primaryNavigation: NavigationItem[] = [
   { label: 'Services', href: '/services' },
   { label: 'Case Studies', href: '/case-studies' },
   { label: 'Research', href: '/research' },
-  { label: 'Why Work With Me', href: '/why-work-with-me' },
+  { label: 'Experience', href: '/experience' },
   { label: 'Contact', href: '/contact' },
 ]
 

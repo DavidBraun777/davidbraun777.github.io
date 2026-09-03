@@ -1,7 +1,9 @@
 import { describe, it, expect } from 'vitest'
 import {
+  INQUIRY_TYPES,
   escapeHtml,
   isValidEmail,
+  parseInquiryType,
   sanitizeEmail,
   sanitizeInput,
   validateContactForm,
@@ -103,8 +105,15 @@ describe('validateContactForm', () => {
   const validBody = {
     name: 'Test User',
     email: 'test@example.com',
+    inquiryType: 'employment',
     subject: 'Test Subject',
     message: 'Hello, this is a test message.',
+  }
+  const legacyBody = {
+    name: validBody.name,
+    email: validBody.email,
+    subject: validBody.subject,
+    message: validBody.message,
   }
 
   it('accepts valid input', () => {
@@ -125,6 +134,7 @@ describe('validateContactForm', () => {
   it.each([
     ['name', '   ', 'Name is required'],
     ['email', '', 'Email is required'],
+    ['inquiryType', '', 'Inquiry type is required'],
     ['subject', null, 'Subject is required'],
     ['message', 42, 'Message is required'],
   ] as const)('rejects invalid required field %s', (field, value, error) => {
@@ -187,6 +197,7 @@ describe('validateContactForm', () => {
 
   it.each([
     ['name', 101, 'Name must be 100 characters or less'],
+    ['organization', 151, 'Organization must be 150 characters or less'],
     ['subject', 201, 'Subject must be 200 characters or less'],
     ['message', 2001, 'Message must be 2,000 characters or less'],
   ] as const)('rejects %s over its length limit', (field, length, error) => {
@@ -195,23 +206,68 @@ describe('validateContactForm', () => {
     ).toEqual({ valid: false, error })
   })
 
+  it.each(INQUIRY_TYPES)('accepts canonical inquiry type %s', (inquiryType) => {
+    const result = validateContactForm({ ...validBody, inquiryType })
+    expect(result.valid).toBe(true)
+    if (result.valid) expect(result.data.inquiryType).toBe(inquiryType)
+  })
+
+  it('parses only canonical inquiry types for query-string preselection', () => {
+    expect(parseInquiryType('research')).toBe('research')
+    expect(parseInquiryType('full-time')).toBeUndefined()
+    expect(parseInquiryType(['research'])).toBeUndefined()
+    expect(parseInquiryType('')).toBeUndefined()
+  })
+
+  it.each([
+    ['full-time', 'employment'],
+    ['consulting', 'consulting'],
+    ['build', 'consulting'],
+    ['architecture', 'consulting'],
+    ['other', 'other'],
+    ['', 'other'],
+  ] as const)(
+    'maps legacy project type %s to canonical inquiry type %s',
+    (projectType, inquiryType) => {
+      const result = validateContactForm({ ...legacyBody, projectType })
+      expect(result.valid).toBe(true)
+      if (result.valid) expect(result.data.inquiryType).toBe(inquiryType)
+    }
+  )
+
+  it('normalizes an older payload without a project type to other', () => {
+    const result = validateContactForm(legacyBody)
+    expect(result.valid).toBe(true)
+    if (result.valid) expect(result.data.inquiryType).toBe('other')
+  })
+
+  it('accepts and trims an optional organization', () => {
+    const result = validateContactForm({
+      ...validBody,
+      organization: '  Example Company  ',
+    })
+    expect(result.valid).toBe(true)
+    if (result.valid) expect(result.data.organization).toBe('Example Company')
+  })
+
   it('accepts valid optional dropdown fields', () => {
     const result = validateContactForm({
       ...validBody,
-      projectType: 'consulting',
+      inquiryType: 'consulting',
       serviceNeeded: 'platform-infra',
       urgency: 'this-quarter',
     })
     expect(result.valid).toBe(true)
     if (result.valid) {
-      expect(result.data.projectType).toBe('consulting')
+      expect(result.data.inquiryType).toBe('consulting')
       expect(result.data.serviceNeeded).toBe('platform-infra')
       expect(result.data.urgency).toBe('this-quarter')
     }
   })
 
   it.each([
-    ['projectType', 'hacking', 'Invalid project type'],
+    ['inquiryType', 'hacking', 'Invalid inquiry type'],
+    ['organization', 42, 'Invalid organization'],
     ['serviceNeeded', null, 'Invalid service type'],
     ['urgency', ' ', 'Invalid urgency level'],
   ] as const)('rejects invalid optional field %s', (field, value, error) => {
@@ -224,7 +280,7 @@ describe('validateContactForm', () => {
   it('ignores empty string optional fields', () => {
     const result = validateContactForm({
       ...validBody,
-      projectType: '',
+      organization: '',
       serviceNeeded: '',
       urgency: '',
     })

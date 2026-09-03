@@ -1,9 +1,10 @@
 import type { Metadata } from 'next'
+import Link from 'next/link'
+import { ArrowRight } from 'lucide-react'
 import { PageIntro } from '@/components/site/page-intro'
 import { Badge } from '@/components/ui/badge'
 import { ExternalLinkAction } from '@/components/ui/external-link-action'
 import { SectionHeader } from '@/components/ui/section-header'
-import { researchToSystemsPractices } from '@/data/career-story'
 import {
   acceptedConferencePapers,
   conferenceAbstracts,
@@ -29,13 +30,16 @@ export default function ResearchPage() {
           eyebrow="Research"
           title="Research across artificial intelligence, language, and physical systems."
           description="Research informs how I evaluate evidence, retrieval quality, uncertainty, and system limits. Current work includes hybrid information retrieval for Urarina–Spanish archival material while I pursue a Master of Science in Artificial Intelligence at the University of St. Thomas."
-          actions={researchProfileLinks.map((profile, index) => ({
-            label: profile.actionLabel,
-            href: profile.url,
-            icon: profile.icon,
-            external: true,
-            variant: index === 0 ? 'primary' : 'secondary',
-          }))}
+          actions={[
+            { label: 'Discuss Research', href: '/contact?type=research' },
+            ...researchProfileLinks.map((profile) => ({
+              label: profile.actionLabel,
+              href: profile.url,
+              icon: profile.icon,
+              external: true,
+              variant: 'secondary' as const,
+            })),
+          ]}
         />
 
         <section className="grid gap-5 lg:grid-cols-2">
@@ -75,41 +79,10 @@ export default function ResearchPage() {
               2018 Journal of Geophysical Research: Space Physics study combined EMIC-wave
               observations with radiation-belt measurements from REPT and MagEIS aboard
               NASA&apos;s Van Allen Probes to examine relativistic and ultrarelativistic
-              electron flux behavior. REPT and MagEIS are part of the study&apos;s scientific
-              data context; this site does not claim that I developed those instruments or
-              authored the earlier REPT instrument publication. Work with large-scale
-              scientific data led through systems engineering to current AI and
-              information-retrieval research.
+              electron flux behavior. Work with large-scale scientific data led through
+              systems engineering to current AI and information-retrieval research.
             </p>
           </article>
-        </section>
-
-        <section>
-          <SectionHeader
-            align="left"
-            title="How research informs systems work"
-            subtitle="Research is supporting evidence for disciplined system design, not a substitute for production proof."
-          />
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
-            {researchToSystemsPractices.map((practice) => (
-              <article
-                key={practice.title}
-                className="rounded-[1.5rem] border border-border-subtle bg-background-elevated p-5 shadow-sm"
-              >
-                <h3 className="text-lg font-semibold text-text-primary">
-                  {practice.title}
-                </h3>
-                <p className="mt-3 text-sm leading-7 text-text-secondary">
-                  {practice.description}
-                </p>
-              </article>
-            ))}
-          </div>
-          <p className="mt-5 max-w-4xl text-sm leading-7 text-text-secondary">
-            The Urarina work is retrieval and alignment research over archival material.
-            It is not presented as full machine translation, and accepted conference
-            work remains listed separately from formally published research.
-          </p>
         </section>
 
         <section>
@@ -192,7 +165,7 @@ export default function ResearchPage() {
                 </p>
                 <div className="mt-5 rounded-2xl border border-border-subtle bg-background-subtle p-4">
                   <p className="font-mono text-xs uppercase tracking-[0.18em] text-link-primary">
-                    Verified authored identity
+                    Author record
                   </p>
                   <p className="mt-2 text-sm font-semibold text-text-primary">
                     {publication.verifiedIdentity.bylineName}
@@ -212,20 +185,6 @@ export default function ResearchPage() {
               </article>
             ))}
           </div>
-          <aside
-            aria-label="Author identity clarification"
-            className="mt-5 rounded-[1.5rem] border border-primary-300/70 bg-primary-50/60 p-5 text-sm leading-7 text-text-secondary dark:border-primary-900 dark:bg-primary-950/30"
-          >
-            <span className="font-semibold text-text-primary">
-              Author identity clarification:
-            </span>{' '}
-            David J. Braun of Augsburg University coauthored this 2018 EMIC study,
-            which incorporated REPT observations. The D. Braun affiliated with the
-            Laboratory for Atmospheric and Space Physics at the University of Colorado
-            Boulder on the earlier REPT instrument publication is a different researcher.
-            That 2013 article and its 2014 book-chapter version are not part of this
-            publication record.
-          </aside>
         </section>
 
         <section>
@@ -291,6 +250,20 @@ export default function ResearchPage() {
               </article>
             ))}
           </div>
+        </section>
+
+        <section className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm">
+          <h2 className="text-2xl font-semibold tracking-tight text-text-primary">
+            Research and evidence standards
+          </h2>
+          <p className="mt-3 max-w-4xl text-sm leading-7 text-text-secondary">
+            Research status, reproducibility, system maturity, and technical limitations are
+            labeled according to the evidence available for each claim.
+          </p>
+          <Link href="/approach/evidence" className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-link-primary hover:text-link-primary-hover">
+            How I label and verify technical work
+            <ArrowRight className="h-4 w-4" />
+          </Link>
         </section>
       </div>
     </div>

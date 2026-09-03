@@ -112,10 +112,11 @@ function logRequest(
 // HTML escaping happens only at render time inside the email template.
 // ---------------------------------------------------------------------------
 interface SanitizedContact {
-  name: string       // plain text, escaped at render time
-  email: string      // plain text (safe for replyTo, must escape for HTML)
-  subject: string    // plain text, safe for email headers
-  message: string    // plain text, escaped at render time
+  name: string // plain text, escaped at render time
+  email: string // plain text (safe for replyTo, must escape for HTML)
+  organization?: string // plain text, escaped at render time
+  subject: string // plain text, safe for email headers
+  message: string // plain text, escaped at render time
 }
 
 function sanitizeSingleLine(input: string, maxLength: number): string {
@@ -136,6 +137,9 @@ function sanitizeContactData(data: ContactFormData): SanitizedContact {
   return {
     name: sanitizeSingleLine(data.name, 100),
     email: sanitizeEmail(data.email),
+    ...(data.organization && {
+      organization: sanitizeSingleLine(data.organization, 150),
+    }),
     subject: sanitizeSingleLine(data.subject, 200),
     message: sanitizeMultiline(data.message, 2000),
   }
@@ -151,20 +155,22 @@ function buildEmailHtml(
   sanitized: SanitizedContact,
   data: ContactFormData
 ): string {
-  const optionalFields: string[] = []
-  if (data.projectType) {
-    optionalFields.push(
-      `<p><strong>Project Type:</strong> ${escapeHtml(data.projectType)}</p>`
+  const contextualFields: string[] = [
+    `<p><strong>Inquiry Type:</strong> ${escapeHtml(data.inquiryType)}</p>`,
+  ]
+  if (sanitized.organization) {
+    contextualFields.push(
+      `<p><strong>Organization:</strong> ${escapeHtml(sanitized.organization)}</p>`
     )
   }
   if (data.serviceNeeded) {
-    optionalFields.push(
+    contextualFields.push(
       `<p><strong>Service Needed:</strong> ${escapeHtml(data.serviceNeeded)}</p>`
     )
   }
   if (data.urgency) {
-    optionalFields.push(
-      `<p><strong>Urgency:</strong> ${escapeHtml(data.urgency)}</p>`
+    contextualFields.push(
+      `<p><strong>Timing:</strong> ${escapeHtml(data.urgency)}</p>`
     )
   }
 
@@ -173,7 +179,7 @@ function buildEmailHtml(
     <p><strong>Name:</strong> ${escapeHtml(sanitized.name)}</p>
     <p><strong>Email:</strong> ${escapeHtml(sanitized.email)}</p>
     <p><strong>Subject:</strong> ${escapeHtml(sanitized.subject)}</p>
-    ${optionalFields.join('\n    ')}
+    ${contextualFields.join('\n    ')}
     <p><strong>Message:</strong></p>
     <p>${escapeHtml(sanitized.message).replace(/\n/g, '<br>')}</p>
   `
@@ -189,11 +195,14 @@ function buildEmailText(
     `Name: ${sanitized.name}`,
     `Email: ${sanitized.email}`,
     `Subject: ${sanitized.subject}`,
+    `Inquiry Type: ${data.inquiryType}`,
   ]
 
-  if (data.projectType) lines.push(`Project Type: ${data.projectType}`)
+  if (sanitized.organization) {
+    lines.push(`Organization: ${sanitized.organization}`)
+  }
   if (data.serviceNeeded) lines.push(`Service Needed: ${data.serviceNeeded}`)
-  if (data.urgency) lines.push(`Urgency: ${data.urgency}`)
+  if (data.urgency) lines.push(`Timing: ${data.urgency}`)
 
   lines.push('', 'Message:', sanitized.message)
   return lines.join('\n')

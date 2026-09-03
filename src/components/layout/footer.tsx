@@ -18,17 +18,28 @@ export function Footer() {
     <footer className="border-t border-[var(--theme-frame-border)] bg-[var(--theme-frame-bg-strong)] text-[var(--theme-frame-text)]">
       <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:px-6 lg:grid-cols-[1.2fr_0.8fr_0.8fr] lg:px-8">
         <div>
-          <Link href="/" className="text-2xl font-semibold tracking-tight text-[var(--theme-frame-text)]">
+          <Link
+            href="/"
+            className="text-2xl font-semibold tracking-tight text-[var(--theme-frame-text)]"
+          >
             {profile.name}
           </Link>
           <p className="mt-2 text-sm font-medium text-[var(--theme-frame-text)]">
             {northStarIdentity}
           </p>
           <p className="mt-3 max-w-md text-sm leading-7 text-[var(--theme-frame-text-muted)]">
-            Designing the applications, workflows, cloud platforms, security controls,
-            evaluation, and operating paths around AI and data capabilities.
+            Designing the applications, workflows, cloud platforms, security controls, evaluation,
+            and operating paths around AI and data capabilities.
           </p>
-          <p className="mt-4 text-sm text-[var(--theme-frame-text-muted)]">
+          <figure className="mt-5 max-w-md border-l-2 border-[var(--theme-frame-border-strong)] pl-4">
+            <blockquote className="text-sm leading-7 text-[var(--theme-frame-text)]">
+              And whatsoever ye do, do it heartily, as to the Lord, and not unto men;
+            </blockquote>
+            <figcaption className="mt-2 text-xs text-[var(--theme-frame-text-muted)]">
+              &mdash; Colossians 3:23 (KJV)
+            </figcaption>
+          </figure>
+          <p className="mt-4 max-w-md text-sm leading-7 text-[var(--theme-frame-text-muted)]">
             {profile.faithStatement}
           </p>
         </div>
@@ -50,10 +61,7 @@ export function Footer() {
                     {item.label}
                   </a>
                 ) : (
-                  <Link
-                    href={item.href}
-                    className={linkClass}
-                  >
+                  <Link href={item.href} className={linkClass}>
                     {item.label}
                   </Link>
                 )}
@@ -86,7 +94,9 @@ export function Footer() {
 
       <div className="border-t border-[var(--theme-frame-border)] px-4 py-5 text-sm text-[var(--theme-frame-text-muted)] sm:px-6 lg:px-8">
         <div className="mx-auto flex max-w-7xl flex-col gap-2 sm:flex-row sm:items-center sm:justify-between">
-          <p>&copy; {currentYear} {profile.name}. All rights reserved.</p>
+          <p>
+            &copy; {currentYear} {profile.name}. All rights reserved.
+          </p>
           <p>Built with Next.js, TypeScript, and a delivery-first approach.</p>
         </div>
       </div>

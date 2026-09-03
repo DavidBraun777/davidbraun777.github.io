@@ -30,9 +30,19 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.8,
     },
     {
-      url: `${baseUrl}/why-work-with-me`,
+      url: `${baseUrl}/experience`,
       changeFrequency: 'monthly' as const,
       priority: 0.9,
+    },
+    {
+      url: `${baseUrl}/experience/career-story`,
+      changeFrequency: 'monthly' as const,
+      priority: 0.65,
+    },
+    {
+      url: `${baseUrl}/approach/evidence`,
+      changeFrequency: 'monthly' as const,
+      priority: 0.65,
     },
     {
       url: `${baseUrl}/writing`,

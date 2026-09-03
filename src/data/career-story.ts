@@ -23,22 +23,22 @@ export interface ArchitectureLayer {
   examples: string[]
 }
 
-export const northStarIdentity = 'AI Systems / Platform Architect'
+export const northStarIdentity = 'AI Systems & Platform Engineer'
 
 export const northStarStatement =
-  'I design the systems around AI and data, including applications, APIs, workflows, cloud infrastructure, security, evaluation, observability, and human handoff, so they can operate reliably in production.'
+  'I build the production systems around AI and data, including applications, APIs, workflows, cloud infrastructure, security, evaluation, observability, and operational handoff.'
 
 export const northStarValueProposition =
   'Turn AI and data capabilities into secure, deployable systems that hold up in production.'
 
 export const canonicalSeoDescription =
-  'David Braun is an AI Systems / Platform Architect who takes AI and data capabilities into secure, deployable, measurable operational systems.'
+  'David Braun is an AI Systems & Platform Engineer building secure, deployable applications, APIs, workflows, cloud infrastructure, and applied AI systems.'
 
 export const professionalAvailability =
   'Open to select full-time AI systems and platform roles, architecture and engineering partnerships, and consulting engagements where software, cloud infrastructure, data, automation, and AI need to operate as one dependable system.'
 
 export const synthesisBoundary =
-  'AI Systems / Platform Architect is a professional synthesis, not a historical employment title. Individual roles, projects, and research remain labeled by their recorded title and evidence maturity.'
+  "AI Systems & Platform Engineer is David Braun's canonical professional positioning, not a retroactive employment title. Individual roles, projects, and research remain labeled by their recorded title and evidence maturity."
 
 export const architectureLayers: ArchitectureLayer[] = [
   {
@@ -140,7 +140,7 @@ export const careerStoryStages: CareerStoryStage[] =
   }))
 
 export const fullTimeRoleFamilies = [
-  'AI Systems / Platform Architect',
+  'AI Systems & Platform Engineer',
   'AI Platform Engineer',
   'AI Systems Engineer',
   'Applied AI Engineer',

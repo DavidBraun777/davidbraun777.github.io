@@ -6,14 +6,25 @@ const STRICT_EMAIL_REGEX = /^[a-zA-Z0-9._%+-]+@[a-zA-Z0-9.-]+\.[a-zA-Z]{2,}$/
 // eslint-disable-next-line no-control-regex
 export const CONTROL_CHAR_REGEX = /[\x00-\x1f\x7f]/
 
-// Allowlists for optional dropdowns
-export const PROJECT_TYPES = [
-  'full-time',
+// Canonical inquiry intents used by the public contact form and typed CTAs.
+export const INQUIRY_TYPES = [
+  'employment',
   'consulting',
-  'build',
-  'architecture',
+  'research',
+  'speaking',
   'other',
 ] as const
+
+// Older deployed clients submitted `projectType`. Keep accepting those values
+// while normalizing every validated request to the canonical `inquiryType`.
+const LEGACY_PROJECT_TYPE_MAP = {
+  'full-time': 'employment',
+  consulting: 'consulting',
+  build: 'consulting',
+  architecture: 'consulting',
+  other: 'other',
+} as const satisfies Record<string, InquiryType>
+
 export const SERVICE_TYPES = [
   'applied-ai',
   'workflow-automation',
@@ -29,16 +40,17 @@ export const URGENCY_LEVELS = [
   'urgent',
 ] as const
 
-export type ProjectType = (typeof PROJECT_TYPES)[number]
+export type InquiryType = (typeof INQUIRY_TYPES)[number]
 export type ServiceType = (typeof SERVICE_TYPES)[number]
 export type UrgencyLevel = (typeof URGENCY_LEVELS)[number]
 
 export interface ContactFormData {
   name: string
   email: string
+  inquiryType: InquiryType
+  organization?: string
   subject: string
   message: string
-  projectType?: ProjectType
   serviceNeeded?: ServiceType
   urgency?: UrgencyLevel
 }
@@ -85,7 +97,7 @@ type RequiredFieldResult =
 type OptionalFieldResult<T extends string> =
   | { valid: true; value?: T }
   | ValidationError
-type OptionalFieldKey = 'projectType' | 'serviceNeeded' | 'urgency'
+type OptionalFieldKey = 'organization' | 'serviceNeeded' | 'urgency'
 
 function validationError(error: string): ValidationError {
   return { valid: false, error }
@@ -112,11 +124,15 @@ function validateRequiredEmail(value: unknown): RequiredFieldResult {
 
 function validateRequiredFieldLengths(
   name: string,
+  organization: string | undefined,
   subject: string,
   message: string
 ): ValidationError | undefined {
   if (name.length > 100) {
     return validationError('Name must be 100 characters or less')
+  }
+  if (organization && organization.length > 150) {
+    return validationError('Organization must be 150 characters or less')
   }
   if (subject.length > 200) {
     return validationError('Subject must be 200 characters or less')
@@ -126,6 +142,62 @@ function validateRequiredFieldLengths(
   }
 
   return undefined
+}
+
+/** Return a canonical inquiry type, or undefined for an absent/invalid value. */
+export function parseInquiryType(value: unknown): InquiryType | undefined {
+  if (
+    typeof value !== 'string' ||
+    !(INQUIRY_TYPES as readonly string[]).includes(value)
+  ) {
+    return undefined
+  }
+
+  return value as InquiryType
+}
+
+function validateInquiryType(
+  inquiryType: unknown,
+  legacyProjectType: unknown
+): { valid: true; value: InquiryType } | ValidationError {
+  if (inquiryType !== undefined) {
+    if (inquiryType === '') return validationError('Inquiry type is required')
+
+    const canonicalType = parseInquiryType(inquiryType)
+    return canonicalType
+      ? { valid: true, value: canonicalType }
+      : validationError('Invalid inquiry type')
+  }
+
+  if (legacyProjectType === undefined || legacyProjectType === '') {
+    return { valid: true, value: 'other' }
+  }
+
+  if (
+    typeof legacyProjectType !== 'string' ||
+    !(legacyProjectType in LEGACY_PROJECT_TYPE_MAP)
+  ) {
+    return validationError('Invalid inquiry type')
+  }
+
+  return {
+    valid: true,
+    value:
+      LEGACY_PROJECT_TYPE_MAP[
+        legacyProjectType as keyof typeof LEGACY_PROJECT_TYPE_MAP
+      ],
+  }
+}
+
+function validateOptionalText(
+  value: unknown,
+  error: string
+): OptionalFieldResult<string> {
+  if (value === undefined || value === '') return { valid: true }
+  if (typeof value !== 'string') return validationError(error)
+
+  const trimmedValue = value.trim()
+  return trimmedValue ? { valid: true, value: trimmedValue } : { valid: true }
 }
 
 function validateOptionalSelection<T extends string>(
@@ -160,8 +232,17 @@ export function validateContactForm(body: unknown): ValidationResult {
     return validationError('Invalid request body')
   }
 
-  const { name, email, subject, message, projectType, serviceNeeded, urgency } =
-    body as Record<string, unknown>
+  const {
+    name,
+    email,
+    inquiryType,
+    organization,
+    subject,
+    message,
+    projectType,
+    serviceNeeded,
+    urgency,
+  } = body as Record<string, unknown>
 
   // Required fields: type + presence
   const nameResult = validateRequiredText(name, 'Name is required')
@@ -169,6 +250,15 @@ export function validateContactForm(body: unknown): ValidationResult {
 
   const emailResult = validateRequiredEmail(email)
   if (!emailResult.valid) return emailResult
+
+  const inquiryTypeResult = validateInquiryType(inquiryType, projectType)
+  if (!inquiryTypeResult.valid) return inquiryTypeResult
+
+  const organizationResult = validateOptionalText(
+    organization,
+    'Invalid organization'
+  )
+  if (!organizationResult.valid) return organizationResult
 
   const subjectResult = validateRequiredText(subject, 'Subject is required')
   if (!subjectResult.valid) return subjectResult
@@ -179,6 +269,7 @@ export function validateContactForm(body: unknown): ValidationResult {
   // Length checks
   const lengthError = validateRequiredFieldLengths(
     nameResult.value,
+    organizationResult.value,
     subjectResult.value,
     messageResult.value
   )
@@ -190,13 +281,6 @@ export function validateContactForm(body: unknown): ValidationResult {
   }
 
   // Optional dropdown validation (allowlist)
-  const projectTypeResult = validateOptionalSelection(
-    projectType,
-    PROJECT_TYPES,
-    'Invalid project type'
-  )
-  if (!projectTypeResult.valid) return projectTypeResult
-
   const serviceNeededResult = validateOptionalSelection(
     serviceNeeded,
     SERVICE_TYPES,
@@ -216,9 +300,10 @@ export function validateContactForm(body: unknown): ValidationResult {
     data: {
       name: nameResult.value.trim(),
       email: emailResult.value.trim(),
+      inquiryType: inquiryTypeResult.value,
+      ...toOptionalField('organization', organizationResult.value),
       subject: subjectResult.value.trim(),
       message: messageResult.value.trim(),
-      ...toOptionalField('projectType', projectTypeResult.value),
       ...toOptionalField('serviceNeeded', serviceNeededResult.value),
       ...toOptionalField('urgency', urgencyResult.value),
     },
