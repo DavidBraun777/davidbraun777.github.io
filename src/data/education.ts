@@ -3,6 +3,8 @@ export interface Education {
   institution: string
   institutionUrl?: string
   programUrl?: string
+  department?: string
+  location?: string
   degree: string
   field: string
   secondaryCredential?: string
@@ -10,6 +12,7 @@ export interface Education {
   secondaryCredentialStartDate?: string
   secondaryCredentialEndDate?: string
   secondaryCredentialInProgress?: boolean
+  secondaryCredentialNote?: string
   startDate: string
   endDate: string | null
   description?: string
@@ -23,6 +26,8 @@ export const education: Education[] = [
     institution: 'University of St. Thomas',
     institutionUrl: 'https://www.stthomas.edu/',
     programUrl: 'https://software.stthomas.edu/degree/masters/artificial-intelligence/',
+    department: 'Department of Software Engineering and Data Science',
+    location: 'Saint Paul, Minnesota',
     degree: 'Master of Science',
     field: 'Artificial Intelligence',
     secondaryCredential: 'Graduate Certificate in Big Data',
@@ -31,6 +36,8 @@ export const education: Education[] = [
     secondaryCredentialStartDate: 'September 2024',
     secondaryCredentialEndDate: 'December 2026',
     secondaryCredentialInProgress: true,
+    secondaryCredentialNote:
+      'The university is transitioning this program to the Data Engineering name.',
     startDate: 'September 2024',
     endDate: 'December 2026',
     inProgress: true,

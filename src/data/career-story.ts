@@ -85,11 +85,13 @@ const careerStoryStageDefinitions = [
   [
     'scientific-computational-foundation',
     'Scientific and computational foundation',
-    'Mathematics, physics, and computer science training led to magnetometer analysis in IDL and Python, two 2017 AGU abstracts, and a 2018 peer-reviewed JGR: Space Physics paper.',
+    "The Augsburg space-physics record includes magnetometer-data analysis for EMIC-wave and magnetospheric research, two 2017 AGU abstracts, and a collaborative 2018 JGR: Space Physics paper. That study incorporated radiation-belt measurements from REPT and MagEIS aboard NASA's Van Allen Probes.",
     'Evidence quality, reproducibility, and careful interpretation became part of the engineering approach from the beginning.',
     [
       'education:augsburg',
       'experience:space-physics',
+      'research:conferenceAbstracts:emic-wave-events-agu-2017',
+      'research:conferenceAbstracts:magnetic-impulse-events-agu-2017',
       'research:peerReviewedPublications:emic-wave-events',
     ],
   ],

@@ -18,13 +18,30 @@ export interface AcceptedConferencePaper {
   areas: string[]
 }
 
+// Publisher-verified authored works only. Instrument or background references need
+// a separate model so their DOIs cannot enter David Braun's publication inventory.
+export const verifiedAuthoredWorkIdentities = {
+  'https://doi.org/10.1029/2018JA025505': {
+    bylineName: 'D. J. Braun',
+    affiliation:
+      'Department of Physics, Augsburg University, Minneapolis, MN, USA',
+  },
+} as const
+
+export type VerifiedAuthoredDoiUrl = keyof typeof verifiedAuthoredWorkIdentities
+
+export type VerifiedAuthoredWorkIdentity =
+  (typeof verifiedAuthoredWorkIdentities)[VerifiedAuthoredDoiUrl]
+
 export interface PeerReviewedPublication {
   id: string
   title: string
   authors: string
   journal: string
   year: string
-  doiUrl: string
+  doiUrl: VerifiedAuthoredDoiUrl
+  verifiedIdentity: VerifiedAuthoredWorkIdentity
+  studyContext: string
   webOfScienceId: string
 }
 
@@ -57,6 +74,9 @@ export const researchAreas = [
   'Retrieval-Augmented Generation (RAG)',
   'Computational Linguistics',
   'Magnetospheric Physics',
+  "Earth's Radiation Belts",
+  'Magnetometer Data Analysis',
+  'Electromagnetic Ion Cyclotron (EMIC) Waves',
   'Space Weather',
 ]
 
@@ -96,10 +116,15 @@ export const peerReviewedPublications: PeerReviewedPublication[] = [
   {
     id: 'emic-wave-events',
     title: 'EMIC Wave Events During the Four GEM QARBM Challenge Intervals',
-    authors: 'David Braun · Co-author',
+    authors:
+      'M. J. Engebretson, J. L. Posch, D. J. Braun, W. Li, Q. Ma, A. C. Kellerman, C.-L. Huang, S. G. Kanekal, C. A. Kletzing, J. R. Wygant, et al.',
     journal: 'Journal of Geophysical Research: Space Physics',
     year: '2018',
     doiUrl: 'https://doi.org/10.1029/2018JA025505',
+    verifiedIdentity:
+      verifiedAuthoredWorkIdentities['https://doi.org/10.1029/2018JA025505'],
+    studyContext:
+      "The collaborative study incorporated radiation-belt electron observations from REPT and MagEIS aboard NASA's Van Allen Probes, together with EMIC-wave observations and other data sources. This is instrumentation and data context for the study, not a claim of instrument development.",
     webOfScienceId: 'WOS:000445731300021',
   },
 ]

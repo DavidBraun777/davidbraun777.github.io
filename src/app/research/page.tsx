@@ -69,10 +69,17 @@ export default function ResearchPage() {
               Magnetospheric physics and space weather
             </h3>
             <p className="mt-4 text-sm leading-7 text-text-secondary">
-              Earlier work involved processing satellite and ground-based magnetometer
-              observations for studies of electromagnetic ion cyclotron wave events and
-              space weather. That analysis contributed to conference research and a
-              peer-reviewed paper in the Journal of Geophysical Research: Space Physics.
+              At Augsburg University, I contributed to research on electromagnetic ion
+              cyclotron (EMIC) waves and magnetospheric dynamics using observations from
+              multiple spacecraft and ground-based instruments. The resulting collaborative
+              2018 Journal of Geophysical Research: Space Physics study combined EMIC-wave
+              observations with radiation-belt measurements from REPT and MagEIS aboard
+              NASA&apos;s Van Allen Probes to examine relativistic and ultrarelativistic
+              electron flux behavior. REPT and MagEIS are part of the study&apos;s scientific
+              data context; this site does not claim that I developed those instruments or
+              authored the earlier REPT instrument publication. Work with large-scale
+              scientific data led through systems engineering to current AI and
+              information-retrieval research.
             </p>
           </article>
         </section>
@@ -109,7 +116,7 @@ export default function ResearchPage() {
           <SectionHeader
             align="left"
             title="Research Areas"
-            subtitle="Current and interdisciplinary areas represented across graduate AI and earlier space-physics work."
+            subtitle="Areas represented across two distinct eras: current graduate AI research and earlier space-physics work."
           />
           <div className="flex flex-wrap gap-2">
             {researchAreas.map((area) => (
@@ -158,8 +165,8 @@ export default function ResearchPage() {
         <section>
           <SectionHeader
             align="left"
-            title="Peer-Reviewed Publications"
-            subtitle="Published journal research with a verified DOI."
+            title="Peer-Reviewed Journal Article"
+            subtitle="Published journal research with a DOI, byline, and affiliation verified against the publisher record."
           />
           <div className="grid gap-5">
             {peerReviewedPublications.map((publication) => (
@@ -181,7 +188,21 @@ export default function ResearchPage() {
                   <cite>{publication.journal}</cite>
                 </p>
                 <p className="mt-1 font-mono text-xs text-text-muted">
-                  {publication.webOfScienceId}
+                  Web of Science: {publication.webOfScienceId}
+                </p>
+                <div className="mt-5 rounded-2xl border border-border-subtle bg-background-subtle p-4">
+                  <p className="font-mono text-xs uppercase tracking-[0.18em] text-link-primary">
+                    Verified authored identity
+                  </p>
+                  <p className="mt-2 text-sm font-semibold text-text-primary">
+                    {publication.verifiedIdentity.bylineName}
+                  </p>
+                  <p className="mt-1 text-sm leading-6 text-text-secondary">
+                    {publication.verifiedIdentity.affiliation}
+                  </p>
+                </div>
+                <p className="mt-5 text-sm leading-7 text-text-secondary">
+                  {publication.studyContext}
                 </p>
                 <div className="mt-5">
                   <ExternalLinkAction href={publication.doiUrl}>
@@ -191,6 +212,20 @@ export default function ResearchPage() {
               </article>
             ))}
           </div>
+          <aside
+            aria-label="Author identity clarification"
+            className="mt-5 rounded-[1.5rem] border border-primary-300/70 bg-primary-50/60 p-5 text-sm leading-7 text-text-secondary dark:border-primary-900 dark:bg-primary-950/30"
+          >
+            <span className="font-semibold text-text-primary">
+              Author identity clarification:
+            </span>{' '}
+            David J. Braun of Augsburg University coauthored this 2018 EMIC study,
+            which incorporated REPT observations. The D. Braun affiliated with the
+            Laboratory for Atmospheric and Space Physics at the University of Colorado
+            Boulder on the earlier REPT instrument publication is a different researcher.
+            That 2013 article and its 2014 book-chapter version are not part of this
+            publication record.
+          </aside>
         </section>
 
         <section>
