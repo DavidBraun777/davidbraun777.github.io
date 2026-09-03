@@ -1,6 +1,7 @@
 type ResearchCollection =
   | 'acceptedConferencePapers'
   | 'peerReviewedPublications'
+  | 'bookChapters'
   | 'conferenceAbstracts'
 
 export type CareerEvidenceRef =
@@ -85,11 +86,13 @@ const careerStoryStageDefinitions = [
   [
     'scientific-computational-foundation',
     'Scientific and computational foundation',
-    'Mathematics, physics, and computer science training led to magnetometer analysis in IDL and Python, two 2017 AGU abstracts, and a 2018 peer-reviewed JGR: Space Physics paper.',
+    "The early space-physics record spans work associated with REPT energetic-particle instrumentation and Earth's radiation belts, magnetometer analysis in IDL and Python, two 2017 AGU abstracts, and a 2018 peer-reviewed JGR: Space Physics paper.",
     'Evidence quality, reproducibility, and careful interpretation became part of the engineering approach from the beginning.',
     [
       'education:augsburg',
       'experience:space-physics',
+      'research:peerReviewedPublications:rept-rbsp-instrument',
+      'research:bookChapters:rept-van-allen-probes-mission',
       'research:peerReviewedPublications:emic-wave-events',
     ],
   ],

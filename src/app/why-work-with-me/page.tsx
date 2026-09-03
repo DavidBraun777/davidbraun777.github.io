@@ -157,9 +157,12 @@ export default function WhyWorkWithMePage() {
                 Graduate AI research in information retrieval, retrieval-augmented
                 generation, and multimodal methods for low-resource-language archives
                 strengthens the technical foundation behind the applied systems work. That
-                record includes accepted IEEE LA-CCI 2026 work and earlier peer-reviewed
-                space-physics research. It supports how I evaluate evidence, retrieval
-                quality, and system limits, but it does not replace production proof.
+                record includes accepted IEEE LA-CCI 2026 work and earlier space-physics
+                research associated with REPT aboard the Radiation Belt Storm Probes / Van
+                Allen Probes, AGU conference outputs, and peer-reviewed work in Space Science
+                Reviews and the Journal of Geophysical Research: Space Physics. It supports
+                how I evaluate evidence, retrieval quality, and system limits, but it does not
+                replace production proof.
               </p>
               <Link
                 href="/research"
@@ -232,17 +235,19 @@ export default function WhyWorkWithMePage() {
                   {experience.department ? `${experience.department} · ` : ''}
                   {experience.location}
                 </p>
-                <ul className="space-y-3">
-                  {experience.highlights.map((highlight) => (
-                    <li
-                      key={highlight}
-                      className="flex gap-3 text-sm leading-7 text-text-secondary"
-                    >
-                      <span className="mt-2 h-2 w-2 rounded-full bg-primary-500" />
-                      <span>{highlight}</span>
-                    </li>
-                  ))}
-                </ul>
+                {experience.highlights.length > 0 ? (
+                  <ul className="space-y-3">
+                    {experience.highlights.map((highlight) => (
+                      <li
+                        key={highlight}
+                        className="flex gap-3 text-sm leading-7 text-text-secondary"
+                      >
+                        <span className="mt-2 h-2 w-2 rounded-full bg-primary-500" />
+                        <span>{highlight}</span>
+                      </li>
+                    ))}
+                  </ul>
+                ) : null}
                 {experience.technologies ? (
                   <div className="mt-5 flex flex-wrap gap-2">
                     {experience.technologies.map((technology) => (
@@ -281,6 +286,11 @@ export default function WhyWorkWithMePage() {
                     {item.degree} in {item.field}
                   </h3>
                   <p className="mt-1 text-sm font-medium text-link-primary">{item.institution}</p>
+                  {item.department || item.location ? (
+                    <p className="mt-1 text-sm text-text-secondary">
+                      {[item.department, item.location].filter(Boolean).join(' · ')}
+                    </p>
+                  ) : null}
                   <p className="mt-1 text-sm text-text-muted">
                     {item.inProgress ? 'In progress · ' : ''}
                     {item.startDate} to {item.inProgress ? 'expected ' : ''}
@@ -295,19 +305,24 @@ export default function WhyWorkWithMePage() {
                   ) : null}
                   {item.secondaryCredential ? (
                     <div className="mt-3">
-                      <p className="text-sm font-medium text-text-primary">
+                      <h3 className="text-sm font-medium text-text-primary">
                         {item.secondaryCredential}
-                      </p>
+                      </h3>
                       <p className="mt-1 text-sm leading-7 text-text-secondary">
                         {item.secondaryCredentialInProgress ? 'In progress · ' : ''}
                         {item.secondaryCredentialStartDate ?? item.startDate} to{' '}
                         {item.secondaryCredentialInProgress ? 'expected ' : ''}
                         {item.secondaryCredentialEndDate ?? item.endDate ?? 'Present'}
                       </p>
+                      {item.secondaryCredentialNote ? (
+                        <p className="mt-1 text-sm leading-7 text-text-muted">
+                          {item.secondaryCredentialNote}
+                        </p>
+                      ) : null}
                       {item.secondaryCredentialUrl ? (
                         <div className="mt-2">
                           <ExternalLinkAction href={item.secondaryCredentialUrl}>
-                            View certificate program
+                            View current certificate program
                           </ExternalLinkAction>
                         </div>
                       ) : null}
@@ -345,8 +360,8 @@ export default function WhyWorkWithMePage() {
               />
             </div>
             <p className="mt-4 text-sm leading-7 text-text-secondary">
-              The full PDF is still available if you want the complete timeline and
-              traditional resume format. It stays secondary to the on-page summary.
+              A traditional one-page resume PDF is available as a secondary summary. The
+              on-page experience and research sections contain the most current record.
             </p>
           </article>
         </section>

@@ -6,6 +6,7 @@ import { SectionHeader } from '@/components/ui/section-header'
 import { researchToSystemsPractices } from '@/data/career-story'
 import {
   acceptedConferencePapers,
+  bookChapters,
   conferenceAbstracts,
   peerReviewedPublications,
   professionalAffiliations,
@@ -69,10 +70,13 @@ export default function ResearchPage() {
               Magnetospheric physics and space weather
             </h3>
             <p className="mt-4 text-sm leading-7 text-text-secondary">
-              Earlier work involved processing satellite and ground-based magnetometer
-              observations for studies of electromagnetic ion cyclotron wave events and
-              space weather. That analysis contributed to conference research and a
-              peer-reviewed paper in the Journal of Geophysical Research: Space Physics.
+              Earlier space-physics work spanned energetic-particle instrumentation and
+              Earth&apos;s radiation belts, including the REPT instrument aboard the
+              Radiation Belt Storm Probes (RBSP), later named the Van Allen Probes. It
+              also involved satellite and ground-based magnetometer data for studies of
+              electromagnetic ion cyclotron waves and space weather. Work with
+              large-scale scientific data led through systems engineering to current AI
+              and information-retrieval research.
             </p>
           </article>
         </section>
@@ -109,7 +113,7 @@ export default function ResearchPage() {
           <SectionHeader
             align="left"
             title="Research Areas"
-            subtitle="Current and interdisciplinary areas represented across graduate AI and earlier space-physics work."
+            subtitle="Areas represented across two distinct eras: current graduate AI research and earlier space-physics work."
           />
           <div className="flex flex-wrap gap-2">
             {researchAreas.map((area) => (
@@ -180,11 +184,64 @@ export default function ResearchPage() {
                 <p className="mt-2 text-sm leading-7 text-text-secondary">
                   <cite>{publication.journal}</cite>
                 </p>
-                <p className="mt-1 font-mono text-xs text-text-muted">
-                  {publication.webOfScienceId}
-                </p>
+                {publication.webOfScienceId ? (
+                  <p className="mt-1 font-mono text-xs text-text-muted">
+                    Web of Science: {publication.webOfScienceId}
+                  </p>
+                ) : null}
+                {publication.scopusEid ? (
+                  <p className="mt-1 font-mono text-xs text-text-muted">
+                    Scopus EID: {publication.scopusEid}
+                  </p>
+                ) : null}
+                {publication.issns ? (
+                  <p className="mt-1 font-mono text-xs text-text-muted">
+                    ISSNs: {publication.issns.join(' / ')}
+                  </p>
+                ) : null}
                 <div className="mt-5">
                   <ExternalLinkAction href={publication.doiUrl}>
+                    View DOI record
+                  </ExternalLinkAction>
+                </div>
+              </article>
+            ))}
+          </div>
+        </section>
+
+        <section>
+          <SectionHeader
+            align="left"
+            title="Book Chapters"
+            subtitle="Published chapters are listed separately from journal articles and conference outputs."
+          />
+          <div className="grid gap-5">
+            {bookChapters.map((chapter) => (
+              <article
+                key={chapter.id}
+                className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm"
+              >
+                <div className="flex flex-wrap items-center gap-2">
+                  <Badge variant="secondary">Book chapter</Badge>
+                  <Badge variant="outline">{chapter.year}</Badge>
+                </div>
+                <h3 className="mt-4 text-2xl font-semibold tracking-tight text-text-primary">
+                  {chapter.title}
+                </h3>
+                <p className="mt-3 text-sm font-medium text-text-primary">
+                  {chapter.authors}
+                </p>
+                <p className="mt-2 text-sm leading-7 text-text-secondary">
+                  In <cite>{chapter.book}</cite>
+                </p>
+                <p className="mt-1 font-mono text-xs text-text-muted">
+                  Scopus EID: {chapter.scopusEid}
+                </p>
+                <p className="mt-1 font-mono text-xs text-text-muted">
+                  ISBNs: {chapter.isbns.join(' / ')}
+                </p>
+                <div className="mt-5">
+                  <ExternalLinkAction href={chapter.doiUrl}>
                     View DOI record
                   </ExternalLinkAction>
                 </div>

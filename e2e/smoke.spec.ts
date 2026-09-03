@@ -13,6 +13,8 @@ const keyBuyerRoutes = [
 const orcidUrl = 'https://orcid.org/0009-0003-9821-8349'
 const googleScholarUrl =
   'https://scholar.google.com/citations?user=9CqMwqMAAAAJ&hl=en'
+const scopusUrl =
+  'https://www.scopus.com/inward/authorDetails.url?authorID=57197365260&partnerID=MN8TOARS'
 const aguProfileUrl =
   'https://www.agu.org/user-profile?cstkey=BF392314-D7E6-40A7-ACDF-DC1318123068'
 const credlyUrl =
@@ -125,6 +127,7 @@ test.describe('Smoke tests', () => {
     await expect(
       page.getByRole('heading', { name: /^peer-reviewed publications$/i })
     ).toBeVisible()
+    await expect(page.getByRole('heading', { name: /^book chapters$/i })).toBeVisible()
     await expect(page.getByRole('heading', { name: /^conference abstracts$/i })).toBeVisible()
     await expect(
       page.getByRole('heading', { name: 'How research informs systems work', exact: true })
@@ -143,15 +146,45 @@ test.describe('Smoke tests', () => {
     await expect(googleScholarLink).toHaveAttribute('href', googleScholarUrl)
     await expect(googleScholarLink).toHaveAttribute('target', '_blank')
 
+    const scopusLink = page.getByRole('link', { name: /view scopus profile/i })
+    await expect(scopusLink).toHaveAttribute('href', scopusUrl)
+    await expect(scopusLink).toHaveAttribute('target', '_blank')
+
     const aguLink = page.getByRole('link', { name: /view agu profile/i })
     await expect(aguLink).toHaveAttribute('href', aguProfileUrl)
     await expect(aguLink).toHaveAttribute('target', '_blank')
 
-    const doiLink = page.getByRole('link', { name: /view doi record/i })
-    await expect(doiLink).toHaveAttribute('href', 'https://doi.org/10.1029/2018JA025505')
-    await expect(doiLink).toHaveAttribute('target', '_blank')
+    const jgrDoiLink = page.locator('a[href="https://doi.org/10.1029/2018JA025505"]')
+    const reptArticleDoiLink = page.locator(
+      'a[href="https://doi.org/10.1007/s11214-012-9950-9"]'
+    )
+    const reptChapterDoiLink = page.locator(
+      'a[href="https://doi.org/10.1007/978-1-4899-7433-4_11"]'
+    )
 
-    for (const link of [orcidLink, googleScholarLink, aguLink, doiLink]) {
+    const reptArticle = page.locator('article').filter({ has: reptArticleDoiLink })
+    await expect(reptArticle).toContainText('Peer-reviewed journal article')
+    await expect(reptArticle).toContainText('Space Science Reviews')
+    await expect(reptArticle).toContainText('2013')
+
+    const reptChapter = page.locator('article').filter({ has: reptChapterDoiLink })
+    await expect(reptChapter).toContainText('Book chapter')
+    await expect(reptChapter).toContainText('Van Allen Probes Mission')
+    await expect(reptChapter).toContainText('2014')
+
+    for (const doiLink of [jgrDoiLink, reptArticleDoiLink, reptChapterDoiLink]) {
+      await expect(doiLink).toHaveAttribute('target', '_blank')
+    }
+
+    for (const link of [
+      orcidLink,
+      googleScholarLink,
+      scopusLink,
+      aguLink,
+      jgrDoiLink,
+      reptArticleDoiLink,
+      reptChapterDoiLink,
+    ]) {
       const rel = await link.getAttribute('rel')
       expect(rel).toContain('noopener')
       expect(rel).toContain('noreferrer')
@@ -197,6 +230,10 @@ test.describe('Smoke tests', () => {
     await expect(
       footer.getByRole('link', { name: /^google scholar$/i })
     ).toHaveAttribute('href', googleScholarUrl)
+    await expect(footer.getByRole('link', { name: /^scopus$/i })).toHaveAttribute(
+      'href',
+      scopusUrl
+    )
     await expect(footer.getByRole('link', { name: /^agu profile$/i })).toHaveAttribute(
       'href',
       aguProfileUrl
@@ -220,9 +257,10 @@ test.describe('Smoke tests', () => {
     expect(person.sameAs).toEqual(
       expect.arrayContaining([
         'https://github.com/DavidBraun777',
-        'https://linkedin.com/in/david-braun777',
+        'https://www.linkedin.com/in/david-braun777/',
         orcidUrl,
         googleScholarUrl,
+        scopusUrl,
         aguProfileUrl,
       ])
     )
@@ -341,12 +379,50 @@ test.describe('Smoke tests', () => {
     await expect(
       page.getByRole('link', { name: /review research and publications/i })
     ).toHaveAttribute('href', '/research')
+    const ustRole = page
+      .getByRole('heading', {
+        name: 'Graduate Tutor / Computer Systems Support · University of St. Thomas',
+        exact: true,
+      })
+      .locator('xpath=ancestor::details')
+    await expect(ustRole).toContainText('December 2025 to Present')
+    await ustRole.locator('summary').click()
+    await expect(
+      ustRole.getByText(
+        'Department of Software Engineering and Data Science · Saint Paul, Minnesota',
+        { exact: true }
+      )
+    ).toBeVisible()
+    const ustEducation = page
+      .getByRole('heading', {
+        name: 'Master of Science in Artificial Intelligence',
+        exact: true,
+      })
+      .locator('xpath=ancestor::article')
+    await expect(
+      ustEducation.getByText(
+        'Department of Software Engineering and Data Science · Saint Paul, Minnesota',
+        { exact: true }
+      )
+    ).toBeVisible()
+    await expect(
+      page.getByRole('heading', { name: 'Graduate Certificate in Big Data', exact: true })
+    ).toBeVisible()
+    await expect(
+      ustEducation.getByText('September 2024 to expected December 2026')
+    ).toHaveCount(2)
+    await expect(
+      ustEducation.getByText(
+        'The university is transitioning this program to the Data Engineering name.',
+        { exact: true }
+      )
+    ).toBeVisible()
     await expect(page.getByRole('link', { name: /verify on credly/i })).toHaveAttribute(
       'href',
       credlyUrl
     )
     await expect(
-      page.getByRole('link', { name: /view certificate program/i })
+      page.getByRole('link', { name: /view current certificate program/i })
     ).toHaveAttribute(
       'href',
       'https://software.stthomas.edu/degree/certificates/data-engineering/index.html'

@@ -56,10 +56,7 @@ export const experiences: Experience[] = [
     endDate: null,
     description:
       'Graduate tutoring and computer systems support within the Department of Software Engineering and Data Science.',
-    highlights: [
-      'Support graduate tutoring and computer systems needs within the department',
-    ],
-    technologies: ['Graduate Tutoring', 'Computer Systems Support'],
+    highlights: [],
   },
   {
     id: 'vifg-treasurer',
