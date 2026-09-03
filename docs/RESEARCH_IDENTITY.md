@@ -40,8 +40,9 @@ performed every analysis in the collaboration.
 
 ## External research profiles
 
-Keep ORCID, Google Scholar, and AGU as public research-profile links, but do not
-automatically import works from ORCID, Scopus, or any other name-matched index.
+Keep ORCID, Google Scholar, ResearchGate, and AGU as public research-profile links,
+but do not automatically import works from ORCID, ResearchGate, Scopus, or any
+other name-matched index.
 
 The previous Scopus Author ID was `57197365260`:
 

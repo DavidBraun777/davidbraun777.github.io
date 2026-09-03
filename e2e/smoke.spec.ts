@@ -15,6 +15,7 @@ const keyBuyerRoutes = [
 const orcidUrl = 'https://orcid.org/0009-0003-9821-8349'
 const googleScholarUrl =
   'https://scholar.google.com/citations?user=9CqMwqMAAAAJ&hl=en'
+const researchGateUrl = 'https://www.researchgate.net/profile/David-Braun-5'
 const aguProfileUrl =
   'https://www.agu.org/user-profile?cstkey=BF392314-D7E6-40A7-ACDF-DC1318123068'
 const credlyUrl =
@@ -149,6 +150,12 @@ test.describe('Smoke tests', () => {
     await expect(googleScholarLink).toHaveAttribute('href', googleScholarUrl)
     await expect(googleScholarLink).toHaveAttribute('target', '_blank')
 
+    const researchGateLink = page.getByRole('link', {
+      name: /view researchgate profile/i,
+    })
+    await expect(researchGateLink).toHaveAttribute('href', researchGateUrl)
+    await expect(researchGateLink).toHaveAttribute('target', '_blank')
+
     await expect(page.getByRole('link', { name: /view scopus profile/i })).toHaveCount(0)
     await expect(page.locator('main')).not.toContainText('Scopus')
 
@@ -188,6 +195,7 @@ test.describe('Smoke tests', () => {
     for (const link of [
       orcidLink,
       googleScholarLink,
+      researchGateLink,
       aguLink,
       jgrDoiLink,
     ]) {
@@ -236,6 +244,10 @@ test.describe('Smoke tests', () => {
     await expect(
       footer.getByRole('link', { name: /^google scholar$/i })
     ).toHaveAttribute('href', googleScholarUrl)
+    await expect(footer.getByRole('link', { name: /^researchgate$/i })).toHaveAttribute(
+      'href',
+      researchGateUrl
+    )
     await expect(footer.getByRole('link', { name: /^scopus$/i })).toHaveCount(0)
     await expect(footer.getByRole('link', { name: /^agu profile$/i })).toHaveAttribute(
       'href',
@@ -270,6 +282,7 @@ test.describe('Smoke tests', () => {
         'https://www.linkedin.com/in/david-braun777/',
         orcidUrl,
         googleScholarUrl,
+        researchGateUrl,
         aguProfileUrl,
       ])
     )
@@ -326,6 +339,38 @@ test.describe('Smoke tests', () => {
     expect(mainText.indexOf('VIFG Nonprofit Platform')).toBeLessThan(
       mainText.indexOf('WeatherForge')
     )
+  })
+
+  test('WeatherForge credits the team and states the established implementation role', async ({
+    page,
+  }) => {
+    await page.goto('/case-studies/weatherforge')
+    await expect(page.locator('meta[name="description"]')).toHaveAttribute(
+      'content',
+      /David served as lead developer and primary implementer, writing more than 90% of the application code/i
+    )
+
+    const main = page.locator('main')
+    await expect(main).toContainText(
+      'WeatherForge originated as a collaborative University of St. Thomas SEIS 745 project with Odin Lee and Jannah ElNemr.'
+    )
+    await expect(main).toContainText(
+      'David Braun served as the lead developer and primary implementer, writing more than 90% of the application code, while the project as a whole was completed collaboratively by the three-person team.'
+    )
+    await expect(main.getByText('Lead developer and primary implementer', { exact: true })).toBeVisible()
+    await expect(
+      main.getByRole('heading', { name: 'Solution / Implementation', exact: true })
+    ).toBeVisible()
+    await expect(main).toContainText(
+      'I wrote more than 90% of the WeatherForge application code across its data pipeline, analytics, and dashboard layers.'
+    )
+    await expect(main).toContainText(
+      'My implementation work included filtering, cleaning, transforming, and packaging NOAA Storm Events and GHCN-Daily data'
+    )
+    await expect(main).not.toContainText('Sole builder')
+    await expect(main).not.toContainText('Co-developer on the three-person SEIS 745 project team')
+    await expect(main).not.toContainText('Solution / Collaborative Build')
+    await expect(main).not.toContainText('The three-person project team filtered')
   })
 
   test('homepage primary actions lead to work and the shared contact page', async ({ page }) => {

@@ -1,4 +1,11 @@
-import { BadgeCheck, Earth, Github, GraduationCap, Linkedin } from 'lucide-react'
+import {
+  BadgeCheck,
+  Earth,
+  Github,
+  GraduationCap,
+  Linkedin,
+  Microscope,
+} from 'lucide-react'
 import type { LucideIcon } from 'lucide-react'
 
 export interface SocialLink {
@@ -30,6 +37,12 @@ export const socialLinks: SocialLink[] = [
     url: 'https://scholar.google.com/citations?user=9CqMwqMAAAAJ&hl=en',
     icon: GraduationCap,
     researchActionLabel: 'View Google Scholar Profile',
+  },
+  {
+    name: 'ResearchGate',
+    url: 'https://www.researchgate.net/profile/David-Braun-5',
+    icon: Microscope,
+    researchActionLabel: 'View ResearchGate Profile',
   },
   {
     name: 'AGU Profile',

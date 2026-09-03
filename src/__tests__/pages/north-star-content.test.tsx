@@ -5,6 +5,7 @@ import CareerStoryPage from '@/app/experience/career-story/page'
 import ExperiencePage from '@/app/experience/page'
 import Home from '@/app/page'
 import ResearchPage from '@/app/research/page'
+import { getSystemById } from '@/data/systems'
 
 describe('north-star page content', () => {
   test('renders the canonical homepage identity and proof-first paths', () => {
@@ -73,5 +74,41 @@ describe('north-star page content', () => {
     expect(markup).not.toContain('Laboratory for Atmospheric and Space Physics')
     expect(markup).not.toContain('University of Colorado Boulder')
     expect(markup).not.toContain('different researcher')
+  })
+
+  test("preserves WeatherForge's collaborative origin and established implementation scope", () => {
+    const weatherForge = getSystemById('weatherforge')
+    const stormIQ = getSystemById('stormiq')
+
+    expect(weatherForge).toBeDefined()
+    expect(weatherForge?.positioning).toContain(
+      'WeatherForge originated as a collaborative University of St. Thomas SEIS 745 project with Odin Lee and Jannah ElNemr.'
+    )
+    expect(weatherForge?.positioning).toContain(
+      'David Braun served as the lead developer and primary implementer, writing more than 90% of the application code, while the project as a whole was completed collaboratively by the three-person team.'
+    )
+    expect(weatherForge?.myRole).toBe('Lead developer and primary implementer')
+    expect(weatherForge?.solutionTitle).toBe('Solution / Implementation')
+    expect(weatherForge?.system).toContain(
+      'I wrote more than 90% of the WeatherForge application code across its data pipeline, analytics, and dashboard layers.'
+    )
+    expect(weatherForge?.system).toContain(
+      'My implementation work included filtering, cleaning, transforming, and packaging NOAA Storm Events and GHCN-Daily data'
+    )
+    expect(JSON.stringify(weatherForge)).not.toMatch(/sole builder/i)
+    expect(JSON.stringify(weatherForge)).not.toMatch(
+      /more than 90% of (?:the )?(?:project|overall project|academic project|work)/i
+    )
+    expect(JSON.stringify(stormIQ)).toContain('collaborative WeatherForge academic project')
+    expect(JSON.stringify(stormIQ)).not.toMatch(
+      /WeatherForge is being built|WeatherForge feeds|systems under active development/i
+    )
+  })
+
+  test('adds ResearchGate through the shared research-profile data path', () => {
+    const markup = renderToStaticMarkup(<ResearchPage />)
+
+    expect(markup).toContain('View ResearchGate Profile')
+    expect(markup).toContain('https://www.researchgate.net/profile/David-Braun-5')
   })
 })
