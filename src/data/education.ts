@@ -56,8 +56,8 @@ export const education: Education[] = [
     institutionUrl: 'https://www.augsburg.edu/',
     degree: 'Bachelor of Science (B.S.)',
     field: 'Mathematics, Physics, and Computer Science',
-    startDate: 'June 2014',
-    endDate: 'May 2019',
+    startDate: '2014',
+    endDate: '2020',
     description:
       'One Bachelor of Science degree with majors in Mathematics, Physics, and Computer Science.',
   },

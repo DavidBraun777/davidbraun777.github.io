@@ -29,6 +29,8 @@ describe('north-star page content', () => {
     expect(markup).toContain(
       'The university is transitioning this program to the Data Engineering name.'
     )
+    expect(markup).toContain('October 2022 to March 2024')
+    expect(markup).toContain('2014 to 2020')
     expect(markup).toContain('Discuss a Role')
     expect(markup).toContain('Read the full career through-line')
   })

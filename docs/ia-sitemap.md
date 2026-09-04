@@ -76,6 +76,7 @@ Legacy aliases resolve directly to the current canonical destination:
 | `/background` | `/experience` |
 | `/resume` | `/experience` |
 | `/resume.pdf` | `/David-J-Braun-Resume-2026.pdf` |
+| `/Resume.pdf` | `/David-J-Braun-Resume-2026.pdf` |
 | `/projects` | `/case-studies` |
 | `/projects/[slug]` | `/case-studies/[slug]` |
 | `/blog` | `/writing` |
@@ -83,6 +84,8 @@ Legacy aliases resolve directly to the current canonical destination:
 | `/systems` | `/case-studies` |
 
 Aliases are not sitemap entries and must not emit obsolete canonical metadata.
+The capitalized `/Resume.pdf` alias is covered by Next.js's case-insensitive
+matching of the configured `/resume.pdf` redirect.
 
 ## Evidence Hierarchy
 
