@@ -98,7 +98,7 @@ export const experiences: Experience[] = [
     companyUrl: 'https://www.securian.com/',
     role: 'Infrastructure Engineer',
     location: 'St. Paul, MN (Remote)',
-    startDate: 'November 2022',
+    startDate: 'October 2022',
     endDate: 'March 2024',
     description:
       'Owned infrastructure automation and cloud application delivery across AWS environments, including configuration management, Kubernetes/EKS support, microservice development, and operational tooling.',

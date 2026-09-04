@@ -451,6 +451,19 @@ test.describe('Smoke tests', () => {
     await expect(page.getByRole('heading', { name: /^career highlights$/i })).toBeVisible()
     await expect(page.getByText('50+ repositories', { exact: true })).toBeVisible()
     await expect(page.getByText('Approximately 40%', { exact: true })).toBeVisible()
+    const securianPanel = page.locator('details').filter({
+      has: page.getByRole('heading', {
+        name: 'Infrastructure Engineer · Securian Financial',
+      }),
+    })
+    await expect(securianPanel).toContainText('October 2022 to March 2024')
+
+    const augsburgCard = page.locator('article').filter({
+      has: page.getByRole('heading', {
+        name: 'Bachelor of Science (B.S.) in Mathematics, Physics, and Computer Science',
+      }),
+    })
+    await expect(augsburgCard).toContainText('2014 to 2020')
     await expect(
       page.getByRole('link', { name: /^discuss a role$/i }).first()
     ).toHaveAttribute('href', '/contact?type=employment')
@@ -577,15 +590,21 @@ test.describe('Smoke tests', () => {
     expect(body).not.toContain('<loc>https://dbraun.io/why-work-with-me</loc>')
   })
 
-  test('versioned resume is served and the former PDF URL redirects', async ({ request }) => {
+  test('versioned resume is served and legacy PDF URLs redirect permanently', async ({
+    request,
+  }) => {
     const response = await request.get('/David-J-Braun-Resume-2026.pdf')
 
     expect(response.status()).toBe(200)
     expect(response.headers()['content-type']).toContain('application/pdf')
 
-    const redirect = await request.get('/resume.pdf', { maxRedirects: 0 })
-    expect(redirect.status()).toBe(308)
-    expect(redirect.headers().location).toMatch(/\/David-J-Braun-Resume-2026\.pdf$/)
+    for (const legacyPath of ['/resume.pdf', '/Resume.pdf']) {
+      const redirect = await request.get(legacyPath, { maxRedirects: 0 })
+      expect(redirect.status()).toBe(308)
+      expect(
+        new URL(redirect.headers().location, 'http://localhost:3000').pathname
+      ).toBe('/David-J-Braun-Resume-2026.pdf')
+    }
   })
 
   test('legacy routes redirect directly to the new IA', async ({ page, request }) => {
