@@ -1,5 +1,6 @@
 import type { LucideIcon } from 'lucide-react'
 import { socialLinks } from '@/data/social-links'
+import { urarinaResearch } from '@/data/urarina-research'
 
 export interface ResearchProfileLink {
   name: string
@@ -11,6 +12,7 @@ export interface ResearchProfileLink {
 export interface AcceptedConferencePaper {
   id: string
   title: string
+  href?: string
   authors: string
   venue: string
   status: 'Accepted Conference Paper'
@@ -96,8 +98,8 @@ export const researchProfileLinks: ResearchProfileLink[] = socialLinks.flatMap((
 export const acceptedConferencePapers: AcceptedConferencePaper[] = [
   {
     id: 'urarina-hybrid-retrieval',
-    title:
-      'Hybrid Retrieval Evaluation for Low-Resource Language Archives: A Urarina\u2014Spanish Case Study',
+    title: urarinaResearch.title,
+    href: urarinaResearch.path,
     authors: 'David Braun and Michael Dorin',
     venue: 'IEEE LA-CCI 2026',
     status: 'Accepted Conference Paper',

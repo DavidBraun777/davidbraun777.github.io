@@ -130,6 +130,15 @@ export default function ResearchPage() {
                     </Badge>
                   ))}
                 </div>
+                {paper.href ? (
+                  <Link
+                    href={paper.href}
+                    className="mt-5 inline-flex items-center gap-2 text-sm font-medium text-link-primary hover:text-link-primary-hover"
+                  >
+                    Research status and project context
+                    <ArrowRight aria-hidden="true" className="h-4 w-4" />
+                  </Link>
+                ) : null}
               </article>
             ))}
           </div>

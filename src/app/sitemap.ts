@@ -1,6 +1,7 @@
 import { MetadataRoute } from 'next'
 import { getAllPosts } from '@/lib/mdx'
 import { allSystems } from '@/data/systems'
+import { urarinaResearch } from '@/data/urarina-research'
 
 export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://dbraun.io'
@@ -28,6 +29,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
       url: `${baseUrl}/research`,
       changeFrequency: 'monthly' as const,
       priority: 0.8,
+    },
+    {
+      url: `${baseUrl}${urarinaResearch.path}`,
+      changeFrequency: 'monthly' as const,
+      priority: 0.65,
     },
     {
       url: `${baseUrl}/experience`,
