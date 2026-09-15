@@ -110,7 +110,8 @@ describe('north-star page content', () => {
   test('adds ResearchGate through the shared research-profile data path', () => {
     const markup = renderToStaticMarkup(<ResearchPage />)
 
-    expect(markup).toContain('View ResearchGate Profile')
+    expect(markup).toContain('Research Profiles')
+    expect(markup).toContain('Academic profile')
     expect(markup).toContain('https://www.researchgate.net/profile/David-Braun-5')
   })
 })

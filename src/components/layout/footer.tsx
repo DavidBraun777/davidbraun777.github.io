@@ -16,7 +16,7 @@ export function Footer() {
 
   return (
     <footer className="border-t border-[var(--theme-frame-border)] bg-[var(--theme-frame-bg-strong)] text-[var(--theme-frame-text)]">
-      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:px-6 lg:grid-cols-[1.2fr_0.8fr_0.8fr] lg:px-8">
+      <div className="mx-auto grid max-w-7xl gap-10 px-4 py-12 sm:grid-cols-2 sm:px-6 lg:grid-cols-[1.6fr_0.7fr_0.8fr_minmax(12rem,0.9fr)] lg:px-8">
         <div>
           <Link
             href="/"
@@ -75,12 +75,12 @@ export function Footer() {
             Connect
           </h2>
           <ul className="mt-4 space-y-3 text-sm">
-            {socialLinks.map((item) => (
-              <li key={item.name}>
+            {socialLinks.filter((item) => item.group === 'professional').map((item) => (
+              <li key={item.url}>
                 <a
                   href={item.url}
-                  target={item.url.startsWith('http') ? '_blank' : undefined}
-                  rel={item.url.startsWith('http') ? 'noopener noreferrer' : undefined}
+                  target="_blank"
+                  rel="noopener noreferrer"
                   className={linkClass}
                 >
                   {item.name}
@@ -89,6 +89,26 @@ export function Footer() {
             ))}
           </ul>
           <p className="mt-6 text-sm text-[var(--theme-frame-text-muted)]">{profile.location}</p>
+        </div>
+
+        <div>
+          <h2 className="text-sm font-semibold uppercase tracking-[0.18em] text-[var(--theme-frame-text)]">
+            Research Profiles
+          </h2>
+          <ul className="mt-4 space-y-3 text-sm">
+            {socialLinks.filter((item) => item.group === 'research').map((item) => (
+              <li key={item.url}>
+                <a
+                  href={item.url}
+                  target="_blank"
+                  rel="noopener noreferrer"
+                  className={linkClass}
+                >
+                  {item.shortName ?? item.name}
+                </a>
+              </li>
+            ))}
+          </ul>
         </div>
       </div>
 

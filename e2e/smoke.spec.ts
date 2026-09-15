@@ -16,9 +16,19 @@ const keyBuyerRoutes = [
 const orcidUrl = 'https://orcid.org/0009-0003-9821-8349'
 const googleScholarUrl =
   'https://scholar.google.com/citations?user=9CqMwqMAAAAJ&hl=en'
+const scopusUrl = 'https://www.scopus.com/authid/detail.uri?authorId=57197365260'
+const webOfScienceUrl = 'https://www.webofscience.com/wos/author/record/QXI-2995-2026'
 const researchGateUrl = 'https://www.researchgate.net/profile/David-Braun-5'
 const aguProfileUrl =
   'https://www.agu.org/user-profile?cstkey=BF392314-D7E6-40A7-ACDF-DC1318123068'
+const researchProfiles = [
+  { name: 'ORCID', url: orcidUrl },
+  { name: 'Google Scholar', url: googleScholarUrl },
+  { name: 'Scopus', url: scopusUrl },
+  { name: 'Web of Science', url: webOfScienceUrl },
+  { name: 'ResearchGate', url: researchGateUrl },
+  { name: 'AGU Profile', url: aguProfileUrl },
+]
 const credlyUrl =
   'https://www.credly.com/badges/9e9d0587-054e-44d4-9ab7-66bc451c85d2/public_url'
 const previousPrimaryIdentity =
@@ -141,28 +151,13 @@ test.describe('Smoke tests', () => {
       page.getByRole('link', { name: /^discuss research$/i })
     ).toHaveAttribute('href', '/contact?type=research')
 
-    const orcidLink = page.getByRole('link', { name: /view orcid record/i })
-    await expect(orcidLink).toHaveAttribute('href', orcidUrl)
-    await expect(orcidLink).toHaveAttribute('target', '_blank')
-
-    const googleScholarLink = page.getByRole('link', {
-      name: /view google scholar profile/i,
-    })
-    await expect(googleScholarLink).toHaveAttribute('href', googleScholarUrl)
-    await expect(googleScholarLink).toHaveAttribute('target', '_blank')
-
-    const researchGateLink = page.getByRole('link', {
-      name: /view researchgate profile/i,
-    })
-    await expect(researchGateLink).toHaveAttribute('href', researchGateUrl)
-    await expect(researchGateLink).toHaveAttribute('target', '_blank')
-
-    await expect(page.getByRole('link', { name: /view scopus profile/i })).toHaveCount(0)
-    await expect(page.locator('main')).not.toContainText('Scopus')
-
-    const aguLink = page.getByRole('link', { name: /view agu profile/i })
-    await expect(aguLink).toHaveAttribute('href', aguProfileUrl)
-    await expect(aguLink).toHaveAttribute('target', '_blank')
+    const profiles = page.getByRole('region', { name: 'Research Profiles' })
+    await expect(profiles.getByRole('link')).toHaveCount(researchProfiles.length)
+    for (const { name, url } of researchProfiles) {
+      const link = profiles.getByRole('link', { name: new RegExp(`^${name} `) })
+      await expect(link).toHaveAttribute('href', url)
+      await expect(link).toHaveAttribute('target', '_blank')
+    }
 
     const jgrDoiLink = page.locator('a[href="https://doi.org/10.1029/2018JA025505"]')
     const reptArticleDoiLink = page.locator(
@@ -193,13 +188,7 @@ test.describe('Smoke tests', () => {
 
     await expect(jgrDoiLink).toHaveAttribute('target', '_blank')
 
-    for (const link of [
-      orcidLink,
-      googleScholarLink,
-      researchGateLink,
-      aguLink,
-      jgrDoiLink,
-    ]) {
+    for (const link of [...await profiles.getByRole('link').all(), jgrDoiLink]) {
       const rel = await link.getAttribute('rel')
       expect(rel).toContain('noopener')
       expect(rel).toContain('noreferrer')
@@ -230,7 +219,7 @@ test.describe('Smoke tests', () => {
     }
   })
 
-  test('footer exposes research navigation and professional profiles', async ({ page }) => {
+  test('footer separates professional and research profiles while preserving identity', async ({ page }) => {
     await page.goto('/')
     const footer = page.locator('footer')
 
@@ -238,22 +227,15 @@ test.describe('Smoke tests', () => {
       'href',
       '/research'
     )
-    await expect(footer.getByRole('link', { name: /^orcid$/i })).toHaveAttribute(
-      'href',
-      orcidUrl
-    )
-    await expect(
-      footer.getByRole('link', { name: /^google scholar$/i })
-    ).toHaveAttribute('href', googleScholarUrl)
-    await expect(footer.getByRole('link', { name: /^researchgate$/i })).toHaveAttribute(
-      'href',
-      researchGateUrl
-    )
-    await expect(footer.getByRole('link', { name: /^scopus$/i })).toHaveCount(0)
-    await expect(footer.getByRole('link', { name: /^agu profile$/i })).toHaveAttribute(
-      'href',
-      aguProfileUrl
-    )
+    const connect = footer.getByRole('heading', { name: 'Connect', exact: true }).locator('..')
+    const profiles = footer.getByRole('heading', { name: 'Research Profiles', exact: true }).locator('..')
+    await expect(connect.getByRole('link')).toHaveText(['GitHub', 'LinkedIn'])
+    await expect(profiles.getByRole('link')).toHaveText([
+      'ORCID', 'Google Scholar', 'Scopus', 'Web of Science', 'ResearchGate', 'AGU',
+    ])
+    for (const [index, { url }] of researchProfiles.entries()) {
+      await expect(profiles.getByRole('link').nth(index)).toHaveAttribute('href', url)
+    }
     await expect(footer).toContainText(
       'And whatsoever ye do, do it heartily, as to the Lord, and not unto men;'
     )
@@ -269,7 +251,9 @@ test.describe('Smoke tests', () => {
       .locator('script[type="application/ld+json"]')
       .allTextContents()
     const records = structuredData.map((content) => JSON.parse(content))
-    const person = records.find((record) => record['@type'] === 'Person')
+    const people = records.filter((record) => record['@type'] === 'Person')
+    expect(people).toHaveLength(1)
+    const person = people[0]
     const website = records.find((record) => record['@type'] === 'WebSite')
 
     expect(person).toBeDefined()
@@ -283,13 +267,13 @@ test.describe('Smoke tests', () => {
         'https://www.linkedin.com/in/david-braun777/',
         orcidUrl,
         googleScholarUrl,
+        scopusUrl,
+        webOfScienceUrl,
         researchGateUrl,
         aguProfileUrl,
       ])
     )
-    expect(person.sameAs).not.toEqual(
-      expect.arrayContaining([expect.stringContaining('scopus.com')])
-    )
+    expect(new Set(person.sameAs).size).toBe(person.sameAs.length)
     expect(person.knowsAbout).toEqual(
       expect.arrayContaining([
         'Software engineering',
@@ -325,7 +309,7 @@ test.describe('Smoke tests', () => {
     await expect(page).toHaveURL(/\/research$/)
     await expect(mobileNavigation).toHaveCount(0)
     await expect(
-      page.getByRole('link', { name: /view google scholar profile/i })
+      page.getByRole('region', { name: 'Research Profiles' }).getByRole('link', { name: /^google scholar /i })
     ).toHaveAttribute('href', googleScholarUrl)
   })
 
