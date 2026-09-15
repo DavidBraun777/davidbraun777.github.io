@@ -174,6 +174,32 @@ export default function ServicesPage() {
           </div>
         </section>
 
+        <section>
+          <SectionHeader align="left" title="Engineering leverage" />
+          <div className="max-w-3xl space-y-4 text-sm leading-7 text-text-secondary">
+            <p>
+              Modern engineering tools can substantially reduce the time required to produce a
+              solution, but delivery time is not the same as project value.
+            </p>
+            <p>
+              My work combines professional engineering experience, formal computer science and AI
+              education, accumulated technical knowledge, reusable engineering patterns, and
+              AI-assisted development workflows. Together, these allow me to move from requirements
+              to working systems more efficiently than a purely manual development process.
+            </p>
+            <p>
+              AI can accelerate implementation, research, testing, documentation, analysis, and
+              repetitive engineering work. I remain responsible for requirements, architecture,
+              technical decisions, validation, security, testing, deployment, and the finished system.
+            </p>
+            <p>
+              For that reason, projects are generally priced around scope, complexity, risk, and the
+              value of the delivered capability rather than simply the number of hours spent writing
+              code.
+            </p>
+          </div>
+        </section>
+
         <section className="grid gap-6 lg:grid-cols-[1fr_1fr] lg:items-start">
           <div className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-5 shadow-sm sm:p-6">
             <SectionHeader
