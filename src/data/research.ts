@@ -1,13 +1,7 @@
-import type { LucideIcon } from 'lucide-react'
-import { socialLinks } from '@/data/social-links'
+import { socialLinks, type ResearchProfileLink } from '@/data/social-links'
 import { urarinaResearch } from '@/data/urarina-research'
 
-export interface ResearchProfileLink {
-  name: string
-  actionLabel: string
-  url: string
-  icon: LucideIcon
-}
+export type { ResearchProfileLink } from '@/data/social-links'
 
 export interface AcceptedConferencePaper {
   id: string
@@ -82,17 +76,8 @@ export const researchAreas = [
   'Space Weather',
 ]
 
-export const researchProfileLinks: ResearchProfileLink[] = socialLinks.flatMap((link) =>
-  link.researchActionLabel
-    ? [
-        {
-          name: link.name,
-          actionLabel: link.researchActionLabel,
-          url: link.url,
-          icon: link.icon,
-        },
-      ]
-    : []
+export const researchProfileLinks = socialLinks.filter(
+  (link): link is ResearchProfileLink => link.group === 'research'
 )
 
 export const acceptedConferencePapers: AcceptedConferencePaper[] = [

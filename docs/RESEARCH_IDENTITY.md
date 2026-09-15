@@ -40,16 +40,22 @@ performed every analysis in the collaboration.
 
 ## External research profiles
 
-Keep ORCID, Google Scholar, ResearchGate, and AGU as public research-profile links,
-but do not automatically import works from ORCID, ResearchGate, Scopus, or any
-other name-matched index.
+Keep ORCID, Google Scholar, Scopus, Web of Science, ResearchGate, and AGU as public
+research-profile links, but do not automatically import works from these profiles
+or any other name-matched index. New publications still require DOI-level byline
+and affiliation verification against the identity boundary above before they can
+be added to the authored-work allowlist.
 
-The previous Scopus Author ID was `57197365260`:
+The Scopus record was manually verified on September 15, 2026 and currently shows:
 
-`https://www.scopus.com/inward/authorDetails.url?authorID=57197365260&partnerID=MN8TOARS`
+- D. J. Braun
+- Augsburg University
+- Scopus Author ID `57197365260`
+- ORCID `0009-0003-9821-8349`
+- The verified 2018 JGR: Space Physics publication, “EMIC Wave Events During the
+  Four GEM QARBM Challenge Intervals,” DOI `10.1029/2018JA025505`
 
-That profile appears to contain an author-disambiguation merge with the unrelated
-LASP researcher. It is intentionally excluded from rendered profile links, footer
-links, and Person `sameAs` structured data. Do not publish a replacement ID or
-restore this one until Elsevier has corrected the profile and its works have been
-checked against the DOI allowlist and affiliation boundary above.
+This verification supersedes the earlier concern about an incorrect author merge.
+The Scopus profile is included in the public research-profile links, footer links,
+and Person `sameAs` structured data. Linking a profile does not verify every work
+it may contain or replace the DOI-level publication safeguards above.

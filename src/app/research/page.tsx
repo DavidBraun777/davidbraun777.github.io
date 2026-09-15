@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
-import { ArrowRight } from 'lucide-react'
+import { ArrowRight, ArrowUpRight } from 'lucide-react'
 import { PageIntro } from '@/components/site/page-intro'
 import { Badge } from '@/components/ui/badge'
 import { ExternalLinkAction } from '@/components/ui/external-link-action'
@@ -32,15 +32,48 @@ export default function ResearchPage() {
           description="Research informs how I evaluate evidence, retrieval quality, uncertainty, and system limits. Current work includes hybrid information retrieval for Urarina–Spanish archival material while I pursue a Master of Science in Artificial Intelligence at the University of St. Thomas."
           actions={[
             { label: 'Discuss Research', href: '/contact?type=research' },
-            ...researchProfileLinks.map((profile) => ({
-              label: profile.actionLabel,
-              href: profile.url,
-              icon: profile.icon,
-              external: true,
-              variant: 'secondary' as const,
-            })),
           ]}
         />
+
+        <section aria-labelledby="research-profiles-heading">
+          <h2
+            id="research-profiles-heading"
+            className="text-xl font-semibold tracking-tight text-text-primary"
+          >
+            Research Profiles
+          </h2>
+          <p className="mt-2 text-sm leading-7 text-text-secondary">
+            Persistent identifiers, citation indexes, and academic profiles associated with my research record.
+          </p>
+          <ul className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {researchProfileLinks.map((profile) => {
+              const Icon = profile.icon
+
+              return (
+                <li key={profile.url}>
+                  <a
+                    href={profile.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block h-full rounded-2xl border border-border-subtle bg-background-elevated p-4 transition-colors hover:border-border-strong hover:bg-background-subtle"
+                  >
+                    <span className="flex items-center gap-3">
+                      <Icon aria-hidden="true" className="h-5 w-5 shrink-0 text-link-primary" />
+                      <span className="flex-1 text-sm font-semibold text-text-primary">
+                        {profile.name}
+                      </span>
+                      <ArrowUpRight aria-hidden="true" className="h-4 w-4 shrink-0 text-text-muted" />
+                    </span>
+                    <span className="mt-2 block text-sm leading-6 text-text-secondary">
+                      {profile.description}
+                    </span>
+                    <span className="sr-only"> (opens in a new tab)</span>
+                  </a>
+                </li>
+              )
+            })}
+          </ul>
+        </section>
 
         <section className="grid gap-5 lg:grid-cols-2">
           <div className="lg:col-span-2">
