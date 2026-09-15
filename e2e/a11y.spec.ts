@@ -22,6 +22,7 @@ const axePageChecks = [
   { label: 'services page', path: '/services' },
   { label: 'case studies page', path: '/case-studies' },
   { label: 'research page', path: '/research' },
+  { label: 'Urarina research status page', path: '/research/urarina-hybrid-retrieval' },
   { label: 'contact page', path: '/contact?type=research' },
   { label: 'experience page', path: '/experience' },
   { label: 'career story page', path: '/experience/career-story' },

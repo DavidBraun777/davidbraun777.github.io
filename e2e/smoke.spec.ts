@@ -6,6 +6,7 @@ const keyBuyerRoutes = [
   '/contact',
   '/case-studies',
   '/research',
+  '/research/urarina-hybrid-retrieval',
   '/experience',
   '/experience/career-story',
   '/approach/evidence',
