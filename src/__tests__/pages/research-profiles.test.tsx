@@ -29,6 +29,11 @@ const expectedProfiles = [
     description: 'Publications and citations',
   },
   {
+    name: 'IEEE DataPort',
+    url: 'https://ieee-dataport.org/authors/david-braun',
+    description: 'Researcher profile on IEEE DataPort',
+  },
+  {
     name: 'Scopus',
     url: 'https://www.scopus.com/authid/detail.uri?authorId=57197365260',
     description: 'Author profile and citation index',
@@ -78,7 +83,7 @@ describe('research profile discovery', () => {
     expect(new Set(socialLinks.map(({ url }) => url)).size).toBe(socialLinks.length)
   })
 
-  test('places six descriptive external cards directly after the single-action hero', () => {
+  test('places seven descriptive external cards directly after the single-action hero', () => {
     const page = renderPage(<ResearchPage />)
     const hero = page.querySelector('h1')?.closest('section')
     const profiles = page.querySelector('section[aria-labelledby="research-profiles-heading"]')
@@ -118,7 +123,7 @@ describe('research profile discovery', () => {
     expect(connect).not.toBe(research)
     expect(connectLinks.map((link) => link.textContent?.trim())).toEqual(['GitHub', 'LinkedIn'])
     expect(researchLinks.map((link) => link.textContent?.trim())).toEqual([
-      'ORCID', 'Google Scholar', 'Scopus', 'Web of Science', 'ResearchGate', 'AGU',
+      'ORCID', 'Google Scholar', 'IEEE DataPort', 'Scopus', 'Web of Science', 'ResearchGate', 'AGU',
     ])
     expect(researchLinks.map((link) => link.getAttribute('href')))
       .toEqual(expectedProfiles.map(({ url }) => url))

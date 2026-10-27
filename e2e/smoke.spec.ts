@@ -16,6 +16,7 @@ const keyBuyerRoutes = [
 const orcidUrl = 'https://orcid.org/0009-0003-9821-8349'
 const googleScholarUrl =
   'https://scholar.google.com/citations?user=9CqMwqMAAAAJ&hl=en'
+const ieeeDataPortUrl = 'https://ieee-dataport.org/authors/david-braun'
 const scopusUrl = 'https://www.scopus.com/authid/detail.uri?authorId=57197365260'
 const webOfScienceUrl = 'https://www.webofscience.com/wos/author/record/QXI-2995-2026'
 const researchGateUrl = 'https://www.researchgate.net/profile/David-Braun-5'
@@ -24,6 +25,7 @@ const aguProfileUrl =
 const researchProfiles = [
   { name: 'ORCID', url: orcidUrl },
   { name: 'Google Scholar', url: googleScholarUrl },
+  { name: 'IEEE DataPort', url: ieeeDataPortUrl },
   { name: 'Scopus', url: scopusUrl },
   { name: 'Web of Science', url: webOfScienceUrl },
   { name: 'ResearchGate', url: researchGateUrl },
@@ -33,6 +35,14 @@ const credlyUrl =
   'https://www.credly.com/badges/9e9d0587-054e-44d4-9ab7-66bc451c85d2/public_url'
 const previousPrimaryIdentity =
   'AI Systems Engineer · Full-Stack & Platform Engineer · Researcher'
+const primaryJourneys = [
+  { label: 'Home', href: '/' },
+  { label: 'Services', href: '/services' },
+  { label: 'Case Studies', href: '/case-studies' },
+  { label: 'Research', href: '/research' },
+  { label: 'Experience', href: '/experience' },
+  { label: 'Contact', href: '/contact' },
+]
 
 function trackConsoleErrors(page: Page) {
   const errors: string[] = []
@@ -101,17 +111,21 @@ test.describe('Smoke tests', () => {
     ).toHaveAttribute('href', '/experience')
   })
 
-  test('navigation links are present', async ({ page }) => {
+  test('desktop header preserves familiar navigation and the homepage brand', async ({ page }) => {
+    await page.setViewportSize({ width: 1280, height: 900 })
     await page.goto('/')
     const header = page.locator('header')
+    const navigation = header.getByRole('navigation', { name: 'Primary', exact: true })
     await expect(header).toBeVisible()
-    await expect(header.getByRole('link', { name: /^home$/i })).toBeVisible()
-    await expect(header.getByRole('link', { name: /^services$/i })).toBeVisible()
-    await expect(header.getByRole('link', { name: /case studies/i })).toBeVisible()
-    await expect(header.getByRole('link', { name: /^research$/i })).toBeVisible()
-    await expect(header.getByRole('link', { name: /^experience$/i })).toBeVisible()
-    await expect(header.getByRole('link', { name: /^contact$/i })).toBeVisible()
-    await expect(header.getByRole('link', { name: /projects/i })).toHaveCount(0)
+    await expect(navigation.getByRole('link')).toHaveText(primaryJourneys.map(({ label }) => label))
+    for (const { label, href } of primaryJourneys) {
+      await expect(navigation.getByRole('link', { name: label, exact: true })).toHaveAttribute('href', href)
+    }
+    await expect(header.getByRole('link', { name: /^David Braun/ })).toHaveAttribute('href', '/')
+    await expect(header.getByRole('link', { name: 'Book a Call', exact: true })).toBeVisible()
+    await expect(header.getByRole('button', { name: /switch to .* theme/i })).toBeVisible()
+    await expect(header.getByRole('link')).toHaveCount(primaryJourneys.length + 2)
+    await expect(header.getByRole('link', { name: /^(Writing|Resume|Career Story|Evidence Standards|GitHub|LinkedIn)$/i })).toHaveCount(0)
   })
 
   test('services page loads', async ({ page }) => {
@@ -229,9 +243,14 @@ test.describe('Smoke tests', () => {
     )
     const connect = footer.getByRole('heading', { name: 'Connect', exact: true }).locator('..')
     const profiles = footer.getByRole('heading', { name: 'Research Profiles', exact: true }).locator('..')
+    await expect(footer.getByRole('heading')).toHaveText(['Explore', 'Connect', 'Research Profiles'])
+    const explore = footer.getByRole('heading', { name: 'Explore', exact: true }).locator('..')
+    await expect(explore.getByRole('link')).toHaveText([
+      'Home', 'Services', 'Case Studies', 'Research', 'Experience', 'Writing', 'Contact', 'Resume PDF',
+    ])
     await expect(connect.getByRole('link')).toHaveText(['GitHub', 'LinkedIn'])
     await expect(profiles.getByRole('link')).toHaveText([
-      'ORCID', 'Google Scholar', 'Scopus', 'Web of Science', 'ResearchGate', 'AGU',
+      'ORCID', 'Google Scholar', 'IEEE DataPort', 'Scopus', 'Web of Science', 'ResearchGate', 'AGU',
     ])
     for (const [index, { url }] of researchProfiles.entries()) {
       await expect(profiles.getByRole('link').nth(index)).toHaveAttribute('href', url)
@@ -267,6 +286,7 @@ test.describe('Smoke tests', () => {
         'https://www.linkedin.com/in/david-braun777/',
         orcidUrl,
         googleScholarUrl,
+        ieeeDataPortUrl,
         scopusUrl,
         webOfScienceUrl,
         researchGateUrl,
@@ -296,12 +316,20 @@ test.describe('Smoke tests', () => {
     )
   })
 
-  test('research is available in the mobile navigation', async ({ page }) => {
+  test('mobile navigation keeps the primary order and links through to research', async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 })
     await page.goto('/')
 
     await page.getByRole('button', { name: /open navigation menu/i }).click()
     const mobileNavigation = page.getByRole('navigation', { name: 'Mobile' })
+    await expect(mobileNavigation.getByRole('link')).toHaveText(primaryJourneys.map(({ label }) => label))
+    for (const { label, href } of primaryJourneys) {
+      await expect(mobileNavigation.getByRole('link', { name: label, exact: true })).toHaveAttribute('href', href)
+    }
+    const header = page.locator('header')
+    await expect(header.getByRole('link', { name: /^David Braun/ })).toHaveAttribute('href', '/')
+    await expect(header.getByRole('link', { name: 'Book a Call', exact: true })).toBeVisible()
+    await expect(header.getByRole('link')).toHaveCount(primaryJourneys.length + 2)
     const researchLink = mobileNavigation.getByRole('link', { name: /^research$/i })
     await expect(researchLink).toBeVisible()
     await expect(researchLink).toHaveAttribute('href', '/research')

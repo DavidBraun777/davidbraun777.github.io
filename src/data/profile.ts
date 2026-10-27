@@ -16,10 +16,17 @@ import {
   northStarValueProposition,
   professionalAvailability,
 } from '@/data/career-story'
+import { resumeUrl } from '@/data/social-links'
 
-export interface NavigationItem {
+export interface NavigationLink {
   label: string
   href: string
+  external?: boolean
+  separatorBefore?: boolean
+}
+
+export interface NavigationItem extends NavigationLink {
+  children?: NavigationLink[]
 }
 
 export interface Signal {
@@ -89,12 +96,38 @@ export const profile = {
     'My faith shapes how I work: honest communication, clear commitments, stewardship, and respect for the people who have to live with the system after launch.',
 }
 
+export const writingLink: NavigationLink = { label: 'Writing', href: '/writing' }
+
+export const resumeLink: NavigationLink = {
+  label: 'Resume PDF',
+  href: resumeUrl,
+  external: true,
+}
+
 export const primaryNavigation: NavigationItem[] = [
   { label: 'Home', href: '/' },
   { label: 'Services', href: '/services' },
   { label: 'Case Studies', href: '/case-studies' },
-  { label: 'Research', href: '/research' },
-  { label: 'Experience', href: '/experience' },
+  {
+    label: 'Research',
+    href: '/research',
+    children: [
+      { label: 'Research Overview', href: '/research' },
+      { label: 'Publications', href: '/research#publications' },
+      { label: 'Research Profiles', href: '/research#research-profiles' },
+      { label: 'Evidence Standards', href: '/approach/evidence' },
+      { ...writingLink, separatorBefore: true },
+    ],
+  },
+  {
+    label: 'Experience',
+    href: '/experience',
+    children: [
+      { label: 'Experience Overview', href: '/experience' },
+      { label: 'Career Story', href: '/experience/career-story' },
+      resumeLink,
+    ],
+  },
   { label: 'Contact', href: '/contact' },
 ]
 

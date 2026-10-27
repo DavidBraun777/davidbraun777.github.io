@@ -1,12 +1,13 @@
 import Link from 'next/link'
 import { northStarIdentity } from '@/data/career-story'
-import { primaryNavigation, profile } from '@/data/profile'
-import { resumeUrl, socialLinks } from '@/data/social-links'
+import { primaryNavigation, profile, resumeLink, writingLink } from '@/data/profile'
+import { socialLinks } from '@/data/social-links'
 
 const footerLinks = [
-  ...primaryNavigation,
-  { label: 'Writing', href: '/writing' },
-  { label: 'Resume PDF', href: resumeUrl, external: true },
+  ...primaryNavigation.flatMap((item) =>
+    item.label === 'Contact' ? [writingLink, item] : [item]
+  ),
+  resumeLink,
 ]
 
 export function Footer() {
@@ -51,7 +52,7 @@ export function Footer() {
           <ul className="mt-4 space-y-3 text-sm">
             {footerLinks.map((item) => (
               <li key={item.href}>
-                {'external' in item && item.external ? (
+                {item.external ? (
                   <a
                     href={item.href}
                     target="_blank"

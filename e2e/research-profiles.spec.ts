@@ -5,7 +5,7 @@ test('research profile cards retain responsive layout and keyboard access in bot
   await page.goto('/research')
   const profiles = page.getByRole('region', { name: 'Research Profiles' })
   const cards = profiles.getByRole('link')
-  const names = ['ORCID', 'Google Scholar', 'Scopus', 'Web of Science', 'ResearchGate', 'AGU Profile']
+  const names = ['ORCID', 'Google Scholar', 'IEEE DataPort', 'Scopus', 'Web of Science', 'ResearchGate', 'AGU Profile']
 
   await expect(cards).toHaveCount(names.length)
   for (const name of names) {
@@ -24,7 +24,7 @@ test('research profile cards retain responsive layout and keyboard access in bot
         return { x: Math.round(x), y: Math.round(y) }
       }))
       expect(new Set(positions.map(({ x }) => x)).size).toBe(columns)
-      expect(new Set(positions.map(({ y }) => y)).size).toBe(6 / columns)
+      expect(new Set(positions.map(({ y }) => y)).size).toBe(Math.ceil(names.length / columns))
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1)).toBe(true)
     }
 

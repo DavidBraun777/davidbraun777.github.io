@@ -35,7 +35,12 @@ export default function ResearchPage() {
           ]}
         />
 
-        <section aria-labelledby="research-profiles-heading">
+        <section
+          id="research-profiles"
+          aria-labelledby="research-profiles-heading"
+          tabIndex={-1}
+          className="scroll-mt-28"
+        >
           <h2
             id="research-profiles-heading"
             className="text-xl font-semibold tracking-tight text-text-primary"
@@ -177,7 +182,7 @@ export default function ResearchPage() {
           </div>
         </section>
 
-        <section>
+        <section id="publications" tabIndex={-1} className="scroll-mt-28">
           <SectionHeader
             align="left"
             title="Peer-Reviewed Journal Article"

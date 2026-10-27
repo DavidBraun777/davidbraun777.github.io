@@ -54,6 +54,13 @@ export const socialLinks: SocialLink[] = [
     description: 'Publications and citations',
   },
   {
+    name: 'IEEE DataPort',
+    group: 'research',
+    url: 'https://ieee-dataport.org/authors/david-braun',
+    icon: Database,
+    description: 'Researcher profile on IEEE DataPort',
+  },
+  {
     name: 'Scopus',
     group: 'research',
     url: 'https://www.scopus.com/authid/detail.uri?authorId=57197365260',
