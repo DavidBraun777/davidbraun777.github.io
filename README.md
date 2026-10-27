@@ -333,6 +333,12 @@ npm run e2e:install
 npm run e2e
 ```
 
+Local E2E tests use Playwright-managed Chromium; run `npm run e2e:install`
+when that browser needs installing or updating. With `CI` set, the same
+`chromium` project uses preinstalled Google Chrome Stable on GitHub's
+`ubuntu-24.04` runner. CI logs the Chrome version and browser launch path.
+The runner updates Chrome independently of the installed Playwright version.
+
 ## Security and Analysis
 
 The repo uses GitHub CI, CodeQL, Dependabot alerts/security updates,
