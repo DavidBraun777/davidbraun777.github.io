@@ -138,7 +138,7 @@ export default async function WritingPostPage({ params }: Readonly<Props>) {
           </div>
         </header>
 
-        <div className="prose prose-lg mt-10 max-w-none dark:prose-invert">
+        <div className="mt-10 max-w-none">
           <MDXRemote source={post.content} components={mdxComponents} />
         </div>
       </div>

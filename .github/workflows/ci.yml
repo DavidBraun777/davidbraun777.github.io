@@ -95,6 +95,9 @@ jobs:
       - name: Security audit
         run: npm audit --audit-level=high
 
+      - name: Production dependency security audit
+        run: npm audit --omit=dev --audit-level=moderate
+
       - name: Build
         run: npm run build
 

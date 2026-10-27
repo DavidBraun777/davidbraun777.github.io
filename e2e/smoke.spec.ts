@@ -645,6 +645,15 @@ test.describe('Smoke tests', () => {
     expect(csp).toContain("'unsafe-inline'")
     expect(csp).toContain('https://www.googletagmanager.com')
     expect(csp).toContain('https://www.google.com')
+    expect(csp).toContain("object-src 'none'")
+    expect(csp).toContain("frame-ancestors 'none'")
+    expect(csp).toContain("base-uri 'self'")
+    expect(csp).toContain("form-action 'self'")
+    // CI serves the production build; local runs may use Next's dev/HMR server.
+    if (process.env.CI) {
+      expect(csp).not.toContain("'unsafe-eval'")
+      expect(csp).not.toMatch(/(?:^|\s)(?:http:|ws:|wss:|\*)(?:\s|;|$)/)
+    }
   })
 
   test('security headers are present', async ({ page }) => {
@@ -653,7 +662,8 @@ test.describe('Smoke tests', () => {
     expect(headers['x-frame-options']).toBe('DENY')
     expect(headers['x-content-type-options']).toBe('nosniff')
     expect(headers['referrer-policy']).toBe('strict-origin-when-cross-origin')
-    expect(headers['strict-transport-security']).toContain('max-age=')
+    expect(headers['strict-transport-security']).toBe('max-age=63072000; includeSubDomains; preload')
+    expect(headers['permissions-policy']).toBe('camera=(), microphone=(), geolocation=()')
   })
 
   test('404 page works', async ({ page }) => {
