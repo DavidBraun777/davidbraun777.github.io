@@ -16,7 +16,7 @@ import {
   northStarValueProposition,
   professionalAvailability,
 } from '@/data/career-story'
-import { resumeUrl } from '@/data/social-links'
+import { resumeUrl } from '@/data/resumes'
 
 export interface NavigationLink {
   label: string
@@ -102,6 +102,11 @@ export const resumeLink: NavigationLink = {
   label: 'Resume PDF',
   href: resumeUrl,
   external: true,
+}
+
+export const resumeDirectoryLink: NavigationLink = {
+  label: 'Résumés & CV',
+  href: '/resumes',
 }
 
 export const primaryNavigation: NavigationItem[] = [

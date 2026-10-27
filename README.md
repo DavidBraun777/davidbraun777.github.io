@@ -5,6 +5,30 @@ identity while retaining consulting, delivery, enterprise, and research proof.
 
 **Live site:** [dbraun.io](https://dbraun.io)
 
+## Résumés and Research CV
+
+`/resumes` is the document directory. `src/data/resumes.ts` defines the document
+descriptions, public URLs, and research-CV request fallback. The industry résumé
+remains the default on Home, Experience, and the Experience navigation menu.
+Résumé documents are not researcher identities and do not belong in JSON-LD `sameAs`.
+
+Approved PDFs belong in `public/resumes/`:
+
+- `David-J-Braun-Resume-Software-Platform-2026.pdf`
+- `David-J-Braun-CV-AI-Research-2026.pdf`
+
+Both `/resume.pdf` and `/David-J-Braun-Resume-2026.pdf` permanently redirect to the
+canonical industry PDF through the shared configuration, without duplicate PDF
+copies. `/resume` still permanently redirects to `/experience`.
+
+Before replacing a PDF, verify provenance, disclosure clearance, exactly two
+pages, readable extracted text, and rendered layout. Keep staging files and editable
+sources private. Leave `researchCv.href` null until a safe public release is approved;
+the directory and Research page then offer contact links. Refresh the approved-asset
+hashes in the résumé tests only after this review to protect the approved bytes
+and verified page count. Both current PDFs were reviewed and explicitly cleared
+by the owner on October 27, 2026; their contents are unchanged from the supplied files.
+
 ## Professional North Star
 
 **Primary identity:** AI Systems & Platform Engineer

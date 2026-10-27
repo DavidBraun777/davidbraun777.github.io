@@ -90,5 +90,3 @@ export const socialLinks: SocialLink[] = [
     description: 'Space-physics and AGU profile',
   },
 ]
-
-export const resumeUrl = '/David-J-Braun-Resume-2026.pdf'

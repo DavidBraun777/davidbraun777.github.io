@@ -1,0 +1,16 @@
+{
+  "reviewedOn": "2026-10-27",
+  "review": "User cleared public release. pdfinfo and strict pypdf parsing verified exactly two pages per PDF; extracted text and all rendered pages were reviewed.",
+  "documents": [
+    {
+      "href": "/resumes/David-J-Braun-Resume-Software-Platform-2026.pdf",
+      "pages": 2,
+      "sha256": "9a237ed1dcb244d86cd4e9d294baf46b013a6bfef955c9df33077ed73712f403"
+    },
+    {
+      "href": "/resumes/David-J-Braun-CV-AI-Research-2026.pdf",
+      "pages": 2,
+      "sha256": "145de75da653ef49e65962d2c6abaf857cdd4ca1d1ae5b80ea1bb7d24052c6d9"
+    }
+  ]
+}
