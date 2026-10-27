@@ -244,7 +244,7 @@ This keeps future work compounding toward the professional north star.
 | Motion | [Framer Motion](https://www.framer.com/motion/) |
 | Content | MDX via `next-mdx-remote` |
 | Email | [Resend](https://resend.com/) |
-| Rate limiting | [Upstash Redis](https://upstash.com/) with in-memory fallback |
+| Rate limiting | [Upstash Redis](https://upstash.com/), required in production; memory fallback for development/tests |
 | Testing | [Vitest](https://vitest.dev/), [Playwright](https://playwright.dev/) |
 | Deployment | [Vercel](https://vercel.com/) |
 
@@ -252,7 +252,7 @@ This keeps future work compounding toward the professional north star.
 
 ### Prerequisites
 
-- Node.js 20 from `.nvmrc` (`package.json` requires `>=20.9.0`)
+- Node.js 24 LTS from `.nvmrc` (`package.json` requires `24.x`)
 - npm
 
 ### Install and Run
@@ -286,7 +286,7 @@ CONTACT_FROM_NAME=dbraun.io Contact
 # Optional scheduling link shown on the contact page
 CAL_LINK=https://calendly.com/your-handle/intro-call
 
-# Optional distributed rate limiting; set both or neither
+# Required distributed rate limiting in production, including Vercel Preview
 UPSTASH_REDIS_REST_URL=https://your-instance.upstash.io
 UPSTASH_REDIS_REST_TOKEN=your-token
 
@@ -303,14 +303,22 @@ Notes:
   or domain must be verified in Resend.
 - `CONTACT_FROM_NAME` defaults to `dbraun.io Contact`.
 - If `CAL_LINK` is set, the contact page shows a secondary optional call link.
-- If both Upstash variables are set, distributed rate limiting is used. Without
-  them, the app falls back to in-memory rate limiting.
+- Both Upstash variables are required when `NODE_ENV=production`, including
+  Vercel Preview deployments. Missing configuration, outages, and timeouts fail
+  closed with HTTP 503 before email delivery. Only development/tests use the
+  in-memory fallback. Failed initialization/checks retry after a 60-second cooldown.
+- Enable Vercel system environment variables. Only `VERCEL=1` deployments trust
+  Vercel's managed `x-vercel-forwarded-for` client IP; other hosts share an
+  `unknown` bucket until a trusted proxy integration is explicitly implemented.
+- Production contact setup is **not verified by a successful build**. Follow the
+  [deployment checklist](docs/security-hardening-report.md#deployment-prerequisites)
+  before deploying. Keep all Resend/Upstash credentials server-only.
 - Google Analytics loads only when `NEXT_PUBLIC_GA_ID` is set. Leaving it unset
   disables GA without code changes.
 
 ## Verification
 
-Use Node 20 and a clean install for verification:
+Use Node 24 LTS and a clean install for verification:
 
 ```bash
 nvm use

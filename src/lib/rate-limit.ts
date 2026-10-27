@@ -1,7 +1,7 @@
-import { CONTROL_CHAR_REGEX } from './contact-validation'
+import { isIP } from 'node:net'
 
 // ---------------------------------------------------------------------------
-// In-memory rate limiter (used as fallback when Upstash is unavailable)
+// In-memory rate limiter (development/test fallback only)
 // ---------------------------------------------------------------------------
 
 interface RateLimitRecord {
@@ -78,25 +78,31 @@ function inMemoryCheckRateLimit(ip: string): RateLimitResult {
   return { limited: false, remaining: RATE_LIMIT_MAX - record.count }
 }
 
-/** Extract client IP from request headers (Vercel-aware). */
+/**
+ * Trust only Vercel's platform-managed client address, and only on Vercel.
+ * System environment variables must be enabled for the deployment. Other hosts
+ * deliberately share an unknown bucket until their proxy trust is configured.
+ * https://vercel.com/docs/headers/request-headers#x-vercel-forwarded-for
+ */
 export function getClientIp(headers: Headers): string {
-  // x-real-ip is set by Vercel/nginx and is most trustworthy
-  const realIp = headers.get('x-real-ip')
-  if (realIp && !CONTROL_CHAR_REGEX.test(realIp)) {
-    return realIp.trim()
-  }
+  if (process.env.VERCEL !== '1') return 'unknown'
 
-  // Fall back to x-forwarded-for; on Vercel the first entry is the client IP.
-  // Validate to prevent control char injection.
-  const forwarded = headers.get('x-forwarded-for')
-  if (forwarded) {
-    const firstIp = forwarded.split(',')[0]?.trim()
-    if (firstIp && !CONTROL_CHAR_REGEX.test(firstIp)) {
-      return firstIp
-    }
-  }
+  const ip = headers.get('x-vercel-forwarded-for')?.trim()
+  if (!ip || ip.length > 45 || ip.includes('%')) return 'unknown'
 
-  return 'unknown'
+  const version = isIP(ip)
+  if (version === 4) return ip
+  if (version !== 6) return 'unknown'
+
+  // URL canonicalization folds casing, leading zeros, and IPv6 compression.
+  const normalized = new URL(`http://[${ip}]/`).hostname.slice(1, -1)
+  const mapped = /^::ffff:([\da-f]{1,4}):([\da-f]{1,4})$/.exec(normalized)
+  if (mapped) {
+    const high = Number.parseInt(mapped[1], 16)
+    const low = Number.parseInt(mapped[2], 16)
+    return [high >> 8, high & 255, low >> 8, low & 255].join('.')
+  }
+  return normalized
 }
 
 /** Reset in-memory rate limit state (for testing) */
@@ -105,79 +111,138 @@ export function _resetRateLimits(): void {
 }
 
 // ---------------------------------------------------------------------------
-// Upstash rate limiter (used when UPSTASH_REDIS_REST_URL is configured)
+// Distributed rate limiter (required in production)
 // ---------------------------------------------------------------------------
 
-// Lazily-initialized Upstash rate limiter (singleton across requests)
-let upstashLimiter: {
-  limit: (id: string) => Promise<{ success: boolean; reset: number; remaining: number }>
-} | null = null
-let upstashInitAttempted = false
+interface DistributedLimiter {
+  limit: (id: string) => Promise<{
+    success: boolean
+    reset: number
+    remaining: number
+    reason?: string
+  }>
+}
 
-// Circuit breaker: after a runtime failure, disable Upstash for a cooldown
-// period to avoid adding latency to every request during an outage.
-let upstashDisabledUntil = 0
-const UPSTASH_COOLDOWN_MS = 60_000 // 1 minute
-
-async function getUpstashLimiter() {
-  // Circuit breaker: skip Upstash while in cooldown
-  if (Date.now() < upstashDisabledUntil) return null
-
-  if (upstashInitAttempted) return upstashLimiter
-  upstashInitAttempted = true
-
-  const url = process.env.UPSTASH_REDIS_REST_URL
-  const token = process.env.UPSTASH_REDIS_REST_TOKEN
-  if (!url || !token) return null
-
-  try {
-    const { Ratelimit } = await import('@upstash/ratelimit')
-    const { Redis } = await import('@upstash/redis')
-
-    upstashLimiter = new Ratelimit({
-      redis: new Redis({ url, token }),
-      limiter: Ratelimit.slidingWindow(5, '60 s'),
-      prefix: 'portfolio:contact',
-    })
-    return upstashLimiter
-  } catch {
-    console.error('Failed to initialize Upstash rate limiter, using in-memory fallback')
-    return null
+export class RateLimitUnavailableError extends Error {
+  constructor() {
+    super('Contact rate limiting is temporarily unavailable')
+    this.name = 'RateLimitUnavailableError'
   }
+}
+
+let upstashLimiter: DistributedLimiter | null = null
+let upstashInitialization: Promise<DistributedLimiter> | null = null
+let upstashDisabledUntil = 0
+const UPSTASH_COOLDOWN_MS = 60_000
+const UPSTASH_TIMEOUT_MS = 2_000
+
+function markUpstashUnavailable(): void {
+  if (Date.now() >= upstashDisabledUntil) {
+    // Do not log upstream errors: they may include credentials or request data.
+    console.error('Distributed contact rate limiter unavailable')
+  }
+  upstashLimiter = null
+  upstashDisabledUntil = Date.now() + UPSTASH_COOLDOWN_MS
+}
+
+async function withDeadline<T>(operation: Promise<T>): Promise<T> {
+  let timer: ReturnType<typeof setTimeout> | undefined
+  try {
+    return await Promise.race([
+      operation,
+      new Promise<never>((_, reject) => {
+        timer = setTimeout(() => reject(new RateLimitUnavailableError()), UPSTASH_TIMEOUT_MS)
+      }),
+    ])
+  } finally {
+    clearTimeout(timer)
+  }
+}
+
+async function getUpstashLimiter(): Promise<DistributedLimiter> {
+  if (Date.now() < upstashDisabledUntil) throw new RateLimitUnavailableError()
+  if (upstashLimiter) return upstashLimiter
+  if (upstashInitialization) return upstashInitialization
+
+  const url = process.env.UPSTASH_REDIS_REST_URL?.trim()
+  const token = process.env.UPSTASH_REDIS_REST_TOKEN?.trim()
+  if (!url || !token) {
+    if (process.env.NODE_ENV === 'production') markUpstashUnavailable()
+    throw new RateLimitUnavailableError()
+  }
+
+  upstashInitialization = withDeadline((async () => {
+    const endpoint = new URL(url)
+    if (endpoint.protocol !== 'https:' || endpoint.username || endpoint.password) {
+      throw new RateLimitUnavailableError()
+    }
+    const [{ Ratelimit }, { Redis }] = await Promise.all([
+      import('@upstash/ratelimit'),
+      import('@upstash/redis'),
+    ])
+
+    return new Ratelimit({
+      redis: new Redis({
+        url,
+        token,
+        retry: false,
+        signal: () => AbortSignal.timeout(UPSTASH_TIMEOUT_MS),
+      }),
+      limiter: Ratelimit.slidingWindow(RATE_LIMIT_MAX, '60 s'),
+      prefix: 'portfolio:contact',
+      // Upstash's built-in timeout returns success. Enforce our own deadline.
+      timeout: 0,
+    })
+  })())
+    .then((limiter) => {
+      upstashLimiter = limiter
+      return limiter
+    })
+    .catch(() => {
+      markUpstashUnavailable()
+      throw new RateLimitUnavailableError()
+    })
+    .finally(() => {
+      upstashInitialization = null
+    })
+
+  return upstashInitialization
 }
 
 /**
  * Check rate limit for a client IP.
  *
- * Uses Upstash Redis when UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN
- * are set; otherwise falls back to the in-memory rate limiter.
- *
- * On Upstash failure, engages a circuit breaker (1 min cooldown) so subsequent
- * requests fall back to in-memory immediately without retrying the failing call.
+ * Production requires UPSTASH_REDIS_REST_URL and UPSTASH_REDIS_REST_TOKEN.
+ * Failed checks throw instead of allowing email submissions without distributed
+ * protection. A one-minute cooldown bounds outage retries, then initialization
+ * is retried. Only development/testing may use the in-memory fallback.
  */
 export async function checkRateLimit(ip: string): Promise<RateLimitResult> {
-  const limiter = await getUpstashLimiter()
-
-  if (limiter) {
+  try {
+    const limiter = await getUpstashLimiter()
     try {
-      const { success, reset, remaining } = await limiter.limit(ip)
+      const { success, reset, remaining, reason } = await withDeadline(limiter.limit(ip))
+      if (reason === 'timeout' || typeof success !== 'boolean' || !Number.isFinite(reset) || !Number.isFinite(remaining)) {
+        throw new RateLimitUnavailableError()
+      }
       if (!success) {
-        const retryAfter = Math.ceil((reset - Date.now()) / 1000)
+        const retryAfter = Math.max(1, Math.ceil((reset - Date.now()) / 1000))
         return { limited: true, retryAfter }
       }
       return { limited: false, remaining }
-    } catch (error) {
-      console.error('Upstash rate limit error, falling back to in-memory:', error)
-      upstashDisabledUntil = Date.now() + UPSTASH_COOLDOWN_MS
+    } catch {
+      markUpstashUnavailable()
+      throw new RateLimitUnavailableError()
     }
+  } catch {
+    if (process.env.NODE_ENV === 'production') throw new RateLimitUnavailableError()
+    return inMemoryCheckRateLimit(ip)
   }
-
-  return inMemoryCheckRateLimit(ip)
 }
 
 /** Reset module state (for testing) */
 export function _resetUpstash(): void {
   upstashLimiter = null
-  upstashInitAttempted = false
+  upstashInitialization = null
   upstashDisabledUntil = 0
 }

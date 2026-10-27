@@ -7,7 +7,8 @@ it does not replace GitHub CodeQL, Dependabot, CI, or Vercel preview checks.
 
 - GitHub Actions CI runs on pull requests to `master` and pushes to `master`.
   The CI workflow covers `npm ci --ignore-scripts`, lint, TypeScript, Vitest with
-  V8 coverage, LCOV validation, high-severity `npm audit`, production build,
+  V8 coverage, LCOV validation, high-severity `npm audit`, an explicit
+  moderate-severity production dependency audit, production build,
   bundle-size checks, Playwright e2e, SonarCloud, and CodeQL.
 - GitHub CodeQL runs JavaScript/TypeScript analysis and reports security alerts
   through GitHub code scanning.
@@ -20,6 +21,12 @@ it does not replace GitHub CodeQL, Dependabot, CI, or Vercel preview checks.
 - SonarQube Cloud / SonarCloud runs additional code-quality and security analysis.
 - Vercel preview deployments remain useful deployment checks for pull requests,
   but they are not a replacement for code analysis or dependency scanning.
+
+See the [2026-10-26 hardening report](security-hardening-report.md) for the
+contact API's fail-closed behavior, runtime requirements, verified repository
+settings, and required production checks. As inspected for that report, `master`
+had neither branch protection nor repository rulesets; passing workflows alone
+did not prevent merges that bypass security checks.
 
 ## SonarCloud Setup Notes
 

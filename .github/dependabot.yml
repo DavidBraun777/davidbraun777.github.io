@@ -8,12 +8,15 @@ updates:
     open-pull-requests-limit: 10
     groups:
       dependencies:
+        # Review major upgrades individually; keep routine updates grouped.
+        update-types: ["minor", "patch"]
         patterns:
           - "*"
         exclude-patterns:
           - "eslint*"
           - "typescript*"
       linting:
+        update-types: ["minor", "patch"]
         patterns:
           - "eslint*"
           - "typescript*"

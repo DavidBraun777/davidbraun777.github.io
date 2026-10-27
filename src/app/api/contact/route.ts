@@ -5,7 +5,7 @@ import {
   escapeHtml,
   type ContactFormData,
 } from '@/lib/contact-validation'
-import { checkRateLimit, getClientIp } from '@/lib/rate-limit'
+import { checkRateLimit, getClientIp, RateLimitUnavailableError } from '@/lib/rate-limit'
 import {
   formatFromAddress,
   getContactEmailConfig,
@@ -20,19 +20,24 @@ import {
 const ALLOWED_ORIGINS = new Set([
   'https://dbraun.io',
   'https://www.dbraun.io',
-  'http://localhost:3000',
 ])
+// The form's bounded text fields total 2,450 UTF-16 code units. Even six-byte
+// JSON escapes plus the email, selections and field names fit within 16 KiB.
+const MAX_CONTACT_BODY_BYTES = 16 * 1024
 const SUBMISSION_ID_HEADER = 'x-contact-submission-id'
 const SUBMISSION_ID_REGEX =
   /^[0-9a-f]{8}-[0-9a-f]{4}-[1-8][0-9a-f]{3}-[89ab][0-9a-f]{3}-[0-9a-f]{12}$/i
 
 function isAllowedLocalDevOrigin(origin: string): boolean {
-  if (process.env.NODE_ENV === 'production') return false
+  if (process.env.NODE_ENV !== 'development' && process.env.NODE_ENV !== 'test') {
+    return false
+  }
 
   try {
     const url = new URL(origin)
     return (
       url.protocol === 'http:' &&
+      url.origin === origin &&
       (url.hostname === 'localhost' || url.hostname === '127.0.0.1')
     )
   } catch {
@@ -66,13 +71,41 @@ function getRefererOrigin(request: Request): string | null {
 function isAllowedOrigin(request: Request): boolean {
   const vercelUrl = process.env.VERCEL_URL
   const origin = request.headers.get('origin')
-  if (origin && isAllowedOriginValue(origin, vercelUrl)) return true
+  if (origin !== null) return isAllowedOriginValue(origin, vercelUrl)
 
   // Fallback: check Referer header (some clients omit Origin on same-origin)
   const refererOrigin = getRefererOrigin(request)
   return (
     refererOrigin !== null && isAllowedOriginValue(refererOrigin, vercelUrl)
   )
+}
+
+class ContactBodyTooLargeError extends Error {}
+
+async function readContactJson(request: Request): Promise<unknown> {
+  if (!request.body) throw new SyntaxError('Empty request body')
+
+  const reader = request.body.getReader()
+  const decoder = new TextDecoder()
+  let bytes = 0
+  let text = ''
+
+  try {
+    while (true) {
+      const { done, value } = await reader.read()
+      if (done) break
+      bytes += value.byteLength
+      if (bytes > MAX_CONTACT_BODY_BYTES) {
+        // Stop consuming immediately; transport cleanup must not delay the 413.
+        void reader.cancel().catch(() => {})
+        throw new ContactBodyTooLargeError()
+      }
+      text += decoder.decode(value, { stream: true })
+    }
+    return JSON.parse(text + decoder.decode())
+  } finally {
+    reader.releaseLock()
+  }
 }
 
 function getSubmissionId(request: Request): string | null {
@@ -222,7 +255,7 @@ export async function POST(request: Request) {
       )
     }
 
-    // 2. Rate limiting (Upstash Redis when configured, in-memory fallback)
+    // 2. Rate limiting (distributed protection is required in production)
     const ip = getClientIp(request.headers)
     const rateLimit = await checkRateLimit(ip)
 
@@ -237,11 +270,18 @@ export async function POST(request: Request) {
       )
     }
 
-    // 3. Parse JSON body
+    // 3. Bound actual bytes read, including absent or misleading Content-Length.
     let body: unknown
     try {
-      body = await request.json()
-    } catch {
+      body = await readContactJson(request)
+    } catch (error) {
+      if (error instanceof ContactBodyTooLargeError) {
+        logRequest(413, start, { errorType: 'body_too_large', submissionId })
+        return NextResponse.json(
+          { success: false, error: 'Request body is too large' },
+          { status: 413 }
+        )
+      }
       logRequest(400, start, { errorType: 'invalid_json', submissionId })
       return NextResponse.json(
         { success: false, error: 'Invalid JSON in request body' },
@@ -270,11 +310,7 @@ export async function POST(request: Request) {
     try {
       resend = getResendClient()
       emailConfig = getContactEmailConfig()
-    } catch (error) {
-      console.error(
-        'Contact mail configuration error:',
-        error instanceof Error ? error.message : 'Unknown error'
-      )
+    } catch {
       logRequest(500, start, { errorType: 'mail_config_error', submissionId })
       return NextResponse.json(
         { success: false, error: 'Mail service misconfigured' },
@@ -297,7 +333,6 @@ export async function POST(request: Request) {
     )
 
     if (error) {
-      console.error('Resend error:', error.message)
       logRequest(500, start, { errorType: 'resend_error', submissionId })
       return NextResponse.json(
         { success: false, error: 'Failed to send message' },
@@ -308,10 +343,13 @@ export async function POST(request: Request) {
     logRequest(200, start, { submissionId })
     return NextResponse.json({ success: true })
   } catch (error) {
-    console.error(
-      'Contact form error:',
-      error instanceof Error ? error.message : 'Unknown error'
-    )
+    if (error instanceof RateLimitUnavailableError) {
+      logRequest(503, start, { errorType: 'rate_limit_unavailable', submissionId })
+      return NextResponse.json(
+        { success: false, error: 'Contact service temporarily unavailable. Please try again later.' },
+        { status: 503 }
+      )
+    }
     logRequest(500, start, { errorType: 'unhandled_error', submissionId })
     return NextResponse.json(
       { success: false, error: 'Failed to send message' },

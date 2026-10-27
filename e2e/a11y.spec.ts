@@ -47,6 +47,42 @@ test.describe('Accessibility', () => {
     })
   }
 
+  test('expanded navigation has no critical or serious violations in either theme or viewport', async ({ page }) => {
+    for (const colorScheme of ['light', 'dark'] as const) {
+      await page.emulateMedia({ colorScheme })
+      for (const width of [1440, 390]) {
+        await page.setViewportSize({ width, height: 900 })
+        await page.goto('/research')
+        if (colorScheme === 'dark') {
+          await expect(page.locator('html')).toHaveClass(/dark/)
+        } else {
+          await expect(page.locator('html')).not.toHaveClass(/dark/)
+        }
+        if (width < 1280) {
+          await page.getByRole('button', { name: 'Open navigation menu', exact: true }).click()
+        }
+        const navigation = page.getByRole('navigation', {
+          name: width < 1280 ? 'Mobile' : 'Primary', exact: true,
+        })
+
+        for (const section of ['Research', 'Experience']) {
+          const trigger = navigation.getByRole('button', { name: `${section} navigation`, exact: true })
+          await trigger.click()
+          await expect(trigger).toHaveAttribute('aria-expanded', 'true')
+          const list = navigation.getByRole('list', { name: `${section} links`, exact: true })
+          await expect(list).toBeVisible()
+          const results = await new AxeBuilder({ page }).include('header').analyze()
+          const violations = results.violations.filter(
+            (violation) => violation.impact === 'critical' || violation.impact === 'serious'
+          )
+          expect(violations, `${colorScheme}, ${width}px, ${section}:\n${formatViolations(violations)}`).toEqual([])
+          await page.keyboard.press('Escape')
+          await expect(list).toBeHidden()
+        }
+      }
+    }
+  })
+
   test('contact form inputs have associated labels', async ({ page }) => {
     await page.goto('/contact')
     await waitForClientHydration(page)
