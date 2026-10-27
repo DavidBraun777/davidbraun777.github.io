@@ -28,5 +28,9 @@ updates:
     schedule:
       interval: "weekly"
       day: "monday"
+    groups:
+      codeql:
+        patterns:
+          - "github/codeql-action/*"
     commit-message:
       prefix: "ci"
