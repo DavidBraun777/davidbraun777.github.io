@@ -46,6 +46,11 @@ export default function sitemap(): MetadataRoute.Sitemap {
       priority: 0.65,
     },
     {
+      url: `${baseUrl}/resumes`,
+      changeFrequency: 'monthly' as const,
+      priority: 0.65,
+    },
+    {
       url: `${baseUrl}/approach/evidence`,
       changeFrequency: 'monthly' as const,
       priority: 0.65,

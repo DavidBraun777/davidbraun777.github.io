@@ -7,7 +7,7 @@ import { Header } from '@/components/layout/header'
 import { Footer } from '@/components/layout/footer'
 import ResearchPage from '@/app/research/page'
 import { primaryNavigation } from '@/data/profile'
-import { resumeUrl } from '@/data/social-links'
+import { resumeUrl } from '@/data/resumes'
 
 vi.mock('next/navigation', () => ({ usePathname: () => '/research' }))
 
@@ -35,7 +35,7 @@ const expectedExplore = [
   ...expectedNavigation.slice(0, 5),
   { label: 'Writing', href: '/writing' },
   expectedNavigation[5],
-  { label: 'Resume PDF', href: resumeUrl },
+  { label: 'Résumés & CV', href: '/resumes' },
 ]
 
 function render(component: ReactNode) {
@@ -111,7 +111,7 @@ describe('navigation hierarchy', () => {
     expect(new Set(destinations).size).toBe(destinations.length)
     for (const link of links) {
       const href = link.getAttribute('href') ?? ''
-      if (href.startsWith('https://') || href === resumeUrl) {
+      if (href.startsWith('https://')) {
         expect(link.getAttribute('target')).toBe('_blank')
         expect(link.getAttribute('rel')?.split(/\s+/)).toEqual(
           expect.arrayContaining(['noopener', 'noreferrer'])

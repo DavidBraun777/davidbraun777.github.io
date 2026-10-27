@@ -4,7 +4,7 @@ import { ArrowRight, FileText } from 'lucide-react'
 import { Badge } from '@/components/ui/badge'
 import { canonicalSeoDescription } from '@/data/career-story'
 import { profile } from '@/data/profile'
-import { resumeUrl } from '@/data/social-links'
+import { resumeUrl } from '@/data/resumes'
 import { getSystemById, type FeaturedSystemCaseStudy } from '@/data/systems'
 import { createPageMetadata } from '@/lib/seo'
 

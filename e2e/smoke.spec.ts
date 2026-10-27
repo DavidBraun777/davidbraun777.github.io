@@ -1,4 +1,5 @@
 import { test, expect, type Page } from '@playwright/test'
+import { legacyResumeUrls, resumeUrl } from '../src/data/resumes'
 
 const keyBuyerRoutes = [
   '/',
@@ -8,6 +9,7 @@ const keyBuyerRoutes = [
   '/research',
   '/research/urarina-hybrid-retrieval',
   '/experience',
+  '/resumes',
   '/experience/career-story',
   '/approach/evidence',
   '/writing',
@@ -246,8 +248,10 @@ test.describe('Smoke tests', () => {
     await expect(footer.getByRole('heading')).toHaveText(['Explore', 'Connect', 'Research Profiles'])
     const explore = footer.getByRole('heading', { name: 'Explore', exact: true }).locator('..')
     await expect(explore.getByRole('link')).toHaveText([
-      'Home', 'Services', 'Case Studies', 'Research', 'Experience', 'Writing', 'Contact', 'Resume PDF',
+      'Home', 'Services', 'Case Studies', 'Research', 'Experience', 'Writing', 'Contact', 'Résumés & CV',
     ])
+    await expect(explore.getByRole('link', { name: 'Résumés & CV', exact: true }))
+      .toHaveAttribute('href', '/resumes')
     await expect(connect.getByRole('link')).toHaveText(['GitHub', 'LinkedIn'])
     await expect(profiles.getByRole('link')).toHaveText([
       'ORCID', 'Google Scholar', 'IEEE DataPort', 'Scopus', 'Web of Science', 'ResearchGate', 'AGU',
@@ -438,15 +442,17 @@ test.describe('Smoke tests', () => {
     await expect(page.locator('#contact-inquiry-type')).toHaveValue('')
   })
 
-  test('experience resume link points to the versioned PDF', async ({ page }) => {
+  test('experience keeps the default PDF and links to other document versions', async ({ page }) => {
     await page.goto('/experience')
 
     const resumeLink = page.getByRole('link', { name: /^view resume pdf$/i })
     await expect(resumeLink).toBeVisible()
     await expect(resumeLink).toHaveAttribute(
       'href',
-      '/David-J-Braun-Resume-2026.pdf'
+      resumeUrl
     )
+    await expect(page.getByRole('link', { name: 'Other Résumé & CV Versions', exact: true }))
+      .toHaveAttribute('href', '/resumes')
     await expect(resumeLink).toHaveAttribute('target', '_blank')
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
       'href',
@@ -598,25 +604,27 @@ test.describe('Smoke tests', () => {
     const body = await response.text()
     expect(body).toContain('<loc>https://dbraun.io/research</loc>')
     expect(body).toContain('<loc>https://dbraun.io/experience</loc>')
+    expect(body).toContain('<loc>https://dbraun.io/resumes</loc>')
     expect(body).toContain('<loc>https://dbraun.io/experience/career-story</loc>')
     expect(body).toContain('<loc>https://dbraun.io/approach/evidence</loc>')
     expect(body).not.toContain('<loc>https://dbraun.io/why-work-with-me</loc>')
   })
 
-  test('versioned resume is served and legacy PDF URLs redirect permanently', async ({
+  test('default resume is served and legacy PDF URLs redirect directly to it', async ({
     request,
   }) => {
-    const response = await request.get('/David-J-Braun-Resume-2026.pdf')
+    const response = await request.get(resumeUrl, { maxRedirects: 0 })
 
     expect(response.status()).toBe(200)
     expect(response.headers()['content-type']).toContain('application/pdf')
+    expect((await response.body()).subarray(0, 5).toString('ascii')).toBe('%PDF-')
 
-    for (const legacyPath of ['/resume.pdf', '/Resume.pdf']) {
+    for (const legacyPath of [...legacyResumeUrls, '/Resume.pdf'].filter((path) => path !== resumeUrl)) {
       const redirect = await request.get(legacyPath, { maxRedirects: 0 })
       expect(redirect.status()).toBe(308)
       expect(
         new URL(redirect.headers().location, 'http://localhost:3000').pathname
-      ).toBe('/David-J-Braun-Resume-2026.pdf')
+      ).toBe(resumeUrl)
     }
   })
 
@@ -709,8 +717,9 @@ test.describe('Smoke tests', () => {
       '/background',
       '/resume',
       '/resume.pdf',
+      '/David-J-Braun-Resume-2026.pdf',
       '/why-work-with-me',
-    ])
+    ].filter((path) => path !== resumeUrl))
 
     for (const route of keyBuyerRoutes) {
       await page.goto(route)

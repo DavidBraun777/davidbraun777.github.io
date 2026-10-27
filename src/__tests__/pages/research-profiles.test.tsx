@@ -7,6 +7,7 @@ import RootLayout from '@/app/layout'
 import ResearchPage from '@/app/research/page'
 import { Footer } from '@/components/layout/footer'
 import { researchProfileLinks } from '@/data/research'
+import { researchCv } from '@/data/resumes'
 import { socialLinks } from '@/data/social-links'
 
 vi.mock('next/font/local', () => ({ default: () => ({ variable: '' }) }))
@@ -83,14 +84,18 @@ describe('research profile discovery', () => {
     expect(new Set(socialLinks.map(({ url }) => url)).size).toBe(socialLinks.length)
   })
 
-  test('places seven descriptive external cards directly after the single-action hero', () => {
+  test('places seven descriptive external cards directly after the research and CV actions', () => {
     const page = renderPage(<ResearchPage />)
     const hero = page.querySelector('h1')?.closest('section')
     const profiles = page.querySelector('section[aria-labelledby="research-profiles-heading"]')
     const heroLinks = Array.from(hero?.querySelectorAll('a') ?? [])
 
-    expect(heroLinks.map((link) => link.textContent?.trim())).toEqual(['Discuss Research'])
+    expect(heroLinks.map((link) => link.textContent?.trim())).toEqual([
+      'Discuss Research',
+      researchCv.href ? 'AI Research CV' : 'AI Research CV (available upon request)',
+    ])
     expect(heroLinks[0]?.getAttribute('href')).toBe('/contact?type=research')
+    expect(heroLinks[1]?.getAttribute('href')).toBe(researchCv.href ?? researchCv.requestHref)
     expect(hero?.nextElementSibling).toBe(profiles)
     expect(profiles?.nextElementSibling?.querySelector('h2')?.textContent).toBe('Research context')
     expect(profiles?.querySelector('h2')?.textContent).toBe('Research Profiles')

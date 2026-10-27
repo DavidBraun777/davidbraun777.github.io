@@ -10,8 +10,8 @@ import { ExternalLinkAction } from '@/components/ui/external-link-action'
 import { SectionHeader } from '@/components/ui/section-header'
 import { certifications, education } from '@/data/education'
 import { experiences } from '@/data/experience'
-import { companySignals } from '@/data/profile'
-import { resumeUrl } from '@/data/social-links'
+import { companySignals, resumeDirectoryLink } from '@/data/profile'
+import { resumeUrl } from '@/data/resumes'
 import { createPageMetadata } from '@/lib/seo'
 
 export const metadata: Metadata = createPageMetadata({
@@ -61,15 +61,25 @@ export default function ExperiencePage() {
   return (
     <div className="min-h-screen pb-12 pt-8 md:pt-10">
       <div className="mx-auto max-w-7xl space-y-12 px-4 sm:px-6 lg:px-8">
-        <PageIntro
-          eyebrow="Experience"
-          title="Engineering across software, platforms, security, and applied AI."
-          description="I build and support the systems around AI and data: applications, APIs, workflows, cloud infrastructure, security controls, evaluation, and operational handoff. My background spans enterprise engineering, production ownership, scientific computing, and current graduate AI work."
-          actions={[
-            { label: 'Discuss a Role', href: '/contact?type=employment' },
-            { label: 'View Resume PDF', href: resumeUrl, external: true, variant: 'secondary' },
-          ]}
-        />
+        <div className="space-y-4">
+          <PageIntro
+            eyebrow="Experience"
+            title="Engineering across software, platforms, security, and applied AI."
+            description="I build and support the systems around AI and data: applications, APIs, workflows, cloud infrastructure, security controls, evaluation, and operational handoff. My background spans enterprise engineering, production ownership, scientific computing, and current graduate AI work."
+            actions={[
+              { label: 'Discuss a Role', href: '/contact?type=employment' },
+              { label: 'View Resume PDF', href: resumeUrl, external: true, variant: 'secondary' },
+            ]}
+          />
+          <p className="px-6 text-sm sm:px-8">
+            <Link
+              href={resumeDirectoryLink.href}
+              className="text-text-secondary underline underline-offset-4 transition-colors hover:text-link-primary"
+            >
+              Other Résumé &amp; CV Versions
+            </Link>
+          </p>
+        </div>
 
         <section>
           <SectionHeader

@@ -1,13 +1,13 @@
 import Link from 'next/link'
 import { northStarIdentity } from '@/data/career-story'
-import { primaryNavigation, profile, resumeLink, writingLink } from '@/data/profile'
+import { primaryNavigation, profile, resumeDirectoryLink, writingLink } from '@/data/profile'
 import { socialLinks } from '@/data/social-links'
 
 const footerLinks = [
   ...primaryNavigation.flatMap((item) =>
     item.label === 'Contact' ? [writingLink, item] : [item]
   ),
-  resumeLink,
+  resumeDirectoryLink,
 ]
 
 export function Footer() {

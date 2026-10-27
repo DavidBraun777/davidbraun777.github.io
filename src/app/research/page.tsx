@@ -13,6 +13,7 @@ import {
   researchAreas,
   researchProfileLinks,
 } from '@/data/research'
+import { researchCv } from '@/data/resumes'
 import { createPageMetadata } from '@/lib/seo'
 
 export const metadata: Metadata = createPageMetadata({
@@ -32,6 +33,12 @@ export default function ResearchPage() {
           description="Research informs how I evaluate evidence, retrieval quality, uncertainty, and system limits. Current work includes hybrid information retrieval for Urarina–Spanish archival material while I pursue a Master of Science in Artificial Intelligence at the University of St. Thomas."
           actions={[
             { label: 'Discuss Research', href: '/contact?type=research' },
+            {
+              label: researchCv.href ? 'AI Research CV' : 'AI Research CV (available upon request)',
+              href: researchCv.href ?? researchCv.requestHref,
+              external: Boolean(researchCv.href),
+              variant: 'secondary',
+            },
           ]}
         />
 
