@@ -64,6 +64,30 @@ describe('distributed production rate limiting', () => {
     expect(mockLimit).toHaveBeenCalledTimes(3)
   })
 
+  it('provides each Redis request a fresh transport deadline after an earlier signal expires', async () => {
+    // AbortSignal.timeout uses Node's native timer rather than Vitest's fake clock.
+    vi.useRealTimers()
+    const signals: AbortSignal[] = []
+    mockRedis.mockImplementation(({ signal }: { signal: () => AbortSignal }) => {
+      mockLimit.mockImplementation(async () => {
+        signals.push(signal())
+        return { success: true, reset: Date.now() + 60_000, remaining: 4 }
+      })
+    })
+
+    await expect(checkRateLimit('192.0.2.1')).resolves.toMatchObject({ limited: false })
+    expect(signals[0].aborted).toBe(false)
+    await new Promise<void>((resolve) => {
+      signals[0].addEventListener('abort', () => resolve(), { once: true })
+    })
+    expect(signals[0].reason).toMatchObject({ name: 'TimeoutError' })
+
+    await expect(checkRateLimit('192.0.2.2')).resolves.toMatchObject({ limited: false })
+    expect(signals[1]).not.toBe(signals[0])
+    expect(signals[1].aborted).toBe(false)
+    expect(mockRedis).toHaveBeenCalledOnce()
+  })
+
   it('preserves actual limit exhaustion and a positive Retry-After', async () => {
     mockLimit.mockResolvedValue({ success: false, reset: Date.now() + 30_000, remaining: 0 })
     await expect(checkRateLimit('192.0.2.1')).resolves.toEqual({ limited: true, retryAfter: 30 })
@@ -154,6 +178,30 @@ describe('distributed production rate limiting', () => {
     mockLimit.mockRejectedValue(new Error('Authorization: fake-token https://private-endpoint'))
     await expect(checkRateLimit('192.0.2.1')).rejects.toEqual(new RateLimitUnavailableError())
     expect(console.error).toHaveBeenCalledExactlyOnceWith('Distributed contact rate limiter unavailable')
+  })
+
+  it('fails all concurrent outage checks while emitting only one diagnostic per cooldown', async () => {
+    mockLimit.mockRejectedValue(new Error('private Redis outage details'))
+
+    const results = await Promise.allSettled([
+      checkRateLimit('192.0.2.1'),
+      checkRateLimit('192.0.2.2'),
+    ])
+
+    expect(results).toEqual([
+      { status: 'rejected', reason: new RateLimitUnavailableError() },
+      { status: 'rejected', reason: new RateLimitUnavailableError() },
+    ])
+    expect(mockLimit).toHaveBeenCalledTimes(2)
+    expect(console.error).toHaveBeenCalledExactlyOnceWith('Distributed contact rate limiter unavailable')
+
+    await expect(checkRateLimit('192.0.2.3')).rejects.toBeInstanceOf(RateLimitUnavailableError)
+    expect(mockLimit).toHaveBeenCalledTimes(2)
+    expect(console.error).toHaveBeenCalledOnce()
+
+    vi.advanceTimersByTime(60_001)
+    await expect(checkRateLimit('192.0.2.1')).rejects.toBeInstanceOf(RateLimitUnavailableError)
+    expect(console.error).toHaveBeenCalledTimes(2)
   })
 })
 

@@ -43,8 +43,8 @@ export function HeaderNavigationItem({
     }
     const handleEscape = (event: KeyboardEvent) => {
       if (event.key !== 'Escape') return
-      event.stopPropagation()
       const focusInside = containerRef.current?.contains(document.activeElement)
+      if (focusInside) event.stopPropagation()
       close()
       if (focusInside) triggerRef.current?.focus()
     }

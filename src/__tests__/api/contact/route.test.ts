@@ -387,6 +387,22 @@ describe('POST /api/contact', () => {
     expect(mockSend).not.toHaveBeenCalled()
   })
 
+  it('rejects a bodyless POST without calling the email service', async () => {
+    const request = new Request('http://localhost:3000/api/contact', {
+      method: 'POST',
+      headers: { origin: 'http://localhost:3000' },
+    })
+
+    const response = await POST(request)
+
+    expect(response.status).toBe(400)
+    expect(await response.json()).toEqual({
+      success: false,
+      error: 'Invalid JSON in request body',
+    })
+    expect(mockSend).not.toHaveBeenCalled()
+  })
+
   it.each([undefined, '1', '999999'])('rejects oversized bytes with Content-Length %s', async (contentLength) => {
     const headers = contentLength === undefined ? undefined : { 'Content-Length': contentLength }
     const res = await POST(createRawRequest(' '.repeat(16 * 1024 + 1), headers))
@@ -395,9 +411,11 @@ describe('POST /api/contact', () => {
     expect(mockSend).not.toHaveBeenCalled()
   })
 
-  it('stops reading and cancels the body as soon as streamed bytes exceed the limit', async () => {
+  it.each([false, true])('stops reading oversized streams even when cancellation rejects: %s', async (rejectCancellation) => {
     let pulls = 0
-    const cancel = vi.fn()
+    const cancel = vi.fn(() => rejectCancellation
+      ? Promise.reject(new Error('private transport cancellation error'))
+      : Promise.resolve())
     const stream = new ReadableStream<Uint8Array>({
       pull(controller) {
         pulls++
@@ -409,6 +427,7 @@ describe('POST /api/contact', () => {
 
     const res = await POST(createRawRequest(stream, { 'Content-Length': '1' }))
     expect(res.status).toBe(413)
+    expect(await res.json()).toEqual({ success: false, error: 'Request body is too large' })
     expect(pulls).toBe(2)
     expect(cancel).toHaveBeenCalledOnce()
     expect(mockSend).not.toHaveBeenCalled()
@@ -542,6 +561,18 @@ describe('POST /api/contact', () => {
       createRequest(validBody, { origin: 'http://localhost:3001' })
     )
     expect(res.status).toBe(200)
+  })
+
+  it('accepts the IPv4 loopback origin during local development', async () => {
+    vi.stubEnv('NODE_ENV', 'development')
+
+    const response = await POST(
+      createRequest(validBody, { origin: 'http://127.0.0.1:3001' })
+    )
+
+    expect(response.status).toBe(200)
+    expect(await response.json()).toEqual({ success: true })
+    expect(mockSend).toHaveBeenCalledOnce()
   })
 
   it('accepts requests with valid referer when origin is missing', async () => {
