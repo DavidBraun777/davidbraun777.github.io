@@ -6,13 +6,13 @@ import { TechTag } from '@/components/site/tech-tag'
 import { Badge } from '@/components/ui/badge'
 import { ExternalLinkAction } from '@/components/ui/external-link-action'
 import {
+  historicalSystems,
   pilotSystems,
   productionSystems,
   researchSystems,
   type FeaturedSystemCaseStudy,
 } from '@/data/systems'
 import { createPageMetadata } from '@/lib/seo'
-import { time2Move } from '@/data/past-client-work'
 
 export const metadata: Metadata = createPageMetadata({
   title: 'Case Studies',
@@ -192,22 +192,9 @@ export default function CaseStudiesPage() {
           <h2 className="text-2xl font-semibold tracking-tight text-text-primary">
             Past client work
           </h2>
-          <article className="rounded-[1.5rem] border border-border-subtle bg-background-elevated p-5 shadow-sm">
-            <Badge variant="outline">
-              {time2Move.status}
-            </Badge>
-            <h3 className="mt-4 text-xl font-semibold tracking-tight text-text-primary">
-              {time2Move.title}
-            </h3>
-            <p className="mt-3 max-w-3xl text-sm leading-7 text-text-secondary">
-              {time2Move.description}
-            </p>
-            <div className="mt-5 flex flex-wrap gap-4">
-              <ExternalLinkAction href={time2Move.href}>
-                {time2Move.linkLabel}
-              </ExternalLinkAction>
-            </div>
-          </article>
+          {historicalSystems.map((system) => (
+            <CaseStudyCard key={system.id} system={system} />
+          ))}
         </section>
 
         <div className="flex flex-wrap gap-x-8 gap-y-4">
@@ -232,24 +219,25 @@ export default function CaseStudiesPage() {
 }
 
 function CaseStudyCard({ system }: Readonly<{ system: FeaturedSystemCaseStudy }>) {
+  const historical = system.caseStudyStage === 'Historical'
   return (
     <article className="rounded-[1.5rem] border border-border-subtle bg-background-elevated p-5 shadow-sm">
       <div className="flex flex-wrap items-center gap-2">
-        <Badge variant="secondary">{system.contextLabel ?? system.caseStudyStage}</Badge>
+        {!historical ? <Badge variant="secondary">{system.contextLabel ?? system.caseStudyStage}</Badge> : null}
         <Badge variant="outline">{system.currentState}</Badge>
-        <Badge variant="outline">{system.themeTitle}</Badge>
+        {!historical ? <Badge variant="outline">{system.themeTitle}</Badge> : null}
       </div>
 
       <h3 className="mt-4 text-xl font-semibold tracking-tight text-text-primary">
-        {system.name}
+        {historical ? system.displayTitle ?? system.name : system.name}
       </h3>
       <p className="mt-3 text-sm leading-7 text-text-secondary">{system.summary}</p>
 
-      <div className="mt-5 flex flex-wrap gap-2">
+      {!historical ? <div className="mt-5 flex flex-wrap gap-2">
         {system.stack.slice(0, 5).map((item) => (
           <TechTag key={item}>{item}</TechTag>
         ))}
-      </div>
+      </div> : null}
 
       <div className="mt-5 flex flex-wrap gap-4">
         <Link
@@ -263,6 +251,16 @@ function CaseStudyCard({ system }: Readonly<{ system: FeaturedSystemCaseStudy }>
           <ExternalLinkAction href={system.externalUrl}>Visit live site</ExternalLinkAction>
         ) : null}
       </div>
+      {system.successorLink ? (
+        <div className="mt-5 border-t border-border-subtle pt-4">
+          <p className="mb-3 max-w-3xl text-sm leading-7 text-text-secondary">
+            {system.successorLink.context}
+          </p>
+          <ExternalLinkAction href={system.successorLink.href}>
+            {system.successorLink.label}
+          </ExternalLinkAction>
+        </div>
+      ) : null}
     </article>
   )
 }

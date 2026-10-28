@@ -204,25 +204,21 @@ test.describe('site content search', () => {
     expect(new Set(hrefs).size).toBe(18)
   })
 
-  test('navigates to visible same-page historical work and closes the dialog', async ({ page }) => {
+  test('navigates to the original historical case study and closes the dialog', async ({ page }) => {
     await page.goto('/case-studies')
     await openSearch(page)
     const dialog = searchDialog(page)
     await searchInput(page).fill('Hombuzz')
-    const historicalResult = dialog.locator('a[href="/case-studies#past-client-work"]')
+    const historicalResult = dialog.locator('a[href="/case-studies/time2move"]')
     await expect(historicalResult).toBeVisible()
     await historicalResult.focus()
     await page.keyboard.press('Enter')
-    await expect(page).toHaveURL(/\/case-studies#past-client-work$/)
+    await expect(page).toHaveURL(/\/case-studies\/time2move$/)
     await expect(dialog).toBeHidden()
-    const historicalWork = page.locator('#past-client-work')
+    const historicalWork = page.locator('main')
     await expect(historicalWork).toContainText('Past client project · Continued independently')
-    await expect(historicalWork.getByRole('link', { name: 'View current website: Hombuzz' })).toHaveAttribute('href', 'https://hombuzz.com/')
-    await expect.poll(() => historicalWork.evaluate((element) => {
-      const top = element.getBoundingClientRect().top
-      const headerBottom = document.querySelector('header')?.getBoundingClientRect().bottom ?? 0
-      return top >= headerBottom - 1 && top < window.innerHeight
-    })).toBe(true)
+    await expect(historicalWork.getByRole('heading', { level: 1 })).toContainText('Time2Move')
+    await expect(historicalWork.getByRole('link', { name: 'Current business website — Hombuzz' })).toHaveAttribute('href', 'https://hombuzz.com/')
   })
 
   test('keeps mobile search directly available and coordinates navigation menus', async ({ page }) => {

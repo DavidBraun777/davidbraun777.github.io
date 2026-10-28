@@ -53,11 +53,13 @@ describe('public search index', () => {
 
   test('preserves historical attribution and indexes only approved résumé destinations', async () => {
     const { records } = await buildSearchIndex()
-    const historical = records.find(record => record.id === 'time2move')
-    expect(historical?.title).toBe(time2Move.title)
-    expect(historical?.description).toBe(time2Move.description)
-    expect(historical?.headings).toContain(time2Move.status)
-    expect(historical?.href).toBe('/case-studies#past-client-work')
+    const historical = records.find(record => record.id === 'project-time2move')
+    expect(historical?.title).toBe(time2Move.displayTitle ?? time2Move.name)
+    expect(historical?.description).toBe(time2Move.summary)
+    expect(`${historical?.headings.join(' ')} ${historical?.body}`).toContain(time2Move.currentState)
+    expect(historical?.href).toBe('/case-studies/time2move')
+    expect(records.filter(record => record.href === '/case-studies/time2move')).toHaveLength(1)
+    expect(records.some(record => record.href === '/case-studies#past-client-work')).toBe(false)
     expect(records.filter(record => record.type === 'Résumé').map(record => record.href))
       .toEqual(resumeDocuments.map(document => document.href ?? document.requestHref))
     expect(records.some(record => /docs\/|audit|\.env|planning-notes/.test(record.href))).toBe(false)

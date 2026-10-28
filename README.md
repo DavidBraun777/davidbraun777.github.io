@@ -76,10 +76,22 @@ The current project evidence remains deliberately classified:
   original `time2move.io` deployment is inactive. The client has since continued
   the project independently as [Hombuzz](https://hombuzz.com/), with changes to its
   brand, design, implementation, and direction. The compact entry under "Past
-  client work" on `/case-studies` documents David's initial contribution and labels
-  Hombuzz as the current business website, not an implementation David currently
-  owns or maintains. Keep the original engagement named Time2Move and preserve
-  dated audit findings as historical records.
+  client work" links to `/case-studies/time2move`, a historical case study of the
+  original website and inquiry workflows. It belongs to the shared case-study
+  registry with stage `Historical`, outside featured/current production proof.
+  Its optional `story` supplies the long-form account, and `successorLink` labels
+  Hombuzz as the current business website without routing it through "Live Proof."
+  Keep the original engagement named Time2Move and preserve dated audit findings.
+
+  The public account records the October 27, 2026 local audit of source revision
+  `515deb2` plus dependency-lock changes: 34 tests, type checking and build passed;
+  lint failed with 29 errors and 12 warnings. These are historical source-project
+  checks, separate from portfolio validation. Handoff/involvement dates and live
+  provider receipt remain unconfirmed. Only the manifest-cleared synthetic form
+  failure capture is included, with its simulation/date caption; other captures
+  were omitted. Do not add private audit reports, source paths, evidence IDs or
+  operational hooks to tracked portfolio content. The portfolio builds independently
+  of the source project and its private audit folder.
 - `DealerFlow`, where shown, should be treated cautiously as pilot/proof work
   unless stronger artifacts and bounded pilot facts are added.
 - `WeatherForge` is a collaborative University of St. Thomas SEIS 745 project on
@@ -301,7 +313,8 @@ to `src/lib/search/static-pages.ts`. For a new content type, add an explicit ada
 in the builder rather than serializing an entire object. Link to its canonical
 detail page or an existing visible, focusable anchor with header scroll clearance.
 Experience disclosures use an `id` to open automatically when targeted by a hash.
-The shared past-client data keeps Time2Move's public description and status in sync.
+Historical entries use the same project indexing path, including public story text
+and the clearly labeled successor context. Time2Move's copy stays in shared data.
 
 Ranking requires every query term and prioritizes exact titles, title phrases,
 title words/prefixes, tags/headings/descriptions, then body text. Case, accents, and

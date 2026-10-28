@@ -2,7 +2,6 @@
 import { architectureSkillLayers, careerStoryStages } from '@/data/career-story'
 import { certifications, education } from '@/data/education'
 import { experiences } from '@/data/experience'
-import { time2Move } from '@/data/past-client-work'
 import { servicesOffered } from '@/data/profile'
 import { acceptedConferencePapers, conferenceAbstracts, peerReviewedPublications, professionalAffiliations, researchAreas, researchProfileLinks } from '@/data/research'
 import { resumeDocuments } from '@/data/resumes'
@@ -19,6 +18,8 @@ const text = (...parts: (string | undefined)[]) => parts.filter(Boolean).join(' 
 /** Explicit public fields only, including the limits rendered on the detail page. */
 export function projectSearchRecord(system: FeaturedSystemCaseStudy): SearchRecord {
   const ladder = system.retrievalCapabilityLadder
+  const story = system.story
+  const storyBlocks = story ? [...story.capabilities, ...story.workflows, ...story.tradeoffs, ...story.technicalDetails] : []
   return {
     id: `project-${system.id}`,
     title: system.displayTitle ?? system.name,
@@ -26,8 +27,18 @@ export function projectSearchRecord(system: FeaturedSystemCaseStudy): SearchReco
     type: 'Project',
     description: system.summary,
     tags: [system.name, ...system.stack, system.contextLabel ?? system.caseStudyStage],
-    headings: [system.solutionTitle ?? 'Solution / Implementation', ...system.proofSections.map(section => section.title)],
-    body: text(
+    headings: story
+      ? [system.currentState, ...storyBlocks.map(block => block.title), ...story.architecture.flows.map(flow => flow.title), ...story.audit.checks.map(check => check.label)]
+      : [system.solutionTitle ?? 'Solution / Implementation', ...system.proofSections.map(section => section.title)],
+    body: story ? text(
+      system.positioning, system.currentState, story.scopeNote, ...story.overview,
+      ...story.atAGlance.map(item => text(item.label, item.value)),
+      ...storyBlocks.flatMap(block => block.paragraphs),
+      story.architecture.intro, ...story.architecture.flows.map(flow => text(...flow.steps, flow.boundary)),
+      story.audit.date, story.audit.snapshot, ...story.audit.checks.map(check => text(check.result, check.detail)),
+      ...story.audit.limitations, story.audit.lesson, story.illustration?.caption,
+      system.successorLink?.label, system.successorLink?.context,
+    ) : text(
       system.oneSentenceOutcome, system.positioning, system.problem, system.system,
       system.myRole, system.coreConstraint, system.outcome, system.currentState,
       ...system.systemHighlights,
@@ -164,11 +175,6 @@ export async function buildSearchIndex(): Promise<SearchIndex> {
       description: document.description, tags: [document.kind], headings: [],
       body: text(document.audience, document.href ? document.viewLabel : `${document.kind} available upon request`),
     })),
-    {
-      id: time2Move.id, title: time2Move.title, href: '/case-studies#past-client-work', type: 'Past client work',
-      description: time2Move.description, tags: ['Time2Move', 'Hombuzz'], headings: [time2Move.status],
-      body: time2Move.linkLabel,
-    },
     ...articles,
   ]
   const seen = new Set<string>()
