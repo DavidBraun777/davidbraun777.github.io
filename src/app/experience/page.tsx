@@ -107,7 +107,11 @@ export default function ExperiencePage() {
               title="Current University of St. Thomas role"
               subtitle="Graduate work paired with direct support inside the Department of Software Engineering and Data Science."
             />
-            <article className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm">
+            <article
+              id={`experience-${universityRole.id}`}
+              tabIndex={-1}
+              className="scroll-mt-28 rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm"
+            >
               <div className="flex flex-wrap items-center gap-2">
                 <Badge variant="secondary">Current</Badge>
                 <Badge variant="outline">{formatExperiencePeriod(universityRole)}</Badge>
@@ -153,7 +157,9 @@ export default function ExperiencePage() {
             {education.map((item) => (
               <article
                 key={item.id}
-                className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm"
+                id={`education-${item.id}`}
+                tabIndex={-1}
+                className="scroll-mt-28 rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm"
               >
                 <Badge variant={item.inProgress ? 'secondary' : 'outline'}>
                   {item.inProgress ? 'In progress' : 'Completed'}
@@ -214,7 +220,9 @@ export default function ExperiencePage() {
             {certifications.map((certification) => (
               <article
                 key={certification.id}
-                className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm"
+                id={`certification-${certification.id}`}
+                tabIndex={-1}
+                className="scroll-mt-28 rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm"
               >
                 <Badge variant="outline">Certification</Badge>
                 <h3 className="mt-4 text-xl font-semibold text-text-primary">
@@ -301,6 +309,7 @@ function ExperiencePanel({
 }: Readonly<{ experience: Experience; defaultOpen: boolean }>) {
   return (
     <DisclosurePanel
+      id={`experience-${experience.id}`}
       title={`${experience.role} · ${experience.company}`}
       summary={`${formatExperiencePeriod(experience)} · ${experience.description}`}
       defaultOpen={defaultOpen}

@@ -130,7 +130,7 @@ export default function ResearchPage() {
           </article>
         </section>
 
-        <section>
+        <section id="research-areas" tabIndex={-1} className="scroll-mt-28">
           <SectionHeader
             align="left"
             title="Research Areas"
@@ -155,7 +155,9 @@ export default function ResearchPage() {
             {acceptedConferencePapers.map((paper) => (
               <article
                 key={paper.id}
-                className="rounded-[1.75rem] border border-primary-300/70 bg-background-elevated p-6 shadow-sm dark:border-primary-900"
+                id={`research-${paper.id}`}
+                tabIndex={-1}
+                className="scroll-mt-28 rounded-[1.75rem] border border-primary-300/70 bg-background-elevated p-6 shadow-sm dark:border-primary-900"
               >
                 <div className="flex flex-wrap items-center gap-2">
                   <Badge variant="primary">{paper.status}</Badge>
@@ -199,7 +201,9 @@ export default function ResearchPage() {
             {peerReviewedPublications.map((publication) => (
               <article
                 key={publication.id}
-                className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm"
+                id={`research-${publication.id}`}
+                tabIndex={-1}
+                className="scroll-mt-28 rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm"
               >
                 <div className="flex flex-wrap items-center gap-2">
                   <Badge variant="secondary">Peer-reviewed journal article</Badge>
@@ -251,7 +255,9 @@ export default function ResearchPage() {
             {conferenceAbstracts.map((abstract) => (
               <article
                 key={abstract.id}
-                className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm"
+                id={`research-${abstract.id}`}
+                tabIndex={-1}
+                className="scroll-mt-28 rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm"
               >
                 <Badge variant="outline">Conference abstract</Badge>
                 <h3 className="mt-4 text-xl font-semibold tracking-tight text-text-primary">
@@ -279,7 +285,9 @@ export default function ResearchPage() {
             {professionalAffiliations.map((affiliation) => (
               <article
                 key={affiliation.id}
-                className="rounded-[1.5rem] border border-border-subtle bg-background-elevated p-5 shadow-sm"
+                id={`research-${affiliation.id}`}
+                tabIndex={-1}
+                className="scroll-mt-28 rounded-[1.5rem] border border-border-subtle bg-background-elevated p-5 shadow-sm"
               >
                 <div className="flex items-start justify-between gap-4">
                   <h3 className="min-w-0 flex-1 text-base font-semibold text-text-primary">

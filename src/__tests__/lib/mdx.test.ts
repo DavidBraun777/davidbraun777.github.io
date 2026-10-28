@@ -264,6 +264,7 @@ describe('getPostBySlug', () => {
 describe('getAllPostSlugs', () => {
   beforeEach(() => {
     vi.clearAllMocks()
+    mockedFs.readFileSync.mockReturnValue(POST_MINIMAL)
   })
 
   afterEach(() => {
@@ -314,5 +315,26 @@ describe('getAllPostSlugs', () => {
 
     expect(slugs).toEqual([])
     expect(mockedFs.readdirSync).not.toHaveBeenCalled()
+  })
+})
+
+
+describe('publication visibility', () => {
+  afterEach(() => vi.restoreAllMocks())
+
+  it.each(['draft: true', 'published: false'])('excludes %s from lists, static routes, and direct reads', (flag) => {
+    vi.clearAllMocks()
+    mockedFs.existsSync.mockReturnValue(true)
+    mockReaddirSync(['public-post.mdx', 'private-post.mdx'])
+    mockedFs.readFileSync.mockImplementation((filePath: fs.PathOrFileDescriptor) =>
+      String(filePath).includes('private-post')
+        ? `---\ntitle: Unpublished sentinel\n${flag}\n---\nPrivate body sentinel`
+        : POST_MINIMAL
+    )
+
+    expect(getAllPosts().map(post => post.slug)).toEqual(['public-post'])
+    expect(getAllPostSlugs()).toEqual(['public-post'])
+    expect(getPostBySlug('private-post')).toBeNull()
+    expect(getPostBySlug('public-post')).not.toBeNull()
   })
 })

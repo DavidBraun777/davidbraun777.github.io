@@ -1,7 +1,10 @@
-import type { ReactNode } from 'react'
+'use client'
+
+import { useEffect, useRef, type ReactNode } from 'react'
 import { ChevronDown } from 'lucide-react'
 
 interface DisclosurePanelProps {
+  id?: string
   title: string
   summary: string
   children: ReactNode
@@ -9,14 +12,42 @@ interface DisclosurePanelProps {
 }
 
 export function DisclosurePanel({
+  id,
   title,
   summary,
   children,
   defaultOpen = false,
 }: Readonly<DisclosurePanelProps>) {
+  const panelRef = useRef<HTMLDetailsElement>(null)
+
+  useEffect(() => {
+    if (!id) return
+    let frame = 0
+    const revealHashTarget = () => {
+      if (window.location.hash !== `#${id}`) return
+      const panel = panelRef.current
+      if (!panel) return
+      panel.open = true
+      cancelAnimationFrame(frame)
+      frame = requestAnimationFrame(() => {
+        panel.scrollIntoView({ block: 'start' })
+        panel.focus({ preventScroll: true })
+      })
+    }
+    revealHashTarget()
+    window.addEventListener('hashchange', revealHashTarget)
+    return () => {
+      cancelAnimationFrame(frame)
+      window.removeEventListener('hashchange', revealHashTarget)
+    }
+  }, [id])
+
   return (
     <details
-      className="group rounded-[1.5rem] border border-border-subtle bg-background-elevated p-5 shadow-sm"
+      ref={panelRef}
+      id={id}
+      tabIndex={id ? -1 : undefined}
+      className="group scroll-mt-28 rounded-[1.5rem] border border-border-subtle bg-background-elevated p-5 shadow-sm"
       open={defaultOpen}
     >
       <summary className="flex cursor-pointer list-none items-start justify-between gap-4">

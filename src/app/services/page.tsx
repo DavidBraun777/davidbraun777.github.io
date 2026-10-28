@@ -5,61 +5,7 @@ import { PageIntro } from '@/components/site/page-intro'
 import { SectionHeader } from '@/components/ui/section-header'
 import { processPreview, servicesOffered } from '@/data/profile'
 import { createPageMetadata } from '@/lib/seo'
-
-const engagementOffers = [
-  {
-    title: 'Architecture & Workflow Review',
-    planningRange: '$1,500–$3,000',
-    duration: '1–2 weeks',
-    description:
-      'A focused review for a workflow or system that needs a clearer technical direction before implementation.',
-    itemsLabel: 'Potential deliverables',
-    items: [
-      'Discovery',
-      'Workflow or system map',
-      'Architecture review',
-      'Bottlenecks and failure points',
-      'Security and reliability considerations',
-      'Prioritized implementation plan',
-      'Recommended next steps',
-    ],
-  },
-  {
-    title: 'Scoped System / Automation Build',
-    planningRange: '$5,000–$25,000+',
-    duration: 'Defined during scoping',
-    description:
-      'A bounded implementation engagement for a clearly defined application, integration, data, or workflow problem.',
-    itemsLabel: 'Potential work',
-    items: [
-      'Applications and APIs',
-      'Integrations and AI-enabled workflows',
-      'Internal tools and automation',
-      'Cloud deployment',
-      'Data pipelines',
-      'Testing and documentation',
-      'Operational handoff',
-    ],
-    note: 'Substantial custom platforms or MVPs often begin around $12,000+, depending on scope. Not every project will fit this planning range.',
-  },
-  {
-    title: 'Ongoing Platform Stewardship',
-    planningRange: '$750–$3,000+/month',
-    duration: 'Ongoing monthly engagement',
-    description:
-      'Continuing technical ownership for systems that need dependable maintenance, support, and incremental improvement after launch.',
-    itemsLabel: 'Potential scope',
-    items: [
-      'Hosting and platform support',
-      'Deployment and monitoring',
-      'Dependency and security maintenance',
-      'Troubleshooting',
-      'Incremental feature work',
-      'Reliability improvements',
-      'Technical stewardship',
-    ],
-  },
-] as const
+import { engagementOffers } from '@/data/services'
 
 const fitExamples = [
   'An AI or data capability needs a production architecture around it.',
@@ -122,8 +68,10 @@ export default function ServicesPage() {
           <div className="grid gap-5 lg:grid-cols-3">
             {engagementOffers.map((offer) => (
               <article
-                key={offer.title}
-                className="flex h-full flex-col rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm"
+                key={offer.id}
+                id={`service-${offer.id}`}
+                tabIndex={-1}
+                className="scroll-mt-28 flex h-full flex-col rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm"
               >
                 <h2 className="text-2xl font-semibold tracking-tight text-text-primary">
                   {offer.title}
@@ -243,7 +191,7 @@ export default function ServicesPage() {
           </div>
         </section>
 
-        <section>
+        <section id="capabilities" tabIndex={-1} className="scroll-mt-28">
           <SectionHeader
             align="left"
             title="Technical capabilities inside an engagement"

@@ -281,6 +281,36 @@ This keeps future work compounding toward the professional north star.
 
 ## Local Development
 
+### Site Search
+
+The header search uses a local, typed index at `/search-index.json`, generated
+statically by each normal `npm run build`. It is fetched on first opening search
+and reused for the browser session. No queries are sent to a search service or
+recorded by this feature. A new session revalidates the index after deployment.
+
+`src/lib/search/build-index.ts` explicitly selects public fields from the same
+collections used by the site. New case studies and published MDX articles enter
+search automatically. Articles marked `draft: true` or `published: false` are
+excluded from both public article routes and search. Readable MDX text and headings
+are extracted at build time; imports, expressions, comments, implementation code,
+hidden content, and unrelated frontmatter are omitted. Résumé records use approved
+metadata and destinations, without extracting PDF contents.
+
+For a new static page, add its public title, description, and meaningful headings
+to `src/lib/search/static-pages.ts`. For a new content type, add an explicit adapter
+in the builder rather than serializing an entire object. Link to its canonical
+detail page or an existing visible, focusable anchor with header scroll clearance.
+Experience disclosures use an `id` to open automatically when targeted by a hash.
+The shared past-client data keeps Time2Move's public description and status in sync.
+
+Ranking requires every query term and prioritizes exact titles, title phrases,
+title words/prefixes, tags/headings/descriptions, then body text. Case, accents, and
+whitespace are normalized while technology punctuation is retained. Short terms
+match whole words; longer terms can match prefixes. The small aliases are Blog
+and Articles for Writing, Projects for Case Studies, and ML for Machine Learning.
+There is no fuzzy matching or added search dependency. Run the search unit tests
+and `npm run e2e -- e2e/search.spec.ts` when changing search behavior or destinations.
+
 ### Prerequisites
 
 - Node.js 24 LTS from `.nvmrc` (`package.json` requires `24.x`)

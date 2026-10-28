@@ -12,6 +12,7 @@ import {
   type FeaturedSystemCaseStudy,
 } from '@/data/systems'
 import { createPageMetadata } from '@/lib/seo'
+import { time2Move } from '@/data/past-client-work'
 
 export const metadata: Metadata = createPageMetadata({
   title: 'Case Studies',
@@ -187,28 +188,23 @@ export default function CaseStudiesPage() {
           systems={activeResearchSystems}
         />
 
-        <section id="past-client-work" className="space-y-5">
+        <section id="past-client-work" tabIndex={-1} className="scroll-mt-28 space-y-5">
           <h2 className="text-2xl font-semibold tracking-tight text-text-primary">
             Past client work
           </h2>
           <article className="rounded-[1.5rem] border border-border-subtle bg-background-elevated p-5 shadow-sm">
             <Badge variant="outline">
-              Past client project · Continued independently
+              {time2Move.status}
             </Badge>
             <h3 className="mt-4 text-xl font-semibold tracking-tight text-text-primary">
-              Time2Move: original real estate website
+              {time2Move.title}
             </h3>
             <p className="mt-3 max-w-3xl text-sm leading-7 text-text-secondary">
-              I designed and developed the original Time2Move real estate website,
-              including its site structure and lead-capture workflows. The client has
-              since continued the project as Hombuzz, taking its brand, design, and
-              implementation in a new direction. This entry documents my initial
-              contribution; the linked website shows how the project has evolved since
-              my involvement.
+              {time2Move.description}
             </p>
             <div className="mt-5 flex flex-wrap gap-4">
-              <ExternalLinkAction href="https://hombuzz.com/">
-                View current website: Hombuzz
+              <ExternalLinkAction href={time2Move.href}>
+                {time2Move.linkLabel}
               </ExternalLinkAction>
             </div>
           </article>
