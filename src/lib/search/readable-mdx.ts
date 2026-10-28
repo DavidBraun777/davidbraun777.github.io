@@ -209,7 +209,9 @@ export function remarkContentDestinations(options: {
       const parentAnchor = candidate.parent ? headingAnchor(candidate.parent) : undefined
       const anchor = candidate.heading ? headingAnchor(candidate.heading) : literalAttribute(candidate.node, 'id') ?? contentId('article', candidate.kind, parentAnchor ?? 'intro', ...candidate.scopes, contentFingerprint(candidate.text))
       // Local titles do not make every paragraph match its containing heading.
-      const title = candidate.kind === 'row' ? readableText(candidate.cells?.[0] ?? candidate.node) : candidate.text.slice(0, 100)
+      // A row is registered only when its child cells produce nonempty text,
+      // so it necessarily has a first cell; no alternate row-node title exists.
+      const title = candidate.kind === 'row' ? readableText(candidate.cells![0]) : candidate.text.slice(0, 100)
       const ancestors = headingAncestors(candidate.parent).map(item => item.text)
       const label = [options.articleTitle, ...ancestors, title].filter(Boolean).join(' › ')
       const destination: ContentDestination = { page: options.page, anchor, label, disclosureIds: [...candidate.disclosureIds], ...(parentAnchor ? { fallbackAnchor: parentAnchor } : {}) }

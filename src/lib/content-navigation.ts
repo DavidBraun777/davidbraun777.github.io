@@ -76,7 +76,8 @@ function startRequest(href: string, destination?: ContentDestination, paused = f
   // Only a failed/stale destination uses this deadline. Successful navigation is
   // driven by registrations, route commits, fonts and layout, never a fixed delay.
   deadline = window.setTimeout(() => {
-    if (request !== active) return
+    // Cancellation clears the sole stored deadline before a request is replaced;
+    // timer callbacks run to completion, so this callback still owns active.
     if (active.paused || window.location.pathname !== active.url.pathname) {
       cancelContentNavigation()
       return
@@ -84,7 +85,7 @@ function startRequest(href: string, destination?: ContentDestination, paused = f
     active.fallbackOnly = true
     // A fallback may itself need a React disclosure commit. Give that lifecycle
     // a bounded opportunity to finish; this timer never schedules the scroll.
-    deadline = window.setTimeout(() => { if (request === active) cancelContentNavigation() }, 1000)
+    deadline = window.setTimeout(cancelContentNavigation, 1000)
     notifyContentLayout()
   }, 5000)
   const main = document.getElementById('main-content')
@@ -153,8 +154,8 @@ function attemptNavigation() {
   for (const disclosureId of active.fallbackOnly ? [] : destination?.disclosureIds ?? []) {
     const panel = document.getElementById(disclosureId)
     if (!(panel instanceof HTMLDetailsElement)) {
-      if (!active.fallbackOnly) return
-      break
+      // Fallback requests skip this loop; ordinary requests wait for their panel.
+      return
     }
     if (!reveal(panel)) return
   }

@@ -13,7 +13,8 @@
     "typecheck": "tsc --noEmit",
     "test": "vitest run",
     "test:watch": "vitest",
-    "test:coverage": "vitest run --coverage",
+    "test:coverage": "vitest run --coverage && npm run coverage:check",
+    "coverage:check": "node scripts/check-coverage.mjs",
     "e2e": "playwright test --project=chromium",
     "e2e:install": "playwright install --with-deps chromium",
     "size-check": "node scripts/check-bundle-size.mjs"

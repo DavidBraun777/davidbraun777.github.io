@@ -36,48 +36,10 @@ jobs:
       - name: Unit & integration tests with coverage
         run: npm run test:coverage
 
-      - name: Validate LCOV report
+      - name: Bind validated coverage to this revision
         run: |
-          node <<'NODE'
-          const { existsSync, readFileSync, statSync } = require('node:fs')
-          const { isAbsolute, relative, resolve, sep } = require('node:path')
-
-          const reportPath = 'coverage/lcov.info'
-          if (!existsSync(reportPath) || statSync(reportPath).size === 0) {
-            throw new Error(`${reportPath} is missing or empty`)
-          }
-
-          const sourceFiles = readFileSync(reportPath, 'utf8')
-            .split(/\r?\n/)
-            .filter((line) => line.startsWith('SF:'))
-            .map((line) => line.slice(3))
-
-          if (sourceFiles.length === 0) {
-            throw new Error(`${reportPath} does not contain any SF records`)
-          }
-
-          for (const sourceFile of sourceFiles) {
-            if (isAbsolute(sourceFile)) {
-              throw new Error(`LCOV source path must be repository-relative: ${sourceFile}`)
-            }
-
-            const resolvedSource = resolve(sourceFile)
-            const relativeSource = relative(process.cwd(), resolvedSource)
-            const sonarPath = relativeSource.split(sep).join('/')
-
-            if (isAbsolute(relativeSource) || relativeSource.startsWith(`..${sep}`)) {
-              throw new Error(`LCOV source path escapes the repository: ${sourceFile}`)
-            }
-            if (!sonarPath.startsWith('src/')) {
-              throw new Error(`LCOV source path is outside the analyzed application source: ${sourceFile}`)
-            }
-            if (!existsSync(resolvedSource) || !statSync(resolvedSource).isFile()) {
-              throw new Error(`LCOV source path does not exist: ${sourceFile}`)
-            }
-          }
-
-          console.log(`Validated ${sourceFiles.length} repository-relative LCOV source paths`)
-          NODE
+          git rev-parse HEAD > coverage/revision.txt
+          sha256sum coverage/lcov.info > coverage/lcov.sha256
 
       - name: Validate blog slugs
         run: |
@@ -108,7 +70,10 @@ jobs:
         uses: actions/upload-artifact@cf430e030ddbb5b0abf93d22962f4752f3646cd9 # v7.0.2
         with:
           name: vitest-lcov
-          path: coverage/lcov.info
+          path: |
+            coverage/lcov.info
+            coverage/revision.txt
+            coverage/lcov.sha256
           if-no-files-found: error
           retention-days: 1
 
@@ -135,7 +100,11 @@ jobs:
       - name: Verify downloaded LCOV report
         run: |
           test -s coverage/lcov.info
+          test "$(cat coverage/revision.txt)" = "$(git rev-parse HEAD)"
+          sha256sum --check coverage/lcov.sha256
           grep -q '^SF:src/' coverage/lcov.info
+          grep -q '^SF:next.config.ts$' coverage/lcov.info
+          grep -q '^SF:scripts/check-bundle-size.mjs$' coverage/lcov.info
 
       - name: SonarQube Cloud Scan
         uses: SonarSource/sonarqube-scan-action@d209202bc7d53ff1cc128f7f907dac145c9d6ae9 # v8.3.0

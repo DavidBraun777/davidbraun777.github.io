@@ -450,6 +450,16 @@ when that browser needs installing or updating. With `CI` set, the same
 `ubuntu-24.04` runner. CI logs the Chrome version and browser launch path.
 The runner updates Chrome independently of the installed Playwright version.
 
+`npm run test:coverage` generates fresh V8/LCOV coverage, enforces 100% per-file
+lines, branches, statements and functions, then validates raw LCOV counts and
+source-file completeness. `scripts/coverage-scope.mjs` derives the eligible
+tracked and untracked JavaScript/TypeScript inventory from the existing Sonar
+scope and exclusions, including production configuration and executable scripts.
+New runtime files receive coverage even before a test imports them. Keep new tests
+under `src/__tests__`; do not add exclusions to bypass uncovered behavior.
+Use `npm run coverage:check` to revalidate an existing report. Browser tests
+verify real navigation but do not contribute to the imported V8 report.
+
 ## Security and Analysis
 
 The repo uses GitHub CI, CodeQL, Dependabot alerts/security updates,

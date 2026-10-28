@@ -9,8 +9,8 @@ export function ContentDetails({ open: initiallyOpen = false, onToggle, children
   const [open, setOpen] = useState(initiallyOpen)
   const panelRef = useRef<HTMLDetailsElement>(null)
   useLayoutEffect(() => {
-    if (!panelRef.current) return
-    return registerContentDisclosure(panelRef.current, () => setOpen(true))
+    // The unconditional native details element receives its ref before layout effects.
+    return registerContentDisclosure(panelRef.current!, () => setOpen(true))
   }, [])
   useLayoutEffect(notifyContentLayout, [open])
   return (
