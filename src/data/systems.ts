@@ -21,6 +21,8 @@ export interface ArchitectureStep {
 }
 
 export interface RetrievalCapabilityLadderLevel {
+  /** Stable semantic key only needed when system-type labels would collide. */
+  id?: string
   level: number
   systemType: string
   compares: string

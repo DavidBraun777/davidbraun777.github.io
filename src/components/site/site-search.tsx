@@ -7,6 +7,7 @@ import { useEffect, useMemo, useRef, useState, type RefObject } from 'react'
 import { loadSearchIndex } from '@/lib/search/client'
 import { SEARCH_QUERY_LIMIT, searchContent } from '@/lib/search/search'
 import type { SearchRecord } from '@/lib/search/types'
+import { prepareContentNavigation, releaseContentNavigation } from '@/lib/content-navigation'
 
 const suggestions = [
   { title: 'Case Studies', href: '/case-studies' },
@@ -22,26 +23,6 @@ interface SiteSearchProps {
   open: boolean
   onOpenChange: (open: boolean) => void
   returnFocusRef: RefObject<HTMLElement | null>
-}
-
-function focusDestination(href: string) {
-  const destination = new URL(href, window.location.origin)
-  if (destination.pathname !== window.location.pathname || !destination.hash) return
-  let id: string
-  try {
-    id = decodeURIComponent(destination.hash.slice(1))
-  } catch {
-    return
-  }
-  const target = document.getElementById(id)
-  if (!target) return
-
-  for (let node: HTMLElement | null = target; node; node = node.parentElement) {
-    if (node instanceof HTMLDetailsElement) node.open = true
-  }
-  if (!target.hasAttribute('tabindex')) target.tabIndex = -1
-  target.focus({ preventScroll: true })
-  target.scrollIntoView({ block: 'start', behavior: 'instant' })
 }
 
 export function SiteSearch({ open, onOpenChange, returnFocusRef }: Readonly<SiteSearchProps>) {
@@ -111,8 +92,9 @@ export function SiteSearch({ open, onOpenChange, returnFocusRef }: Readonly<Site
     nextResultToFocus.current = null
   }, [visibleCount])
 
-  const closeForNavigation = (href: string) => {
+  const closeForNavigation = (href: string, destination?: SearchRecord['destination']) => {
     selectedHref.current = href
+    prepareContentNavigation(href, destination)
     onOpenChange(false)
   }
 
@@ -134,7 +116,7 @@ export function SiteSearch({ open, onOpenChange, returnFocusRef }: Readonly<Site
             const href = selectedHref.current
             selectedHref.current = null
             if (href) {
-              window.requestAnimationFrame(() => focusDestination(href))
+              releaseContentNavigation()
             } else if (returnFocusRef.current?.isConnected) {
               returnFocusRef.current.focus({ preventScroll: true })
             }
@@ -236,11 +218,13 @@ export function SiteSearch({ open, onOpenChange, returnFocusRef }: Readonly<Site
                       <Link
                         href={record.href}
                         prefetch={false}
-                        onNavigate={() => closeForNavigation(record.href)}
+                        scroll={record.href.includes('#') ? false : undefined}
+                        onNavigate={() => closeForNavigation(record.href, record.destination)}
                         className="block rounded-xl border border-border-subtle px-4 py-3 hover:border-border-strong hover:bg-background-subtle motion-reduce:transition-none"
                       >
                         <span className="text-xs font-medium text-text-muted">{record.type}</span>
                         <span className="mt-1 block font-semibold leading-6 text-link-primary">{record.title}</span>
+                        {record.destination ? <span className="mt-1 block text-xs leading-5 text-text-muted">{record.destination.label}</span> : null}
                         <span className="mt-1 block text-sm leading-6 text-text-secondary">{snippet}</span>
                       </Link>
                     </li>

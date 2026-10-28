@@ -3,8 +3,11 @@ import { allSystems } from '@/data/systems'
 import { time2Move } from '@/data/past-client-work'
 import { resumeDocuments } from '@/data/resumes'
 import { getAllPosts } from '@/lib/mdx'
-import { buildSearchIndex, projectSearchRecord } from '@/lib/search/build-index'
+import { assembleSearchIndex, buildSearchIndex, projectSearchRecord } from '@/lib/search/build-index'
 import { extractReadableMdx } from '@/lib/search/readable-mdx'
+import { createProjectContent } from '@/lib/search/project-destinations'
+import { searchContent } from '@/lib/search/search'
+import { isSearchIndex } from '@/lib/search/client'
 
 describe('public search index', () => {
   test('extracts readable MDX without implementation, attributes, comments, or unrelated frontmatter', async () => {
@@ -33,9 +36,9 @@ describe('public search index', () => {
   test('derives all public projects and published article detail URLs from their collections', async () => {
     const index = await buildSearchIndex()
     expect(index.version).toBe(1)
-    expect(index.records.filter(record => record.type === 'Project').map(record => record.href))
+    expect(index.records.filter(record => record.type === 'Project' && !record.granularity).map(record => record.href))
       .toEqual(allSystems.map(system => `/case-studies/${system.id}`))
-    expect(index.records.filter(record => record.type === 'Article').map(record => record.href))
+    expect(index.records.filter(record => record.type === 'Article' && !record.granularity).map(record => record.href))
       .toEqual(getAllPosts().map(post => `/writing/${post.slug}`))
     expect(index.records.find(record => record.href === '/writing/designing-automation-platforms-for-real-workflows')?.body)
       .toContain('work arrives unevenly')
@@ -62,9 +65,42 @@ describe('public search index', () => {
     expect(records.some(record => record.href === '/case-studies#past-client-work')).toBe(false)
     expect(records.filter(record => record.type === 'Résumé').map(record => record.href))
       .toEqual(resumeDocuments.map(document => document.href ?? document.requestHref))
-    expect(records.some(record => /docs\/|audit|\.env|planning-notes/.test(record.href))).toBe(false)
+    expect(records.some(record => /docs\/|audit|\.env|planning-notes/.test(record.href.split('#')[0]))).toBe(false)
     expect(JSON.stringify(records)).not.toContain('research:acceptedConferencePapers:')
     // Unused skill inventory is not public page content.
     expect(JSON.stringify(records)).not.toContain('Sign Language (Fluent)')
+  })
+
+  test('indexes exact rendered destinations and keeps page-name and row queries useful', async () => {
+    const index = await buildSearchIndex()
+    expect(isSearchIndex(index)).toBe(true)
+    const rageatm = allSystems.find(system => system.id === 'rageatm')!
+    const content = createProjectContent(rageatm)
+    const comparison = content.records.find(record => record.title === 'BM25' && (record.cells?.length ?? 0) > 1)!
+    for (const query of ['BM25', 'RAGeATM BM25']) {
+      expect(searchContent(index.records, query)[0].record.href).toBe(comparison.href)
+    }
+    expect(searchContent(index.records, 'RAGeATM')[0].record.id).toBe('project-rageatm')
+    expect(searchContent(index.records, 'Time2Move')[0].record.id).toBe('project-time2move')
+    for (const cell of comparison.cells!) {
+      expect(searchContent(index.records, `BM25 ${cell.text}`)[0].record.destination, cell.destination.label).toEqual(cell.destination)
+    }
+    const bodyMatch = searchContent(index.records, 'work arrives unevenly')[0].record
+    expect(bodyMatch.href).toMatch(/^\/writing\/designing-automation-platforms-for-real-workflows#content-/)
+    expect(bodyMatch.granularity).toBe('block')
+    expect(bodyMatch.destination?.label).toContain('Designing Automation Platforms for Real Workflows')
+    expect(bodyMatch.destination?.label).toContain('Start from the workflow map')
+    expect(bodyMatch.destination?.label).toContain(bodyMatch.title)
+  })
+
+  test('rejects duplicate IDs and ambiguous destinations while retaining intentional canonical page deduplication', () => {
+    const broad = projectSearchRecord(allSystems[0])
+    expect(() => assembleSearchIndex([broad, { ...broad, href: '/another-page' }])).toThrow('Duplicate search record ID')
+    expect(assembleSearchIndex([broad, { ...broad, id: 'alias' }]).records).toEqual([broad])
+    const content = createProjectContent(allSystems[0]).records
+    expect(() => assembleSearchIndex([content[0], { ...content[0], id: 'duplicate-anchor' }])).toThrow('Duplicate content destination')
+    expect(() => assembleSearchIndex([{ ...content[0], href: '/wrong-destination' }])).toThrow('does not match href')
+    const cell = { text: 'Duplicated target', destination: content[1].destination! }
+    expect(() => assembleSearchIndex([{ ...content[0], cells: [cell] }, content[1]])).toThrow('Duplicate content destination')
   })
 })

@@ -5,6 +5,7 @@ import { ArrowRight, Github } from 'lucide-react'
 import { notFound } from 'next/navigation'
 import { DisclosurePanel } from '@/components/site/disclosure-panel'
 import { CaseStudyStoryContent } from '@/components/site/case-study-story'
+import { ContentDestinationManifest } from '@/components/site/content-destination-manifest'
 import { MetricCard } from '@/components/site/metric-card'
 import { PageIntro } from '@/components/site/page-intro'
 import { TechTag } from '@/components/site/tech-tag'
@@ -20,6 +21,8 @@ import {
   type RetrievalCapabilityLadder,
 } from '@/data/systems'
 import { absoluteUrl, createPageMetadata } from '@/lib/seo'
+import { createProjectContent, projectBlockKey, projectDefaults, projectProofLinkCopy, retrievalColumns, retrievalLevelKey, type ProjectContent } from '@/lib/search/project-destinations'
+import { destinationAttributes, type ContentDestination } from '@/lib/search/destinations'
 
 interface Props {
   params: Promise<{ slug: string }>
@@ -63,6 +66,7 @@ export default async function CaseStudyDetailPage({ params }: Readonly<Props>) {
   }
 
   const relatedProjects = getRelatedProjects(system)
+  const content = createProjectContent(system)
   const breadcrumbStructuredData = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
@@ -85,6 +89,7 @@ export default async function CaseStudyDetailPage({ params }: Readonly<Props>) {
   return (
     <div className="min-h-screen pb-12 pt-8 md:pt-10">
       <div className="mx-auto max-w-7xl space-y-12 px-4 sm:px-6 lg:px-8">
+        <ContentDestinationManifest page={content.page} destinations={content.destinations} />
         <script
           type="application/ld+json"
           dangerouslySetInnerHTML={{ __html: JSON.stringify(breadcrumbStructuredData) }}
@@ -107,29 +112,30 @@ export default async function CaseStudyDetailPage({ params }: Readonly<Props>) {
                 ]
               : []),
           ]}
-          aside={<CaseStudyAtAGlance system={system} />}
+          aside={<CaseStudyAtAGlance system={system} content={content} />}
         />
 
         {system.story ? (
-          <CaseStudyStoryContent story={system.story} stack={system.stack} />
+          <CaseStudyStoryContent story={system.story} stack={system.stack} content={content} />
         ) : (
           <>
         <section className="grid gap-8 xl:grid-cols-[1.02fr_0.98fr]">
           <ProjectVisual system={system} />
 
           <div className="grid gap-5">
-            <NarrativeCard title="Problem" body={system.problem} />
-            <NarrativeCard title="Core Constraint" body={system.coreConstraint} />
+            <NarrativeCard title="Problem" body={system.problem} destination={content.get('problem')} />
+            <NarrativeCard title="Core Constraint" body={system.coreConstraint} destination={content.get('constraint')} />
             <NarrativeCard
               title={system.solutionTitle ?? 'Solution / What I Built'}
               body={system.system}
+              destination={content.get('solution')}
             />
-            <NarrativeCard title="Results" body={system.outcome} />
+            <NarrativeCard title="Results" body={system.outcome} destination={content.get('results')} />
           </div>
         </section>
 
         {system.metrics?.length ? (
-          <section>
+          <section {...content.attrs('metrics')}>
             <SectionHeader
               align="left"
               title="Quantified Outcomes"
@@ -137,27 +143,29 @@ export default async function CaseStudyDetailPage({ params }: Readonly<Props>) {
             />
             <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
               {system.metrics.map((metric) => (
-                <MetricCard key={`${metric.value}-${metric.label}`} metric={metric} />
+                <div key={`${metric.value}-${metric.label}`} {...content.attrs('metric', projectBlockKey(metric.label, [metric.value, metric.detail].filter(Boolean).join(' ')))}>
+                  <MetricCard metric={metric} />
+                </div>
               ))}
             </div>
           </section>
         ) : null}
 
-        <section>
+        <section {...content.attrs('architecture')}>
           <SectionHeader
             align="left"
             title="Architecture"
             subtitle="The pipeline is shown as explicit stages so the system boundary is inspectable."
           />
           {system.architecture?.length ? (
-            <ArchitectureFlow steps={system.architecture} />
+            <ArchitectureFlow steps={system.architecture} content={content} />
           ) : (
-            <FallbackArchitecture system={system} />
+            <FallbackArchitecture system={system} content={content} />
           )}
         </section>
 
         <section className="grid gap-6 lg:grid-cols-[1fr_1fr]">
-          <article className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm">
+          <article {...content.attrs('technical-stack')} className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm">
             <h2 className="text-2xl font-semibold tracking-tight text-text-primary">
               Technical Stack
             </h2>
@@ -171,11 +179,12 @@ export default async function CaseStudyDetailPage({ params }: Readonly<Props>) {
                 className="mt-7"
                 title="Data sources"
                 items={system.dataSources}
+                destination={content.get('data-sources')}
               />
             ) : null}
           </article>
 
-          <article className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm">
+          <article {...content.attrs('relevance')} className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm">
             <h2 className="text-2xl font-semibold tracking-tight text-text-primary">
               Applied Relevance
             </h2>
@@ -183,19 +192,14 @@ export default async function CaseStudyDetailPage({ params }: Readonly<Props>) {
               className="mt-5"
               title="Where the pattern matters"
               items={
-                system.realWorldRelevance ?? [
-                  'Workflow analysis',
-                  'Operational software design',
-                  'Prototype planning',
-                  'System architecture review',
-                ]
+                system.realWorldRelevance ?? projectDefaults.relevance
               }
             />
           </article>
         </section>
 
         {system.dashboardViews?.length ? (
-          <section>
+          <section {...content.attrs('dashboard-views')}>
             <SectionHeader
               align="left"
               title="Dashboard Views"
@@ -205,6 +209,7 @@ export default async function CaseStudyDetailPage({ params }: Readonly<Props>) {
               {system.dashboardViews.map((view) => (
                 <div
                   key={view}
+                  {...content.attrs('dashboard', view)}
                   className="rounded-[1.25rem] border border-border-subtle bg-background-elevated px-4 py-4 text-sm font-medium text-text-primary shadow-sm"
                 >
                   {view}
@@ -214,7 +219,7 @@ export default async function CaseStudyDetailPage({ params }: Readonly<Props>) {
           </section>
         ) : null}
 
-        <section>
+        <section {...content.attrs('proof')}>
           <SectionHeader
             align="left"
             title="Proof Surfaces"
@@ -222,13 +227,13 @@ export default async function CaseStudyDetailPage({ params }: Readonly<Props>) {
           />
           <div className="grid gap-6 lg:grid-cols-2">
             {system.proofSections.map((section) => (
-              <ProofSectionCard key={section.id} section={section} />
+              <ProofSectionCard key={section.id} section={section} content={content} />
             ))}
           </div>
         </section>
 
         <section className="grid gap-6 lg:grid-cols-[1fr_1fr]">
-          <article className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm">
+          <article {...content.attrs('limitations')} className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm">
             <h2 className="text-2xl font-semibold tracking-tight text-text-primary">
               Limitations
             </h2>
@@ -236,15 +241,12 @@ export default async function CaseStudyDetailPage({ params }: Readonly<Props>) {
               className="mt-5"
               title="What this does not claim"
               items={
-                system.limitations ?? [
-                  'This page describes the current proof available for the project.',
-                  'Additional screenshots, logs, or usage artifacts should be added before making stronger claims.',
-                ]
+                system.limitations ?? projectDefaults.limitations
               }
             />
           </article>
 
-          <article className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm">
+          <article {...content.attrs('improvements')} className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm">
             <h2 className="text-2xl font-semibold tracking-tight text-text-primary">
               Next Improvements
             </h2>
@@ -252,26 +254,22 @@ export default async function CaseStudyDetailPage({ params }: Readonly<Props>) {
               className="mt-5"
               title="Reasonable next steps"
               items={
-                system.nextImprovements ?? [
-                  'Add stronger screenshots or walkthrough artifacts.',
-                  'Document validation checks and edge cases more completely.',
-                  'Tighten public write-up as the system matures.',
-                ]
+                system.nextImprovements ?? projectDefaults.improvements
               }
             />
           </article>
         </section>
 
         {system.retrievalCapabilityLadder ? (
-          <RetrievalCapabilityLadderSection ladder={system.retrievalCapabilityLadder} />
+          <RetrievalCapabilityLadderSection ladder={system.retrievalCapabilityLadder} content={content} />
         ) : null}
 
-        {system.githubUrl || system.externalUrl ? <ProofLinkSection system={system} /> : null}
+        {system.githubUrl || system.externalUrl ? <ProofLinkSection system={system} content={content} /> : null}
           </>
         )}
 
         {system.successorLink ? (
-          <section className="rounded-[1.75rem] border border-border-subtle bg-background-subtle p-6 sm:p-7">
+          <section {...content.attrs('continuation')} className="rounded-[1.75rem] border border-border-subtle bg-background-subtle p-6 sm:p-7">
             <h2 className="text-2xl font-semibold tracking-tight text-text-primary">
               Project continuation
             </h2>
@@ -317,38 +315,40 @@ export default async function CaseStudyDetailPage({ params }: Readonly<Props>) {
 
 function RetrievalCapabilityLadderSection({
   ladder,
+  content,
 }: Readonly<{
   ladder: RetrievalCapabilityLadder
+  content: ProjectContent
 }>) {
   return (
     <section>
-      <DisclosurePanel title={ladder.title} summary={ladder.summary}>
+      <DisclosurePanel {...content.attrs('retrieval-ladder')} title={ladder.title} summary={ladder.summary}>
         <div className="space-y-6">
-          <p className="max-w-4xl text-sm leading-7 text-text-secondary">
+          <p {...content.attrs('retrieval', 'overview')} className="max-w-4xl text-sm leading-7 text-text-secondary">
             {ladder.intro}
           </p>
 
           <div className="grid gap-4 lg:grid-cols-2">
-            <p className="rounded-[1.25rem] border border-border-subtle bg-background-subtle p-4 text-sm leading-7 text-text-secondary">
+            <p {...content.attrs('retrieval', 'safe-claim')} className="rounded-[1.25rem] border border-border-subtle bg-background-subtle p-4 text-sm leading-7 text-text-secondary">
               {ladder.safeClaim}
             </p>
-            <p className="rounded-[1.25rem] border border-border-subtle bg-background-subtle p-4 text-sm leading-7 text-text-secondary">
+            <p {...content.attrs('retrieval', 'guardrail')} className="rounded-[1.25rem] border border-border-subtle bg-background-subtle p-4 text-sm leading-7 text-text-secondary">
               {ladder.guardrail}
             </p>
           </div>
 
-          <CapabilityLadderTable ladder={ladder} />
+          <CapabilityLadderTable ladder={ladder} content={content} />
 
-          <p className="rounded-[1.25rem] border border-border-subtle bg-background-subtle p-4 text-sm leading-7 text-text-secondary">
+          <p {...content.attrs('retrieval', 'heuristic-note')} className="rounded-[1.25rem] border border-border-subtle bg-background-subtle p-4 text-sm leading-7 text-text-secondary">
             {ladder.heuristicNote}
           </p>
 
-          <div>
+          <div {...content.attrs('retrieval-interpretations')}>
             <h4 className="text-lg font-semibold text-text-primary">Clean interpretation</h4>
-            <InterpretationTable ladder={ladder} />
+            <InterpretationTable ladder={ladder} content={content} />
           </div>
 
-          <p className="max-w-4xl text-sm leading-7 text-text-secondary">
+          <p {...content.attrs('retrieval', 'future-work')} className="max-w-4xl text-sm leading-7 text-text-secondary">
             {ladder.futureWork}
           </p>
         </div>
@@ -359,58 +359,31 @@ function RetrievalCapabilityLadderSection({
 
 function CapabilityLadderTable({
   ladder,
-}: Readonly<{ ladder: RetrievalCapabilityLadder }>) {
+  content,
+}: Readonly<{ ladder: RetrievalCapabilityLadder; content: ProjectContent }>) {
   return (
-    <div className="overflow-x-auto rounded-[1.25rem] border border-border-subtle">
+    <div data-content-table className="overflow-x-auto rounded-[1.25rem] border border-border-subtle">
       <table className="min-w-[1180px] divide-y divide-border-subtle text-left text-sm">
         <caption className="sr-only">{ladder.title}</caption>
         <thead className="bg-background-subtle text-xs uppercase tracking-[0.16em] text-text-muted">
           <tr>
-            <th scope="col" className="px-4 py-3 text-right">
-              Level
-            </th>
-            <th scope="col" className="px-4 py-3">
-              System type
-            </th>
-            <th scope="col" className="px-4 py-3">
-              What it compares
-            </th>
-            <th scope="col" className="px-4 py-3">
-              Meaning captured
-            </th>
-            <th scope="col" className="px-4 py-3">
-              Question under the question ability
-            </th>
-            <th scope="col" className="px-4 py-3">
-              Personal context ability
-            </th>
-            <th scope="col" className="px-4 py-3">
-              Real-world grounding
-            </th>
-            <th scope="col" className="px-4 py-3">
-              Best use case
-            </th>
-            <th scope="col" className="px-4 py-3">
-              Fatal weakness
-            </th>
+            {retrievalColumns.map(column => (
+              <th key={column.key} scope="col" className={`px-4 py-3 ${column.key === 'level' ? 'text-right' : ''}`}>{column.label}</th>
+            ))}
           </tr>
         </thead>
         <tbody className="divide-y divide-border-subtle bg-background-elevated text-text-secondary">
           {ladder.levels.map((level) => (
-            <tr key={level.level}>
-              <td className="px-4 py-3 text-right font-mono text-xs text-text-primary">
-                {level.level}
-              </td>
-              <td className="px-4 py-3 font-medium text-text-primary">
-                {level.systemType}
-              </td>
-              <td className="px-4 py-3">{level.compares}</td>
-              <td className="px-4 py-3">{level.meaningCaptured}</td>
-              <td className="px-4 py-3">{level.questionUnderQuestionAbility}</td>
-              <td className="px-4 py-3">{level.personalContextAbility}</td>
-              <td className="px-4 py-3">{level.realWorldGrounding}</td>
-              <td className="px-4 py-3">{level.bestUseCase}</td>
-              <td className="px-4 py-3">{level.fatalWeakness}</td>
+            <tr key={retrievalLevelKey(level)}>
+              {retrievalColumns.map(column => column.key === 'systemType' ? (
+                <th key={column.key} scope="row" {...content.attrs('retrieval-level', retrievalLevelKey(level))} className="px-4 py-3 font-medium text-text-primary">
+                  {level.systemType}
+                </th>
+              ) : (
+                <td key={column.key} {...content.attrs('retrieval-level', retrievalLevelKey(level), column.key)} className={`px-4 py-3 ${column.key === 'level' ? 'text-right font-mono text-xs text-text-primary' : ''}`}>
+                  {level[column.key]}
+                </td>
+              ))}
             </tr>
           ))}
         </tbody>
@@ -421,9 +394,10 @@ function CapabilityLadderTable({
 
 function InterpretationTable({
   ladder,
-}: Readonly<{ ladder: RetrievalCapabilityLadder }>) {
+  content,
+}: Readonly<{ ladder: RetrievalCapabilityLadder; content: ProjectContent }>) {
   return (
-    <div className="mt-4 overflow-x-auto rounded-[1.25rem] border border-border-subtle">
+    <div data-content-table className="mt-4 overflow-x-auto rounded-[1.25rem] border border-border-subtle">
       <table className="min-w-[620px] divide-y divide-border-subtle text-left text-sm">
         <caption className="sr-only">Clean interpretation of retrieval methods</caption>
         <thead className="bg-background-subtle text-xs uppercase tracking-[0.16em] text-text-muted">
@@ -438,9 +412,9 @@ function InterpretationTable({
         </thead>
         <tbody className="divide-y divide-border-subtle bg-background-elevated text-text-secondary">
           {ladder.interpretations.map((item) => (
-            <tr key={item.method}>
-              <td className="px-4 py-3 font-medium text-text-primary">{item.method}</td>
-              <td className="px-4 py-3">&quot;{item.meaning}&quot;</td>
+            <tr key={projectBlockKey(item.method, item.meaning)}>
+              <th scope="row" {...content.attrs('retrieval-interpretation', projectBlockKey(item.method, item.meaning))} className="px-4 py-3 font-medium text-text-primary">{item.method}</th>
+              <td {...content.attrs('retrieval-interpretation', projectBlockKey(item.method, item.meaning), 'meaning')} className="px-4 py-3">&quot;{item.meaning}&quot;</td>
             </tr>
           ))}
         </tbody>
@@ -511,23 +485,12 @@ function RelatedCaseStudyCard({
 
 function ProofLinkSection({
   system,
-}: Readonly<{ system: FeaturedSystemCaseStudy }>) {
-  let title = 'Live Proof'
-  let description =
-    'This system has a live public surface, which matters because delivery only counts when the software is actually in use.'
-
-  if (system.githubUrl && system.externalUrl) {
-    title = 'Public Repository and Live Proof'
-    description =
-      'This case study has both a public code surface and a live external proof surface.'
-  } else if (system.githubUrl) {
-    title = 'Public Repository'
-    description =
-      'The public code link is provided for review of the prototype and technical approach. This does not represent paid deployment, production adoption, or client ROI unless stated elsewhere on the page.'
-  }
+  content,
+}: Readonly<{ system: FeaturedSystemCaseStudy; content: ProjectContent }>) {
+  const { title, description } = projectProofLinkCopy(system)
 
   return (
-    <section className="rounded-[1.75rem] border border-border-subtle bg-background-subtle p-6 sm:p-7">
+    <section {...content.attrs('proof-links')} className="rounded-[1.75rem] border border-border-subtle bg-background-subtle p-6 sm:p-7">
       <h2 className="text-2xl font-semibold tracking-tight text-text-primary">
         {title}
       </h2>
@@ -553,9 +516,10 @@ function ProofLinkSection({
 
 function CaseStudyAtAGlance({
   system,
-}: Readonly<{ system: FeaturedSystemCaseStudy }>) {
+  content,
+}: Readonly<{ system: FeaturedSystemCaseStudy; content: ProjectContent }>) {
   return (
-    <div className="rounded-[1.75rem] border border-border-subtle bg-background-subtle p-6">
+    <div {...content.attrs('at-a-glance')} className="rounded-[1.75rem] border border-border-subtle bg-background-subtle p-6">
       <p className="font-mono text-xs uppercase tracking-[0.22em] text-link-primary">
         At a glance
       </p>
@@ -650,21 +614,23 @@ function ProjectVisual({ system }: Readonly<{ system: FeaturedSystemCaseStudy }>
 function NarrativeCard({
   title,
   body,
-}: Readonly<{ title: string; body: string }>) {
+  destination,
+}: Readonly<{ title: string; body: string; destination: ContentDestination }>) {
   return (
-    <article className="rounded-[1.5rem] border border-border-subtle bg-background-elevated p-6 shadow-sm">
+    <article {...destinationAttributes(destination)} className="rounded-[1.5rem] border border-border-subtle bg-background-elevated p-6 shadow-sm">
       <h2 className="text-lg font-semibold text-text-primary">{title}</h2>
       <p className="mt-3 text-sm leading-7 text-text-secondary">{body}</p>
     </article>
   )
 }
 
-function ArchitectureFlow({ steps }: Readonly<{ steps: ArchitectureStep[] }>) {
+function ArchitectureFlow({ steps, content }: Readonly<{ steps: ArchitectureStep[]; content: ProjectContent }>) {
   return (
     <ol className="grid gap-4 lg:grid-cols-3">
       {steps.map((step, index) => (
         <li
           key={`${step.label}-${index}`}
+          {...content.attrs('architecture-step', projectBlockKey(step.label, step.detail))}
           className="relative rounded-[1.5rem] border border-border-subtle bg-background-elevated p-5 shadow-sm"
         >
           <div className="flex items-center gap-3">
@@ -682,9 +648,10 @@ function ArchitectureFlow({ steps }: Readonly<{ steps: ArchitectureStep[] }>) {
 
 function FallbackArchitecture({
   system,
-}: Readonly<{ system: FeaturedSystemCaseStudy }>) {
+  content,
+}: Readonly<{ system: FeaturedSystemCaseStudy; content: ProjectContent }>) {
   return (
-    <article className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm">
+    <article {...content.attrs('architecture-pieces')} className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm">
       <h3 className="text-xl font-semibold text-text-primary">Key system pieces</h3>
       <div className="mt-6 grid gap-3 md:grid-cols-3">
         {system.systemHighlights.map((highlight) => (
@@ -700,12 +667,12 @@ function FallbackArchitecture({
   )
 }
 
-function ProofSectionCard({ section }: Readonly<{ section: ProofSection }>) {
+function ProofSectionCard({ section, content }: Readonly<{ section: ProofSection; content: ProjectContent }>) {
   const title =
     section.status === 'planned' ? `${section.title} (to be added)` : section.title
 
   return (
-    <article className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm">
+    <article {...content.attrs('proof', section.id)} className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm">
       <div className="flex flex-wrap items-center gap-3">
         <h3 className="text-xl font-semibold text-text-primary">{title}</h3>
         <Badge variant={section.status === 'available' ? 'secondary' : 'outline'}>
@@ -729,13 +696,15 @@ function DetailList({
   title,
   items,
   className,
+  destination,
 }: Readonly<{
   title: string
   items: string[]
   className?: string
+  destination?: ContentDestination
 }>) {
   return (
-    <div className={className}>
+    <div {...(destination ? destinationAttributes(destination) : {})} className={className}>
       <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-text-muted">
         {title}
       </p>

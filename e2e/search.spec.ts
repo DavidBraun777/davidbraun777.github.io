@@ -66,7 +66,7 @@ test.describe('site content search', () => {
       ['work arrives unevenly', '/writing/designing-automation-platforms-for-real-workflows'],
     ]) {
       await input.fill(query)
-      await expect(dialog.locator(`a[href="${href}"]`), query).toBeVisible()
+      await expect(dialog.locator(`a[href="${href}"], a[href^="${href}#"]`).first(), query).toBeVisible()
     }
 
     await input.fill('resume')
@@ -209,11 +209,11 @@ test.describe('site content search', () => {
     await openSearch(page)
     const dialog = searchDialog(page)
     await searchInput(page).fill('Hombuzz')
-    const historicalResult = dialog.locator('a[href="/case-studies/time2move"]')
+    const historicalResult = dialog.locator('a[href="/case-studies/time2move"], a[href^="/case-studies/time2move#"]').first()
     await expect(historicalResult).toBeVisible()
     await historicalResult.focus()
     await page.keyboard.press('Enter')
-    await expect(page).toHaveURL(/\/case-studies\/time2move$/)
+    await expect(page).toHaveURL(/\/case-studies\/time2move(?:#.*)?$/)
     await expect(dialog).toBeHidden()
     const historicalWork = page.locator('main')
     await expect(historicalWork).toContainText('Past client project · Continued independently')
@@ -302,6 +302,7 @@ test.describe('site content search', () => {
   })
 
   test('every indexed destination resolves and every section anchor exists visibly', async ({ page, request, baseURL }) => {
+    test.setTimeout(120_000)
     const response = await request.get('/search-index.json')
     expect(response.ok()).toBe(true)
     expect(response.headers()['content-type']).toContain('application/json')
@@ -311,7 +312,10 @@ test.describe('site content search', () => {
     const pdfs = new Set<string>()
     const origin = new URL(baseURL!).origin
 
-    for (const record of index.records) {
+    for (const record of index.records.flatMap(record => [
+      record,
+      ...(record.cells ?? []).map(cell => ({ title: cell.destination.label, href: `${cell.destination.page}#${cell.destination.anchor}` })),
+    ])) {
       const destination = new URL(record.href, origin)
       expect(destination.origin, record.title).toBe(origin)
       expect(destination.pathname, record.title).not.toMatch(/^\/(?:projects|blog|resume)(?:\/|$)/)
@@ -339,6 +343,9 @@ test.describe('site content search', () => {
         expect(anchor).toMatch(/^[a-zA-Z][\w-]*$/)
         const target = page.locator(`#${anchor}`)
         await expect(target, `${path}#${anchor}`).toHaveCount(1)
+        // Follow the same hash path visitors can bookmark, revealing its declared
+        // disclosures before checking content inside them.
+        await page.evaluate(hash => { window.location.hash = hash }, anchor)
         await expect(target, `${path}#${anchor}`).toBeVisible()
       }
     }
