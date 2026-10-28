@@ -29,6 +29,10 @@ export interface BlogPostMeta {
 
 /** Only allow slugs that are alphanumeric with hyphens/underscores (no mutation) */
 const VALID_SLUG_REGEX = /^[a-zA-Z0-9][a-zA-Z0-9_-]*$/
+function isPublished(data: Record<string, unknown>): boolean {
+  return data.draft !== true && data.published !== false
+}
+
 function isValidSlug(slug: string): boolean {
   return VALID_SLUG_REGEX.test(slug)
 }
@@ -61,6 +65,7 @@ export function getAllPosts(): BlogPostMeta[] {
       const fullPath = path.join(postsDirectory, fileName)
       const fileContents = fs.readFileSync(fullPath, 'utf8')
       const { data, content } = matter(fileContents)
+      if (!isPublished(data)) return null
 
       return {
         slug,
@@ -73,6 +78,7 @@ export function getAllPosts(): BlogPostMeta[] {
         readingTime: calculateReadingTime(content),
       }
     })
+    .filter((post) => post !== null)
     .sort((a, b) => new Date(b.date).getTime() - new Date(a.date).getTime())
 
   return posts
@@ -84,6 +90,7 @@ export function getPostBySlug(slug: string): BlogPost | null {
     const fullPath = path.join(postsDirectory, `${slug}.mdx`)
     const fileContents = fs.readFileSync(fullPath, 'utf8')
     const { data, content } = matter(fileContents)
+    if (!isPublished(data)) return null
 
     return {
       slug,
@@ -116,6 +123,10 @@ export function getAllPostSlugs(): string[] {
         return false
       }
       return true
+    })
+    .filter((fileName) => {
+      const { data } = matter(fs.readFileSync(path.join(postsDirectory, fileName), 'utf8'))
+      return isPublished(data)
     })
     .map((fileName) => fileName.replace(/\.mdx$/, ''))
 }

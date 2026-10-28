@@ -44,7 +44,9 @@ export default function CareerStoryPage() {
             {careerStoryStages.map((stage, index) => (
               <article
                 key={stage.id}
-                className="rounded-[1.5rem] border border-border-subtle bg-background-elevated p-5 shadow-sm"
+                id={`career-${stage.id}`}
+                tabIndex={-1}
+                className="scroll-mt-28 rounded-[1.5rem] border border-border-subtle bg-background-elevated p-5 shadow-sm"
               >
                 <p className="font-mono text-xs font-semibold text-link-primary">
                   Chapter {index + 1}
@@ -76,7 +78,7 @@ export default function CareerStoryPage() {
           </div>
         </section>
 
-        <section>
+        <section id="system-skills" tabIndex={-1} className="scroll-mt-28">
           <SectionHeader
             align="left"
             title="The system scope that emerged"

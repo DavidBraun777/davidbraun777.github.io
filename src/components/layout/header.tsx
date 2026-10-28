@@ -2,12 +2,13 @@
 
 import { useCallback, useEffect, useRef, useState } from 'react'
 import Link from 'next/link'
-import { Menu, X } from 'lucide-react'
+import { Menu, Search, X } from 'lucide-react'
 import { usePathname } from 'next/navigation'
 import { northStarIdentity } from '@/data/career-story'
 import { primaryNavigation, profile } from '@/data/profile'
 import { ThemeToggle } from '@/components/site/theme-toggle'
 import { HeaderNavigationItem } from '@/components/layout/header-navigation-item'
+import { SiteSearch } from '@/components/site/site-search'
 
 function isActive(pathname: string, href: string) {
   const normalizedHref = href.split('#')[0] || '/'
@@ -20,8 +21,11 @@ export function Header() {
   const [menuOpen, setMenuOpen] = useState(false)
   const [desktopSection, setDesktopSection] = useState<string | null>(null)
   const [mobileSection, setMobileSection] = useState<string | null>(null)
+  const [searchOpen, setSearchOpen] = useState(false)
   const headerRef = useRef<HTMLElement>(null)
   const mobileTriggerRef = useRef<HTMLButtonElement>(null)
+  const searchTriggerRef = useRef<HTMLButtonElement>(null)
+  const searchReturnFocusRef = useRef<HTMLElement | null>(null)
 
   const closeNavigation = useCallback(() => {
     setMenuOpen(false)
@@ -29,8 +33,34 @@ export function Header() {
     setMobileSection(null)
   }, [])
 
+  const openSearch = useCallback((trigger?: HTMLElement) => {
+    const previousFocus = trigger ?? document.activeElement
+    searchReturnFocusRef.current = previousFocus instanceof HTMLElement
+      && !previousFocus.closest('#mobile-navigation, [id$="-navigation"]')
+      ? previousFocus
+      : searchTriggerRef.current
+    closeNavigation()
+    setSearchOpen(true)
+  }, [closeNavigation])
+
+  useEffect(() => {
+    const handleSearchShortcut = (event: KeyboardEvent) => {
+      if (event.defaultPrevented || event.isComposing || event.repeat || event.altKey) return
+      if (!(event.metaKey || event.ctrlKey) || event.key.toLowerCase() !== 'k') return
+      const target = event.target
+      if (target instanceof Element && target.closest(
+        'input, textarea, select, [contenteditable]:not([contenteditable="false"]), [role="textbox"]'
+      )) return
+      event.preventDefault()
+      if (!searchOpen) openSearch()
+    }
+    window.addEventListener('keydown', handleSearchShortcut)
+    return () => window.removeEventListener('keydown', handleSearchShortcut)
+  }, [openSearch, searchOpen])
+
   useEffect(() => {
     closeNavigation()
+    setSearchOpen(false)
   }, [pathname, closeNavigation])
 
   useEffect(() => {
@@ -62,13 +92,13 @@ export function Header() {
 
   return (
     <header ref={headerRef} className="sticky top-0 z-50 border-b border-[var(--theme-frame-border)] bg-[var(--theme-frame-bg)] text-[var(--theme-frame-text)] backdrop-blur-xl">
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-4 px-4 py-4 sm:px-6 lg:px-8">
+      <div className="mx-auto flex max-w-7xl items-center justify-between gap-2 px-4 py-4 sm:gap-3 sm:px-6 lg:px-8">
         <div className="min-w-0">
           <Link href="/" onClick={closeNavigation} className="inline-flex flex-col">
             <span className="text-lg font-semibold tracking-tight text-[var(--theme-frame-text)]">
               {profile.name}
             </span>
-            <span className="text-sm text-[var(--theme-frame-text-muted)]">
+            <span className="text-xs text-[var(--theme-frame-text-muted)] sm:text-sm">
               {northStarIdentity}
             </span>
           </Link>
@@ -87,19 +117,30 @@ export function Header() {
           ))}
         </nav>
 
-        <div className="hidden items-center gap-3 xl:flex">
+        <div className="flex shrink-0 items-center gap-1 sm:gap-2">
+          <button
+            ref={searchTriggerRef}
+            type="button"
+            aria-label="Search site"
+            aria-haspopup="dialog"
+            aria-keyshortcuts="Control+K Meta+K"
+            aria-expanded={searchOpen}
+            aria-controls="site-search-dialog"
+            title="Search site (⌘K / Ctrl+K)"
+            onClick={(event) => openSearch(event.currentTarget)}
+            className="inline-flex h-11 w-11 items-center justify-center rounded-full border border-[var(--theme-frame-border)] bg-[var(--theme-frame-overlay)] text-[var(--theme-frame-text)] hover:border-[var(--theme-frame-border-strong)] hover:bg-[var(--theme-frame-overlay-strong)] motion-reduce:transition-none xl:h-10 xl:w-auto xl:gap-2 xl:px-3"
+          >
+            <Search className="h-4 w-4" aria-hidden="true" />
+            <span className="hidden whitespace-nowrap text-sm xl:inline">Search site…</span>
+          </button>
           <ThemeToggle />
           <Link
             href="/contact"
             onClick={closeNavigation}
-            className="rounded-full bg-[var(--theme-frame-cta-bg)] px-4 py-2 text-sm font-medium text-[var(--theme-frame-cta-text)] transition-colors hover:bg-[var(--theme-frame-cta-bg-hover)]"
+            className="hidden whitespace-nowrap rounded-full bg-[var(--theme-frame-cta-bg)] px-4 py-2 text-sm font-medium text-[var(--theme-frame-cta-text)] transition-colors hover:bg-[var(--theme-frame-cta-bg-hover)] xl:inline-flex"
           >
             Book a Call
           </Link>
-        </div>
-
-        <div className="flex items-center gap-2 xl:hidden">
-          <ThemeToggle />
           <button
             ref={mobileTriggerRef}
             type="button"
@@ -107,7 +148,7 @@ export function Header() {
               setMenuOpen((current) => !current)
               setMobileSection(null)
             }}
-            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[var(--theme-frame-border)] bg-[var(--theme-frame-overlay)] text-[var(--theme-frame-text)] hover:border-[var(--theme-frame-border-strong)] hover:bg-[var(--theme-frame-overlay-strong)]"
+            className="inline-flex h-10 w-10 items-center justify-center rounded-full border border-[var(--theme-frame-border)] bg-[var(--theme-frame-overlay)] text-[var(--theme-frame-text)] hover:border-[var(--theme-frame-border-strong)] hover:bg-[var(--theme-frame-overlay-strong)] xl:hidden"
             aria-expanded={menuOpen}
             aria-controls="mobile-navigation"
             aria-label={menuOpen ? 'Close navigation menu' : 'Open navigation menu'}
@@ -147,6 +188,11 @@ export function Header() {
           </div>
         </div>
       ) : null}
+      <SiteSearch
+        open={searchOpen}
+        onOpenChange={setSearchOpen}
+        returnFocusRef={searchReturnFocusRef}
+      />
     </header>
   )
 }

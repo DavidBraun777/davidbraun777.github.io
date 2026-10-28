@@ -339,23 +339,24 @@ describe('mounted Header navigation', () => {
       - remove.mock.calls.filter(([event]) => event === type).length
     )
 
-    expect(balances()).toEqual([0, 0, 0])
+    // The search shortcut remains registered while the header is mounted.
+    expect(balances()).toEqual([1, 0, 0])
     click(header.menuButton())
-    expect(balances()).toEqual([1, 1, 0])
+    expect(balances()).toEqual([2, 1, 0])
     header.rerender()
-    expect(balances()).toEqual([1, 1, 0])
+    expect(balances()).toEqual([2, 1, 0])
     click(header.disclosure('Mobile', 'Research'))
-    expect(balances()).toEqual([1, 2, 1])
+    expect(balances()).toEqual([2, 2, 1])
     header.rerender()
-    expect(balances()).toEqual([1, 2, 1])
+    expect(balances()).toEqual([2, 2, 1])
     click(header.disclosure('Mobile', 'Research'))
-    expect(balances()).toEqual([1, 1, 0])
+    expect(balances()).toEqual([2, 1, 0])
     click(header.menuButton())
-    expect(balances()).toEqual([0, 0, 0])
+    expect(balances()).toEqual([1, 0, 0])
 
     click(header.menuButton())
     click(header.disclosure('Mobile', 'Experience'))
-    expect(balances()).toEqual([1, 2, 1])
+    expect(balances()).toEqual([2, 2, 1])
     header.unmount()
     expect(balances()).toEqual([0, 0, 0])
     for (const { add, remove, type } of subscriptions) {
