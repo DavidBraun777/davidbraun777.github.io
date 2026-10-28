@@ -1213,15 +1213,20 @@ const systemById = new Map<string, FeaturedSystemCaseStudy>(
   )
 )
 
-export const featuredSystems: FeaturedSystemCaseStudy[] = orderedSystemIds.map((id) => {
-  const system = systemById.get(id)
+/** Validate selected public proof against its registry before publishing it. */
+export function selectFeaturedSystems(registry: ReadonlyMap<string, FeaturedSystemCaseStudy>, ids: readonly string[]): FeaturedSystemCaseStudy[] {
+  return ids.map((id) => {
+    const system = registry.get(id)
 
-  if (!system) {
-    throw new Error(`Missing featured system for id: ${id}`)
-  }
+    if (!system) {
+      throw new Error(`Missing featured system for id: ${id}`)
+    }
 
-  return system
-})
+    return system
+  })
+}
+
+export const featuredSystems = selectFeaturedSystems(systemById, orderedSystemIds)
 
 export const allSystems: FeaturedSystemCaseStudy[] = [
   ...featuredSystems,

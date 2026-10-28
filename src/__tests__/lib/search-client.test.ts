@@ -10,9 +10,14 @@ const row: SearchRecord = {
 }
 const index = (record: unknown): unknown => ({ version: 1, records: [record] })
 
-afterEach(() => vi.unstubAllGlobals())
+afterEach(() => { vi.unstubAllGlobals(); vi.useRealTimers() })
 
 describe('search index client contract', () => {
+  it('rejects malformed top-level documents and absent records', () => {
+    for (const value of [null, false, 1, {}, { version: 2 }, { version: 1 }, { version: 1, records: {} }, index(null)]) {
+      expect(isSearchIndex(value)).toBe(false)
+    }
+  })
   it('accepts broad canonical links and complete local content destinations', () => {
     expect(isSearchIndex(index(row))).toBe(true)
     const broad = { ...row, destination: undefined, cells: undefined, granularity: undefined, context: undefined }
@@ -73,5 +78,42 @@ describe('search index client contract', () => {
     await expect(retried).resolves.toEqual([row])
     expect(loadSearchIndex()).toBe(retried)
     expect(fetch).toHaveBeenCalledTimes(2)
+  })
+
+  it.each(['http', 'network', 'json'])('clears failed %s loads and permits a fresh successful request', async failure => {
+    vi.resetModules()
+    vi.stubGlobal('window', { setTimeout, clearTimeout })
+    const fetch = vi.fn().mockResolvedValueOnce({ ok: false })
+    if (failure === 'network') fetch.mockReset().mockRejectedValueOnce(new Error('network offline'))
+    if (failure === 'json') fetch.mockReset().mockResolvedValueOnce({ ok: true, json: async () => { throw new SyntaxError('bad json') } })
+    fetch.mockResolvedValueOnce({ ok: true, json: async () => ({ version: 1, records: [row] }) })
+    vi.stubGlobal('fetch', fetch)
+    const { loadSearchIndex } = await import('@/lib/search/client')
+    await expect(loadSearchIndex()).rejects.toThrow()
+    await expect(loadSearchIndex()).resolves.toEqual([row])
+    expect(fetch).toHaveBeenCalledTimes(2)
+  })
+
+  it('shares an in-flight request and aborts a hung fetch at its deadline', async () => {
+    vi.resetModules()
+    vi.useFakeTimers()
+    vi.stubGlobal('window', { setTimeout, clearTimeout })
+    let signal: AbortSignal | undefined
+    const fetch = vi.fn((_url, options: RequestInit) => new Promise((_resolve, reject) => {
+      signal = options.signal as AbortSignal
+      signal.addEventListener('abort', () => reject(new DOMException('Timed out', 'AbortError')))
+    }))
+    vi.stubGlobal('fetch', fetch)
+    const { loadSearchIndex } = await import('@/lib/search/client')
+    const pending = loadSearchIndex()
+    expect(loadSearchIndex()).toBe(pending)
+    const rejected = expect(pending).rejects.toMatchObject({ name: 'AbortError' })
+    await vi.advanceTimersByTimeAsync(10_000)
+    await rejected
+    expect(signal?.aborted).toBe(true)
+    expect(vi.getTimerCount()).toBe(0)
+    fetch.mockResolvedValueOnce({ ok: true, json: async () => ({ version: 1, records: [] }) })
+    await expect(loadSearchIndex()).resolves.toEqual([])
+    expect(vi.getTimerCount()).toBe(0)
   })
 })

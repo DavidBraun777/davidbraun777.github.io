@@ -105,6 +105,13 @@ describe('local content search', () => {
     expect(result.record.href).toBe('/writing/workflow-design')
   })
 
+  it('preserves a matching long token when there is no preceding word boundary to trim', () => {
+    const item = record('long-token', { tags: ['needle'], body: `${'x'.repeat(210)}needle ${'trailing '.repeat(30)}` })
+    const result = searchContent([item], 'needle')[0]
+    expect(result.snippet).toContain('needle')
+    expect(result.snippet.endsWith('…')).toBe(true)
+  })
+
   it('handles empty, punctuation-only, nonsensical and bounded long input', () => {
     const records = [record('VIFG')]
     for (const query of ['', ' \t\n ', '!?<>+=', 'zqxw987654321']) expect(searchContent(records, query)).toEqual([])
