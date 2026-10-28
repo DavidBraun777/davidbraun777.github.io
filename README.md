@@ -71,8 +71,15 @@ The current project evidence remains deliberately classified:
   production proof.
 - [arklandscaping.net](https://arklandscaping.net) is a current public delivery
   example.
-- `time2move.io` is a paused client project retained as past delivery evidence;
-  do not describe it as currently live.
+- Time2Move is past client work: David designed and developed the original real
+  estate website, including its site structure and lead-capture workflows. The
+  original `time2move.io` deployment is inactive. The client has since continued
+  the project independently as [Hombuzz](https://hombuzz.com/), with changes to its
+  brand, design, implementation, and direction. The compact entry under "Past
+  client work" on `/case-studies` documents David's initial contribution and labels
+  Hombuzz as the current business website, not an implementation David currently
+  owns or maintains. Keep the original engagement named Time2Move and preserve
+  dated audit findings as historical records.
 - `DealerFlow`, where shown, should be treated cautiously as pilot/proof work
   unless stronger artifacts and bounded pilot facts are added.
 - `WeatherForge` is a collaborative University of St. Thomas SEIS 745 project on
