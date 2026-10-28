@@ -16,6 +16,11 @@ function isActive(pathname: string, href: string) {
   return pathname === normalizedHref || pathname.startsWith(`${normalizedHref}/`)
 }
 
+function nextNavigationSection(current: string | null, href: string, open: boolean) {
+  if (open) return href
+  return current === href ? null : current
+}
+
 export function Header() {
   const pathname = usePathname()
   const [menuOpen, setMenuOpen] = useState(false)
@@ -111,7 +116,7 @@ export function Header() {
               item={item}
               active={isActive(pathname, item.href)}
               open={desktopSection === item.href}
-              onOpenChange={(open) => setDesktopSection((current) => open ? item.href : current === item.href ? null : current)}
+              onOpenChange={(open) => setDesktopSection((current) => nextNavigationSection(current, item.href, open))}
               onNavigate={closeNavigation}
             />
           ))}
@@ -171,7 +176,7 @@ export function Header() {
                 active={isActive(pathname, item.href)}
                 mobile
                 open={mobileSection === item.href}
-                onOpenChange={(open) => setMobileSection((current) => open ? item.href : current === item.href ? null : current)}
+                onOpenChange={(open) => setMobileSection((current) => nextNavigationSection(current, item.href, open))}
                 onNavigate={closeNavigation}
               />
             ))}

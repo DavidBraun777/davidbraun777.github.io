@@ -11,7 +11,10 @@ function isLocalHref(value: unknown): value is string {
   if (typeof value !== 'string' || !value.startsWith('/') || value.startsWith('//')) return false
   try {
     const decoded = decodeURIComponent(value)
-    return !decoded.startsWith('//') && !Array.from(decoded).some(character => character === '\\' || character.charCodeAt(0) < 32 || character.charCodeAt(0) === 127)
+    return !decoded.startsWith('//') && !Array.from(decoded).some(character => {
+      const codePoint = character.codePointAt(0)!
+      return character === '\\' || codePoint < 32 || codePoint === 127
+    })
   } catch {
     return false
   }
@@ -66,28 +69,26 @@ export function isSearchIndex(value: unknown): value is SearchIndex {
 
 /** One local request per browser session. A failed request can always be retried. */
 export function loadSearchIndex(): Promise<SearchRecord[]> {
-  if (!pendingIndex) {
-    pendingIndex = (async () => {
-      const controller = new AbortController()
-      const timeout = window.setTimeout(() => controller.abort(), 10_000)
-      try {
-        const response = await fetch('/search-index.json', {
-          headers: { Accept: 'application/json' },
-          cache: 'no-cache',
-          signal: controller.signal,
-        })
-        if (!response.ok) throw new Error('Search index unavailable')
-        const index: unknown = await response.json()
-        if (!isSearchIndex(index)) throw new Error('Invalid search index')
-        return index.records
-      } finally {
-        window.clearTimeout(timeout)
-      }
-    })().catch((error: unknown) => {
-      pendingIndex = null
-      throw error
-    })
-  }
+  pendingIndex ??= (async () => {
+    const controller = new AbortController()
+    const timeout = window.setTimeout(() => controller.abort(), 10_000)
+    try {
+      const response = await fetch('/search-index.json', {
+        headers: { Accept: 'application/json' },
+        cache: 'no-cache',
+        signal: controller.signal,
+      })
+      if (!response.ok) throw new Error('Search index unavailable')
+      const index: unknown = await response.json()
+      if (!isSearchIndex(index)) throw new Error('Invalid search index')
+      return index.records
+    } finally {
+      window.clearTimeout(timeout)
+    }
+  })().catch((error: unknown) => {
+    pendingIndex = null
+    throw error
+  })
 
   return pendingIndex
 }

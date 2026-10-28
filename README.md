@@ -361,6 +361,15 @@ There is no fuzzy matching or added search dependency. Run the search and destin
 unit tests plus `npm run e2e -- e2e/search.spec.ts e2e/search-destinations.spec.ts`
 when changing search behavior or destinations.
 
+`published-search-compatibility.test.ts` also preserves compact digests captured
+from published revision `ba84b4d` before the Sonar cleanup: the full index,
+destination inventory, project manifests, and representative ranked results.
+Algorithm-only refactors must pass these recorded expectations unchanged. When
+deliberately editing public content, review the actual old/new destination and
+ranking differences before updating the affected expectations; retain explicit
+compatibility for published links that need to survive. The fixture revision is
+provenance, not permission to regenerate expectations from a failing implementation.
+
 ### Prerequisites
 
 - Node.js 24 LTS from `.nvmrc` (`package.json` requires `24.x`)

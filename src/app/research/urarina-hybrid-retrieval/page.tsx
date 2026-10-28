@@ -20,7 +20,7 @@ export const metadata: Metadata = {
 const contextLinkClassName =
   'rounded-sm text-link-primary underline decoration-link-primary/40 underline-offset-4 hover:text-link-primary-hover'
 
-function ContextLink({ href, children }: { href: string; children: ReactNode }) {
+function ContextLink({ href, children }: Readonly<{ href: string; children: ReactNode }>) {
   return (
     <a href={href} target="_blank" rel="noopener noreferrer" className={contextLinkClassName}>
       {children}

@@ -6,7 +6,7 @@ import { ArrowRight, Search, X } from 'lucide-react'
 import { useEffect, useMemo, useRef, useState, type RefObject } from 'react'
 import { loadSearchIndex } from '@/lib/search/client'
 import { SEARCH_QUERY_LIMIT, searchContent } from '@/lib/search/search'
-import type { SearchRecord } from '@/lib/search/types'
+import type { SearchRecord, SearchResult } from '@/lib/search/types'
 import { prepareContentNavigation, releaseContentNavigation } from '@/lib/content-navigation'
 
 const suggestions = [
@@ -18,6 +18,7 @@ const suggestions = [
 ]
 
 const PAGE_SIZE = 10
+type SearchLoadState = 'idle' | 'loading' | 'ready' | 'error'
 
 interface SiteSearchProps {
   open: boolean
@@ -28,7 +29,7 @@ interface SiteSearchProps {
 export function SiteSearch({ open, onOpenChange, returnFocusRef }: Readonly<SiteSearchProps>) {
   const [query, setQuery] = useState('')
   const [records, setRecords] = useState<SearchRecord[]>([])
-  const [loadState, setLoadState] = useState<'idle' | 'loading' | 'ready' | 'error'>('idle')
+  const [loadState, setLoadState] = useState<SearchLoadState>('idle')
   const [retryAttempt, setRetryAttempt] = useState(0)
   const [visibleCount, setVisibleCount] = useState(PAGE_SIZE)
   const [announcement, setAnnouncement] = useState('')
@@ -67,18 +68,7 @@ export function SiteSearch({ open, onOpenChange, returnFocusRef }: Readonly<Site
     return () => viewport.removeEventListener('resize', resize)
   }, [open])
 
-  let status = 'Suggestions. Choose a destination or enter a search.'
-  if (loadState === 'error') {
-    status = 'Search could not load. Please retry.'
-  } else if (hasQuery) {
-    if (loadState !== 'ready') {
-      status = 'Loading search…'
-    } else if (results.length === 0) {
-      status = 'No results found. Try a project name, technology, or a shorter phrase.'
-    } else {
-      status = `${results.length} ${results.length === 1 ? 'result' : 'results'}. Showing ${Math.min(visibleCount, results.length)}.`
-    }
-  }
+  const status = searchStatus(loadState, hasQuery, results.length, visibleCount)
 
   useEffect(() => {
     if (!open) return
@@ -192,61 +182,93 @@ export function SiteSearch({ open, onOpenChange, returnFocusRef }: Readonly<Site
               </div>
             ) : null}
 
-            {!hasQuery || loadState === 'error' ? (
-              <div>
-                <h2 className="mb-2 text-xs font-semibold uppercase tracking-wider text-text-muted">Suggestions</h2>
-                <ul className="space-y-1">
-                  {suggestions.map((suggestion) => (
-                    <li key={suggestion.href}>
-                      <Link
-                        href={suggestion.href}
-                        onNavigate={() => closeForNavigation(suggestion.href)}
-                        className="flex min-h-11 items-center justify-between gap-3 rounded-xl px-3 py-3 text-sm font-medium text-link-primary hover:bg-background-subtle motion-reduce:transition-none"
-                      >
-                        {suggestion.title}
-                        <ArrowRight className="h-4 w-4" aria-hidden="true" />
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-              </div>
-            ) : loadState === 'ready' ? (
-              <>
-                <ul ref={resultListRef} className="space-y-2" aria-label="Search results">
-                  {results.slice(0, visibleCount).map(({ record, snippet }) => (
-                    <li key={record.id}>
-                      <Link
-                        href={record.href}
-                        prefetch={false}
-                        scroll={record.href.includes('#') ? false : undefined}
-                        onNavigate={() => closeForNavigation(record.href, record.destination)}
-                        className="block rounded-xl border border-border-subtle px-4 py-3 hover:border-border-strong hover:bg-background-subtle motion-reduce:transition-none"
-                      >
-                        <span className="text-xs font-medium text-text-muted">{record.type}</span>
-                        <span className="mt-1 block font-semibold leading-6 text-link-primary">{record.title}</span>
-                        {record.destination ? <span className="mt-1 block text-xs leading-5 text-text-muted">{record.destination.label}</span> : null}
-                        <span className="mt-1 block text-sm leading-6 text-text-secondary">{snippet}</span>
-                      </Link>
-                    </li>
-                  ))}
-                </ul>
-                {results.length > visibleCount ? (
-                  <button
-                    type="button"
-                    onClick={() => {
-                      nextResultToFocus.current = visibleCount
-                      setVisibleCount((count) => count + PAGE_SIZE)
-                    }}
-                    className="mt-4 min-h-11 w-full rounded-xl border border-border-strong px-4 py-3 text-sm font-medium text-link-primary hover:bg-background-subtle motion-reduce:transition-none"
-                  >
-                    Show more results
-                  </button>
-                ) : null}
-              </>
-            ) : null}
+            <SearchDestinations
+              showSuggestions={!hasQuery || loadState === 'error'}
+              ready={loadState === 'ready'}
+              results={results}
+              visibleCount={visibleCount}
+              resultListRef={resultListRef}
+              onNavigate={closeForNavigation}
+              onShowMore={() => {
+                nextResultToFocus.current = visibleCount
+                setVisibleCount((count) => count + PAGE_SIZE)
+              }}
+            />
           </div>
         </Dialog.Content>
       </Dialog.Portal>
     </Dialog.Root>
+  )
+}
+
+function searchStatus(loadState: SearchLoadState, hasQuery: boolean, resultCount: number, visibleCount: number) {
+  if (loadState === 'error') return 'Search could not load. Please retry.'
+  if (!hasQuery) return 'Suggestions. Choose a destination or enter a search.'
+  if (loadState !== 'ready') return 'Loading search…'
+  if (resultCount === 0) return 'No results found. Try a project name, technology, or a shorter phrase.'
+  return `${resultCount} ${resultCount === 1 ? 'result' : 'results'}. Showing ${Math.min(visibleCount, resultCount)}.`
+}
+
+function SearchDestinations({ showSuggestions, ready, results, visibleCount, resultListRef, onNavigate, onShowMore }: Readonly<{
+  showSuggestions: boolean
+  ready: boolean
+  results: SearchResult[]
+  visibleCount: number
+  resultListRef: RefObject<HTMLUListElement | null>
+  onNavigate: (href: string, destination?: SearchRecord['destination']) => void
+  onShowMore: () => void
+}>) {
+  if (showSuggestions) {
+    return (
+      <div>
+        <h2 className="mb-2 text-xs font-semibold uppercase tracking-wider text-text-muted">Suggestions</h2>
+        <ul className="space-y-1">
+          {suggestions.map((suggestion) => (
+            <li key={suggestion.href}>
+              <Link
+                href={suggestion.href}
+                onNavigate={() => onNavigate(suggestion.href)}
+                className="flex min-h-11 items-center justify-between gap-3 rounded-xl px-3 py-3 text-sm font-medium text-link-primary hover:bg-background-subtle motion-reduce:transition-none"
+              >
+                {suggestion.title}
+                <ArrowRight className="h-4 w-4" aria-hidden="true" />
+              </Link>
+            </li>
+          ))}
+        </ul>
+      </div>
+    )
+  }
+  if (!ready) return null
+  return (
+    <>
+      <ul ref={resultListRef} className="space-y-2" aria-label="Search results">
+        {results.slice(0, visibleCount).map(({ record, snippet }) => (
+          <li key={record.id}>
+            <Link
+              href={record.href}
+              prefetch={false}
+              scroll={record.href.includes('#') ? false : undefined}
+              onNavigate={() => onNavigate(record.href, record.destination)}
+              className="block rounded-xl border border-border-subtle px-4 py-3 hover:border-border-strong hover:bg-background-subtle motion-reduce:transition-none"
+            >
+              <span className="text-xs font-medium text-text-muted">{record.type}</span>
+              <span className="mt-1 block font-semibold leading-6 text-link-primary">{record.title}</span>
+              {record.destination ? <span className="mt-1 block text-xs leading-5 text-text-muted">{record.destination.label}</span> : null}
+              <span className="mt-1 block text-sm leading-6 text-text-secondary">{snippet}</span>
+            </Link>
+          </li>
+        ))}
+      </ul>
+      {results.length > visibleCount ? (
+        <button
+          type="button"
+          onClick={onShowMore}
+          className="mt-4 min-h-11 w-full rounded-xl border border-border-strong px-4 py-3 text-sm font-medium text-link-primary hover:bg-background-subtle motion-reduce:transition-none"
+        >
+          Show more results
+        </button>
+      ) : null}
+    </>
   )
 }
