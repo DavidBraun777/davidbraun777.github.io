@@ -328,6 +328,20 @@ function ExperiencePanel({
           ))}
         </ul>
       ) : null}
+      {experience.projectLinks?.length ? (
+        <div className="mt-5 flex flex-wrap gap-4">
+          {experience.projectLinks.map((project) => (
+            <Link
+              key={project.href}
+              href={project.href}
+              className="inline-flex items-center gap-2 text-sm font-medium text-link-primary transition-colors hover:text-link-primary-hover"
+            >
+              {project.label}
+              <ArrowRight className="h-4 w-4" aria-hidden="true" />
+            </Link>
+          ))}
+        </div>
+      ) : null}
       {experience.technologies ? (
         <div className="mt-5 flex flex-wrap gap-2">
           {experience.technologies.map((technology) => (

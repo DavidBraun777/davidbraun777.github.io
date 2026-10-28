@@ -10,6 +10,7 @@ export interface Experience {
   description: string
   highlights: string[]
   technologies?: string[]
+  projectLinks?: { label: string; href: string }[]
 }
 
 export const experiences: Experience[] = [
@@ -29,6 +30,7 @@ export const experiences: Experience[] = [
       'Time2Move: original website and lead-capture work; subsequently continued independently as Hombuzz.',
       'Client and partner delivery has included ARK Landscaping, Outerly, 3C1S, and other initiatives',
     ],
+    projectLinks: [{ label: 'Read the Time2Move case study', href: '/case-studies/time2move' }],
     technologies: [
       'React',
       'Next.js',

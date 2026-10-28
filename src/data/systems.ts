@@ -1,3 +1,6 @@
+import type { CaseStudyStory, CaseStudySuccessorLink } from './case-study-story'
+import { time2Move } from './past-client-work'
+
 export interface ProofSection {
   id: 'walkthrough' | 'architecture' | 'operations' | 'artifacts'
   title: string
@@ -55,7 +58,7 @@ export interface SystemCaseStudy {
   oneSentenceOutcome?: string
   contextLabel?: string
   positioning?: string
-  caseStudyStage: 'Production' | 'Pilot' | 'R&D'
+  caseStudyStage: 'Production' | 'Pilot' | 'R&D' | 'Historical'
   problem: string
   system: string
   solutionTitle?: string
@@ -75,6 +78,8 @@ export interface SystemCaseStudy {
   visualSurface?: 'dark' | 'light'
   visualAspect?: 'landscape' | 'portrait'
   externalUrl?: string
+  successorLink?: CaseStudySuccessorLink
+  story?: CaseStudyStory
   githubUrl?: string
   /** What I personally owned on this project */
   myRole: string
@@ -1180,6 +1185,12 @@ export const systemThemes: SystemTheme[] = [
       },
     ],
   },
+  {
+    id: 'past-client-work',
+    title: 'Past client work',
+    intro: 'Historical client implementation work, with current status and contribution boundaries kept explicit.',
+    systems: [time2Move],
+  },
 ]
 
 const orderedSystemIds = [
@@ -1224,6 +1235,8 @@ export const productionSystems = featuredSystems.filter(
 export const pilotSystems = featuredSystems.filter((system) => system.caseStudyStage === 'Pilot')
 
 export const researchSystems = featuredSystems.filter((system) => system.caseStudyStage === 'R&D')
+
+export const historicalSystems = allSystems.filter((system) => system.caseStudyStage === 'Historical')
 
 export const supportingSystems = allSystems.filter(
   (system) => !orderedSystemIds.includes(system.id)

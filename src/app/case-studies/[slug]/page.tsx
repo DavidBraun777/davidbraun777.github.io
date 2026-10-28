@@ -4,6 +4,7 @@ import Link from 'next/link'
 import { ArrowRight, Github } from 'lucide-react'
 import { notFound } from 'next/navigation'
 import { DisclosurePanel } from '@/components/site/disclosure-panel'
+import { CaseStudyStoryContent } from '@/components/site/case-study-story'
 import { MetricCard } from '@/components/site/metric-card'
 import { PageIntro } from '@/components/site/page-intro'
 import { TechTag } from '@/components/site/tech-tag'
@@ -109,6 +110,10 @@ export default async function CaseStudyDetailPage({ params }: Readonly<Props>) {
           aside={<CaseStudyAtAGlance system={system} />}
         />
 
+        {system.story ? (
+          <CaseStudyStoryContent story={system.story} stack={system.stack} />
+        ) : (
+          <>
         <section className="grid gap-8 xl:grid-cols-[1.02fr_0.98fr]">
           <ProjectVisual system={system} />
 
@@ -262,6 +267,24 @@ export default async function CaseStudyDetailPage({ params }: Readonly<Props>) {
         ) : null}
 
         {system.githubUrl || system.externalUrl ? <ProofLinkSection system={system} /> : null}
+          </>
+        )}
+
+        {system.successorLink ? (
+          <section className="rounded-[1.75rem] border border-border-subtle bg-background-subtle p-6 sm:p-7">
+            <h2 className="text-2xl font-semibold tracking-tight text-text-primary">
+              Project continuation
+            </h2>
+            <p className="mt-4 max-w-3xl text-base leading-8 text-text-secondary">
+              {system.successorLink.context}
+            </p>
+            <div className="mt-5">
+              <ExternalLinkAction href={system.successorLink.href}>
+                {system.successorLink.label}
+              </ExternalLinkAction>
+            </div>
+          </section>
+        ) : null}
 
         {relatedProjects.length > 0 ? (
           <section>
@@ -427,6 +450,7 @@ function InterpretationTable({
 }
 
 const curatedRelatedIds: Record<string, string[]> = {
+  time2move: ['vifg-nonprofit-platform', 'dealerflow'],
   'vifg-nonprofit-platform': ['dealerflow', 'dgm'],
   dealerflow: ['vifg-nonprofit-platform', 'dgm'],
   weatherforge: ['rageatm', 'dgm'],
@@ -536,9 +560,20 @@ function CaseStudyAtAGlance({
         At a glance
       </p>
       <div className="mt-4 space-y-3">
+        {system.story ? (
+          <>
+            <AtAGlanceItem label="Status" value={system.currentState} />
+            {system.story.atAGlance.map((item) => (
+              <AtAGlanceItem key={item.label} label={item.label} value={item.value} />
+            ))}
+          </>
+        ) : (
+          <>
         <AtAGlanceItem label="Context" value={system.contextLabel ?? system.caseStudyStage} />
         <AtAGlanceItem label="Current state" value={system.currentState} />
         <AtAGlanceItem label="Role" value={system.myRole} />
+          </>
+        )}
       </div>
     </div>
   )

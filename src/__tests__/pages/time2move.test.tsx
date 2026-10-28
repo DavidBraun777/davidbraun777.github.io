@@ -1,0 +1,114 @@
+// @vitest-environment happy-dom
+
+import { renderToStaticMarkup } from 'react-dom/server'
+import { describe, expect, test } from 'vitest'
+import CaseStudiesPage from '@/app/case-studies/page'
+import CaseStudyDetailPage, { generateMetadata, generateStaticParams } from '@/app/case-studies/[slug]/page'
+import ExperiencePage from '@/app/experience/page'
+import sitemap from '@/app/sitemap'
+import { allSystems, featuredSystems, getSystemById, pilotSystems, productionSystems, researchSystems } from '@/data/systems'
+import { buildSearchIndex } from '@/lib/search/build-index'
+import { searchContent } from '@/lib/search/search'
+
+const title = 'Time2Move: Real Estate Website & Inquiry Workflows'
+const path = '/case-studies/time2move'
+const status = 'Past client project · Continued independently'
+const successorLabel = 'Current business website — Hombuzz'
+
+function renderPage(element: React.ReactNode) {
+  const container = document.createElement('div')
+  container.innerHTML = renderToStaticMarkup(element)
+  return container
+}
+
+const detailPage = (slug = 'time2move') => CaseStudyDetailPage({ params: Promise.resolve({ slug }) })
+
+describe('Time2Move historical case study', () => {
+  test('uses the shared registry without promoting historical work to current production proof', () => {
+    const system = getSystemById('time2move')
+    expect(system).not.toBeNull()
+    expect(allSystems.filter(item => item.id === 'time2move')).toHaveLength(1)
+    expect(system?.caseStudyStage).toBe('Historical')
+    expect(system?.currentState).toBe(status)
+    for (const collection of [featuredSystems, productionSystems, pilotSystems, researchSystems]) {
+      expect(collection.some(item => item.id === 'time2move')).toBe(false)
+    }
+    expect(system?.externalUrl).toBeUndefined()
+    expect(system?.githubUrl).toBeUndefined()
+    expect(system?.successorLink?.href).toBe('https://hombuzz.com/')
+    expect(system?.successorLink?.label).toBe(successorLabel)
+    expect(system?.successorLink?.context).toMatch(/independent|subsequent/i)
+  })
+
+  test('generates canonical metadata, breadcrumbs, static params and sitemap through existing mechanisms', async () => {
+    const metadata = await generateMetadata({ params: Promise.resolve({ slug: 'time2move' }) })
+    expect(metadata.title).toBe(title)
+    expect(metadata.alternates?.canonical).toBe(path)
+    expect(metadata.openGraph?.title).toBe(title)
+    expect(metadata.twitter?.title).toBe(title)
+    expect(metadata.description).toContain('original Time2Move')
+    expect(generateStaticParams()).toContainEqual({ slug: 'time2move' })
+    expect(sitemap().filter(item => item.url === `https://dbraun.io${path}`)).toHaveLength(1)
+    const page = renderPage(await detailPage())
+    const breadcrumb = JSON.parse(page.querySelector('script[type="application/ld+json"]')?.textContent ?? '{}')
+    expect(breadcrumb.itemListElement.at(-1)).toMatchObject({ name: title, item: `https://dbraun.io${path}` })
+  })
+
+  test('presents the dated local audit with its failure and scope boundaries, without generic production claims', async () => {
+    const page = renderPage(await detailPage())
+    const text = page.textContent ?? ''
+    expect(page.querySelector('h1')?.textContent).toBe(title)
+    expect(text).toContain(status)
+    expect(text).toContain('October 27, 2026')
+    expect(text).toContain('515deb2')
+    expect(text).toMatch(/34 (?:existing )?tests|34 passed/i)
+    expect(text).toMatch(/29 errors.*12 warnings/i)
+    expect(text).toMatch(/lint/i)
+    expect(text).toMatch(/failed/i)
+    expect(text).toMatch(/handoff|handed.over/i)
+    expect(text).toMatch(/not verified|not established|unverified|unconfirmed/i)
+    const headings = Array.from(page.querySelectorAll('h2, h3')).map(heading => heading.textContent)
+    expect(headings).not.toContain('Live Proof')
+    expect(headings).not.toContain('Quantified Outcomes')
+    expect(text).not.toMatch(/screenshot placeholder|production verified|guaranteed reliable delivery|all checks passing/i)
+    expect(page.querySelector('a[href*="time2move.io"]')).toBeNull()
+  })
+
+  test('makes the case study the primary historical card and experience destination with a contextual successor link', () => {
+    const index = renderPage(<CaseStudiesPage />)
+    const historical = index.querySelector('#past-client-work')
+    expect(historical?.querySelectorAll(`a[href="${path}"]`)).toHaveLength(1)
+    const successor = historical?.querySelector('a[href="https://hombuzz.com/"]')
+    expect(successor?.textContent).toBe(successorLabel)
+    expect(successor?.getAttribute('rel')).toBe('noopener noreferrer')
+    expect(successor?.getAttribute('target')).toBe('_blank')
+    expect(historical?.textContent).toMatch(/independent|subsequent/i)
+    const experience = renderPage(<ExperiencePage />)
+    expect(experience.querySelector(`a[href="${path}"]`)).not.toBeNull()
+    expect((index.textContent ?? '').indexOf('VIFG Nonprofit Platform')).toBeLessThan((index.textContent ?? '').indexOf(title))
+  })
+
+  test('indexes only the public historical account and keeps original-project titles for successor searches', async () => {
+    const { records } = await buildSearchIndex()
+    const historical = records.find(record => record.href === path)
+    expect(historical?.title).toBe(title)
+    for (const query of ['Time2Move', 'lead processing', 'FastAPI', 'Redis', 'Hombuzz']) {
+      expect(searchContent(records, query).some(result => result.record.href === path), query).toBe(true)
+    }
+    const page = renderPage(await detailPage())
+    const metadata = await generateMetadata({ params: Promise.resolve({ slug: 'time2move' }) })
+    const publicOutput = `${page.innerHTML} ${JSON.stringify(historical)} ${JSON.stringify(metadata)}`
+    expect(publicOutput).not.toMatch(/\/Users\/|prime-location-site|docs\/audits|technical-audit\.md|case-study-brief\.md|source-manifest\.json|\bE\d{2}\b|api\.vercel\.com\/v1\/integrations\/deploy/i)
+    const illustration = page.querySelector('figure img')
+    expect(illustration?.getAttribute('alt')).toMatch(/synthetic|example/i)
+    expect(illustration?.closest('figure')?.textContent).toMatch(/simulat/i)
+    expect(illustration?.closest('figure')?.textContent).toMatch(/no lead delivered/i)
+  })
+
+  test('retains the original live-proof behavior for existing production projects', async () => {
+    const vifg = renderPage(await detailPage('vifg-nonprofit-platform'))
+    expect(vifg.textContent).toContain('Live Proof')
+    expect(vifg.querySelector('a[href="https://www.vifg.org/home"]')?.textContent).toBe('Visit Live Site')
+    expect(vifg.textContent).not.toContain(successorLabel)
+  })
+})
