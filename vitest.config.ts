@@ -10,7 +10,7 @@ export default defineConfig({
       provider: 'v8',
       reporter: ['text', 'lcov', 'json-summary'],
       reportsDirectory: 'coverage',
-      include: coverageFiles().map(file => file.replaceAll('[', '\\[').replaceAll(']', '\\]')),
+      include: coverageFiles().map(file => file.replaceAll('[', String.raw`\[`).replaceAll(']', String.raw`\]`)),
       thresholds: { perFile: true, lines: 100, branches: 100, functions: 100, statements: 100 },
     },
   },

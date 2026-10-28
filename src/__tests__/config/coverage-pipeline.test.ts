@@ -40,7 +40,7 @@ describe('shared coverage scope', () => {
     vi.mocked(execFileSync).mockReturnValue(files.join('\0'))
     writeFileSync(join(root, 'sonar-project.properties'), properties.replaceAll('\n', '\r\n'))
     expect(coverageFiles(root)).toEqual(['another/runtime.cts', 'module.mts', 'next.config.ts', 'scripts/check-bundle-size.mjs', 'src/lib/types.ts', source, 'ui.jsx'])
-    expect(execFileSync).toHaveBeenCalledWith('git', ['ls-files', '-c', '-o', '--exclude-standard', '-z'], { cwd: root, encoding: 'utf8' })
+    expect(execFileSync).toHaveBeenCalledWith('/usr/bin/git', ['ls-files', '-c', '-o', '--exclude-standard', '-z'], { cwd: root, encoding: 'utf8' })
   })
   it('rejects an unexpected narrowed source scope', () => {
     writeFileSync(join(root, 'sonar-project.properties'), properties.replace('sonar.sources=.', 'sonar.sources=src'))

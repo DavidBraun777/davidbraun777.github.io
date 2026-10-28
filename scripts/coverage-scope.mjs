@@ -18,9 +18,10 @@ export function coverageFiles(root = process.cwd()) {
     .flatMap(value => value.split(','))
   // Include untracked source during local development as well as tracked files.
   // Git's ignore rules match the scanner's treatment of generated output.
-  const files = execFileSync('git', ['ls-files', '-c', '-o', '--exclude-standard', '-z'], { cwd: root, encoding: 'utf8' }).split('\0')
+  // macOS development and Ubuntu CI both provide Git here. Avoid PATH lookup.
+  const files = execFileSync('/usr/bin/git', ['ls-files', '-c', '-o', '--exclude-standard', '-z'], { cwd: root, encoding: 'utf8' }).split('\0')
   return [...new Set(files)].filter(file =>
     /\.(?:[cm]?[jt]s|[jt]sx)$/.test(file) &&
     !excluded.some(pattern => matchesGlob(file, pattern))
-  ).sort()
+  ).sort((left, right) => left.localeCompare(right, 'en'))
 }

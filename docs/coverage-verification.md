@@ -32,11 +32,11 @@ was not provided, so it is not treated as the current local baseline.
 | Screenshot: overall (67.1% combined) | 1,062 / 1,555 | 493 | 708 / 1,081 | 373 |
 | Screenshot: new code (79.1% combined) | 631 / 777 | 146 | 474 / 620 | 146 |
 | Fresh local baseline, original 83-file instrumentation | 1,338 / 1,680 | 342 | 1,129 / 1,503 | 374 |
-| Final local, corrected 87-file instrumentation | **1,747 / 1,747** | **0** | **1,543 / 1,543** | **0** |
+| Final local, corrected 87-file instrumentation | **1,748 / 1,748** | **0** | **1,543 / 1,543** | **0** |
 
 The fresh baseline passed 312 tests in 24 files. Its line coverage was 79.64%
 and branch coverage 75.11%. Final coverage passes 438 tests in 41 files, with
-2,031/2,031 statements and 628/628 functions also covered. These are exact raw
+2,032/2,032 statements and 629/629 functions also covered. These are exact raw
 counts, not rounded claims. Three type-only/re-export files have zero executable
 lines; they are included in the inventory but do not establish coverage by themselves.
 
@@ -49,7 +49,7 @@ bug explains the difference. The evidenced problems are:
 2. Incomplete instrumentation: Sonar's existing repository-wide scope included
    `next.config.ts` and `scripts/check-bundle-size.mjs`, while Vitest covered only
    `src`. Those two existing files now add 29 executable lines. The two new
-   coverage scripts add 40 lines and are themselves fully tested.
+   coverage scripts add 41 lines and are themselves fully tested.
 3. Several redundant guards were unreachable by the surrounding lifecycle or
    content invariants. Their small simplifications, plus the registry extraction,
    account for the remaining denominator difference. No reachable validation or
@@ -99,7 +99,8 @@ Explicit fragment/popstate tests and actual browser back/forward tests remain.
 
 `sonar-project.properties` is unchanged. `scripts/coverage-scope.mjs` reads that
 scope and enumerates tracked plus untracked JS/TS with Git, respecting generated
-file ignores. Vitest includes all eligible files even if never imported. Dynamic
+file ignores. It invokes `/usr/bin/git`, available in macOS development and Ubuntu
+CI, so executable selection does not depend on a mutable `PATH`. Vitest includes all eligible files even if never imported. Dynamic
 route bracket characters are escaped in the instrumentation globs.
 
 Existing coverage exclusions remain: `eslint.config.mjs`, `playwright.config.ts`,
@@ -150,7 +151,7 @@ non-executable files, not missing records.
 | `next.config.ts` | Outside prior instrumentation | Outside prior instrumentation | 0 / 6 | 0 / 6 |
 | `scripts/check-bundle-size.mjs` | Outside prior instrumentation | Outside prior instrumentation | 0 / 23 | 0 / 10 |
 | `scripts/check-coverage.mjs` | new | new | 0 / 29 | 0 / 29 |
-| `scripts/coverage-scope.mjs` | new | new | 0 / 11 | 0 / 5 |
+| `scripts/coverage-scope.mjs` | new | new | 0 / 12 | 0 / 5 |
 | `src/app/layout.tsx` | 0 / 8 | 0 / 0 | 0 / 8 | 0 / 0 |
 | `src/app/page.tsx` | 1 / 17 | 1 / 4 | 0 / 17 | 0 / 4 |
 | `src/app/robots.ts` | 1 / 1 | 0 / 0 | 0 / 1 | 0 / 0 |
