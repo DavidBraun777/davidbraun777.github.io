@@ -1,3 +1,5 @@
+import type { ContentDestination } from './destinations'
+
 export type SearchContentType =
   | 'Page'
   | 'Project'
@@ -20,6 +22,11 @@ export interface SearchRecord {
   tags: string[]
   headings: string[]
   body: string
+  /** Local text determines relevance; parent context only qualifies the query. */
+  context?: string
+  granularity?: 'section' | 'block' | 'row'
+  destination?: ContentDestination
+  cells?: { text: string; destination: ContentDestination }[]
 }
 
 export interface SearchIndex {

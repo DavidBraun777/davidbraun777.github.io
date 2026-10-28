@@ -1,6 +1,7 @@
 import { describe, expect, it } from 'vitest'
 import { normalizeSearchText, SEARCH_QUERY_LIMIT, searchContent, searchWords } from '@/lib/search/search'
 import type { SearchRecord } from '@/lib/search/types'
+import { destinationHref, type ContentDestination } from '@/lib/search/destinations'
 
 function record(id: string, fields: Partial<SearchRecord> = {}): SearchRecord {
   return {
@@ -8,6 +9,23 @@ function record(id: string, fields: Partial<SearchRecord> = {}): SearchRecord {
     description: '', tags: [], headings: [], body: '', ...fields,
   }
 }
+
+function block(id: string, fields: Partial<SearchRecord> = {}): SearchRecord {
+  const destination: ContentDestination = {
+    page: '/case-studies/rageatm', anchor: `content-${id}`, label: fields.title ?? id,
+    disclosureIds: ['content-retrieval-ladder'],
+  }
+  return record(id, { granularity: 'block', destination, href: destinationHref(destination), context: 'RAGeATM Retrieval capability ladder', ...fields })
+}
+
+const comparison = block('bm25', {
+  title: 'BM25', granularity: 'row',
+  body: 'Keyword relevance. Fatal weakness: No deep semantics. Best use case: Search engines.',
+  cells: [
+    { text: 'Fatal weakness: No deep semantics.', destination: { page: '/case-studies/rageatm', anchor: 'content-bm25-weakness', label: 'BM25: Fatal weakness', disclosureIds: ['content-retrieval-ladder'] } },
+    { text: 'Best use case: Search engines.', destination: { page: '/case-studies/rageatm', anchor: 'content-bm25-use', label: 'BM25: Best use case', disclosureIds: ['content-retrieval-ladder'] } },
+  ],
+})
 
 describe('local content search', () => {
   it('ranks exact titles, title phrases, title words, metadata, then body mentions', () => {
@@ -92,5 +110,67 @@ describe('local content search', () => {
     for (const query of ['', ' \t\n ', '!?<>+=', 'zqxw987654321']) expect(searchContent(records, query)).toEqual([])
     expect(searchContent(records, 'v'.repeat(20_000))).toEqual([])
     expect(searchContent(records, 'VIFG'.padEnd(SEARCH_QUERY_LIMIT, ' ') + 'ignored')).toEqual(searchContent(records, 'VIFG'))
+  })
+
+  it('ranks a precise row above aggregate prose and allows the project name to qualify it', () => {
+    const records = [
+      record('rageatm', { title: 'RAGeATM', body: comparison.body + ' BM25' }),
+      block('bm25-interpretation', { title: 'BM25', body: 'Important words in a search-optimized way.', granularity: 'row' }),
+      comparison,
+      block('unrelated', { title: 'Overview', body: 'A small prototype.' }),
+    ]
+    for (const query of ['BM25', 'RAGeATM BM25']) {
+      expect(searchContent(records, query)[0].record.href).toBe(comparison.href)
+    }
+    expect(searchContent(records, 'BM25').some(result => result.record.id === 'rageatm')).toBe(false)
+    expect(searchContent(records, 'RAGeATM').map(result => result.record.id)).toEqual(['rageatm'])
+    expect(searchContent(records, 'RAGeATM nonexistent')).toEqual([])
+  })
+
+  it('selects the matching cell without changing subsequent row-label queries or cached records', () => {
+    const records = [comparison]
+    for (const query of ['BM25 no deep semantics', 'RAGeATM BM25 fatal weakness']) {
+      const result = searchContent(records, query)[0]
+      expect(result.record.href).toBe('/case-studies/rageatm#content-bm25-weakness')
+      expect(result.record.destination?.label).toBe('BM25: Fatal weakness')
+      expect(result.snippet).toBe('Fatal weakness: No deep semantics.')
+    }
+    expect(searchContent(records, 'BM25 search engines')[0].record.href).toBe('/case-studies/rageatm#content-bm25-use')
+    expect(searchContent(records, 'BM25')[0].record.href).toBe(comparison.href)
+    expect(comparison.destination?.anchor).toBe('content-bm25')
+    expect(searchContent(records, 'BM25 no deep semantics')).toEqual(searchContent(records, 'BM25 no deep semantics'))
+  })
+
+  it('limits granular results per page while retaining named page navigation and other pages', () => {
+    const records = [
+      record('rageatm', { title: 'RAGeATM', tags: ['retrieval'] }),
+      ...['a', 'b', 'c', 'd', 'e'].map(id => block(id, { title: `Retrieval ${id}` })),
+      block('other', { title: 'Retrieval elsewhere', href: '/writing/retrieval#content-other', destination: { page: '/writing/retrieval', anchor: 'content-other', label: 'Retrieval elsewhere', disclosureIds: [] } }),
+    ]
+    const results = searchContent(records, 'retrieval')
+    expect(results.filter(result => result.record.destination?.page === '/case-studies/rageatm')).toHaveLength(3)
+    expect(results.some(result => result.record.id === 'rageatm')).toBe(true)
+    expect(results.some(result => result.record.id === 'other')).toBe(true)
+    expect(searchContent(records, 'RAGeATM')[0].record.id).toBe('rageatm')
+  })
+
+  it('keeps duplicate visible labels distinguishable and deterministic across pages', () => {
+    const first = block('first', { title: 'Limitations', body: 'Bounded prototype.' })
+    const second = block('second', { title: 'Limitations', body: 'Bounded prototype.', context: 'Time2Move', href: '/case-studies/time2move#content-limitations', destination: { page: '/case-studies/time2move', anchor: 'content-limitations', label: 'Limitations', disclosureIds: [] } })
+    expect(searchContent([first, second], 'Limitations').map(result => result.record.id)).toEqual(['first', 'second'])
+    expect(searchContent([second, first], 'Limitations').map(result => result.record.id)).toEqual(['first', 'second'])
+    expect(searchContent([first, second], 'Time2Move limitations').map(result => result.record.id)).toEqual(['second'])
+  })
+
+  it('does not boost children whose local match only repeats inherited article-title context', () => {
+    const title = 'Designing Automation Platforms for Real Workflows'
+    const records = [
+      record('article', { title, type: 'Article', href: '/writing/platforms' }),
+      block('example', { title: 'For example:', context: title }),
+      block('automation', { title: 'Automation platforms need a queue.', context: title }),
+    ]
+    expect(searchContent(records, title).map(result => result.record.id)).toEqual(['article'])
+    expect(searchContent(records, 'for example').map(result => result.record.id)).toEqual(['example'])
+    expect(searchContent(records, 'workflows queue').map(result => result.record.id)).toEqual(['automation'])
   })
 })

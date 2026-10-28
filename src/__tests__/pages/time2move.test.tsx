@@ -93,11 +93,17 @@ describe('Time2Move historical case study', () => {
     const historical = records.find(record => record.href === path)
     expect(historical?.title).toBe(title)
     for (const query of ['Time2Move', 'lead processing', 'FastAPI', 'Redis', 'Hombuzz']) {
-      expect(searchContent(records, query).some(result => result.record.href === path), query).toBe(true)
+      const matches = searchContent(records, query).filter(result => result.record.href.split('#')[0] === path)
+      expect(matches.length, query).toBeGreaterThan(0)
+      for (const { record } of matches) {
+        expect(record.destination?.label ?? record.title).toContain(title)
+      }
     }
+    const successor = searchContent(records, 'Hombuzz').find(result => result.record.href.split('#')[0] === path)
+    expect(successor?.record.body).toMatch(/independent|subsequent/i)
     const page = renderPage(await detailPage())
     const metadata = await generateMetadata({ params: Promise.resolve({ slug: 'time2move' }) })
-    const publicOutput = `${page.innerHTML} ${JSON.stringify(historical)} ${JSON.stringify(metadata)}`
+    const publicOutput = `${page.innerHTML} ${JSON.stringify(records.filter(record => record.href.split('#')[0] === path))} ${JSON.stringify(metadata)}`
     expect(publicOutput).not.toMatch(/\/Users\/|prime-location-site|docs\/audits|technical-audit\.md|case-study-brief\.md|source-manifest\.json|\bE\d{2}\b|api\.vercel\.com\/v1\/integrations\/deploy/i)
     const illustration = page.querySelector('figure img')
     expect(illustration?.getAttribute('alt')).toMatch(/synthetic|example/i)

@@ -1,9 +1,29 @@
 'use client'
 
-import { useEffect, useRef, type ReactNode } from 'react'
+import { useLayoutEffect, useRef, useState, type ComponentProps, type ReactNode } from 'react'
 import { ChevronDown } from 'lucide-react'
+import { notifyContentLayout, registerContentDisclosure } from '@/lib/content-navigation'
 
-interface DisclosurePanelProps {
+/** One state owner for manual toggles and fragment-driven disclosure opening. */
+export function ContentDetails({ open: initiallyOpen = false, onToggle, children, ...props }: ComponentProps<'details'>) {
+  const [open, setOpen] = useState(initiallyOpen)
+  const panelRef = useRef<HTMLDetailsElement>(null)
+  useLayoutEffect(() => {
+    if (!panelRef.current) return
+    return registerContentDisclosure(panelRef.current, () => setOpen(true))
+  }, [])
+  useLayoutEffect(notifyContentLayout, [open])
+  return (
+    <details {...props} ref={panelRef} open={open} onToggle={event => {
+      setOpen(event.currentTarget.open)
+      onToggle?.(event)
+    }}>
+      {children}
+    </details>
+  )
+}
+
+interface DisclosurePanelProps extends Omit<ComponentProps<'details'>, 'title' | 'children' | 'open'> {
   id?: string
   title: string
   summary: string
@@ -11,43 +31,14 @@ interface DisclosurePanelProps {
   defaultOpen?: boolean
 }
 
-export function DisclosurePanel({
-  id,
-  title,
-  summary,
-  children,
-  defaultOpen = false,
-}: Readonly<DisclosurePanelProps>) {
-  const panelRef = useRef<HTMLDetailsElement>(null)
-
-  useEffect(() => {
-    if (!id) return
-    let frame = 0
-    const revealHashTarget = () => {
-      if (window.location.hash !== `#${id}`) return
-      const panel = panelRef.current
-      if (!panel) return
-      panel.open = true
-      cancelAnimationFrame(frame)
-      frame = requestAnimationFrame(() => {
-        panel.scrollIntoView({ block: 'start' })
-        panel.focus({ preventScroll: true })
-      })
-    }
-    revealHashTarget()
-    window.addEventListener('hashchange', revealHashTarget)
-    return () => {
-      cancelAnimationFrame(frame)
-      window.removeEventListener('hashchange', revealHashTarget)
-    }
-  }, [id])
-
+export function DisclosurePanel({ id, title, summary, children, defaultOpen = false, ...props }: Readonly<DisclosurePanelProps>) {
   return (
-    <details
-      ref={panelRef}
+    <ContentDetails
       id={id}
       tabIndex={id ? -1 : undefined}
+      data-content-target={id ? '' : undefined}
       className="group scroll-mt-28 rounded-[1.5rem] border border-border-subtle bg-background-elevated p-5 shadow-sm"
+      {...props}
       open={defaultOpen}
     >
       <summary className="flex cursor-pointer list-none items-start justify-between gap-4">
@@ -60,6 +51,6 @@ export function DisclosurePanel({
         </span>
       </summary>
       <div className="mt-5 border-t border-border-subtle pt-5">{children}</div>
-    </details>
+    </ContentDetails>
   )
 }

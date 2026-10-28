@@ -1,9 +1,10 @@
 'use client'
 
-import { useEffect, useRef, useState } from 'react'
+import { useEffect, useLayoutEffect, useRef, useState } from 'react'
 import { usePathname } from 'next/navigation'
 import { ArrowUp } from 'lucide-react'
 import { AnimatePresence, motion } from 'framer-motion'
+import { contentRouteCommitted, hasContentNavigation, mountContentNavigation } from '@/lib/content-navigation'
 
 export function ScrollToTop() {
   const pathname = usePathname()
@@ -11,6 +12,7 @@ export function ScrollToTop() {
   const previousPathRef = useRef<string | null>(null)
 
   const scrollWindowToTop = () => {
+    if (window.location.hash || hasContentNavigation()) return
     window.scrollTo({ top: 0, left: 0, behavior: 'auto' })
     document.documentElement.scrollTop = 0
     document.body.scrollTop = 0
@@ -18,7 +20,6 @@ export function ScrollToTop() {
 
   const scheduleScrollReset = () => {
     let frameTwo = 0
-    const timeoutId = window.setTimeout(scrollWindowToTop, 160)
     const frameOne = window.requestAnimationFrame(() => {
       frameTwo = window.requestAnimationFrame(scrollWindowToTop)
     })
@@ -26,9 +27,11 @@ export function ScrollToTop() {
     return () => {
       window.cancelAnimationFrame(frameOne)
       window.cancelAnimationFrame(frameTwo)
-      window.clearTimeout(timeoutId)
     }
   }
+
+  useEffect(mountContentNavigation, [])
+  useLayoutEffect(() => contentRouteCommitted(pathname), [pathname])
 
   useEffect(() => {
     const canManageHistory = 'scrollRestoration' in window.history
@@ -91,7 +94,7 @@ export function ScrollToTop() {
           animate={{ opacity: 1, y: 0, scale: 1 }}
           exit={{ opacity: 0, y: 16, scale: 0.96 }}
           transition={{ duration: 0.2, ease: 'easeOut' }}
-          onClick={() => window.scrollTo({ top: 0, left: 0, behavior: 'smooth' })}
+          onClick={() => window.scrollTo({ top: 0, left: 0, behavior: window.matchMedia('(prefers-reduced-motion: reduce)').matches ? 'instant' : 'smooth' })}
           className="fixed bottom-5 right-5 z-[70] inline-flex h-12 w-12 items-center justify-center rounded-full border border-border-subtle bg-background-elevated/95 text-link-primary shadow-[0_16px_36px_-24px_rgba(10,41,104,0.32)] backdrop-blur transition-colors hover:bg-background-subtle dark:border-border-subtle dark:bg-background-elevated/95 dark:text-link-primary dark:shadow-[0_16px_36px_-24px_rgba(2,6,23,0.5)] dark:hover:bg-background-subtle"
           aria-label="Back to top"
         >

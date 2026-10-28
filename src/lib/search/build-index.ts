@@ -10,6 +10,8 @@ import { allSystems, type FeaturedSystemCaseStudy } from '@/data/systems'
 import { urarinaResearch } from '@/data/urarina-research'
 import { getAllPosts, getPostBySlug } from '@/lib/mdx'
 import { extractReadableMdx } from './readable-mdx'
+import { projectContentRecords } from './project-destinations'
+import { assertUniqueDestinations, destinationHref } from './destinations'
 import { staticSearchPages } from './static-pages'
 import type { SearchIndex, SearchRecord } from './types'
 
@@ -115,20 +117,56 @@ function researchRecords(): SearchRecord[] {
   ]
 }
 
+/** Fail ambiguous content targets at build time rather than hiding broken anchors. */
+export function assembleSearchIndex(records: SearchRecord[]): SearchIndex {
+  const ids = new Set<string>()
+  const byHref = new Map<string, SearchRecord>()
+  assertUniqueDestinations(records.flatMap(record => [
+    ...(record.destination ? [record.destination] : []),
+    ...(record.cells ?? []).map(cell => cell.destination),
+  ]))
+  for (const record of records) {
+    if (ids.has(record.id)) throw new Error(`Duplicate search record ID: ${record.id}`)
+    ids.add(record.id)
+    if (record.destination && record.href !== destinationHref(record.destination)) {
+      throw new Error(`Search destination does not match href: ${record.id}`)
+    }
+    const previous = byHref.get(record.href)
+    if (previous) {
+      if (previous.destination || record.destination || record.href.includes('#')) {
+        throw new Error(`Duplicate search destination: ${record.href}`)
+      }
+      // Public collections may intentionally reference the same canonical page.
+      // Preserve the established first adapter; granular anchors must be unique.
+      continue
+    }
+    byHref.set(record.href, record)
+  }
+  return { version: 1, records: [...byHref.values()] }
+}
+
 export async function buildSearchIndex(): Promise<SearchIndex> {
-  const articles = await Promise.all(getAllPosts().map(async (meta): Promise<SearchRecord> => {
+  const articles = await Promise.all(getAllPosts().map(async (meta): Promise<SearchRecord[]> => {
     const post = getPostBySlug(meta.slug)
     if (!post) throw new Error(`Published article cannot be read: ${meta.slug}`)
-    const readable = await extractReadableMdx(post.content)
-    return {
-      id: `article-${post.slug}`, title: post.title, href: `/writing/${post.slug}`, type: 'Article',
+    const page = `/writing/${post.slug}`
+    const readable = await extractReadableMdx(post.content, page, post.title)
+    return [{
+      id: `article-${post.slug}`, title: post.title, href: page, type: 'Article',
       description: post.description, tags: post.tags, headings: readable.headings, body: readable.body,
-    }
+    }, ...readable.blocks.map((block): SearchRecord => ({
+      id: `article-${post.slug}-${block.destination.anchor}`,
+      title: block.title, href: destinationHref(block.destination), type: 'Article',
+      description: block.text, body: block.text, tags: [], headings: [],
+      context: text(post.title, ...post.tags, block.context), granularity: block.granularity,
+      destination: block.destination, ...(block.cells ? { cells: block.cells } : {}),
+    }))]
   }))
 
   const records: SearchRecord[] = [
     ...staticSearchPages,
     ...allSystems.map(projectSearchRecord),
+    ...allSystems.flatMap(projectContentRecords),
     ...researchRecords(),
     ...experiences.map((experience): SearchRecord => ({
       id: `experience-${experience.id}`, title: `${experience.role} · ${experience.company}`,
@@ -175,12 +213,7 @@ export async function buildSearchIndex(): Promise<SearchIndex> {
       description: document.description, tags: [document.kind], headings: [],
       body: text(document.audience, document.href ? document.viewLabel : `${document.kind} available upon request`),
     })),
-    ...articles,
+    ...articles.flat(),
   ]
-  const seen = new Set<string>()
-  return { version: 1, records: records.filter(record => {
-    if (seen.has(record.href)) return false
-    seen.add(record.href)
-    return true
-  }) }
+  return assembleSearchIndex(records)
 }

@@ -3,10 +3,13 @@ import Link from 'next/link'
 import { ArrowLeft, Calendar, Clock } from 'lucide-react'
 import { notFound } from 'next/navigation'
 import { MDXRemote } from 'next-mdx-remote/rsc'
+import remarkGfm from 'remark-gfm'
 import { mdxComponents } from '@/components/blog/mdx-components'
+import { ContentDestinationManifest } from '@/components/site/content-destination-manifest'
 import { Badge } from '@/components/ui/badge'
 import { getAllPostSlugs, getPostBySlug } from '@/lib/mdx'
 import { createPageMetadata, absoluteUrl } from '@/lib/seo'
+import { extractReadableMdx, prepareMdxSource, remarkContentDestinations } from '@/lib/search/readable-mdx'
 
 interface Props {
   params: Promise<{ slug: string }>
@@ -44,6 +47,9 @@ export default async function WritingPostPage({ params }: Readonly<Props>) {
   if (!post) {
     notFound()
   }
+
+  const page = `/writing/${slug}`
+  const { destinations } = await extractReadableMdx(post.content, page, post.title)
 
   const formattedDate = new Date(post.date).toLocaleDateString('en-US', {
     year: 'numeric',
@@ -92,6 +98,7 @@ export default async function WritingPostPage({ params }: Readonly<Props>) {
 
   return (
     <article className="min-h-screen pb-16 pt-10 md:pt-12">
+      <ContentDestinationManifest page={page} destinations={destinations} />
       <div className="mx-auto max-w-3xl px-4 sm:px-6 lg:px-8">
         <script
           type="application/ld+json"
@@ -139,7 +146,11 @@ export default async function WritingPostPage({ params }: Readonly<Props>) {
         </header>
 
         <div className="mt-10 max-w-none">
-          <MDXRemote source={post.content} components={mdxComponents} />
+          <MDXRemote
+            source={prepareMdxSource(post.content)}
+            components={mdxComponents}
+            options={{ mdxOptions: { remarkPlugins: [remarkGfm, [remarkContentDestinations, { page, articleTitle: post.title }]] } }}
+          />
         </div>
       </div>
     </article>

@@ -214,3 +214,18 @@ summary::-webkit-details-marker {
     transition-duration: 0.01ms !important;
   }
 }
+
+/* Programmatic content destinations remain outside the normal Tab sequence. */
+[data-content-target] {
+  scroll-margin-top: 7rem;
+}
+[data-content-active] {
+  outline: 2px solid var(--color-primary-500, #3b82f6);
+  outline-offset: 3px;
+  background-color: color-mix(in srgb, var(--color-primary-500, #3b82f6) 12%, transparent);
+}
+[data-content-table] {
+  max-width: 100%;
+  overscroll-behavior-x: contain;
+  scroll-behavior: auto;
+}

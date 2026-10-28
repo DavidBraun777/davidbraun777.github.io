@@ -1,4 +1,5 @@
 import type { SearchRecord, SearchResult } from './types'
+import { destinationHref } from './destinations'
 
 export const SEARCH_QUERY_LIMIT = 160
 
@@ -21,6 +22,8 @@ interface PreparedRecord {
   record: SearchRecord
   title: string[]
   fields: SearchField[]
+  context: SearchField
+  cells: { cell: NonNullable<SearchRecord['cells']>[number]; field: SearchField }[]
 }
 
 const preparedIndexes = new WeakMap<readonly SearchRecord[], PreparedRecord[]>()
@@ -40,6 +43,10 @@ function prepare(records: readonly SearchRecord[]) {
           { words: searchWords(record.description), exactWeight: 8, prefixWeight: 5 },
           { words: searchWords(record.body), exactWeight: 3, prefixWeight: 2 },
         ],
+        context: { words: searchWords(record.context ?? ''), exactWeight: 0.5, prefixWeight: 0.25 },
+        cells: (record.cells ?? []).map(cell => ({
+          cell, field: { words: searchWords(cell.text), exactWeight: 2, prefixWeight: 1 },
+        })),
       }
     })
     preparedIndexes.set(records, prepared)
@@ -94,29 +101,69 @@ export function searchContent(records: readonly SearchRecord[], query: string): 
   const terms = [...new Set(queryWords)]
   if (terms.length === 0) return []
 
-  const matches: SearchResult[] = []
-  for (const { record, title, fields } of prepare(records)) {
-    const weights = terms.map((term) => Math.max(...fields.map((field) => fieldWeight(field, term))))
+  const matches: (SearchResult & { page: string; bodyOnly: boolean })[] = []
+  for (const { record, title, fields, context, cells } of prepare(records)) {
+    const localWeights = terms.map((term) => Math.max(...fields.map((field) => fieldWeight(field, term))))
+    // A parent name can qualify a local match, but cannot make every child a hit.
+    if (!localWeights.some(weight => weight > 0)) continue
+    const weights = terms.map((term, index) => localWeights[index] || fieldWeight(context, term))
     if (weights.some((weight) => weight === 0)) continue
+    // When context supplies part of the query, local content must add a distinct
+    // match. An article-title query must not promote a paragraph merely saying
+    // "For example" because "for" also occurs in its inherited article title.
+    if (localWeights.some(weight => weight === 0)
+      && !terms.some((term, index) => localWeights[index] > 0 && fieldWeight(context, term) === 0)) continue
 
     let score = weights.reduce((sum, weight) => sum + weight, 0) / terms.length
-    if (title.join(' ') === queryWords.join(' ')) score += 10_000
-    else if (includesPhrase(title, queryWords)) {
+    const localTerms = terms.filter((_, index) => localWeights[index] > 0)
+    const localPhrase = queryWords.filter(term => localTerms.includes(term))
+    if (title.join(' ') === localPhrase.join(' ')) score += 10_000
+    else if (includesPhrase(title, localPhrase)) {
       score += 5_000
       // A leading title phrase is usually the named destination the visitor wants.
-      if (queryWords.every((word, index) => title[index] === word)) score += 100
+      if (localPhrase.every((word, index) => title[index] === word)) score += 100
     }
-    else if (terms.every((term) => title.includes(term))) score += 1_500
-    else if (terms.every((term) => title.some((word) => word === term || isPrefix(word, term)))) score += 1_000
+    else if (localTerms.every((term) => title.includes(term))) score += 1_500
+    else if (localTerms.every((term) => title.some((word) => word === term || isPrefix(word, term)))) score += 1_000
+    // Prefer the comparison row over a shorter interpretation with the same label.
+    if (record.granularity === 'row' && cells.length > 1) score += 0.1
 
-    matches.push({ record, score, snippet: contextualSnippet(record, terms) })
+    // A row-label query stays on its header. Additional cell text chooses the
+    // most specific target without mutating the cached record for later queries.
+    const cellTerms = localTerms.filter(term => fieldWeight(fields[0], term) === 0)
+    let selected: (typeof cells)[number] | undefined
+    let cellScore = 0
+    for (const cell of cells) {
+      const candidateScore = cellTerms.reduce((sum, term) => sum + fieldWeight(cell.field, term), 0)
+      if (candidateScore > cellScore) {
+        selected = cell
+        cellScore = candidateScore
+      }
+    }
+    const resultRecord = selected
+      ? { ...record, href: destinationHref(selected.cell.destination), destination: selected.cell.destination }
+      : record
+    matches.push({
+      record: resultRecord, score,
+      snippet: selected ? contextualSnippet({ ...record, description: selected.cell.text, body: selected.cell.text }, cellTerms) : contextualSnippet(record, localTerms),
+      page: record.destination?.page ?? record.href.split('#')[0],
+      bodyOnly: !terms.some(term => fields.slice(0, -1).some(field => fieldWeight(field, term) > 0)),
+    })
   }
 
   matches.sort((a, b) => b.score - a.score || a.record.title.localeCompare(b.record.title, 'en') || a.record.id.localeCompare(b.record.id, 'en'))
+  const precisePages = new Set(matches.filter(match => match.record.granularity).map(match => match.page))
   const destinations = new Set<string>()
-  return matches.filter(({ record }) => {
+  const perPage = new Map<string, number>()
+  return matches.filter(({ record, page, bodyOnly }) => {
     if (destinations.has(record.href)) return false
+    if (!record.granularity && bodyOnly && precisePages.has(page)) return false
+    if (record.granularity) {
+      const count = perPage.get(page) ?? 0
+      if (count >= 3) return false
+      perPage.set(page, count + 1)
+    }
     destinations.add(record.href)
     return true
-  })
+  }).map(({ record, score, snippet }) => ({ record, score, snippet }))
 }

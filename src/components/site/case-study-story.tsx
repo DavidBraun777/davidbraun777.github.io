@@ -4,35 +4,39 @@ import { TechTag } from '@/components/site/tech-tag'
 import { Badge } from '@/components/ui/badge'
 import { SectionHeader } from '@/components/ui/section-header'
 import type { CaseStudyStory, CaseStudyStoryBlock } from '@/data/case-study-story'
+import { projectBlockKey, type ProjectContent } from '@/lib/search/project-destinations'
+import { destinationAttributes, type ContentDestination } from '@/lib/search/destinations'
 
 export function CaseStudyStoryContent({
   story,
   stack,
-}: Readonly<{ story: CaseStudyStory; stack: string[] }>) {
+  content,
+}: Readonly<{ story: CaseStudyStory; stack: string[]; content: ProjectContent }>) {
   return (
     <div className="space-y-12">
-      <section>
+      <section {...content.attrs('overview')}>
         <SectionHeader align="left" title="Overview" />
         <Paragraphs paragraphs={story.overview} />
-        <aside className="mt-6 max-w-4xl rounded-[1.5rem] border border-border-subtle bg-background-subtle p-5 sm:p-6" aria-label="Scope of this account">
+        <aside {...content.attrs('scope')} className="mt-6 max-w-4xl rounded-[1.5rem] border border-border-subtle bg-background-subtle p-5 sm:p-6" aria-label="Scope of this account">
           <p className="text-sm font-semibold text-text-primary">Scope of this account</p>
           <p className="mt-2 text-sm leading-7 text-text-secondary">{story.scopeNote}</p>
         </aside>
       </section>
 
-      <section>
+      <section {...content.attrs('capabilities')}>
         <SectionHeader align="left" title="What I built" />
         <div className="grid gap-5 lg:grid-cols-2">
-          {story.capabilities.map((block) => <StoryCard key={block.title} block={block} />)}
+          {story.capabilities.map((block) => <StoryCard key={projectBlockKey(block.title, block.paragraphs.join(' '))} block={block} destination={content.get('capability', projectBlockKey(block.title, block.paragraphs.join(' ')))} />)}
         </div>
       </section>
 
-      <section>
+      <section {...content.attrs('architecture')}>
         <SectionHeader align="left" title="Architecture" subtitle={story.architecture.intro} />
         <div className="grid gap-5 lg:grid-cols-3">
           {story.architecture.flows.map((flow, index) => (
             <article
-              key={flow.title}
+              key={projectBlockKey(flow.title, flow.steps.join(' '))}
+              {...content.attrs('flow', projectBlockKey(flow.title, flow.steps.join(' ')))}
               className={`rounded-[1.5rem] border border-border-subtle bg-background-elevated p-5 shadow-sm sm:p-6 ${index === 0 ? 'lg:col-span-3' : ''}`}
             >
               <h3 className="text-xl font-semibold text-text-primary">{flow.title}</h3>
@@ -57,35 +61,35 @@ export function CaseStudyStoryContent({
         </div>
       </section>
 
-      <section>
+      <section {...content.attrs('workflows')}>
         <SectionHeader align="left" title="Workflow stories" />
         <div className="space-y-5">
-          {story.workflows.map((block) => <StoryCard key={block.title} block={block} />)}
+          {story.workflows.map((block) => <StoryCard key={projectBlockKey(block.title, block.paragraphs.join(' '))} block={block} destination={content.get('workflow', projectBlockKey(block.title, block.paragraphs.join(' ')))} />)}
         </div>
       </section>
 
-      <section>
+      <section {...content.attrs('tradeoffs')}>
         <SectionHeader align="left" title="Engineering decisions and tradeoffs" />
         <div className="grid gap-5 lg:grid-cols-2">
-          {story.tradeoffs.map((block) => <StoryCard key={block.title} block={block} />)}
+          {story.tradeoffs.map((block) => <StoryCard key={projectBlockKey(block.title, block.paragraphs.join(' '))} block={block} destination={content.get('tradeoff', projectBlockKey(block.title, block.paragraphs.join(' ')))} />)}
         </div>
       </section>
 
-      <section>
+      <section {...content.attrs('technical-details')}>
         <SectionHeader align="left" title="Technical details" />
         <div className="mb-6 flex flex-wrap gap-2" aria-label="Technical stack">
           {stack.map((item) => <TechTag key={item}>{item}</TechTag>)}
         </div>
         <div className="space-y-4">
           {story.technicalDetails.map((block) => block.paragraphs.length > 1 ? (
-            <DisclosurePanel key={block.title} title={block.title} summary={block.paragraphs[0]}>
+            <DisclosurePanel key={projectBlockKey(block.title, block.paragraphs.join(' '))} {...content.attrs('technical', projectBlockKey(block.title, block.paragraphs.join(' ')))} title={block.title} summary={block.paragraphs[0]}>
               <Paragraphs paragraphs={block.paragraphs.slice(1)} />
             </DisclosurePanel>
           ) : (
-            <StoryCard key={block.title} block={block} />
+            <StoryCard key={projectBlockKey(block.title, block.paragraphs.join(' '))} block={block} destination={content.get('technical', projectBlockKey(block.title, block.paragraphs.join(' ')))} />
           ))}
           {story.illustration ? (
-            <DisclosurePanel title="Local form feedback capture" summary="Inspect the original local audit capture and its test conditions.">
+            <DisclosurePanel {...content.attrs('illustration')} title="Local form feedback capture" summary="Inspect the original local audit capture and its test conditions.">
               <figure className="max-w-lg">
                 <Image
                   src={story.illustration.src}
@@ -104,15 +108,17 @@ export function CaseStudyStoryContent({
         </div>
       </section>
 
-      <section>
+      <section {...content.attrs('verification')}>
         <SectionHeader align="left" title="Verification and limitations" />
         <div className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-5 shadow-sm sm:p-7">
-          <h3 className="text-xl font-semibold text-text-primary">Recorded local audit</h3>
-          <p className="mt-3 text-sm leading-7 text-text-secondary">{story.audit.date}</p>
-          <p className="mt-1 text-sm leading-7 text-text-secondary">{story.audit.snapshot}</p>
+          <div {...content.attrs('audit')}>
+            <h3 className="text-xl font-semibold text-text-primary">Recorded local audit</h3>
+            <p className="mt-3 text-sm leading-7 text-text-secondary">{story.audit.date}</p>
+            <p className="mt-1 text-sm leading-7 text-text-secondary">{story.audit.snapshot}</p>
+          </div>
           <dl className="mt-6 divide-y divide-border-subtle">
             {story.audit.checks.map((check) => (
-              <div key={check.label} className="grid gap-2 py-4 first:pt-0 md:grid-cols-[13rem_1fr] md:gap-6">
+              <div key={projectBlockKey(check.label, check.detail)} {...content.attrs('audit-check', projectBlockKey(check.label, check.detail))} className="grid gap-2 py-4 first:pt-0 md:grid-cols-[13rem_1fr] md:gap-6">
                 <dt className="text-sm font-semibold leading-7 text-text-primary">{check.label}</dt>
                 <dd>
                   <Badge variant={check.result === 'Passed' ? 'secondary' : 'outline'}>{check.result}</Badge>
@@ -122,7 +128,7 @@ export function CaseStudyStoryContent({
             ))}
           </dl>
         </div>
-        <div className="mt-6 max-w-4xl">
+        <div {...content.attrs('limitations')} className="mt-6 max-w-4xl">
           <h3 className="text-xl font-semibold text-text-primary">Remaining gaps</h3>
           <ul className="mt-4 space-y-3">
             {story.audit.limitations.map((item) => (
@@ -149,9 +155,9 @@ function Paragraphs({ paragraphs }: Readonly<{ paragraphs: string[] }>) {
   )
 }
 
-function StoryCard({ block }: Readonly<{ block: CaseStudyStoryBlock }>) {
+function StoryCard({ block, destination }: Readonly<{ block: CaseStudyStoryBlock; destination: ContentDestination }>) {
   return (
-    <article className="rounded-[1.5rem] border border-border-subtle bg-background-elevated p-5 shadow-sm sm:p-6">
+    <article {...destinationAttributes(destination)} className="rounded-[1.5rem] border border-border-subtle bg-background-elevated p-5 shadow-sm sm:p-6">
       <h3 className="mb-3 text-xl font-semibold text-text-primary">{block.title}</h3>
       <Paragraphs paragraphs={block.paragraphs} />
     </article>
