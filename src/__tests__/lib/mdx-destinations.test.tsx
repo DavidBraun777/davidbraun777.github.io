@@ -21,6 +21,63 @@ async function renderMdx(source: string, articleTitle?: string) {
 }
 
 describe('MDX content destinations', () => {
+  test('reconstructed comments leave extraction, rendering and disclosure table destinations identical to clean MDX', async () => {
+    const clean = [
+      '## Retrieval comparison', '',
+      '<ContentDetails id="retrieval-notes">', '<summary>Method notes</summary>', '',
+      '| Method | Comparison |', '| --- | --- |', '| BM25 | Lexical relevance |', '',
+      '</ContentDetails>',
+    ].join('\n')
+    const authored = clean.replace('| Method |', '<<<<!-- removed -->!-- removed -->!-- removed -->!-- hidden sentinel -->\n\n| Method |')
+    const [expected, content, cleanRendered, rendered] = await Promise.all([
+      extractReadableMdx(clean, page, 'Retrieval experiments'),
+      extractReadableMdx(authored, page, 'Retrieval experiments'),
+      renderMdx(clean, 'Retrieval experiments'),
+      renderMdx(authored, 'Retrieval experiments'),
+    ])
+    expect(content).toEqual(expected)
+    expect(content.body).toBe('Retrieval comparison Method notes Method Comparison BM25 Lexical relevance')
+    expect(JSON.stringify(content)).not.toContain('sentinel')
+    expect(rendered.innerHTML).not.toContain('sentinel')
+    expect(rendered.textContent).toBe(cleanRendered.textContent)
+
+    const heading = content.blocks.find(block => block.granularity === 'section')!
+    const row = content.blocks.find(block => block.granularity === 'row')!
+    expect(heading.title).toBe('Retrieval comparison')
+    expect(row.title).toBe('BM25')
+    expect(row.destination.disclosureIds).toEqual(['retrieval-notes'])
+    expect(row.cells?.map(cell => cell.text)).toEqual(['BM25', 'Lexical relevance'])
+    const targets = [
+      { destination: heading.destination, tag: 'H2', text: heading.text },
+      { destination: row.destination, tag: 'TR', text: 'BM25Lexical relevance' },
+      ...row.cells!.map(cell => ({ destination: cell.destination, tag: 'TD', text: cell.text })),
+    ]
+    expect(content.destinations).toEqual(targets.map(target => target.destination))
+    for (const { destination, tag, text } of targets) {
+      const matches = rendered.querySelectorAll(`[id="${destination.anchor}"]`)
+      expect(matches).toHaveLength(1)
+      expect(matches[0].tagName).toBe(tag)
+      expect(matches[0].textContent).toBe(text)
+      expect(matches[0].getAttribute('data-content-label')).toBe(destination.label)
+      expect(matches[0].getAttribute('tabindex')).toBe('-1')
+      if (destination.disclosureIds.length) expect(matches[0].closest('details')?.id).toBe('retrieval-notes')
+    }
+  })
+
+  test.each(['<!-- unfinished', '<!-- unfinished --!>', '<!- unfinished'])(
+    'retains parser rejection of malformed authored input: %s', async source => {
+      expect(prepareMdxSource(source)).toBe(source)
+      await expect(extractReadableMdx(source, page)).rejects.toThrow(/Unexpected character/)
+      await expect(renderMdx(source)).rejects.toThrow(/Unexpected character/)
+    }
+  )
+
+  test('preserves stray closing delimiters as accepted public text', async () => {
+    const source = 'Before --> after.'
+    expect((await extractReadableMdx(source, page)).body).toBe(source)
+    expect((await renderMdx(source)).textContent).toBe(source)
+  })
+
   test('handles authored JSX headings, registered components, empty containers and explicit table cells', async () => {
     const source = [
       '<div id="scoped">', '<h2 id="jsx-heading">JSX heading</h2>', '<p>Scoped public prose.</p>', '</div>', '',

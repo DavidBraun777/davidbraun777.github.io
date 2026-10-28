@@ -127,9 +127,21 @@ function setAttributes(node: ContentNode, attributes: Record<string, unknown>) {
   }
 }
 
-/** Comments are neither rendered nor indexed. The shared transform never evaluates MDX. */
+/**
+ * Preprocess repository-authored MDX from src/content/blog for extraction and rendering.
+ * Reconstructed comments can require repeated scans; this is not a general HTML
+ * sanitizer and does not make arbitrary untrusted MDX safe to execute.
+ */
 export function prepareMdxSource(source: string): string {
-  return source.replace(/<!--[\s\S]*?-->/g, '')
+  let prepared = source
+  let previous: string
+  // Every changed pass removes a nonempty complete comment, strictly shortening
+  // the string. Incomplete comments remain unchanged for the MDX parser to handle.
+  do {
+    previous = prepared
+    prepared = prepared.replace(/<!--[\s\S]*?-->/g, '')
+  } while (prepared !== previous)
+  return prepared
 }
 
 /** Both extraction and MDXRemote use this transform, so every indexed ID is rendered. */
