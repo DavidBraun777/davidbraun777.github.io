@@ -1,8 +1,8 @@
 'use client'
 
-import { useId, useState } from 'react'
+import { useId, useRef, useState, type KeyboardEvent } from 'react'
 import {
-  time2moveAllPathsResponsibility, time2moveArchitecturePaths, time2moveDiagramLayout, time2moveReviewPipeline,
+  time2moveArchitecturePaths, time2moveDiagramLayout, time2moveReviewPipeline,
   type Time2MoveDiagram, type Time2MoveDiagramEdge, type Time2MoveDiagramNode, type Time2MoveNodeKind,
 } from '@/data/time2move-architecture'
 import { cn } from '@/lib/utils'
@@ -14,33 +14,76 @@ const nodeStyles: Record<Time2MoveNodeKind, { label: string; svg: string; html: 
 }
 
 export function Time2MoveArchitecture() {
-  const [selected, setSelected] = useState('all')
-  const selectedPath = time2moveArchitecturePaths.find(path => path.id === selected)
+  const id = useId()
+  const [selected, setSelected] = useState(0)
+  const tabs = useRef<(HTMLButtonElement | null)[]>([])
+
+  function moveTab(event: KeyboardEvent<HTMLButtonElement>, index: number) {
+    const count = time2moveArchitecturePaths.length
+    const destinations: Record<string, number> = {
+      ArrowLeft: (index + count - 1) % count,
+      ArrowRight: (index + 1) % count,
+      Home: 0,
+      End: count - 1,
+    }
+    const next = destinations[event.key]
+    if (next === undefined) return
+    event.preventDefault()
+    tabs.current[next]!.focus()
+  }
+
   return (
-    <div className="space-y-6">
-      <p className="max-w-4xl text-sm leading-7 text-text-secondary">Historical implementation paths; this diagram does not establish live provider delivery or a completed production release.</p>
-      <div role="group" aria-label="Architecture path" className="flex flex-wrap gap-2">
-        {[{ id: 'all', selectorLabel: 'All' }, ...time2moveArchitecturePaths].map(path => (
-          <button key={path.id} type="button" aria-pressed={selected === path.id} onClick={() => setSelected(path.id)} className={cn(
-            'rounded-full border px-4 py-2 text-sm font-medium focus-visible:outline-2 focus-visible:outline-offset-4 focus-visible:outline-link-primary',
-            selected === path.id ? 'border-primary-700 bg-primary-700 text-white' : 'border-border-strong bg-background-elevated text-text-primary hover:bg-background-subtle',
-          )}>{path.selectorLabel}</button>
-        ))}
-      </div>
-      <p aria-live="polite" aria-atomic="true" className="min-h-14 max-w-4xl text-base leading-7 text-text-secondary">
-        {selectedPath?.responsibility ?? time2moveAllPathsResponsibility}
-      </p>
-      <DiagramLegend />
-      <div className="space-y-5">
-        {time2moveArchitecturePaths.map(path => (
-          <div key={path.id} data-architecture-path={path.id} data-highlighted={selected === 'all' || selected === path.id} className={cn(
-            'min-w-0 rounded-[1.5rem] border p-4 sm:p-6',
-            selected === 'all' || selected === path.id ? 'border-primary-600 bg-background-elevated' : 'border-border-subtle bg-background-subtle',
-          )}>
-            <Diagram graph={path} />
+    <div className="space-y-4">
+      <div className="rounded-[1.5rem] border border-border-subtle bg-background-elevated shadow-sm">
+        <div role="tablist" aria-label="Architecture paths" className="grid grid-cols-2 gap-1 rounded-t-[1.5rem] border-b border-border-subtle bg-background-subtle p-2 sm:grid-cols-4">
+          {time2moveArchitecturePaths.map((path, index) => (
+            <button
+              key={path.id}
+              ref={node => { tabs.current[index] = node }}
+              id={`${id}-tab-${path.id}`}
+              type="button"
+              role="tab"
+              aria-selected={selected === index}
+              aria-controls={`${id}-panel-${path.id}`}
+              tabIndex={selected === index ? 0 : -1}
+              onClick={() => setSelected(index)}
+              onFocus={() => setSelected(index)}
+              onKeyDown={event => moveTab(event, index)}
+              className={cn(
+                'min-h-11 rounded-xl border px-3 py-3 text-sm font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-link-primary',
+                selected === index
+                  ? 'border-border-strong bg-background-elevated text-link-primary shadow-sm'
+                  : 'border-transparent text-text-secondary hover:bg-background-elevated hover:text-text-primary',
+              )}
+            >{path.selectorLabel}</button>
+          ))}
+        </div>
+        {time2moveArchitecturePaths.map((path, index) => (
+          <div
+            key={path.id}
+            id={`${id}-panel-${path.id}`}
+            role="tabpanel"
+            aria-labelledby={`${id}-tab-${path.id}`}
+            tabIndex={0}
+            hidden={selected !== index}
+            className="min-w-0 rounded-b-[1.5rem] p-5 sm:p-7"
+          >
+            {selected === index ? (
+              <div data-architecture-path={path.id} className="space-y-6">
+                <Diagram graph={path} />
+                <div className="space-y-4 border-t border-border-subtle pt-5">
+                  <DiagramLegend />
+                  <div className="max-w-4xl">
+                    <p className="text-xs font-semibold uppercase tracking-wider text-link-primary">My contribution</p>
+                    <p className="mt-2 text-sm leading-7 text-text-secondary">{path.responsibility}</p>
+                  </div>
+                </div>
+              </div>
+            ) : null}
           </div>
         ))}
       </div>
+      <p className="text-xs leading-6 text-text-muted">Architecture reconstructed from project source. The engagement concluded before final system validation.</p>
     </div>
   )
 }
@@ -75,8 +118,8 @@ function Diagram({ graph }: Readonly<{ graph: Time2MoveDiagram }>) {
   return (
     <figure className="min-w-0" data-diagram={graph.id}>
       <figcaption>
-        <h3 className="text-lg font-semibold text-text-primary">{graph.title}</h3>
-        <p className="mt-2 max-w-4xl text-sm leading-7 text-text-secondary">{graph.description}</p>
+        <h3 className="text-xl font-semibold text-text-primary">{graph.title}</h3>
+        <p className="mt-2 max-w-4xl text-sm leading-6 text-text-secondary">{graph.description}</p>
       </figcaption>
       <svg className="mt-4 hidden h-auto w-full xl:block" viewBox={`0 0 ${time2moveDiagramLayout.width} ${graph.height}`} role="img" aria-labelledby={`${id}-title ${id}-description`}>
         <title id={`${id}-title`}>{graph.title}</title>
@@ -108,36 +151,45 @@ function Diagram({ graph }: Readonly<{ graph: Time2MoveDiagram }>) {
 }
 
 function MobileDiagram({ graph }: Readonly<{ graph: Time2MoveDiagram }>) {
+  const branches = graph.edges.filter(edge => edge.branch)
   return (
     <div className="mt-5 space-y-5 xl:hidden">
       <ol aria-label={`${graph.title}: main path`}>
         {graph.mainNodeIds.map((nodeId, index) => (
-          <li key={nodeId}>
+          <li key={nodeId} className="flex gap-3">
+            <div aria-hidden="true" className="flex w-7 shrink-0 flex-col items-center pt-3">
+              <span className="flex h-7 w-7 items-center justify-center rounded-full bg-background-subtle font-mono text-xs text-text-secondary">{index + 1}</span>
+              {index < graph.mainNodeIds.length - 1 ? <VerticalConnector /> : null}
+            </div>
             <MobileNode node={diagramNode(graph, nodeId)} />
-            {index < graph.mainNodeIds.length - 1 ? <VerticalConnector bidirectional={false} /> : null}
           </li>
         ))}
       </ol>
-      <ul aria-label={`${graph.title}: branch connections`} className="space-y-4">
-        {graph.edges.filter(edge => edge.branch).map(edge => (
-          <li key={edge.id} data-mobile-edge={edge.id} className="rounded-xl border border-dashed border-border-strong p-4">
-            <p className="mb-3 text-sm font-semibold text-link-primary">{edge.label}</p>
-            <div className="min-w-0">
-              <MobileNode node={diagramNode(graph, edge.from)} />
-              <span className="sr-only">{edge.bidirectional ? 'Connects both ways with' : 'Connects to'}</span>
-              <VerticalConnector bidirectional={edge.bidirectional} />
-              <MobileNode node={diagramNode(graph, edge.to)} />
-            </div>
-          </li>
-        ))}
-      </ul>
+      {branches.length > 0 ? (
+        <ul aria-label={`${graph.title}: branch connections`} className="space-y-4 border-t border-border-subtle pt-4">
+          {branches.map(edge => (
+            <li key={edge.id} data-mobile-edge={edge.id} className="space-y-1 text-sm leading-6 text-text-secondary">
+              <p className="font-semibold text-link-primary">{edge.label}</p>
+              <p>
+                {diagramNode(graph, edge.from).label}
+                <span aria-hidden="true" className="px-2">{edge.bidirectional ? '↔' : '→'}</span>
+                <span className="sr-only">{edge.bidirectional ? ' connects both ways with ' : ' connects to '}</span>
+                {diagramNode(graph, edge.to).label}
+              </p>
+              {[edge.from, edge.to].filter(nodeId => !graph.mainNodeIds.includes(nodeId)).map(nodeId => (
+                <p key={nodeId}>{diagramNode(graph, nodeId).detail.join(' · ')}</p>
+              ))}
+            </li>
+          ))}
+        </ul>
+      ) : null}
     </div>
   )
 }
 
 function MobileNode({ node }: Readonly<{ node: Time2MoveDiagramNode }>) {
   return (
-    <div className={cn('rounded-xl border p-4', nodeStyles[node.kind].html)}>
+    <div data-mobile-node={node.id} className={cn('mb-3 min-w-0 flex-1 rounded-lg border-l-2 px-4 py-3', nodeStyles[node.kind].html)}>
       <p className="text-[0.65rem] uppercase tracking-wider text-text-secondary">{nodeStyles[node.kind].label}</p>
       <p className="mt-1 font-semibold text-text-primary">{node.label}</p>
       <p className="mt-1 text-sm leading-6 text-text-secondary">{node.detail.join(' · ')}</p>
@@ -145,11 +197,10 @@ function MobileNode({ node }: Readonly<{ node: Time2MoveDiagramNode }>) {
   )
 }
 
-function VerticalConnector({ bidirectional }: Readonly<{ bidirectional: boolean }>) {
+function VerticalConnector() {
   return (
     <svg aria-hidden="true" focusable="false" className="mx-auto my-2 h-8 w-6 fill-none stroke-link-primary" viewBox="0 0 24 32" strokeWidth="1.5">
       <path d="M12 3 V28 M6 22 L12 28 L18 22" />
-      {bidirectional ? <path d="M6 9 L12 3 L18 9" /> : null}
     </svg>
   )
 }

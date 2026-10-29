@@ -87,7 +87,9 @@ The current project evidence remains deliberately classified:
   Its optional `story` supplies the concise public narrative, with explicit section
   IDs shared by rendering and search. It contains no audit appendix, evidence
   disclosure or screenshot. The public architecture overview and optional review-data
-  pipeline show the historical implementation. The optional AI lesson is explicitly
+  pipeline show the historical implementation. Four keyboard-accessible tabs each
+  show one architecture path and its engineering contribution; compact mobile
+  branches avoid repeating the main flow. The optional AI lesson is explicitly
   an illustrative extension with synthetic, precomputed proposals and local validation;
   it makes no model or CRM calls. The `Time2Move info/` reference packet is ignored
   by Git, lint and TypeScript; do not import it or publish its review documents.
