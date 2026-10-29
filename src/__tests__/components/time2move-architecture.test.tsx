@@ -1,7 +1,6 @@
 // @vitest-environment happy-dom
 
 import { afterEach, describe, expect, test } from 'vitest'
-import { act } from 'react'
 import { Time2MoveArchitecture, Time2MoveReviewPipeline } from '@/components/site/time2move-architecture'
 import {
   time2moveInquiryArchitecture, time2moveArchitectureText,
@@ -69,12 +68,9 @@ describe('Time2Move architecture diagrams', () => {
 
   test('renders matching desktop and mobile graphs with unique, complete accessible descriptions', () => {
     const app = mount(<><Time2MoveArchitecture /><Time2MoveReviewPipeline /></>)
-    const tabs = [...app.container.querySelectorAll<HTMLButtonElement>('[role="tab"]')]
+    const ids = [...app.container.querySelectorAll('[id]')].map(node => node.id)
+    expect(new Set(ids).size).toBe(ids.length)
     for (const graph of diagrams) {
-      const tab = tabs.find(button => button.textContent === time2moveArchitecturePaths.find(path => path.id === graph.id)?.selectorLabel)
-      if (tab) click(tab)
-      const ids = [...app.container.querySelectorAll('[id]')].map(node => node.id)
-      expect(new Set(ids).size).toBe(ids.length)
       const figure = element<HTMLElement>(`[data-diagram="${graph.id}"]`, app.container)
       const svg = figure.querySelector<SVGElement>('svg[role="img"]')!
       const accessibleIds = svg.getAttribute('aria-labelledby')!.split(' ')
@@ -89,6 +85,9 @@ describe('Time2Move architecture diagrams', () => {
         for (const detail of node.detail) expect(description).toContain(detail)
       }
       for (const edge of graph.edges) {
+        const from = graph.nodes.find(node => node.id === edge.from)!
+        const to = graph.nodes.find(node => node.id === edge.to)!
+        expect(description).toContain(`${from.label} connects to ${to.label}`)
         const rendered = svg.querySelector<SVGGElement>(`[data-graph-edge="${edge.id}"]`)!
         expect(rendered.dataset.from).toBe(edge.from)
         expect(rendered.dataset.to).toBe(edge.to)
@@ -108,9 +107,24 @@ describe('Time2Move architecture diagrams', () => {
             }
           }
           expect(mobile.querySelectorAll('[data-mobile-node]')).toHaveLength(0)
+          expect(mobile.querySelectorAll('svg')).toHaveLength(0)
         }
       }
-      expect(figure.querySelectorAll('ol > li')).toHaveLength(graph.mainNodeIds.length)
+      const mainPath = element('ol', figure)
+      const steps = [...mainPath.querySelectorAll<HTMLElement>(':scope > li')]
+      expect(steps).toHaveLength(graph.mainNodeIds.length)
+      expect([...figure.querySelectorAll('[data-mobile-node]')].map(node => node.getAttribute('data-mobile-node'))).toEqual(graph.mainNodeIds)
+      expect(mainPath.querySelectorAll('svg[aria-hidden="true"]')).toHaveLength(graph.mainNodeIds.length - 1)
+      for (const [index, nodeId] of graph.mainNodeIds.entries()) {
+        const node = graph.nodes.find(item => item.id === nodeId)!
+        const step = steps[index]
+        const mobile = element(`[data-mobile-node="${nodeId}"]`, step)
+        expect(mobile.textContent).toContain(node.label)
+        for (const detail of node.detail) expect(mobile.textContent).toContain(detail)
+        const gutter = element(':scope > [aria-hidden="true"]', step)
+        expect(gutter.textContent).toBe(String(index + 1))
+        expect(gutter.querySelectorAll('svg')).toHaveLength(index < steps.length - 1 ? 1 : 0)
+      }
       expect(figure.querySelectorAll('[aria-label="Diagram legend"] li')).toHaveLength(new Set(graph.nodes.map(node => node.kind)).size)
     }
     expect(time2moveArchitectureText).toContain(time2moveInquiryArchitecture.responsibility)

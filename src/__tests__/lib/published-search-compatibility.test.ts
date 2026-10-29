@@ -43,6 +43,8 @@ import type { SearchIndex } from '@/lib/search/types'
 // title breadcrumbs changed destination metadata. All 581 unrelated records,
 // nine other project manifests and unrelated ranked values/order stayed exact.
 // Five query expectations changed; the other 15 remain from the prior baseline.
+// PR #154's merge repair replaces the stale four-workflow overview caption with
+// the single-inquiry description. Record destinations and ranked queries stay exact.
 function canonical(value: unknown): unknown {
   if (Array.isArray(value)) return value.map(canonical)
   if (value && typeof value === 'object') return Object.fromEntries(
@@ -80,7 +82,7 @@ const queries = [
 describe('published search compatibility with ba84b4d and reviewed editorial updates', () => {
   test('preserves all public records, destinations and project target metadata', () => {
     expect(index.records).toHaveLength(590)
-    expect(digest(index)).toBe('ba138e6b27c0ffa99da9399b62bdc5c69737b1ef184e235addd01b29a6012a6d')
+    expect(digest(index)).toBe('98e15b1df9290fb0a5f3081e5b7df05155e63a3d070e75e9bb7889a37798dbe5')
     const inventory = index.records.map(record => ({ id: record.id, href: record.href, destination: record.destination, cells: record.cells }))
     expect(index.records.reduce((count, record) => count + Number(!!record.destination) + (record.cells?.length ?? 0), 0)).toBe(636)
     expect(digest(inventory)).toBe('ff15a266cb6ce35acd87cbf13550648e31ed3e6a3fa1d70ed1406adb13b2a6bb')

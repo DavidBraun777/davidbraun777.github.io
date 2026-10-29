@@ -7,13 +7,6 @@ const successorLabel = 'Current business website — Hombuzz'
 const expectedHeadings = [
   'Engineering ownership', 'Inside the system', 'AI development and tool use', 'Outcome and lessons', 'Related Case Studies',
 ]
-const architecturePaths = [
-  { label: 'Inquiries', id: 'inquiries' },
-  { label: 'Rates', id: 'rates' },
-  { label: 'Reviews', id: 'reviews' },
-  { label: 'Property search', id: 'property-search' },
-]
-
 test.describe('Time2Move historical case study', () => {
   test.beforeEach(async ({ page }) => {
     await page.emulateMedia({ reducedMotion: 'reduce' })
@@ -58,7 +51,10 @@ test.describe('Time2Move historical case study', () => {
         await expect(page.locator('main img, #content-illustration, #content-technical-details, #content-scope')).toHaveCount(0)
         await expect(page.locator('#content-ai-development ul li')).toHaveCount(3)
         const overview = page.locator('#content-inside-system')
-        await expect(overview.locator('[data-diagram="inquiries"]')).toHaveCount(1)
+        const inquiry = overview.locator('[data-diagram="inquiries"]')
+        await expect(inquiry).toHaveCount(1)
+        await expect(inquiry).toBeVisible()
+        await expect(overview.locator('[data-diagram]:visible')).toHaveCount(1)
         await expect(overview.locator('button, [role="tablist"], [role="tab"], [aria-pressed]')).toHaveCount(0)
         await expect(page.locator('[data-diagram="rates"], [data-diagram="reviews"], [data-diagram="property-search"], [data-graph-node="homepage-artifact"]')).toHaveCount(0)
         await expect(overview).not.toContainText(/Homepage-cache|No consumer shown|Explore four workflows/)
@@ -69,6 +65,16 @@ test.describe('Time2Move historical case study', () => {
           await disclosure.locator(':scope > summary').focus()
           await page.keyboard.press('Enter')
           await expect(disclosure).toHaveAttribute('open', '')
+        }
+        for (const graph of [inquiry, pipeline.locator('[data-diagram="review-pipeline"]')]) {
+          await expect(graph).toBeVisible()
+          if (width >= 1280) {
+            await expect(graph.locator('svg[role="img"]')).toBeVisible()
+            await expect(graph.locator('ol')).toBeHidden()
+          } else {
+            await expect(graph.locator('svg[role="img"]')).toBeHidden()
+            await expect(graph.locator('ol')).toBeVisible()
+          }
         }
         await expect(lesson.getByText('Illustrative extension', { exact: true })).toBeVisible()
         for (const section of await page.locator('main section[data-content-target]').all()) {
@@ -86,47 +92,15 @@ test.describe('Time2Move historical case study', () => {
 
         const violations = (await new AxeBuilder({ page }).analyze()).violations.filter(item => ['critical', 'serious'].includes(item.impact ?? ''))
         expect(violations).toEqual([])
+        for (const disclosure of [lesson, pipeline]) {
+          await disclosure.locator(':scope > summary').focus()
+          await page.keyboard.press('Space')
+          await expect(disclosure).not.toHaveAttribute('open')
+          await expect(disclosure.locator(':scope > summary')).toBeFocused()
+        }
+        await expect(overview.locator('[data-diagram]:visible')).toHaveCount(1)
       }
     }
-  })
-
-  test('switches architecture tabs with wrapping arrow navigation and native activation', async ({ page }) => {
-    await page.goto(path)
-    const overview = page.locator('#content-inside-system')
-    const tabs = overview.getByRole('tablist', { name: 'Architecture paths', exact: true })
-    await expect(tabs.getByRole('tab')).toHaveText(architecturePaths.map(item => item.label))
-
-    async function expectSelected(label: string) {
-      const selected = tabs.getByRole('tab', { name: label, exact: true })
-      await expect(selected).toBeFocused()
-      await expect(selected).toHaveAttribute('aria-selected', 'true')
-      await expect(selected).toHaveAttribute('tabindex', '0')
-      await expect(tabs.locator('[aria-selected="false"][tabindex="-1"]')).toHaveCount(3)
-      const panel = overview.getByRole('tabpanel', { name: label, exact: true })
-      await expect(panel).toBeVisible()
-      await expect(panel).toHaveAttribute('id', (await selected.getAttribute('aria-controls'))!)
-      await expect(panel).toHaveAttribute('aria-labelledby', (await selected.getAttribute('id'))!)
-      await expect(overview.locator('[role="tabpanel"] [data-diagram]')).toHaveCount(1)
-      await expect(panel.locator('[data-diagram]')).toHaveAttribute('data-diagram', architecturePaths.find(item => item.label === label)!.id)
-    }
-
-    await tabs.getByRole('tab', { name: 'Inquiries', exact: true }).focus()
-    await expectSelected('Inquiries')
-    for (const [key, label] of [
-      ['ArrowLeft', 'Property search'], ['ArrowRight', 'Inquiries'], ['ArrowRight', 'Rates'],
-      ['End', 'Property search'], ['Home', 'Inquiries'],
-    ]) {
-      await page.keyboard.press(key)
-      await expectSelected(label)
-    }
-    await tabs.getByRole('tab', { name: 'Reviews', exact: true }).focus()
-    await page.keyboard.press('Enter')
-    await expectSelected('Reviews')
-    await tabs.getByRole('tab', { name: 'Property search', exact: true }).focus()
-    await page.keyboard.press('Space')
-    await expectSelected('Property search')
-    await page.keyboard.press('Tab')
-    await expect(tabs.locator(':focus')).toHaveCount(0)
   })
 
   test('computes the synthetic checks locally and keeps review separate from schema validity', async ({ page }) => {

@@ -21,7 +21,7 @@ export function Time2MoveArchitecture() {
         <p className="text-sm font-semibold text-text-primary">My contribution</p>
         <p className="mt-2 text-sm leading-7 text-text-secondary">{time2moveInquiryArchitecture.responsibility}</p>
       </div>
-      <p className="text-xs leading-6 text-text-muted">Architecture reconstructed from project source. The engagement concluded before final system validation.</p>
+      <p className="text-xs leading-6 text-text-muted">Architecture reconstructed from project source.</p>
     </div>
   )
 }
@@ -101,20 +101,22 @@ function MobileDiagram({ graph }: Readonly<{ graph: Time2MoveDiagram }>) {
               {index < graph.mainNodeIds.length - 1 ? <VerticalConnector /> : null}
             </div>
             <MobileNode node={diagramNode(graph, nodeId)} />
-            {index < graph.mainNodeIds.length - 1 ? <VerticalConnector /> : null}
           </li>
         ))}
       </ol>
-      <ul aria-label={`${graph.title}: branch connections`} className="space-y-4">
-        {graph.edges.filter(edge => edge.branch).map(edge => (
-          <li key={edge.id} data-mobile-edge={edge.id} className="rounded-xl border border-dashed border-border-strong p-4">
-            <p className="mb-3 text-sm font-semibold text-link-primary">{edge.label}</p>
-            <div className="min-w-0">
-              <MobileNode node={diagramNode(graph, edge.from)} />
-              <span className="sr-only">Connects to</span>
-              <VerticalConnector />
-              <MobileNode node={diagramNode(graph, edge.to)} />
-            </div>
+      <ul aria-label={`${graph.title}: branch connections`} className="space-y-4 border-t border-border-subtle pt-4">
+        {branches.map(edge => (
+          <li key={edge.id} data-mobile-edge={edge.id} className="space-y-1 text-sm leading-6 text-text-secondary">
+            <p className="font-semibold text-link-primary">{edge.label}</p>
+            <p>
+              {diagramNode(graph, edge.from).label}
+              <span aria-hidden="true" className="px-2">→</span>
+              <span className="sr-only"> connects to </span>
+              {diagramNode(graph, edge.to).label}
+            </p>
+            {[edge.from, edge.to].filter(nodeId => !graph.mainNodeIds.includes(nodeId)).map(nodeId => (
+              <p key={nodeId}>{diagramNode(graph, nodeId).detail.join(' · ')}</p>
+            ))}
           </li>
         ))}
       </ul>
