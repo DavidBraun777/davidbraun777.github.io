@@ -37,6 +37,8 @@ import type { SearchIndex } from '@/lib/search/types'
 // query expectations changed; unrelated ranked values/order and 16 queries did not.
 // Final accuracy refinement names Pydantic validation and contact normalization
 // in the architecture record only; all destinations and 20 ranked queries stayed exact.
+// The architecture-tab refinement changes only the overview caption in that
+// record. Record identities, destinations, manifests and ranked queries stay exact.
 function canonical(value: unknown): unknown {
   if (Array.isArray(value)) return value.map(canonical)
   if (value && typeof value === 'object') return Object.fromEntries(
@@ -74,7 +76,7 @@ const queries = [
 describe('published search compatibility with ba84b4d and reviewed editorial updates', () => {
   test('preserves all public records, destinations and project target metadata', () => {
     expect(index.records).toHaveLength(590)
-    expect(digest(index)).toBe('fbef672ea95548af6ab975fe7b02b1ee0574e7ddc76e09927d9fbba77529b4aa')
+    expect(digest(index)).toBe('93a81f2a159767a45ea4912a8e2e884b657ba6912603cadcfb8c9b65c3fc6d92')
     const inventory = index.records.map(record => ({ id: record.id, href: record.href, destination: record.destination, cells: record.cells }))
     expect(index.records.reduce((count, record) => count + Number(!!record.destination) + (record.cells?.length ?? 0), 0)).toBe(636)
     expect(digest(inventory)).toBe('499d5c45593b17a14a5540a58b9394c97010e79e84de76af75f4c7808cb429e4')

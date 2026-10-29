@@ -1,9 +1,10 @@
 // @vitest-environment happy-dom
 
 import { afterEach, describe, expect, test } from 'vitest'
+import { act } from 'react'
 import { Time2MoveArchitecture, Time2MoveReviewPipeline } from '@/components/site/time2move-architecture'
 import {
-  time2moveAllPathsResponsibility, time2moveArchitecturePaths, time2moveArchitectureText,
+  time2moveArchitecturePaths, time2moveArchitectureText,
   time2moveDiagramLayout, time2moveReviewPipeline, time2moveReviewPipelineText,
   type Time2MoveDiagramNode,
 } from '@/data/time2move-architecture'
@@ -73,9 +74,12 @@ describe('Time2Move architecture diagrams', () => {
 
   test('renders matching desktop and mobile graphs with unique, complete accessible descriptions', () => {
     const app = mount(<><Time2MoveArchitecture /><Time2MoveReviewPipeline /></>)
-    const ids = [...app.container.querySelectorAll('[id]')].map(node => node.id)
-    expect(new Set(ids).size).toBe(ids.length)
+    const tabs = [...app.container.querySelectorAll<HTMLButtonElement>('[role="tab"]')]
     for (const graph of diagrams) {
+      const tab = tabs.find(button => button.textContent === time2moveArchitecturePaths.find(path => path.id === graph.id)?.selectorLabel)
+      if (tab) click(tab)
+      const ids = [...app.container.querySelectorAll('[id]')].map(node => node.id)
+      expect(new Set(ids).size).toBe(ids.length)
       const figure = element<HTMLElement>(`[data-diagram="${graph.id}"]`, app.container)
       const svg = figure.querySelector<SVGElement>('svg[role="img"]')!
       const accessibleIds = svg.getAttribute('aria-labelledby')!.split(' ')
@@ -100,39 +104,87 @@ describe('Time2Move architecture diagrams', () => {
         expect(path.hasAttribute('stroke-dasharray')).toBe(edge.branch)
         if (edge.branch) {
           const mobile = element<HTMLElement>(`[data-mobile-edge="${edge.id}"]`, figure)
+          expect(mobile.textContent).toContain(edge.label)
           for (const id of [edge.from, edge.to]) {
             const node = graph.nodes.find(item => item.id === id)!
             expect(mobile.textContent).toContain(node.label)
-            for (const detail of node.detail) expect(mobile.textContent).toContain(detail)
+            if (!graph.mainNodeIds.includes(id)) {
+              for (const detail of node.detail) expect(mobile.textContent).toContain(detail)
+            }
           }
-          expect(mobile.querySelector('svg[aria-hidden="true"]')).not.toBeNull()
+          expect(mobile.querySelectorAll('[data-mobile-node]')).toHaveLength(0)
         }
       }
-      expect(figure.querySelectorAll('ol > li')).toHaveLength(graph.mainNodeIds.length)
+      const mainPath = element('ol', figure)
+      expect(mainPath.querySelectorAll(':scope > li')).toHaveLength(graph.mainNodeIds.length)
+      expect([...figure.querySelectorAll('[data-mobile-node]')].map(node => node.getAttribute('data-mobile-node'))).toEqual(graph.mainNodeIds)
+      expect(mainPath.querySelectorAll('svg[aria-hidden="true"]')).toHaveLength(graph.mainNodeIds.length - 1)
+      for (const nodeId of graph.mainNodeIds) {
+        const node = graph.nodes.find(item => item.id === nodeId)!
+        const mobile = element(`[data-mobile-node="${nodeId}"]`, mainPath)
+        expect(mobile.textContent).toContain(node.label)
+        for (const detail of node.detail) expect(mobile.textContent).toContain(detail)
+      }
     }
-    expect(time2moveArchitectureText).toContain(time2moveAllPathsResponsibility)
+    for (const path of time2moveArchitecturePaths) expect(time2moveArchitectureText).toContain(path.responsibility)
     expect(time2moveReviewPipelineText).toContain(time2moveReviewPipeline.note)
     expect(`${time2moveArchitectureText} ${time2moveReviewPipelineText}`).not.toMatch(/\/Users\/|source-map|security-notes|api_key|bearer\s/i)
   })
 
-  test('native selector buttons highlight one path without hiding the other paths or changing their graphs', () => {
+  test('tabs expose only the selected graph and its contribution through valid accessible associations', () => {
     const app = mount(<Time2MoveArchitecture />)
-    const controls = element('[role="group"]', app.container)
-    const buttons = [...controls.querySelectorAll('button')]
-    expect(buttons.map(button => button.type)).toEqual(Array(5).fill('button'))
-    expect(buttons.map(button => button.getAttribute('aria-pressed'))).toEqual(['true', 'false', 'false', 'false', 'false'])
-    expect(app.container.querySelectorAll('[data-highlighted="true"]')).toHaveLength(4)
-    for (const [index, path] of time2moveArchitecturePaths.entries()) {
-      const before = app.container.querySelectorAll('[data-graph-edge]').length
-      click(buttons[index + 1])
-      expect(buttons.filter(button => button.getAttribute('aria-pressed') === 'true')).toEqual([buttons[index + 1]])
-      expect(element('[data-highlighted="true"]', app.container).dataset.architecturePath).toBe(path.id)
-      expect(element('[aria-live="polite"]', app.container).textContent).toBe(path.responsibility)
-      expect(app.container.querySelectorAll('[data-architecture-path]')).toHaveLength(4)
-      expect(app.container.querySelectorAll('[data-graph-edge]')).toHaveLength(before)
+    const controls = element('[role="tablist"]', app.container)
+    expect(controls.getAttribute('aria-label')).toBe('Architecture paths')
+    const tabs = [...controls.querySelectorAll<HTMLButtonElement>('[role="tab"]')]
+    expect(tabs.map(tab => tab.textContent)).toEqual(['Inquiries', 'Rates', 'Reviews', 'Property search'])
+    expect(tabs.map(tab => tab.type)).toEqual(Array(4).fill('button'))
+    expect([...controls.querySelectorAll('button')]).toEqual(tabs)
+
+    function expectSelected(index: number) {
+      const selected = tabs[index]
+      const path = time2moveArchitecturePaths[index]
+      expect(tabs.filter(tab => tab.getAttribute('aria-selected') === 'true')).toEqual([selected])
+      expect(tabs.map(tab => tab.tabIndex)).toEqual(tabs.map((_, tabIndex) => tabIndex === index ? 0 : -1))
+      for (const tab of tabs) {
+        expect(tab.id).not.toBe('')
+        const controlled = document.getElementById(tab.getAttribute('aria-controls')!)
+        expect(controlled?.getAttribute('role')).toBe('tabpanel')
+      }
+      const panels = [...app.container.querySelectorAll<HTMLElement>('[role="tabpanel"]')]
+      const visible = panels.filter(panel => !panel.hidden)
+      expect(visible).toHaveLength(1)
+      const panel = visible[0]
+      expect(panel.id).toBe(selected.getAttribute('aria-controls'))
+      expect(panel.getAttribute('aria-labelledby')).toBe(selected.id)
+      expect([...app.container.querySelectorAll('[data-diagram]')].map(graph => graph.getAttribute('data-diagram'))).toEqual([path.id])
+      expect(panel.textContent).toContain(path.responsibility)
+      expect(panel.textContent!.indexOf('My contribution')).toBeGreaterThan(panel.textContent!.indexOf(path.note))
+      for (const hidden of panels.filter(item => item !== panel)) {
+        expect(hidden.hidden).toBe(true)
+        expect(hidden.textContent).toBe('')
+      }
     }
-    click(buttons[0])
-    expect(app.container.querySelectorAll('[data-highlighted="true"]')).toHaveLength(4)
-    expect(element('[aria-live="polite"]', app.container).textContent).toBe(time2moveAllPathsResponsibility)
+
+    expectSelected(0)
+    for (const [index, path] of time2moveArchitecturePaths.entries()) {
+      click(tabs[index])
+      expectSelected(index)
+      expect(app.container.querySelectorAll('[data-graph-edge]')).toHaveLength(path.edges.length)
+    }
+
+    tabs[3].focus()
+    for (const [key, index] of [
+      ['ArrowRight', 0], ['ArrowLeft', 3], ['Home', 0], ['ArrowRight', 1], ['ArrowLeft', 0], ['End', 3],
+    ] as const) {
+      const event = new KeyboardEvent('keydown', { key, bubbles: true, cancelable: true })
+      act(() => document.activeElement!.dispatchEvent(event))
+      expect(event.defaultPrevented).toBe(true)
+      expect(document.activeElement).toBe(tabs[index])
+      expectSelected(index)
+    }
+    const tabKey = new KeyboardEvent('keydown', { key: 'Tab', bubbles: true, cancelable: true })
+    act(() => tabs[3].dispatchEvent(tabKey))
+    expect(tabKey.defaultPrevented).toBe(false)
+    expectSelected(3)
   })
 })
