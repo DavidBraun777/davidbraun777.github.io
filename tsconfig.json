@@ -39,6 +39,7 @@
   ],
   "exclude": [
     "node_modules",
-    "_old_site"
+    "_old_site",
+    "Time2Move info"
   ]
 }

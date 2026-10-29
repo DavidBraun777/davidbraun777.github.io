@@ -38,7 +38,6 @@ function certificationDescription(item: (typeof certifications)[number]): string
 export function projectSearchRecord(system: FeaturedSystemCaseStudy): SearchRecord {
   const ladder = system.retrievalCapabilityLadder
   const story = system.story
-  const storyBlocks = story ? [...story.capabilities, ...story.workflows, ...story.tradeoffs, ...story.technicalDetails] : []
   return {
     id: `project-${system.id}`,
     title: system.displayTitle ?? system.name,
@@ -47,16 +46,13 @@ export function projectSearchRecord(system: FeaturedSystemCaseStudy): SearchReco
     description: system.summary,
     tags: [system.name, ...system.stack, system.contextLabel ?? system.caseStudyStage],
     headings: story
-      ? [system.currentState, ...storyBlocks.map(block => block.title), ...story.architecture.flows.map(flow => flow.title), ...story.audit.checks.map(check => check.label)]
+      ? [system.currentState, ...story.sections.map(block => block.title)]
       : [system.solutionTitle ?? 'Solution / Implementation', ...system.proofSections.map(section => section.title)],
     body: story ? text(
-      system.positioning, system.currentState, story.scopeNote, ...story.overview,
+      system.positioning, system.currentState,
       ...story.atAGlance.map(item => text(item.label, item.value)),
-      ...storyBlocks.flatMap(block => block.paragraphs),
-      story.architecture.intro, ...story.architecture.flows.map(flow => text(...flow.steps, flow.boundary)),
-      story.audit.date, story.audit.snapshot, ...story.audit.checks.map(check => text(check.result, check.detail)),
-      ...story.audit.limitations, story.audit.lesson, story.illustration?.caption,
-      system.successorLink?.label, system.successorLink?.context,
+      ...story.sections.map(block => text(...block.paragraphs, ...(block.items ?? []).map(item => `${item.label}: ${item.description}`), block.closing)),
+      system.successorLink?.label,
     ) : text(
       system.oneSentenceOutcome, system.positioning, system.problem, system.system,
       system.myRole, system.coreConstraint, system.outcome, system.currentState,

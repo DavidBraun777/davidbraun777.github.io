@@ -1,7 +1,9 @@
 import type { FeaturedSystemCaseStudy, RetrievalCapabilityLadderLevel } from '@/data/systems'
-import type { CaseStudyStoryBlock } from '@/data/case-study-story'
 import { assertUniqueDestinations, contentFingerprint, contentId, destinationAttributes, destinationHref, type ContentDestination } from './destinations'
 import type { SearchRecord } from './types'
+import { time2MoveExtras } from '@/data/time2move-extras'
+import { time2moveArchitectureText, time2moveReviewPipelineText } from '@/data/time2move-architecture'
+import { aiLessonCopy } from '@/lib/time2move-ai-lesson'
 
 const text = (...parts: (string | undefined)[]) => parts.filter(Boolean).join(' ')
 
@@ -66,42 +68,25 @@ function createProjectRegistry(system: FeaturedSystemCaseStudy) {
     return record
   }
   const section = (key: string, title: string, body = '') => add([key], title, body, '', 'section')
-  const blocks = (group: string, label: string, items: CaseStudyStoryBlock[], disclosures = false) => {
-    items.forEach(block => {
-      const keys = [group, projectBlockKey(block.title, block.paragraphs.join(' '))]
-      add(keys, block.title, block.paragraphs.join(' '), label, 'block', disclosures && block.paragraphs.length > 1 ? [contentId(...keys)] : [])
-    })
-  }
 
-  return { page, records, byAnchor, register, add, section, blocks, breadcrumb }
+  return { page, records, byAnchor, register, add, section, breadcrumb }
 }
 
 type ProjectRegistry = ReturnType<typeof createProjectRegistry>
 
-function registerStoryContent(system: FeaturedSystemCaseStudy, story: NonNullable<FeaturedSystemCaseStudy['story']>, registry: ProjectRegistry) {
-  const { add, section, blocks } = registry
-  section('overview', 'Overview', story.overview.join(' '))
-  add(['scope'], 'Scope of this account', story.scopeNote, 'Overview')
-  section('capabilities', 'What I built')
-  blocks('capability', 'What I built', story.capabilities)
-  section('architecture', 'Architecture', story.architecture.intro)
-  story.architecture.flows.forEach(flow => {
-    add(['flow', projectBlockKey(flow.title, flow.steps.join(' '))], flow.title, text(...flow.steps, flow.boundary), 'Architecture')
+function registerStoryContent(story: NonNullable<FeaturedSystemCaseStudy['story']>, registry: ProjectRegistry) {
+  story.sections.forEach(block => {
+    registry.section(block.id, block.title, text(...block.paragraphs, ...(block.items ?? []).map(item => `${item.label}: ${item.description}`), block.closing))
   })
-  section('workflows', 'Workflow stories')
-  blocks('workflow', 'Workflow stories', story.workflows)
-  section('tradeoffs', 'Engineering decisions and tradeoffs')
-  blocks('tradeoff', 'Engineering decisions and tradeoffs', story.tradeoffs)
-  section('technical-details', 'Technical details', system.stack.join(' '))
-  blocks('technical', 'Technical details', story.technicalDetails, true)
-  if (story.illustration) {
-    const keys = ['illustration']
-    add(keys, 'Local form feedback capture', story.illustration.caption, 'Technical details', 'block', [contentId(...keys)])
-  }
-  section('verification', 'Verification and limitations')
-  add(['audit'], 'Recorded local audit', text(story.audit.date, story.audit.snapshot), 'Verification and limitations')
-  story.audit.checks.forEach(check => add(['audit-check', projectBlockKey(check.label, check.detail)], check.label, text(check.result, check.detail), 'Recorded local audit'))
-  add(['limitations'], 'Remaining gaps', text(...story.audit.limitations, story.audit.lesson), 'Verification and limitations')
+}
+
+function registerTime2MoveExtras(registry: ProjectRegistry) {
+  const { overview, reviews, lesson } = time2MoveExtras
+  registry.section(overview.id, overview.title, text(overview.caption, time2moveArchitectureText))
+  registry.add([reviews.id], reviews.title, text(reviews.summary, time2moveReviewPipelineText), overview.title, 'section', [contentId(reviews.id)])
+  registry.add([lesson.id], lesson.title, text(lesson.summary, aiLessonCopy.badge, aiLessonCopy.disclaimer,
+    aiLessonCopy.boundary, ...aiLessonCopy.sequence, aiLessonCopy.evidence, aiLessonCopy.review,
+    aiLessonCopy.trustedFields, aiLessonCopy.evaluation), '', 'section', [contentId(lesson.id)])
 }
 
 function registerRetrievalContent(ladder: NonNullable<FeaturedSystemCaseStudy['retrievalCapabilityLadder']>, registry: ProjectRegistry) {
@@ -172,9 +157,10 @@ export function createProjectContent(system: FeaturedSystemCaseStudy) {
   section('at-a-glance', 'At a glance', story
     ? text('Status', system.currentState, ...story.atAGlance.map(item => text(item.label, item.value)))
     : text('Context', system.contextLabel ?? system.caseStudyStage, 'Current state', system.currentState, 'Role', system.myRole))
-  if (story) registerStoryContent(system, story, registry)
+  if (story) registerStoryContent(story, registry)
   else registerStandardContent(system, registry)
-  if (system.successorLink) section('continuation', 'Project continuation', text(system.successorLink.context, system.successorLink.label))
+  if (system.id === 'time2move') registerTime2MoveExtras(registry)
+  if (system.successorLink) section('continuation', system.successorLink.label)
   const destinations = [...byAnchor.values()]
   assertUniqueDestinations(destinations)
   const get = (...keys: string[]) => {

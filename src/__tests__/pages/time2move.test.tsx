@@ -10,9 +10,9 @@ import { allSystems, featuredSystems, getSystemById, pilotSystems, productionSys
 import { buildSearchIndex } from '@/lib/search/build-index'
 import { searchContent } from '@/lib/search/search'
 
-const title = 'Time2Move: Real Estate Website & Inquiry Workflows'
+const title = 'Time2Move: Real Estate Automation & AI Development'
 const path = '/case-studies/time2move'
-const status = 'Past client project · Continued independently'
+const status = 'Past client project · Engagement concluded'
 const successorLabel = 'Current business website — Hombuzz'
 
 function renderPage(element: React.ReactNode) {
@@ -54,19 +54,14 @@ describe('Time2Move historical case study', () => {
     expect(breadcrumb.itemListElement.at(-1)).toMatchObject({ name: title, item: `https://dbraun.io${path}` })
   })
 
-  test('presents the dated local audit with its failure and scope boundaries, without generic production claims', async () => {
+  test('presents the concise concluded engagement without public audit or failure artifacts', async () => {
     const page = renderPage(await detailPage())
     const text = page.textContent ?? ''
     expect(page.querySelector('h1')?.textContent).toBe(title)
     expect(text).toContain(status)
-    expect(text).toContain('October 27, 2026')
-    expect(text).toContain('515deb2')
-    expect(text).toMatch(/34 (?:existing )?tests|34 passed/i)
-    expect(text).toMatch(/29 errors.*12 warnings/i)
-    expect(text).toMatch(/lint/i)
-    expect(text).toMatch(/failed/i)
-    expect(text).toMatch(/handoff|handed.over/i)
-    expect(text).toMatch(/not verified|not established|unverified|unconfirmed/i)
+    expect(page.querySelector('#content-technical-details, #content-illustration, #content-scope, #content-workflows')).toBeNull()
+    expect(text).not.toMatch(/Technical evidence|Local form feedback|Evidence and status|One engineering decision|515deb2|29 errors|12 warnings|simulated|Recorded local audit|paused/i)
+    expect(page.querySelectorAll('a[href="https://hombuzz.com/"]')).toHaveLength(1)
     const headings = Array.from(page.querySelectorAll('h2, h3')).map(heading => heading.textContent)
     expect(headings).not.toContain('Live Proof')
     expect(headings).not.toContain('Quantified Outcomes')
@@ -92,7 +87,7 @@ describe('Time2Move historical case study', () => {
     const { records } = await buildSearchIndex()
     const historical = records.find(record => record.href === path)
     expect(historical?.title).toBe(title)
-    for (const query of ['Time2Move', 'lead processing', 'FastAPI', 'Redis', 'Hombuzz']) {
+    for (const query of ['Time2Move', 'CRM workflows', 'LLM review', 'regional housing-news', 'Hombuzz']) {
       const matches = searchContent(records, query).filter(result => result.record.href.split('#')[0] === path)
       expect(matches.length, query).toBeGreaterThan(0)
       for (const { record } of matches) {
@@ -100,15 +95,14 @@ describe('Time2Move historical case study', () => {
       }
     }
     const successor = searchContent(records, 'Hombuzz').find(result => result.record.href.split('#')[0] === path)
-    expect(successor?.record.body).toMatch(/independent|subsequent/i)
+    expect(successor?.record.destination?.label ?? successor?.record.title).toContain(title)
     const page = renderPage(await detailPage())
     const metadata = await generateMetadata({ params: Promise.resolve({ slug: 'time2move' }) })
     const publicOutput = `${page.innerHTML} ${JSON.stringify(records.filter(record => record.href.split('#')[0] === path))} ${JSON.stringify(metadata)}`
     expect(publicOutput).not.toMatch(/\/Users\/|prime-location-site|docs\/audits|technical-audit\.md|case-study-brief\.md|source-manifest\.json|\bE\d{2}\b|api\.vercel\.com\/v1\/integrations\/deploy/i)
-    const illustration = page.querySelector('figure img')
-    expect(illustration?.getAttribute('alt')).toMatch(/synthetic|example/i)
-    expect(illustration?.closest('figure')?.textContent).toMatch(/simulat/i)
-    expect(illustration?.closest('figure')?.textContent).toMatch(/no lead delivered/i)
+    expect(publicOutput).not.toMatch(/Technical evidence|Local form feedback|Recorded local audit|515deb2|29 errors|12 warnings|time2move-contact-simulated-error|paused/i)
+    expect(page.querySelector('#content-results')?.textContent).toMatch(/independent direction.*Hombuzz, outside/i)
+    expect(page.querySelector('img[src*="simulated-error"]')).toBeNull()
   })
 
   test('retains the original live-proof behavior for existing production projects', async () => {

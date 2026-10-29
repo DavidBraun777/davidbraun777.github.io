@@ -1,13 +1,11 @@
 import { expect, test } from '@playwright/test'
 import AxeBuilder from '@axe-core/playwright'
 
-const title = 'Time2Move: Real Estate Website & Inquiry Workflows'
+const title = 'Time2Move: Real Estate Automation & AI Development'
 const path = '/case-studies/time2move'
 const successorLabel = 'Current business website — Hombuzz'
 const expectedHeadings = [
-  'Overview', 'What I built', 'Architecture', 'Workflow stories',
-  'Engineering decisions and tradeoffs', 'Technical details',
-  'Verification and limitations', 'Project continuation',
+  'Engineering ownership', 'Inside the system', 'AI development and tool use', 'Outcome and lessons', 'Related Case Studies',
 ]
 
 test.describe('Time2Move historical case study', () => {
@@ -27,7 +25,7 @@ test.describe('Time2Move historical case study', () => {
     await expect(page).toHaveURL(new RegExp(`${path}$`))
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(title)
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', `https://dbraun.io${path}`)
-    await expect(page.locator('main')).toContainText('Past client project · Continued independently')
+    await expect(page.locator('main')).toContainText('Past client project · Engagement concluded')
     await expect(page.getByRole('heading', { name: 'Live Proof', exact: true })).toHaveCount(0)
     await expect(page.getByRole('heading', { name: 'Quantified Outcomes', exact: true })).toHaveCount(0)
     await expect(page.getByRole('link', { name: successorLabel, exact: true })).toHaveAttribute('rel', 'noopener noreferrer')
@@ -42,7 +40,7 @@ test.describe('Time2Move historical case study', () => {
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(title)
   })
 
-  test('keeps the narrative, diagram, disclosure and image accessible on desktop and mobile in both themes', async ({ page }) => {
+  test('keeps the concise narrative accessible without empty or repeated sections on desktop and mobile', async ({ page }) => {
     for (const colorScheme of ['light', 'dark'] as const) {
       for (const width of [1440, 390]) {
         await page.setViewportSize({ width, height: 900 })
@@ -50,33 +48,27 @@ test.describe('Time2Move historical case study', () => {
         await page.goto(path)
         await expect(page.getByRole('heading', { level: 1 })).toHaveText(title)
         const headings = await page.locator('main h2').allTextContents()
-        let previousIndex = -1
-        for (const heading of expectedHeadings) {
-          const currentIndex = headings.findIndex(text => text.trim() === heading)
-          expect(currentIndex, heading).toBeGreaterThan(previousIndex)
-          previousIndex = currentIndex
-        }
-        const architecture = page.locator('section').filter({ has: page.getByRole('heading', { level: 2, name: 'Architecture', exact: true }) })
-        await expect(architecture).toContainText('IDX')
-        await expect(architecture).toContainText('Follow Up Boss')
-        expect(await architecture.locator('ol').count()).toBeGreaterThan(0)
-        expect(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1)).toBe(false)
-
-        const summaries = page.locator('main details > summary')
-        expect(await summaries.count()).toBeGreaterThan(0)
-        for (const summary of await summaries.all()) {
-          await summary.focus()
+        expect(headings.map(heading => heading.trim())).toEqual(expectedHeadings)
+        await expect(page.locator('main img, #content-illustration, #content-technical-details, #content-scope')).toHaveCount(0)
+        await expect(page.locator('#content-ai-development ul li')).toHaveCount(3)
+        const overview = page.locator('#content-inside-system')
+        await expect(overview.getByRole('button', { name: 'All', exact: true })).toHaveAttribute('aria-pressed', 'true')
+        const reviews = overview.getByRole('button', { name: 'Reviews', exact: true })
+        await reviews.focus()
+        await page.keyboard.press('Enter')
+        await expect(reviews).toHaveAttribute('aria-pressed', 'true')
+        const pipeline = page.locator('#content-review-data-pipeline')
+        const lesson = page.locator('#content-ai-workflow-lesson')
+        for (const disclosure of [pipeline, lesson]) {
+          await expect(disclosure).not.toHaveAttribute('open')
+          await disclosure.locator(':scope > summary').focus()
           await page.keyboard.press('Enter')
-          await expect(summary.locator('..')).toHaveAttribute('open', '')
+          await expect(disclosure).toHaveAttribute('open', '')
         }
-        const illustration = page.locator('main figure')
-        await expect(illustration).toBeVisible()
-        const image = illustration.getByRole('img')
-        await expect(image).toHaveAttribute('alt', /synthetic|example/i)
-        await expect(illustration.locator('figcaption')).toContainText('October 27, 2026')
-        await expect(illustration.locator('figcaption')).toContainText(/simulat/i)
-        await expect(illustration.locator('figcaption')).toContainText(/no lead delivered/i)
-        await expect.poll(() => image.evaluate((element) => (element as HTMLImageElement).naturalWidth)).toBeGreaterThan(0)
+        await expect(lesson.getByText('Illustrative extension', { exact: true })).toBeVisible()
+        for (const section of await page.locator('main section[data-content-target]').all()) {
+          expect((await section.innerText()).trim()).not.toBe('')
+        }
         expect(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1)).toBe(false)
 
         const successor = page.getByRole('link', { name: successorLabel, exact: true })
@@ -93,6 +85,37 @@ test.describe('Time2Move historical case study', () => {
     }
   })
 
+  test('computes the synthetic checks locally and keeps review separate from schema validity', async ({ page }) => {
+    const unexpectedRequests: string[] = []
+    page.on('request', request => {
+      if (request.method() !== 'GET' || (['fetch', 'xhr'].includes(request.resourceType()) && new URL(request.url()).origin !== 'http://localhost:3000')) {
+        unexpectedRequests.push(`${request.method()} ${new URL(request.url()).pathname}`)
+      }
+    })
+    await page.goto(`${path}#content-ai-workflow-lesson`)
+    const lesson = page.locator('#content-ai-workflow-lesson')
+    await expect(lesson).toHaveAttribute('open', '')
+    await expect(lesson).toBeFocused()
+    const check = (label: string) => lesson.locator('dl > div').filter({ has: page.getByText(label, { exact: true }) })
+    await expect(check('Schema check')).toContainText('Passed')
+    await expect(check('Evidence-presence check')).toContainText('Passed')
+    await expect(check('Human-review gate')).toContainText('Required')
+    await lesson.getByRole('button', { name: 'Needs clarification', exact: true }).click()
+    await expect(check('Schema check')).toContainText('Passed')
+    await expect(check('Human-review gate')).toContainText('Clarification needed')
+    const unsupported = lesson.getByRole('button', { name: 'Unsupported detail', exact: true })
+    await unsupported.focus()
+    await page.keyboard.press('Space')
+    await expect(unsupported).toHaveAttribute('aria-pressed', 'true')
+    await expect(check('Schema check')).toContainText('Passed')
+    await expect(check('Evidence-presence check')).toContainText('Failed')
+    await expect(check('Human-review gate')).toContainText('Blocked')
+    await expect(lesson).toContainText('budget of $500,000')
+    expect(unexpectedRequests).toEqual([])
+    await lesson.locator(':scope > summary').click()
+    await expect(lesson).not.toHaveAttribute('open')
+  })
+
   test('finds the original project through capabilities and its successor without publishing private audit material', async ({ page, request }) => {
     const indexResponse = await request.get('/search-index.json')
     expect(indexResponse.ok()).toBe(true)
@@ -104,14 +127,12 @@ test.describe('Time2Move historical case study', () => {
     const response = await page.goto(path)
     const publicOutput = `${await response?.text()} ${JSON.stringify(records)}`
     expect(publicOutput).not.toMatch(/\/Users\/|prime-location-site|docs\/audits|technical-audit\.md|case-study-brief\.md|source-manifest\.json|\bE\d{2}\b|api\.vercel\.com\/v1\/integrations\/deploy/i)
-    await expect(page.locator('main')).toContainText('34')
-    await expect(page.locator('main')).toContainText('29 errors')
-    await expect(page.locator('main')).toContainText('12 warnings')
-    await expect(page.locator('main')).toContainText('October 27, 2026')
+    expect(publicOutput).not.toMatch(/Technical evidence|Local form feedback|Recorded local audit|515deb2|29 errors|12 warnings|time2move-contact-simulated-error/i)
+    expect((await request.get('/images/projects/time2move-contact-simulated-error.png')).status()).toBe(404)
     await page.getByRole('button', { name: 'Search site', exact: true }).click()
     const dialog = page.getByRole('dialog', { name: 'Search the site', exact: true })
     const input = dialog.getByRole('searchbox', { name: 'Search site content' })
-    for (const query of ['Time2Move', 'lead processing', 'FastAPI', 'Redis', 'Hombuzz']) {
+    for (const query of ['Time2Move', 'CRM workflows', 'LLM review', 'regional housing-news', 'Hombuzz']) {
       await input.fill(query)
       const results = dialog.locator(`a[href="${path}"], a[href^="${path}#"]`)
       const result = results.first()
@@ -120,8 +141,16 @@ test.describe('Time2Move historical case study', () => {
       const hrefs = await results.evaluateAll(links => links.map(link => link.getAttribute('href')))
       expect(new Set(hrefs).size).toBe(hrefs.length)
     }
-    await dialog.locator(`a[href="${path}"], a[href^="${path}#"]`).first().click()
+    const selectedResult = dialog.locator(`a[href="${path}"], a[href^="${path}#"]`).first()
+    const selectedHref = await selectedResult.getAttribute('href')
+    await selectedResult.click()
     await expect(dialog).toBeHidden()
+    await expect(page).toHaveURL(url => `${url.pathname}${url.hash}` === selectedHref)
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(title)
+
+    // Removed evidence links use the existing stale-fragment fallback cleanly.
+    await page.goto(`${path}#content-illustration`)
+    await expect(page.getByRole('heading', { level: 1 })).toBeFocused()
+    await expect(page.locator('#content-illustration')).toHaveCount(0)
   })
 })

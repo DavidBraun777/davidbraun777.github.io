@@ -27,11 +27,12 @@ interface DisclosurePanelProps extends Omit<ComponentProps<'details'>, 'title' |
   id?: string
   title: string
   summary: string
+  badge?: string
   children: ReactNode
   defaultOpen?: boolean
 }
 
-export function DisclosurePanel({ id, title, summary, children, defaultOpen = false, ...props }: Readonly<DisclosurePanelProps>) {
+export function DisclosurePanel({ id, title, summary, badge, children, defaultOpen = false, ...props }: Readonly<DisclosurePanelProps>) {
   return (
     <ContentDetails
       id={id}
@@ -43,7 +44,10 @@ export function DisclosurePanel({ id, title, summary, children, defaultOpen = fa
     >
       <summary className="flex cursor-pointer list-none items-start justify-between gap-4">
         <div>
-          <h3 className="text-lg font-semibold text-text-primary">{title}</h3>
+          <div className="flex flex-wrap items-center gap-3">
+            <h3 className="text-lg font-semibold text-text-primary">{title}</h3>
+            {badge ? <span className="rounded-full border border-border-strong bg-background-subtle px-3 py-1 text-xs font-semibold text-text-secondary">{badge}</span> : null}
+          </div>
           <p className="mt-2 text-sm leading-7 text-text-secondary">{summary}</p>
         </div>
         <span className="mt-1 inline-flex h-10 w-10 shrink-0 items-center justify-center rounded-full border border-border-subtle bg-background-subtle text-text-secondary transition-transform group-open:rotate-180">
