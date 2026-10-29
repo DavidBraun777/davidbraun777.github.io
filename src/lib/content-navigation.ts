@@ -153,7 +153,7 @@ function revealDeclaredDisclosures(active: NavigationRequest, destination?: Cont
     const panel = document.getElementById(disclosureId)
     if (!(panel instanceof HTMLDetailsElement)) {
       // Fallback requests skip this loop; ordinary requests wait for their panel.
-      return
+      return false
     }
     if (!reveal(panel)) return false
   }
