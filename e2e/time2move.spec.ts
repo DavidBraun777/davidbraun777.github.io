@@ -1,7 +1,7 @@
 import { expect, test } from '@playwright/test'
 import AxeBuilder from '@axe-core/playwright'
 
-const title = 'Time2Move: Real Estate Automation & AI Development'
+const title = 'Time2Move: Real Estate Workflows & Integrations'
 const path = '/case-studies/time2move'
 const successorLabel = 'Current business website — Hombuzz'
 const expectedHeadings = [
@@ -52,11 +52,10 @@ test.describe('Time2Move historical case study', () => {
         await expect(page.locator('main img, #content-illustration, #content-technical-details, #content-scope')).toHaveCount(0)
         await expect(page.locator('#content-ai-development ul li')).toHaveCount(3)
         const overview = page.locator('#content-inside-system')
-        await expect(overview.getByRole('button', { name: 'All', exact: true })).toHaveAttribute('aria-pressed', 'true')
-        const reviews = overview.getByRole('button', { name: 'Reviews', exact: true })
-        await reviews.focus()
-        await page.keyboard.press('Enter')
-        await expect(reviews).toHaveAttribute('aria-pressed', 'true')
+        await expect(overview.locator('[data-diagram="inquiries"]')).toHaveCount(1)
+        await expect(overview.locator('button, [role="tablist"], [role="tab"], [aria-pressed]')).toHaveCount(0)
+        await expect(page.locator('[data-diagram="rates"], [data-diagram="reviews"], [data-diagram="property-search"], [data-graph-node="homepage-artifact"]')).toHaveCount(0)
+        await expect(overview).not.toContainText(/Homepage-cache|No consumer shown|Explore four workflows/)
         const pipeline = page.locator('#content-review-data-pipeline')
         const lesson = page.locator('#content-ai-workflow-lesson')
         for (const disclosure of [pipeline, lesson]) {
@@ -132,7 +131,7 @@ test.describe('Time2Move historical case study', () => {
     await page.getByRole('button', { name: 'Search site', exact: true }).click()
     const dialog = page.getByRole('dialog', { name: 'Search the site', exact: true })
     const input = dialog.getByRole('searchbox', { name: 'Search site content' })
-    for (const query of ['Time2Move', 'CRM workflows', 'LLM review', 'regional housing-news', 'Hombuzz']) {
+    for (const query of ['Time2Move', 'CRM workflows', 'visitor-interaction analysis', 'housing-market content', 'Hombuzz']) {
       await input.fill(query)
       const results = dialog.locator(`a[href="${path}"], a[href^="${path}#"]`)
       const result = results.first()

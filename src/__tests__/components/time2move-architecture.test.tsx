@@ -3,15 +3,15 @@
 import { afterEach, describe, expect, test } from 'vitest'
 import { Time2MoveArchitecture, Time2MoveReviewPipeline } from '@/components/site/time2move-architecture'
 import {
-  time2moveAllPathsResponsibility, time2moveArchitecturePaths, time2moveArchitectureText,
+  time2moveInquiryArchitecture, time2moveArchitectureText,
   time2moveDiagramLayout, time2moveReviewPipeline, time2moveReviewPipelineText,
   type Time2MoveDiagramNode,
 } from '@/data/time2move-architecture'
-import { cleanupMountedUi, click, element, mount } from '../helpers/mounted-ui'
+import { cleanupMountedUi, element, mount } from '../helpers/mounted-ui'
 
 afterEach(cleanupMountedUi)
 
-const diagrams = [...time2moveArchitecturePaths, time2moveReviewPipeline]
+const diagrams = [time2moveInquiryArchitecture, time2moveReviewPipeline]
 
 /** Trace the orthogonal SVG connector so metadata cannot silently draw a different relationship. */
 function pathEnds(path: string) {
@@ -54,21 +54,16 @@ describe('Time2Move architecture diagrams', () => {
         expect(touchesNode(end, nodes.get(edge.to)!), `${graph.id}/${edge.id} destination`).toBe(true)
       }
     }
-    const inquiry = time2moveArchitecturePaths.find(path => path.id === 'inquiries')!
+    const inquiry = time2moveInquiryArchitecture
+    expect(inquiry.mainNodeIds).toEqual(['forms', 'contract', 'rewrite', 'fastapi', 'fub'])
     expect(inquiry.edges.filter(edge => edge.from === 'fastapi').map(edge => edge.to)).toEqual(['fub', 'resend'])
     expect(inquiry.edges.find(edge => edge.to === 'resend')?.branch).toBe(true)
-    const reviews = time2moveArchitecturePaths.find(path => path.id === 'reviews')!
-    expect(reviews.edges.find(edge => edge.to === 'redis')?.bidirectional).toBe(true)
-    const rates = time2moveArchitecturePaths.find(path => path.id === 'rates')!
-    expect(rates.mainNodeIds).toEqual(['calculators', 'market-routes', 'fred'])
-    const property = time2moveArchitecturePaths.find(path => path.id === 'property-search')!
-    expect(property.nodes.some(node => ['forms', 'fastapi', 'redis'].includes(node.id))).toBe(false)
     const branchEdges = time2moveReviewPipeline.edges.filter(edge => edge.branch)
     expect(branchEdges.map(edge => [edge.from, edge.to])).toEqual([
-      ['legacy', 'canonical'], ['canonical', 'public-cache'], ['canonical', 'homepage-artifact'],
+      ['legacy', 'canonical'], ['canonical', 'public-cache'],
     ])
     expect(time2moveReviewPipeline.edges.filter(edge => edge.to === 'consumer').map(edge => edge.from)).toEqual(['public-cache'])
-    expect(time2moveReviewPipeline.edges.some(edge => edge.from === 'homepage-artifact')).toBe(false)
+    expect(time2moveReviewPipeline.nodes.some(node => node.id === 'homepage-artifact')).toBe(false)
   })
 
   test('renders matching desktop and mobile graphs with unique, complete accessible descriptions', () => {
@@ -96,7 +91,7 @@ describe('Time2Move architecture diagrams', () => {
         const path = rendered.querySelector<SVGPathElement>('path')!
         expect(path.getAttribute('d')).toBe(edge.path)
         expect(path.hasAttribute('marker-end')).toBe(true)
-        expect(path.hasAttribute('marker-start')).toBe(edge.bidirectional)
+        expect(path.hasAttribute('marker-start')).toBe(false)
         expect(path.hasAttribute('stroke-dasharray')).toBe(edge.branch)
         if (edge.branch) {
           const mobile = element<HTMLElement>(`[data-mobile-edge="${edge.id}"]`, figure)
@@ -109,30 +104,23 @@ describe('Time2Move architecture diagrams', () => {
         }
       }
       expect(figure.querySelectorAll('ol > li')).toHaveLength(graph.mainNodeIds.length)
+      expect(figure.querySelectorAll('[aria-label="Diagram legend"] li')).toHaveLength(new Set(graph.nodes.map(node => node.kind)).size)
     }
-    expect(time2moveArchitectureText).toContain(time2moveAllPathsResponsibility)
+    expect(time2moveArchitectureText).toContain(time2moveInquiryArchitecture.responsibility)
     expect(time2moveReviewPipelineText).toContain(time2moveReviewPipeline.note)
     expect(`${time2moveArchitectureText} ${time2moveReviewPipelineText}`).not.toMatch(/\/Users\/|source-map|security-notes|api_key|bearer\s/i)
+    expect(`${app.container.innerHTML} ${time2moveArchitectureText} ${time2moveReviewPipelineText}`).not.toMatch(/homepage[- ]cache|homepage-artifact|No consumer shown|inspected route/i)
   })
 
-  test('native selector buttons highlight one path without hiding the other paths or changing their graphs', () => {
+  test('renders the inquiry flow directly without retired selectors or overview graphs', () => {
     const app = mount(<Time2MoveArchitecture />)
-    const controls = element('[role="group"]', app.container)
-    const buttons = [...controls.querySelectorAll('button')]
-    expect(buttons.map(button => button.type)).toEqual(Array(5).fill('button'))
-    expect(buttons.map(button => button.getAttribute('aria-pressed'))).toEqual(['true', 'false', 'false', 'false', 'false'])
-    expect(app.container.querySelectorAll('[data-highlighted="true"]')).toHaveLength(4)
-    for (const [index, path] of time2moveArchitecturePaths.entries()) {
-      const before = app.container.querySelectorAll('[data-graph-edge]').length
-      click(buttons[index + 1])
-      expect(buttons.filter(button => button.getAttribute('aria-pressed') === 'true')).toEqual([buttons[index + 1]])
-      expect(element('[data-highlighted="true"]', app.container).dataset.architecturePath).toBe(path.id)
-      expect(element('[aria-live="polite"]', app.container).textContent).toBe(path.responsibility)
-      expect(app.container.querySelectorAll('[data-architecture-path]')).toHaveLength(4)
-      expect(app.container.querySelectorAll('[data-graph-edge]')).toHaveLength(before)
-    }
-    click(buttons[0])
-    expect(app.container.querySelectorAll('[data-highlighted="true"]')).toHaveLength(4)
-    expect(element('[aria-live="polite"]', app.container).textContent).toBe(time2moveAllPathsResponsibility)
+    expect(app.container.querySelectorAll('[data-diagram]')).toHaveLength(1)
+    expect(element('[data-diagram]', app.container).dataset.diagram).toBe('inquiries')
+    expect(app.container.querySelector('button, [role="tablist"], [role="group"], [aria-pressed], [aria-live]')).toBeNull()
+    expect(app.container.querySelector('[data-highlighted], [data-architecture-path]')).toBeNull()
+    expect(app.container.textContent).toContain(time2moveInquiryArchitecture.responsibility)
+    expect(app.container.textContent).toContain(time2moveInquiryArchitecture.note)
+    expect(app.container.textContent).not.toMatch(/Rates and calculators|Property search|Reviews UI|four workflows|four separate paths/i)
+    expect(time2moveArchitectureText).not.toMatch(/FRED|IDX Broker|reviews API|four separate paths/i)
   })
 })

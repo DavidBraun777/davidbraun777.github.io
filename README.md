@@ -86,11 +86,14 @@ The current project evidence remains deliberately classified:
   registry with stage `Historical`, outside featured/current production proof.
   Its optional `story` supplies the concise public narrative, with explicit section
   IDs shared by rendering and search. It contains no audit appendix, evidence
-  disclosure or screenshot. The public architecture overview and optional review-data
-  pipeline show the historical implementation. The optional AI lesson is explicitly
+  disclosure or screenshot. “Time2Move: Real Estate Workflows & Integrations” keeps
+  one primary inquiry-processing diagram with no architecture selector. The optional
+  review-data pipeline retains ingestion, canonical records, migration and public-cache
+  rebuilding. Rates, calculators, reviews and property-search integration remain in
+  the concise engineering narrative. The optional AI lesson is explicitly
   an illustrative extension with synthetic, precomputed proposals and local validation;
-  it makes no model or CRM calls. The `Time2Move info/` reference packet is ignored
-  by Git, lint and TypeScript; do not import it or publish its review documents.
+  it makes no model or CRM calls. Keep private reference packets outside public
+  delivery; do not import or publish their source archives or review documents.
   Only approved diagram content and synthetic fixtures are adapted into `src/`.
   `successorLink` labels
   Hombuzz as the current business website without routing it through "Live Proof."

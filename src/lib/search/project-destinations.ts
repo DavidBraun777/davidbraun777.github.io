@@ -76,7 +76,7 @@ type ProjectRegistry = ReturnType<typeof createProjectRegistry>
 
 function registerStoryContent(story: NonNullable<FeaturedSystemCaseStudy['story']>, registry: ProjectRegistry) {
   story.sections.forEach(block => {
-    registry.section(block.id, block.title, text(...block.paragraphs, ...(block.items ?? []).map(item => `${item.label}: ${item.description}`), block.closing))
+    registry.section(block.id, block.title, text(...block.paragraphs, ...(block.items ?? []), block.closing))
   })
 }
 

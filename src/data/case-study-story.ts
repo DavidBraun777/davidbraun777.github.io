@@ -2,7 +2,7 @@ export interface CaseStudyStoryBlock {
   id: string
   title: string
   paragraphs: string[]
-  items?: { label: string; description: string }[]
+  items?: string[]
   closing?: string
 }
 

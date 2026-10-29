@@ -14,9 +14,9 @@ export function CaseStudyStoryContent({ story, content, afterSections = {} }: Re
             {section.items?.length ? (
               <ul className="mt-4 max-w-4xl space-y-3">
                 {section.items.map((item) => (
-                  <li key={item.label} className="flex gap-3 text-base leading-8 text-text-secondary">
+                  <li key={item} className="flex gap-3 text-base leading-8 text-text-secondary">
                     <span aria-hidden="true" className="mt-3 h-1.5 w-1.5 shrink-0 rounded-full bg-primary-500" />
-                    <span><strong>{item.label}:</strong> {item.description}</span>
+                    <span>{item}</span>
                   </li>
                 ))}
               </ul>
