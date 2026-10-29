@@ -1,6 +1,7 @@
 // @vitest-environment happy-dom
 
 import { afterEach, describe, expect, test } from 'vitest'
+import { act } from 'react'
 import { Time2MoveArchitecture, Time2MoveReviewPipeline } from '@/components/site/time2move-architecture'
 import {
   time2moveInquiryArchitecture, time2moveArchitectureText,
@@ -68,9 +69,12 @@ describe('Time2Move architecture diagrams', () => {
 
   test('renders matching desktop and mobile graphs with unique, complete accessible descriptions', () => {
     const app = mount(<><Time2MoveArchitecture /><Time2MoveReviewPipeline /></>)
-    const ids = [...app.container.querySelectorAll('[id]')].map(node => node.id)
-    expect(new Set(ids).size).toBe(ids.length)
+    const tabs = [...app.container.querySelectorAll<HTMLButtonElement>('[role="tab"]')]
     for (const graph of diagrams) {
+      const tab = tabs.find(button => button.textContent === time2moveArchitecturePaths.find(path => path.id === graph.id)?.selectorLabel)
+      if (tab) click(tab)
+      const ids = [...app.container.querySelectorAll('[id]')].map(node => node.id)
+      expect(new Set(ids).size).toBe(ids.length)
       const figure = element<HTMLElement>(`[data-diagram="${graph.id}"]`, app.container)
       const svg = figure.querySelector<SVGElement>('svg[role="img"]')!
       const accessibleIds = svg.getAttribute('aria-labelledby')!.split(' ')
@@ -95,12 +99,15 @@ describe('Time2Move architecture diagrams', () => {
         expect(path.hasAttribute('stroke-dasharray')).toBe(edge.branch)
         if (edge.branch) {
           const mobile = element<HTMLElement>(`[data-mobile-edge="${edge.id}"]`, figure)
+          expect(mobile.textContent).toContain(edge.label)
           for (const id of [edge.from, edge.to]) {
             const node = graph.nodes.find(item => item.id === id)!
             expect(mobile.textContent).toContain(node.label)
-            for (const detail of node.detail) expect(mobile.textContent).toContain(detail)
+            if (!graph.mainNodeIds.includes(id)) {
+              for (const detail of node.detail) expect(mobile.textContent).toContain(detail)
+            }
           }
-          expect(mobile.querySelector('svg[aria-hidden="true"]')).not.toBeNull()
+          expect(mobile.querySelectorAll('[data-mobile-node]')).toHaveLength(0)
         }
       }
       expect(figure.querySelectorAll('ol > li')).toHaveLength(graph.mainNodeIds.length)

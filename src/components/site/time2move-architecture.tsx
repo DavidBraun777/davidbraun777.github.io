@@ -21,6 +21,7 @@ export function Time2MoveArchitecture() {
         <p className="text-sm font-semibold text-text-primary">My contribution</p>
         <p className="mt-2 text-sm leading-7 text-text-secondary">{time2moveInquiryArchitecture.responsibility}</p>
       </div>
+      <p className="text-xs leading-6 text-text-muted">Architecture reconstructed from project source. The engagement concluded before final system validation.</p>
     </div>
   )
 }
@@ -55,8 +56,8 @@ function Diagram({ graph }: Readonly<{ graph: Time2MoveDiagram }>) {
   return (
     <figure className="min-w-0" data-diagram={graph.id}>
       <figcaption>
-        <h3 className="text-lg font-semibold text-text-primary">{graph.title}</h3>
-        <p className="mt-2 max-w-4xl text-sm leading-7 text-text-secondary">{graph.description}</p>
+        <h3 className="text-xl font-semibold text-text-primary">{graph.title}</h3>
+        <p className="mt-2 max-w-4xl text-sm leading-6 text-text-secondary">{graph.description}</p>
       </figcaption>
       <DiagramLegend graph={graph} />
       <svg className="mt-4 hidden h-auto w-full xl:block" viewBox={`0 0 ${time2moveDiagramLayout.width} ${graph.height}`} role="img" aria-labelledby={`${id}-title ${id}-description`}>
@@ -89,11 +90,16 @@ function Diagram({ graph }: Readonly<{ graph: Time2MoveDiagram }>) {
 }
 
 function MobileDiagram({ graph }: Readonly<{ graph: Time2MoveDiagram }>) {
+  const branches = graph.edges.filter(edge => edge.branch)
   return (
     <div className="mt-5 space-y-5 xl:hidden">
       <ol aria-label={`${graph.title}: main path`}>
         {graph.mainNodeIds.map((nodeId, index) => (
-          <li key={nodeId}>
+          <li key={nodeId} className="flex gap-3">
+            <div aria-hidden="true" className="flex w-7 shrink-0 flex-col items-center pt-3">
+              <span className="flex h-7 w-7 items-center justify-center rounded-full bg-background-subtle font-mono text-xs text-text-secondary">{index + 1}</span>
+              {index < graph.mainNodeIds.length - 1 ? <VerticalConnector /> : null}
+            </div>
             <MobileNode node={diagramNode(graph, nodeId)} />
             {index < graph.mainNodeIds.length - 1 ? <VerticalConnector /> : null}
           </li>
@@ -118,7 +124,7 @@ function MobileDiagram({ graph }: Readonly<{ graph: Time2MoveDiagram }>) {
 
 function MobileNode({ node }: Readonly<{ node: Time2MoveDiagramNode }>) {
   return (
-    <div className={cn('rounded-xl border p-4', nodeStyles[node.kind].html)}>
+    <div data-mobile-node={node.id} className={cn('mb-3 min-w-0 flex-1 rounded-lg border-l-2 px-4 py-3', nodeStyles[node.kind].html)}>
       <p className="text-[0.65rem] uppercase tracking-wider text-text-secondary">{nodeStyles[node.kind].label}</p>
       <p className="mt-1 font-semibold text-text-primary">{node.label}</p>
       <p className="mt-1 text-sm leading-6 text-text-secondary">{node.detail.join(' · ')}</p>
