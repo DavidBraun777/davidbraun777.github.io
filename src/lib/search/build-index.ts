@@ -17,6 +17,23 @@ import type { SearchIndex, SearchRecord } from './types'
 
 const text = (...parts: (string | undefined)[]) => parts.filter(Boolean).join(' ').replace(/\s+/g, ' ').trim()
 
+function retrievalSearchText(ladder: FeaturedSystemCaseStudy['retrievalCapabilityLadder']): string[] {
+  if (!ladder) return []
+  return [
+    ladder.title, ladder.summary, ladder.intro, ladder.safeClaim, ladder.guardrail,
+    ladder.heuristicNote, ladder.futureWork,
+    ...ladder.interpretations.map(item => text(item.method, item.meaning)),
+    ...ladder.levels.map(level => text(level.systemType, level.compares, level.meaningCaptured,
+      level.questionUnderQuestionAbility, level.personalContextAbility, level.realWorldGrounding,
+      level.bestUseCase, level.fatalWeakness)),
+  ]
+}
+
+function certificationDescription(item: (typeof certifications)[number]): string {
+  const expiration = item.expirationDate ? ` · Expires ${item.expirationDate}` : ''
+  return `${item.issuer} · Issued ${item.issueDate}${expiration}`
+}
+
 /** Explicit public fields only, including the limits rendered on the detail page. */
 export function projectSearchRecord(system: FeaturedSystemCaseStudy): SearchRecord {
   const ladder = system.retrievalCapabilityLadder
@@ -49,14 +66,7 @@ export function projectSearchRecord(system: FeaturedSystemCaseStudy): SearchReco
       ...(system.dataSources ?? []), ...(system.dashboardViews ?? []),
       ...(system.realWorldRelevance ?? []), ...(system.limitations ?? []), ...(system.nextImprovements ?? []),
       ...system.proofSections.map(section => text(section.summary, ...section.items)),
-      ...(ladder ? [
-        ladder.title, ladder.summary, ladder.intro, ladder.safeClaim, ladder.guardrail,
-        ladder.heuristicNote, ladder.futureWork,
-        ...ladder.interpretations.map(item => text(item.method, item.meaning)),
-        ...ladder.levels.map(level => text(level.systemType, level.compares, level.meaningCaptured,
-          level.questionUnderQuestionAbility, level.personalContextAbility, level.realWorldGrounding,
-          level.bestUseCase, level.fatalWeakness)),
-      ] : []),
+      ...retrievalSearchText(ladder),
     ),
   }
 }
@@ -183,7 +193,7 @@ export async function buildSearchIndex(): Promise<SearchIndex> {
     })),
     ...certifications.map((item): SearchRecord => ({
       id: `certification-${item.id}`, title: item.name, href: `/experience#certification-${item.id}`, type: 'Education',
-      description: `${item.issuer} · Issued ${item.issueDate}${item.expirationDate ? ` · Expires ${item.expirationDate}` : ''}`,
+      description: certificationDescription(item),
       tags: ['Certification'], headings: [], body: '',
     })),
     ...careerStoryStages.map((stage): SearchRecord => ({

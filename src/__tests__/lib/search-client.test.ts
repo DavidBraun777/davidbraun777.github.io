@@ -24,7 +24,7 @@ describe('search index client contract', () => {
     expect(isSearchIndex(index({ ...broad, href: '/contact?type=research' }))).toBe(true)
   })
 
-  it.each(['https://example.test/', '//example.test/', '/\\example.test', '/%5cexample.test', '/%2fexample.test', '/bad%00path', '/bad%zzpath'])(
+  it.each(['https://example.test/', '//example.test/', '/\\example.test', '/%5cexample.test', '/%2fexample.test', '/bad%00path', '/bad%1fpath', '/bad%7fpath', '/bad\u007fpath', '/bad%zzpath'])(
     'rejects unsafe or malformed local destinations: %s', href => {
       expect(isSearchIndex(index({ ...row, href, destination: undefined, cells: undefined, granularity: undefined }))).toBe(false)
     }
@@ -57,7 +57,7 @@ describe('search index client contract', () => {
     for (const page of ['/case-studies/%2e%2e/contact', '/case-studies/.%2E/contact', '/case-studies/%2E/contact', '/case-studies/%2e%2e%2fcontact', '/writing/notes ']) {
       expect(isSearchIndex(index(withPage(page))), page).toBe(false)
     }
-    for (const page of ['/writing/caf%C3%A9%20notes', '/writing/notes%23example', '/writing/notes%2Fexample']) {
+    for (const page of ['/writing/caf%C3%A9%20notes', '/writing/notes%23example', '/writing/notes%2Fexample', '/writing/%F0%9F%98%80']) {
       expect(isSearchIndex(index(withPage(page))), page).toBe(true)
     }
   })

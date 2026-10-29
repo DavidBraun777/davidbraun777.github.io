@@ -17,7 +17,7 @@ export function contentId(...keys: string[]): string {
 export function contentFingerprint(text: string): string {
   let hash = 2166136261
   for (const character of text.normalize('NFKC').replace(/\s+/g, ' ').trim()) {
-    hash = Math.imul(hash ^ character.charCodeAt(0), 16777619)
+    hash = Math.imul(hash ^ character.codePointAt(0)!, 16777619)
   }
   return (hash >>> 0).toString(36)
 }

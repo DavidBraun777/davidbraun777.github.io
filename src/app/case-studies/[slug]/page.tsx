@@ -118,154 +118,7 @@ export default async function CaseStudyDetailPage({ params }: Readonly<Props>) {
         {system.story ? (
           <CaseStudyStoryContent story={system.story} stack={system.stack} content={content} />
         ) : (
-          <>
-        <section className="grid gap-8 xl:grid-cols-[1.02fr_0.98fr]">
-          <ProjectVisual system={system} />
-
-          <div className="grid gap-5">
-            <NarrativeCard title="Problem" body={system.problem} destination={content.get('problem')} />
-            <NarrativeCard title="Core Constraint" body={system.coreConstraint} destination={content.get('constraint')} />
-            <NarrativeCard
-              title={system.solutionTitle ?? 'Solution / What I Built'}
-              body={system.system}
-              destination={content.get('solution')}
-            />
-            <NarrativeCard title="Results" body={system.outcome} destination={content.get('results')} />
-          </div>
-        </section>
-
-        {system.metrics?.length ? (
-          <section {...content.attrs('metrics')}>
-            <SectionHeader
-              align="left"
-              title="Quantified Outcomes"
-              subtitle="These numbers describe project artifacts and sanity checks. They are not client ROI, deployment adoption, actuarial accuracy, or broad model-accuracy claims."
-            />
-            <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
-              {system.metrics.map((metric) => (
-                <div key={`${metric.value}-${metric.label}`} {...content.attrs('metric', projectBlockKey(metric.label, [metric.value, metric.detail].filter(Boolean).join(' ')))}>
-                  <MetricCard metric={metric} />
-                </div>
-              ))}
-            </div>
-          </section>
-        ) : null}
-
-        <section {...content.attrs('architecture')}>
-          <SectionHeader
-            align="left"
-            title="Architecture"
-            subtitle="The pipeline is shown as explicit stages so the system boundary is inspectable."
-          />
-          {system.architecture?.length ? (
-            <ArchitectureFlow steps={system.architecture} content={content} />
-          ) : (
-            <FallbackArchitecture system={system} content={content} />
-          )}
-        </section>
-
-        <section className="grid gap-6 lg:grid-cols-[1fr_1fr]">
-          <article {...content.attrs('technical-stack')} className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm">
-            <h2 className="text-2xl font-semibold tracking-tight text-text-primary">
-              Technical Stack
-            </h2>
-            <div className="mt-5 flex flex-wrap gap-2">
-              {system.stack.map((item) => (
-                <TechTag key={item}>{item}</TechTag>
-              ))}
-            </div>
-            {system.dataSources?.length ? (
-              <DetailList
-                className="mt-7"
-                title="Data sources"
-                items={system.dataSources}
-                destination={content.get('data-sources')}
-              />
-            ) : null}
-          </article>
-
-          <article {...content.attrs('relevance')} className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm">
-            <h2 className="text-2xl font-semibold tracking-tight text-text-primary">
-              Applied Relevance
-            </h2>
-            <DetailList
-              className="mt-5"
-              title="Where the pattern matters"
-              items={
-                system.realWorldRelevance ?? projectDefaults.relevance
-              }
-            />
-          </article>
-        </section>
-
-        {system.dashboardViews?.length ? (
-          <section {...content.attrs('dashboard-views')}>
-            <SectionHeader
-              align="left"
-              title="Dashboard Views"
-              subtitle="WeatherForge is organized as a decision-support dashboard rather than a single chart export."
-            />
-            <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
-              {system.dashboardViews.map((view) => (
-                <div
-                  key={view}
-                  {...content.attrs('dashboard', view)}
-                  className="rounded-[1.25rem] border border-border-subtle bg-background-elevated px-4 py-4 text-sm font-medium text-text-primary shadow-sm"
-                >
-                  {view}
-                </div>
-              ))}
-            </div>
-          </section>
-        ) : null}
-
-        <section {...content.attrs('proof')}>
-          <SectionHeader
-            align="left"
-            title="Proof Surfaces"
-            subtitle="Available artifacts are labeled directly. Missing visuals stay as placeholders until real screenshots are added."
-          />
-          <div className="grid gap-6 lg:grid-cols-2">
-            {system.proofSections.map((section) => (
-              <ProofSectionCard key={section.id} section={section} content={content} />
-            ))}
-          </div>
-        </section>
-
-        <section className="grid gap-6 lg:grid-cols-[1fr_1fr]">
-          <article {...content.attrs('limitations')} className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm">
-            <h2 className="text-2xl font-semibold tracking-tight text-text-primary">
-              Limitations
-            </h2>
-            <DetailList
-              className="mt-5"
-              title="What this does not claim"
-              items={
-                system.limitations ?? projectDefaults.limitations
-              }
-            />
-          </article>
-
-          <article {...content.attrs('improvements')} className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm">
-            <h2 className="text-2xl font-semibold tracking-tight text-text-primary">
-              Next Improvements
-            </h2>
-            <DetailList
-              className="mt-5"
-              title="Reasonable next steps"
-              items={
-                system.nextImprovements ?? projectDefaults.improvements
-              }
-            />
-          </article>
-        </section>
-
-        {system.retrievalCapabilityLadder ? (
-          <RetrievalCapabilityLadderSection ladder={system.retrievalCapabilityLadder} content={content} />
-        ) : null}
-
-        {system.githubUrl || system.externalUrl ? <ProofLinkSection system={system} content={content} /> : null}
-          </>
+          <StandardCaseStudyContent system={system} content={content} />
         )}
 
         {system.successorLink ? (
@@ -310,6 +163,162 @@ export default async function CaseStudyDetailPage({ params }: Readonly<Props>) {
         </div>
       </div>
     </div>
+  )
+}
+
+function StandardCaseStudyContent({ system, content }: Readonly<{
+  system: FeaturedSystemCaseStudy
+  content: ProjectContent
+}>) {
+  return (
+    <>
+      <section className="grid gap-8 xl:grid-cols-[1.02fr_0.98fr]">
+        <ProjectVisual system={system} />
+
+        <div className="grid gap-5">
+          <NarrativeCard title="Problem" body={system.problem} destination={content.get('problem')} />
+          <NarrativeCard title="Core Constraint" body={system.coreConstraint} destination={content.get('constraint')} />
+          <NarrativeCard
+            title={system.solutionTitle ?? 'Solution / What I Built'}
+            body={system.system}
+            destination={content.get('solution')}
+          />
+          <NarrativeCard title="Results" body={system.outcome} destination={content.get('results')} />
+        </div>
+      </section>
+
+      {system.metrics?.length ? (
+        <section {...content.attrs('metrics')}>
+          <SectionHeader
+            align="left"
+            title="Quantified Outcomes"
+            subtitle="These numbers describe project artifacts and sanity checks. They are not client ROI, deployment adoption, actuarial accuracy, or broad model-accuracy claims."
+          />
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
+            {system.metrics.map((metric) => (
+              <div key={`${metric.value}-${metric.label}`} {...content.attrs('metric', projectBlockKey(metric.label, [metric.value, metric.detail].filter(Boolean).join(' ')))}>
+                <MetricCard metric={metric} />
+              </div>
+            ))}
+          </div>
+        </section>
+      ) : null}
+
+      <section {...content.attrs('architecture')}>
+        <SectionHeader
+          align="left"
+          title="Architecture"
+          subtitle="The pipeline is shown as explicit stages so the system boundary is inspectable."
+        />
+        {system.architecture?.length ? (
+          <ArchitectureFlow steps={system.architecture} content={content} />
+        ) : (
+          <FallbackArchitecture system={system} content={content} />
+        )}
+      </section>
+
+      <section className="grid gap-6 lg:grid-cols-[1fr_1fr]">
+        <article {...content.attrs('technical-stack')} className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm">
+          <h2 className="text-2xl font-semibold tracking-tight text-text-primary">
+            Technical Stack
+          </h2>
+          <div className="mt-5 flex flex-wrap gap-2">
+            {system.stack.map((item) => (
+              <TechTag key={item}>{item}</TechTag>
+            ))}
+          </div>
+          {system.dataSources?.length ? (
+            <DetailList
+              className="mt-7"
+              title="Data sources"
+              items={system.dataSources}
+              destination={content.get('data-sources')}
+            />
+          ) : null}
+        </article>
+
+        <article {...content.attrs('relevance')} className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm">
+          <h2 className="text-2xl font-semibold tracking-tight text-text-primary">
+            Applied Relevance
+          </h2>
+          <DetailList
+            className="mt-5"
+            title="Where the pattern matters"
+            items={
+              system.realWorldRelevance ?? projectDefaults.relevance
+            }
+          />
+        </article>
+      </section>
+
+      {system.dashboardViews?.length ? (
+        <section {...content.attrs('dashboard-views')}>
+          <SectionHeader
+            align="left"
+            title="Dashboard Views"
+            subtitle="WeatherForge is organized as a decision-support dashboard rather than a single chart export."
+          />
+          <div className="grid gap-3 sm:grid-cols-2 lg:grid-cols-4">
+            {system.dashboardViews.map((view) => (
+              <div
+                key={view}
+                {...content.attrs('dashboard', view)}
+                className="rounded-[1.25rem] border border-border-subtle bg-background-elevated px-4 py-4 text-sm font-medium text-text-primary shadow-sm"
+              >
+                {view}
+              </div>
+            ))}
+          </div>
+        </section>
+      ) : null}
+
+      <section {...content.attrs('proof')}>
+        <SectionHeader
+          align="left"
+          title="Proof Surfaces"
+          subtitle="Available artifacts are labeled directly. Missing visuals stay as placeholders until real screenshots are added."
+        />
+        <div className="grid gap-6 lg:grid-cols-2">
+          {system.proofSections.map((section) => (
+            <ProofSectionCard key={section.id} section={section} content={content} />
+          ))}
+        </div>
+      </section>
+
+      <section className="grid gap-6 lg:grid-cols-[1fr_1fr]">
+        <article {...content.attrs('limitations')} className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm">
+          <h2 className="text-2xl font-semibold tracking-tight text-text-primary">
+            Limitations
+          </h2>
+          <DetailList
+            className="mt-5"
+            title="What this does not claim"
+            items={
+              system.limitations ?? projectDefaults.limitations
+            }
+          />
+        </article>
+
+        <article {...content.attrs('improvements')} className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm">
+          <h2 className="text-2xl font-semibold tracking-tight text-text-primary">
+            Next Improvements
+          </h2>
+          <DetailList
+            className="mt-5"
+            title="Reasonable next steps"
+            items={
+              system.nextImprovements ?? projectDefaults.improvements
+            }
+          />
+        </article>
+      </section>
+
+      {system.retrievalCapabilityLadder ? (
+        <RetrievalCapabilityLadderSection ladder={system.retrievalCapabilityLadder} content={content} />
+      ) : null}
+
+      {system.githubUrl || system.externalUrl ? <ProofLinkSection system={system} content={content} /> : null}
+    </>
   )
 }
 

@@ -43,7 +43,7 @@ export function projectProofLinkCopy(system: FeaturedSystemCaseStudy) {
   }
 }
 
-export function createProjectContent(system: FeaturedSystemCaseStudy) {
+function createProjectRegistry(system: FeaturedSystemCaseStudy) {
   const page = `/case-studies/${system.id}`
   const parent = system.displayTitle ?? system.name
   const breadcrumb = (...labels: string[]) => [parent, ...labels].filter(Boolean).filter((label, index, all) => all.indexOf(label) === index).join(' → ')
@@ -73,90 +73,107 @@ export function createProjectContent(system: FeaturedSystemCaseStudy) {
     })
   }
 
+  return { page, records, byAnchor, register, add, section, blocks, breadcrumb }
+}
+
+type ProjectRegistry = ReturnType<typeof createProjectRegistry>
+
+function registerStoryContent(system: FeaturedSystemCaseStudy, story: NonNullable<FeaturedSystemCaseStudy['story']>, registry: ProjectRegistry) {
+  const { add, section, blocks } = registry
+  section('overview', 'Overview', story.overview.join(' '))
+  add(['scope'], 'Scope of this account', story.scopeNote, 'Overview')
+  section('capabilities', 'What I built')
+  blocks('capability', 'What I built', story.capabilities)
+  section('architecture', 'Architecture', story.architecture.intro)
+  story.architecture.flows.forEach(flow => {
+    add(['flow', projectBlockKey(flow.title, flow.steps.join(' '))], flow.title, text(...flow.steps, flow.boundary), 'Architecture')
+  })
+  section('workflows', 'Workflow stories')
+  blocks('workflow', 'Workflow stories', story.workflows)
+  section('tradeoffs', 'Engineering decisions and tradeoffs')
+  blocks('tradeoff', 'Engineering decisions and tradeoffs', story.tradeoffs)
+  section('technical-details', 'Technical details', system.stack.join(' '))
+  blocks('technical', 'Technical details', story.technicalDetails, true)
+  if (story.illustration) {
+    const keys = ['illustration']
+    add(keys, 'Local form feedback capture', story.illustration.caption, 'Technical details', 'block', [contentId(...keys)])
+  }
+  section('verification', 'Verification and limitations')
+  add(['audit'], 'Recorded local audit', text(story.audit.date, story.audit.snapshot), 'Verification and limitations')
+  story.audit.checks.forEach(check => add(['audit-check', projectBlockKey(check.label, check.detail)], check.label, text(check.result, check.detail), 'Recorded local audit'))
+  add(['limitations'], 'Remaining gaps', text(...story.audit.limitations, story.audit.lesson), 'Verification and limitations')
+}
+
+function registerRetrievalContent(ladder: NonNullable<FeaturedSystemCaseStudy['retrievalCapabilityLadder']>, registry: ProjectRegistry) {
+  const { add, register, breadcrumb } = registry
+  const disclosure = contentId('retrieval-ladder')
+  add(['retrieval-ladder'], ladder.title, ladder.summary, '', 'section', [disclosure])
+  const ladderBlock = (key: string, label: string, body: string) => add(['retrieval', key], label, body, ladder.title, 'block', [disclosure])
+  ladderBlock('overview', 'Retrieval roadmap', ladder.intro)
+  ladderBlock('safe-claim', 'Retrieval capability scope', ladder.safeClaim)
+  ladderBlock('guardrail', 'Intent-modeling boundary', ladder.guardrail)
+  ladderBlock('heuristic-note', 'Heuristic gauges', ladder.heuristicNote)
+  ladderBlock('future-work', 'Practical future work', ladder.futureWork)
+  ladder.levels.forEach(level => {
+    const keys = ['retrieval-level', retrievalLevelKey(level)]
+    const row = add(keys, level.systemType, retrievalColumns.filter(column => column.key !== 'systemType').map(column => `${column.label}: ${level[column.key]}`).join('. '), ladder.title, 'row', [disclosure])
+    row.cells = retrievalColumns.filter(column => column.key !== 'systemType').map(column => ({
+      text: `${column.label}: ${level[column.key]}`,
+      destination: register([...keys, column.key], breadcrumb(ladder.title, level.systemType, column.label), [disclosure], row.destination!.anchor),
+    }))
+  })
+  add(['retrieval-interpretations'], 'Clean interpretation', '', ladder.title, 'section', [disclosure])
+  ladder.interpretations.forEach(item => {
+    const keys = ['retrieval-interpretation', projectBlockKey(item.method, item.meaning)]
+    const row = add(keys, item.method, item.meaning, `${ladder.title} / Clean interpretation`, 'row', [disclosure])
+    row.cells = [{ text: item.meaning, destination: register([...keys, 'meaning'], breadcrumb(ladder.title, 'Clean interpretation', item.method, 'What it really knows'), [disclosure], row.destination!.anchor) }]
+  })
+}
+
+function registerStandardContent(system: FeaturedSystemCaseStudy, registry: ProjectRegistry) {
+  const { add, section } = registry
+  add(['problem'], 'Problem', system.problem)
+  add(['constraint'], 'Core Constraint', system.coreConstraint)
+  add(['solution'], system.solutionTitle ?? 'Solution / What I Built', system.system)
+  add(['results'], 'Results', system.outcome)
+  if (system.metrics?.length) {
+    section('metrics', 'Quantified Outcomes', 'These numbers describe project artifacts and sanity checks. They are not client ROI, deployment adoption, actuarial accuracy, or broad model-accuracy claims.')
+    system.metrics.forEach(metric => add(['metric', projectBlockKey(metric.label, text(metric.value, metric.detail))], metric.label, text(metric.value, metric.detail), 'Quantified Outcomes'))
+  }
+  section('architecture', 'Architecture', 'The pipeline is shown as explicit stages so the system boundary is inspectable.')
+  if (system.architecture?.length) {
+    system.architecture.forEach(step => add(['architecture-step', projectBlockKey(step.label, step.detail)], step.label, step.detail, 'Architecture'))
+  } else {
+    add(['architecture-pieces'], 'Key system pieces', system.systemHighlights.join(' '), 'Architecture')
+  }
+  section('technical-stack', 'Technical Stack', system.stack.join(' '))
+  if (system.dataSources?.length) add(['data-sources'], 'Data sources', system.dataSources.join(' '), 'Technical Stack')
+  section('relevance', 'Applied Relevance', text('Where the pattern matters', ...(system.realWorldRelevance ?? projectDefaults.relevance)))
+  if (system.dashboardViews?.length) {
+    section('dashboard-views', 'Dashboard Views', 'WeatherForge is organized as a decision-support dashboard rather than a single chart export.')
+    system.dashboardViews.forEach(view => add(['dashboard', view], view, '', 'Dashboard Views'))
+  }
+  section('proof', 'Proof Surfaces', 'Available artifacts are labeled directly. Missing visuals stay as placeholders until real screenshots are added.')
+  system.proofSections.forEach(proof => add(['proof', proof.id], proof.status === 'planned' ? `${proof.title} (to be added)` : proof.title, text(proof.status === 'available' ? 'Available now' : 'In progress', proof.summary, ...proof.items), 'Proof Surfaces'))
+  section('limitations', 'Limitations', text('What this does not claim', ...(system.limitations ?? projectDefaults.limitations)))
+  section('improvements', 'Next Improvements', text('Reasonable next steps', ...(system.nextImprovements ?? projectDefaults.improvements)))
+
+  if (system.retrievalCapabilityLadder) registerRetrievalContent(system.retrievalCapabilityLadder, registry)
+  if (system.githubUrl || system.externalUrl) {
+    const copy = projectProofLinkCopy(system)
+    section('proof-links', copy.title, text(copy.description, system.githubUrl ? 'View GitHub Repository' : undefined, system.externalUrl ? 'Visit Live Site' : undefined))
+  }
+}
+
+export function createProjectContent(system: FeaturedSystemCaseStudy) {
+  const registry = createProjectRegistry(system)
+  const { page, records, byAnchor, section } = registry
   const story = system.story
   section('at-a-glance', 'At a glance', story
     ? text('Status', system.currentState, ...story.atAGlance.map(item => text(item.label, item.value)))
     : text('Context', system.contextLabel ?? system.caseStudyStage, 'Current state', system.currentState, 'Role', system.myRole))
-  if (story) {
-    section('overview', 'Overview', story.overview.join(' '))
-    add(['scope'], 'Scope of this account', story.scopeNote, 'Overview')
-    section('capabilities', 'What I built')
-    blocks('capability', 'What I built', story.capabilities)
-    section('architecture', 'Architecture', story.architecture.intro)
-    story.architecture.flows.forEach(flow => {
-      add(['flow', projectBlockKey(flow.title, flow.steps.join(' '))], flow.title, text(...flow.steps, flow.boundary), 'Architecture')
-    })
-    section('workflows', 'Workflow stories')
-    blocks('workflow', 'Workflow stories', story.workflows)
-    section('tradeoffs', 'Engineering decisions and tradeoffs')
-    blocks('tradeoff', 'Engineering decisions and tradeoffs', story.tradeoffs)
-    section('technical-details', 'Technical details', system.stack.join(' '))
-    blocks('technical', 'Technical details', story.technicalDetails, true)
-    if (story.illustration) {
-      const keys = ['illustration']
-      add(keys, 'Local form feedback capture', story.illustration.caption, 'Technical details', 'block', [contentId(...keys)])
-    }
-    section('verification', 'Verification and limitations')
-    add(['audit'], 'Recorded local audit', text(story.audit.date, story.audit.snapshot), 'Verification and limitations')
-    story.audit.checks.forEach(check => add(['audit-check', projectBlockKey(check.label, check.detail)], check.label, text(check.result, check.detail), 'Recorded local audit'))
-    add(['limitations'], 'Remaining gaps', text(...story.audit.limitations, story.audit.lesson), 'Verification and limitations')
-  } else {
-    add(['problem'], 'Problem', system.problem)
-    add(['constraint'], 'Core Constraint', system.coreConstraint)
-    add(['solution'], system.solutionTitle ?? 'Solution / What I Built', system.system)
-    add(['results'], 'Results', system.outcome)
-    if (system.metrics?.length) {
-      section('metrics', 'Quantified Outcomes', 'These numbers describe project artifacts and sanity checks. They are not client ROI, deployment adoption, actuarial accuracy, or broad model-accuracy claims.')
-      system.metrics.forEach(metric => add(['metric', projectBlockKey(metric.label, text(metric.value, metric.detail))], metric.label, text(metric.value, metric.detail), 'Quantified Outcomes'))
-    }
-    section('architecture', 'Architecture', 'The pipeline is shown as explicit stages so the system boundary is inspectable.')
-    if (system.architecture?.length) {
-      system.architecture.forEach(step => add(['architecture-step', projectBlockKey(step.label, step.detail)], step.label, step.detail, 'Architecture'))
-    } else {
-      add(['architecture-pieces'], 'Key system pieces', system.systemHighlights.join(' '), 'Architecture')
-    }
-    section('technical-stack', 'Technical Stack', system.stack.join(' '))
-    if (system.dataSources?.length) add(['data-sources'], 'Data sources', system.dataSources.join(' '), 'Technical Stack')
-    section('relevance', 'Applied Relevance', text('Where the pattern matters', ...(system.realWorldRelevance ?? projectDefaults.relevance)))
-    if (system.dashboardViews?.length) {
-      section('dashboard-views', 'Dashboard Views', 'WeatherForge is organized as a decision-support dashboard rather than a single chart export.')
-      system.dashboardViews.forEach(view => add(['dashboard', view], view, '', 'Dashboard Views'))
-    }
-    section('proof', 'Proof Surfaces', 'Available artifacts are labeled directly. Missing visuals stay as placeholders until real screenshots are added.')
-    system.proofSections.forEach(proof => add(['proof', proof.id], proof.status === 'planned' ? `${proof.title} (to be added)` : proof.title, text(proof.status === 'available' ? 'Available now' : 'In progress', proof.summary, ...proof.items), 'Proof Surfaces'))
-    section('limitations', 'Limitations', text('What this does not claim', ...(system.limitations ?? projectDefaults.limitations)))
-    section('improvements', 'Next Improvements', text('Reasonable next steps', ...(system.nextImprovements ?? projectDefaults.improvements)))
-
-    const ladder = system.retrievalCapabilityLadder
-    if (ladder) {
-      const disclosure = contentId('retrieval-ladder')
-      add(['retrieval-ladder'], ladder.title, ladder.summary, '', 'section', [disclosure])
-      const ladderBlock = (key: string, label: string, body: string) => add(['retrieval', key], label, body, ladder.title, 'block', [disclosure])
-      ladderBlock('overview', 'Retrieval roadmap', ladder.intro)
-      ladderBlock('safe-claim', 'Retrieval capability scope', ladder.safeClaim)
-      ladderBlock('guardrail', 'Intent-modeling boundary', ladder.guardrail)
-      ladderBlock('heuristic-note', 'Heuristic gauges', ladder.heuristicNote)
-      ladderBlock('future-work', 'Practical future work', ladder.futureWork)
-      ladder.levels.forEach(level => {
-        const keys = ['retrieval-level', retrievalLevelKey(level)]
-        const row = add(keys, level.systemType, retrievalColumns.filter(column => column.key !== 'systemType').map(column => `${column.label}: ${level[column.key]}`).join('. '), ladder.title, 'row', [disclosure])
-        row.cells = retrievalColumns.filter(column => column.key !== 'systemType').map(column => ({
-          text: `${column.label}: ${level[column.key]}`,
-          destination: register([...keys, column.key], breadcrumb(ladder.title, level.systemType, column.label), [disclosure], row.destination!.anchor),
-        }))
-      })
-      add(['retrieval-interpretations'], 'Clean interpretation', '', ladder.title, 'section', [disclosure])
-      ladder.interpretations.forEach(item => {
-        const keys = ['retrieval-interpretation', projectBlockKey(item.method, item.meaning)]
-        const row = add(keys, item.method, item.meaning, `${ladder.title} / Clean interpretation`, 'row', [disclosure])
-        row.cells = [{ text: item.meaning, destination: register([...keys, 'meaning'], breadcrumb(ladder.title, 'Clean interpretation', item.method, 'What it really knows'), [disclosure], row.destination!.anchor) }]
-      })
-    }
-    if (system.githubUrl || system.externalUrl) {
-      const copy = projectProofLinkCopy(system)
-      section('proof-links', copy.title, text(copy.description, system.githubUrl ? 'View GitHub Repository' : undefined, system.externalUrl ? 'Visit Live Site' : undefined))
-    }
-  }
+  if (story) registerStoryContent(system, story, registry)
+  else registerStandardContent(system, registry)
   if (system.successorLink) section('continuation', 'Project continuation', text(system.successorLink.context, system.successorLink.label))
   const destinations = [...byAnchor.values()]
   assertUniqueDestinations(destinations)

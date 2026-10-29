@@ -134,35 +134,47 @@ export function HeaderNavigationItem({
       </div>
 
       {open ? (
-        <div className={mobile ? 'ml-4 mt-2 border-l border-[var(--theme-frame-border)] pl-3' : 'absolute left-0 top-full z-50 w-56 pt-2'}>
-          <ul
-            id={panelId}
-            aria-label={`${item.label} links`}
-            className={cn(
-              'space-y-1',
-              !mobile && 'rounded-2xl border border-[var(--theme-frame-border)] bg-[var(--theme-frame-bg-solid)] p-2 shadow-lg'
-            )}
-          >
-            {item.children.map((child) => (
-              <li
-                key={child.href}
-                className={child.separatorBefore ? 'mt-2 border-t border-[var(--theme-frame-border)] pt-2' : undefined}
-              >
-                <Link
-                  href={child.href}
-                  onClick={onNavigate}
-                  target={child.external ? '_blank' : undefined}
-                  rel={child.external ? 'noopener noreferrer' : undefined}
-                  className="flex min-h-11 items-center rounded-xl px-3 py-2 text-sm font-medium text-[var(--theme-frame-text-muted)] transition-colors hover:bg-[var(--theme-frame-overlay)] hover:text-[var(--theme-frame-text)]"
-                >
-                  {child.label}
-                  {child.external ? <span className="sr-only"> (opens in a new tab)</span> : null}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </div>
+        <NavigationLinksPanel items={item.children} label={item.label} mobile={mobile} panelId={panelId} onNavigate={onNavigate} />
       ) : null}
+    </div>
+  )
+}
+
+function NavigationLinksPanel({ items, label, mobile, panelId, onNavigate }: Readonly<{
+  items: NonNullable<NavigationItem['children']>
+  label: string
+  mobile: boolean
+  panelId: string
+  onNavigate: () => void
+}>) {
+  return (
+    <div className={mobile ? 'ml-4 mt-2 border-l border-[var(--theme-frame-border)] pl-3' : 'absolute left-0 top-full z-50 w-56 pt-2'}>
+      <ul
+        id={panelId}
+        aria-label={`${label} links`}
+        className={cn(
+          'space-y-1',
+          !mobile && 'rounded-2xl border border-[var(--theme-frame-border)] bg-[var(--theme-frame-bg-solid)] p-2 shadow-lg'
+        )}
+      >
+        {items.map((child) => (
+          <li
+            key={child.href}
+            className={child.separatorBefore ? 'mt-2 border-t border-[var(--theme-frame-border)] pt-2' : undefined}
+          >
+            <Link
+              href={child.href}
+              onClick={onNavigate}
+              target={child.external ? '_blank' : undefined}
+              rel={child.external ? 'noopener noreferrer' : undefined}
+              className="flex min-h-11 items-center rounded-xl px-3 py-2 text-sm font-medium text-[var(--theme-frame-text-muted)] transition-colors hover:bg-[var(--theme-frame-overlay)] hover:text-[var(--theme-frame-text)]"
+            >
+              {child.label}
+              {child.external ? <span className="sr-only"> (opens in a new tab)</span> : null}
+            </Link>
+          </li>
+        ))}
+      </ul>
     </div>
   )
 }
