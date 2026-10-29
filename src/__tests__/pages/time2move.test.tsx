@@ -10,7 +10,7 @@ import { allSystems, featuredSystems, getSystemById, pilotSystems, productionSys
 import { buildSearchIndex } from '@/lib/search/build-index'
 import { searchContent } from '@/lib/search/search'
 
-const title = 'Time2Move: Real Estate Automation & AI Development'
+const title = 'Time2Move: Real Estate Workflows & Integrations'
 const path = '/case-studies/time2move'
 const status = 'Past client project · Engagement concluded'
 const successorLabel = 'Current business website — Hombuzz'
@@ -87,7 +87,7 @@ describe('Time2Move historical case study', () => {
     const { records } = await buildSearchIndex()
     const historical = records.find(record => record.href === path)
     expect(historical?.title).toBe(title)
-    for (const query of ['Time2Move', 'CRM workflows', 'LLM review', 'regional housing-news', 'Hombuzz']) {
+    for (const query of ['Time2Move', 'CRM workflows', 'visitor-interaction analysis', 'housing-market content', 'Hombuzz']) {
       const matches = searchContent(records, query).filter(result => result.record.href.split('#')[0] === path)
       expect(matches.length, query).toBeGreaterThan(0)
       for (const { record } of matches) {

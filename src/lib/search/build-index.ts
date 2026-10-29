@@ -51,7 +51,7 @@ export function projectSearchRecord(system: FeaturedSystemCaseStudy): SearchReco
     body: story ? text(
       system.positioning, system.currentState,
       ...story.atAGlance.map(item => text(item.label, item.value)),
-      ...story.sections.map(block => text(...block.paragraphs, ...(block.items ?? []).map(item => `${item.label}: ${item.description}`), block.closing)),
+      ...story.sections.map(block => text(...block.paragraphs, ...(block.items ?? []), block.closing)),
       system.successorLink?.label,
     ) : text(
       system.oneSentenceOutcome, system.positioning, system.problem, system.system,

@@ -7,9 +7,9 @@ const time2MoveCoreStack = ['Next.js', 'React', 'TypeScript', 'Python', 'FastAPI
 export const time2Move = {
   id: 'time2move',
   name: 'Time2Move',
-  displayTitle: 'Time2Move: Real Estate Automation & AI Development',
+  displayTitle: 'Time2Move: Real Estate Workflows & Integrations',
   summary:
-    'Through People’s Connection LLC, I designed and built the original Time2Move application and integrations for Dustin Marmon. Product AI capabilities remained unfinished when the engagement ended.',
+    'Through People’s Connection LLC, I designed and built the original Time2Move application and integrations for Dustin Marmon. The implementation connected customer tools, a shared inquiry backend, and external services.',
   positioning:
     'Through People’s Connection LLC, I designed and built the original Time2Move application and integrations for Dustin Marmon. The goal was to connect a real estate customer experience with business workflows: helping visitors explore properties, understand their options, and submit inquiries with useful context for follow-up. The broader plan included AI-assisted customer support, content, and website improvement.',
   contextLabel: 'Past client project',
@@ -41,16 +41,16 @@ export const time2Move = {
     atAGlance: [
       { label: 'Client', value: 'Dustin Marmon' },
       { label: 'Role', value: time2MoveRole },
-      { label: 'Scope', value: 'Real estate website, CRM workflows and AI development' },
+      { label: 'Scope', value: 'Real estate website, inquiry workflows and service integrations' },
     ],
     sections: [
       {
         id: 'capabilities',
         title: 'Engineering ownership',
         paragraphs: [
-          'I wrote the original application code using established frameworks and third-party services. The implementation covered regional content, property-search embeds, mortgage and fee calculators, rate and review integrations, and a shared inquiry-processing backend.',
-          'One central decision was to bring six inquiry types under a common backend contract. That centralized validation and integration logic while preserving each request’s purpose and context. I also implemented API configuration, submission safeguards, and operational documentation covering service responsibilities and recovery procedures.',
-          'The work required coordinating the customer-facing application, backend processing, external providers, and the configuration needed to connect them.',
+          'I wrote the original frontend and backend application code. The implementation covered regional content, property-search embeds, mortgage and fee calculators, rate and review integrations, and a shared inquiry-processing backend.',
+          'One central decision was to bring six inquiry types under a common backend contract. That centralized validation and integration logic while preserving each request’s purpose and context. Each form used the same submission path, carrying its request type, contact details, and source information into backend processing. Contact normalization and deterministic intent rules prepared those submissions for the CRM adapter.',
+          'I also implemented API configuration and submission safeguards. I kept provider responsibilities explicit: IDX Broker supplied hosted property search and registration, while native inquiry processing remained separate. Operational documentation covered service responsibilities and recovery procedures.',
         ],
         closing: `Core stack: ${time2MoveCoreStack.join(', ')}.`,
       },
@@ -58,22 +58,13 @@ export const time2Move = {
         id: 'ai-development',
         title: 'AI development and tool use',
         paragraphs: [
-          'Later in development, I used ChatGPT and Codex to work through integration questions and refine the implementation. I retained responsibility for the application and its technical decisions.',
-          'I also worked toward three AI capabilities:',
+          'Later in development, I used ChatGPT and Codex to clarify integration questions and refine the implementation.',
+          'The broader AI plans included:',
         ],
         items: [
-          {
-            label: 'Website improvement informed by visitor behavior',
-            description: 'A workflow intended to use recorded visitor interactions as input to LLM reviews, then rank proposed website changes for trial. The goal was to help prioritize improvements to the customer journey.',
-          },
-          {
-            label: 'Voice-enabled customer assistance',
-            description: 'A chatbot intended to use Dustin’s voice, giving prospective clients a more familiar conversational experience while exploring the business’s services.',
-          },
-          {
-            label: 'Regional housing-news updates',
-            description: 'A semi-automated LLM workflow intended to support current housing-market content relevant to the regions the business served.',
-          },
+          'Visitor-interaction analysis to prioritize website improvements.',
+          'Voice-enabled customer assistance.',
+          'Regional housing-market content support.',
         ],
         closing: 'These capabilities remained unfinished when the engagement ended.',
       },
@@ -81,8 +72,8 @@ export const time2Move = {
         id: 'results',
         title: 'Outcome and lessons',
         paragraphs: [
-          'The engagement ended before the broader system and planned validation were completed. The original Time2Move deployment is inactive. Dustin subsequently pursued an independent direction, and the business continued as Hombuzz, outside the work described here.',
-          'The project strengthened my experience connecting application code, external services, and AI development goals. It also reinforced a delivery principle I would apply to future projects: define a useful first release, make integration dependencies explicit, and give validation and later AI enhancements clear milestones of their own.',
+          'The engagement concluded before the broader system and planned validation were completed. The original Time2Move deployment is inactive. Dustin subsequently pursued an independent direction, and the business continued as Hombuzz, outside my Time2Move contribution.',
+          'The practical delivery lesson was to define a useful first release, identify integration dependencies early, and give validation and later AI enhancements explicit milestones.',
         ],
       },
     ],

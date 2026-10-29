@@ -66,7 +66,6 @@ describe('public content components', () => {
     expect(page.querySelector('#content-capabilities ul')).toBeNull()
     const ai = page.querySelector('#content-ai-development')!
     expect(ai.querySelectorAll('ul li')).toHaveLength(story.sections[1].items!.length)
-    expect(Array.from(ai.querySelectorAll('li strong'), label => label.textContent)).toEqual(story.sections[1].items!.map(item => `${item.label}:`))
     expect(ai.querySelector('ul + p')?.textContent).toBe(story.sections[1].closing)
     expect(page.querySelector('details, figure, img, aside')).toBeNull()
   })

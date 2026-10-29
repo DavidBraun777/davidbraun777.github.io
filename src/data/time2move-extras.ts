@@ -3,7 +3,7 @@ export const time2MoveExtras = {
   overview: {
     id: 'inside-system',
     title: 'Inside the system',
-    caption: 'Explore four workflows connecting the website, application services, and external providers.',
+    caption: 'How customer inquiries move through the application and its service integrations.',
   },
   reviews: {
     id: 'review-data-pipeline',

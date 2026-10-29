@@ -1,8 +1,8 @@
 'use client'
 
-import { useId, useRef, useState, type KeyboardEvent } from 'react'
+import { useId } from 'react'
 import {
-  time2moveArchitecturePaths, time2moveDiagramLayout, time2moveReviewPipeline,
+  time2moveInquiryArchitecture, time2moveDiagramLayout, time2moveReviewPipeline,
   type Time2MoveDiagram, type Time2MoveDiagramEdge, type Time2MoveDiagramNode, type Time2MoveNodeKind,
 } from '@/data/time2move-architecture'
 import { cn } from '@/lib/utils'
@@ -14,89 +14,28 @@ const nodeStyles: Record<Time2MoveNodeKind, { label: string; svg: string; html: 
 }
 
 export function Time2MoveArchitecture() {
-  const id = useId()
-  const [selected, setSelected] = useState(0)
-  const tabs = useRef<(HTMLButtonElement | null)[]>([])
-
-  function moveTab(event: KeyboardEvent<HTMLButtonElement>, index: number) {
-    const count = time2moveArchitecturePaths.length
-    const destinations: Record<string, number> = {
-      ArrowLeft: (index + count - 1) % count,
-      ArrowRight: (index + 1) % count,
-      Home: 0,
-      End: count - 1,
-    }
-    const next = destinations[event.key]
-    if (next === undefined) return
-    event.preventDefault()
-    tabs.current[next]!.focus()
-  }
-
   return (
-    <div className="space-y-4">
-      <div className="rounded-[1.5rem] border border-border-subtle bg-background-elevated shadow-sm">
-        <div role="tablist" aria-label="Architecture paths" className="grid grid-cols-2 gap-1 rounded-t-[1.5rem] border-b border-border-subtle bg-background-subtle p-2 sm:grid-cols-4">
-          {time2moveArchitecturePaths.map((path, index) => (
-            <button
-              key={path.id}
-              ref={node => { tabs.current[index] = node }}
-              id={`${id}-tab-${path.id}`}
-              type="button"
-              role="tab"
-              aria-selected={selected === index}
-              aria-controls={`${id}-panel-${path.id}`}
-              tabIndex={selected === index ? 0 : -1}
-              onClick={() => setSelected(index)}
-              onFocus={() => setSelected(index)}
-              onKeyDown={event => moveTab(event, index)}
-              className={cn(
-                'min-h-11 rounded-xl border px-3 py-3 text-sm font-semibold focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-link-primary',
-                selected === index
-                  ? 'border-border-strong bg-background-elevated text-link-primary shadow-sm'
-                  : 'border-transparent text-text-secondary hover:bg-background-elevated hover:text-text-primary',
-              )}
-            >{path.selectorLabel}</button>
-          ))}
-        </div>
-        {time2moveArchitecturePaths.map((path, index) => (
-          <div
-            key={path.id}
-            id={`${id}-panel-${path.id}`}
-            role="tabpanel"
-            aria-labelledby={`${id}-tab-${path.id}`}
-            tabIndex={0}
-            hidden={selected !== index}
-            className="min-w-0 rounded-b-[1.5rem] p-5 sm:p-7"
-          >
-            {selected === index ? (
-              <div data-architecture-path={path.id} className="space-y-6">
-                <Diagram graph={path} />
-                <div className="space-y-4 border-t border-border-subtle pt-5">
-                  <DiagramLegend />
-                  <div className="max-w-4xl">
-                    <p className="text-xs font-semibold uppercase tracking-wider text-link-primary">My contribution</p>
-                    <p className="mt-2 text-sm leading-7 text-text-secondary">{path.responsibility}</p>
-                  </div>
-                </div>
-              </div>
-            ) : null}
-          </div>
-        ))}
+    <div className="min-w-0 space-y-6 rounded-[1.5rem] border border-border-subtle bg-background-elevated p-4 sm:p-6">
+      <Diagram graph={time2moveInquiryArchitecture} />
+      <div className="max-w-4xl border-t border-border-subtle pt-5">
+        <p className="text-sm font-semibold text-text-primary">My contribution</p>
+        <p className="mt-2 text-sm leading-7 text-text-secondary">{time2moveInquiryArchitecture.responsibility}</p>
       </div>
-      <p className="text-xs leading-6 text-text-muted">Architecture reconstructed from project source. The engagement concluded before final system validation.</p>
+      <p className="text-xs leading-6 text-text-muted">Architecture reconstructed from project source.</p>
     </div>
   )
 }
 
 export function Time2MoveReviewPipeline() {
-  return <div className="space-y-5"><DiagramLegend /><Diagram graph={time2moveReviewPipeline} /></div>
+  return <Diagram graph={time2moveReviewPipeline} />
 }
 
-function DiagramLegend() {
+function DiagramLegend({ graph }: Readonly<{ graph: Time2MoveDiagram }>) {
+  const kinds = [...new Set(graph.nodes.map(node => node.kind))]
   return (
-    <ul aria-label="Diagram legend" className="flex flex-wrap gap-3 text-xs text-text-secondary">
-      {Object.entries(nodeStyles).map(([kind, style]) => (
-        <li key={kind} className="flex items-center gap-2"><span aria-hidden="true" className={cn('h-3 w-3 rounded border', style.html)} />{style.label}</li>
+    <ul aria-label="Diagram legend" className="mt-4 flex flex-wrap gap-3 text-xs text-text-secondary">
+      {kinds.map(kind => (
+        <li key={kind} className="flex items-center gap-2"><span aria-hidden="true" className={cn('h-3 w-3 rounded border', nodeStyles[kind].html)} />{nodeStyles[kind].label}</li>
       ))}
     </ul>
   )
@@ -107,9 +46,8 @@ function diagramNode(graph: Time2MoveDiagram, id: string): Time2MoveDiagramNode 
 }
 
 function edgeText(graph: Time2MoveDiagram, edge: Time2MoveDiagramEdge): string {
-  const direction = edge.bidirectional ? 'connects both ways with' : 'connects to'
   const label = edge.label ? ` (${edge.label})` : ''
-  return `${diagramNode(graph, edge.from).label} ${direction} ${diagramNode(graph, edge.to).label}${label}.`
+  return `${diagramNode(graph, edge.from).label} connects to ${diagramNode(graph, edge.to).label}${label}.`
 }
 
 function Diagram({ graph }: Readonly<{ graph: Time2MoveDiagram }>) {
@@ -121,17 +59,18 @@ function Diagram({ graph }: Readonly<{ graph: Time2MoveDiagram }>) {
         <h3 className="text-xl font-semibold text-text-primary">{graph.title}</h3>
         <p className="mt-2 max-w-4xl text-sm leading-6 text-text-secondary">{graph.description}</p>
       </figcaption>
+      <DiagramLegend graph={graph} />
       <svg className="mt-4 hidden h-auto w-full xl:block" viewBox={`0 0 ${time2moveDiagramLayout.width} ${graph.height}`} role="img" aria-labelledby={`${id}-title ${id}-description`}>
         <title id={`${id}-title`}>{graph.title}</title>
         <desc id={`${id}-description`}>{description}</desc>
         <defs>
-          <marker id={`${id}-arrow`} markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto-start-reverse">
+          <marker id={`${id}-arrow`} markerWidth="10" markerHeight="10" refX="8" refY="4" orient="auto">
             <path d="M0 0 L8 4 L0 8" className="fill-none stroke-link-primary" strokeWidth="1.5" />
           </marker>
         </defs>
         {graph.edges.map(edge => (
           <g key={edge.id} data-graph-edge={edge.id} data-from={edge.from} data-to={edge.to}>
-            <path d={edge.path} className="fill-none stroke-link-primary" strokeWidth="2" strokeDasharray={edge.branch ? '6 5' : undefined} markerEnd={`url(#${id}-arrow)`} markerStart={edge.bidirectional ? `url(#${id}-arrow)` : undefined} />
+            <path d={edge.path} className="fill-none stroke-link-primary" strokeWidth="2" strokeDasharray={edge.branch ? '6 5' : undefined} markerEnd={`url(#${id}-arrow)`} />
             {edge.label ? <text x={edge.labelX} y={edge.labelY} textAnchor="middle" className="fill-text-secondary" fontSize="15">{edge.label}</text> : null}
           </g>
         ))}
@@ -165,24 +104,22 @@ function MobileDiagram({ graph }: Readonly<{ graph: Time2MoveDiagram }>) {
           </li>
         ))}
       </ol>
-      {branches.length > 0 ? (
-        <ul aria-label={`${graph.title}: branch connections`} className="space-y-4 border-t border-border-subtle pt-4">
-          {branches.map(edge => (
-            <li key={edge.id} data-mobile-edge={edge.id} className="space-y-1 text-sm leading-6 text-text-secondary">
-              <p className="font-semibold text-link-primary">{edge.label}</p>
-              <p>
-                {diagramNode(graph, edge.from).label}
-                <span aria-hidden="true" className="px-2">{edge.bidirectional ? '↔' : '→'}</span>
-                <span className="sr-only">{edge.bidirectional ? ' connects both ways with ' : ' connects to '}</span>
-                {diagramNode(graph, edge.to).label}
-              </p>
-              {[edge.from, edge.to].filter(nodeId => !graph.mainNodeIds.includes(nodeId)).map(nodeId => (
-                <p key={nodeId}>{diagramNode(graph, nodeId).detail.join(' · ')}</p>
-              ))}
-            </li>
-          ))}
-        </ul>
-      ) : null}
+      <ul aria-label={`${graph.title}: branch connections`} className="space-y-4 border-t border-border-subtle pt-4">
+        {branches.map(edge => (
+          <li key={edge.id} data-mobile-edge={edge.id} className="space-y-1 text-sm leading-6 text-text-secondary">
+            <p className="font-semibold text-link-primary">{edge.label}</p>
+            <p>
+              {diagramNode(graph, edge.from).label}
+              <span aria-hidden="true" className="px-2">→</span>
+              <span className="sr-only"> connects to </span>
+              {diagramNode(graph, edge.to).label}
+            </p>
+            {[edge.from, edge.to].filter(nodeId => !graph.mainNodeIds.includes(nodeId)).map(nodeId => (
+              <p key={nodeId}>{diagramNode(graph, nodeId).detail.join(' · ')}</p>
+            ))}
+          </li>
+        ))}
+      </ul>
     </div>
   )
 }
