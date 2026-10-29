@@ -361,6 +361,15 @@ There is no fuzzy matching or added search dependency. Run the search and destin
 unit tests plus `npm run e2e -- e2e/search.spec.ts e2e/search-destinations.spec.ts`
 when changing search behavior or destinations.
 
+`published-search-compatibility.test.ts` also preserves compact digests captured
+from published revision `ba84b4d` before the Sonar cleanup: the full index,
+destination inventory, project manifests, and representative ranked results.
+Algorithm-only refactors must pass these recorded expectations unchanged. When
+deliberately editing public content, review the actual old/new destination and
+ranking differences before updating the affected expectations; retain explicit
+compatibility for published links that need to survive. The fixture revision is
+provenance, not permission to regenerate expectations from a failing implementation.
+
 ### Prerequisites
 
 - Node.js 24 LTS from `.nvmrc` (`package.json` requires `24.x`)
@@ -449,6 +458,16 @@ when that browser needs installing or updating. With `CI` set, the same
 `chromium` project uses preinstalled Google Chrome Stable on GitHub's
 `ubuntu-24.04` runner. CI logs the Chrome version and browser launch path.
 The runner updates Chrome independently of the installed Playwright version.
+
+`npm run test:coverage` generates fresh V8/LCOV coverage, enforces 100% per-file
+lines, branches, statements and functions, then validates raw LCOV counts and
+source-file completeness. `scripts/coverage-scope.mjs` derives the eligible
+tracked and untracked JavaScript/TypeScript inventory from the existing Sonar
+scope and exclusions, including production configuration and executable scripts.
+New runtime files receive coverage even before a test imports them. Keep new tests
+under `src/__tests__`; do not add exclusions to bypass uncovered behavior.
+Use `npm run coverage:check` to revalidate an existing report. Browser tests
+verify real navigation but do not contribute to the imported V8 report.
 
 ## Security and Analysis
 

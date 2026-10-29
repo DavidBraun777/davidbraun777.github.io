@@ -322,6 +322,14 @@ describe('getAllPostSlugs', () => {
 describe('publication visibility', () => {
   afterEach(() => vi.restoreAllMocks())
 
+  it('labels missing titles consistently in lists and detail pages', () => {
+    mockedFs.existsSync.mockReturnValue(true)
+    mockReaddirSync(['untitled.mdx'])
+    mockedFs.readFileSync.mockReturnValue('A public post without frontmatter.')
+    expect(getAllPosts()[0].title).toBe('Untitled')
+    expect(getPostBySlug('untitled')?.title).toBe('Untitled')
+  })
+
   it.each(['draft: true', 'published: false'])('excludes %s from lists, static routes, and direct reads', (flag) => {
     vi.clearAllMocks()
     mockedFs.existsSync.mockReturnValue(true)

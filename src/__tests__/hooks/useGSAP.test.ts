@@ -167,6 +167,14 @@ describe('useReducedMotion', () => {
       subscribedListener
     )
   })
+
+  it('keeps the default preference when media queries are unavailable', () => {
+    vi.stubGlobal('matchMedia', undefined)
+    const rendered = renderHook(useReducedMotion)
+    expect(rendered.getResult()).toBe(false)
+    act(() => rendered.root.unmount())
+    vi.unstubAllGlobals()
+  })
 })
 
 describe('useGSAP', () => {
@@ -197,6 +205,15 @@ describe('useGSAP', () => {
 
     act(() => rendered.root.unmount())
     expect(context.revert).toHaveBeenCalledOnce()
+  })
+
+  it('does not create an animation context before its container mounts', () => {
+    const rendered = renderHook(useGSAP)
+    const initialize = vi.fn()
+    rendered.getResult().createContext(initialize)
+    expect(initialize).not.toHaveBeenCalled()
+    expect(gsapMocks.context).not.toHaveBeenCalled()
+    act(() => rendered.root.unmount())
   })
 
   it('reverts replaced and unmounted contexts exactly once', () => {

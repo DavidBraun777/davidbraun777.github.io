@@ -121,6 +121,13 @@ describe('validateContactForm', () => {
     expect(result).toEqual({ valid: true, data: validBody })
   })
 
+  it('rejects unknown legacy inquiry types and omits whitespace-only optional organization text', () => {
+    for (const projectType of [123, 'not-a-project']) {
+      expect(validateContactForm({ ...legacyBody, projectType })).toEqual({ valid: false, error: 'Invalid inquiry type' })
+    }
+    expect(validateContactForm({ ...validBody, organization: ' \n ' })).toEqual({ valid: true, data: validBody })
+  })
+
   it.each([null, undefined, 'not-an-object', 42])(
     'rejects a non-object request body: %j',
     (body) => {

@@ -44,10 +44,24 @@ did not prevent merges that bypass security checks.
   and thin social-image wrappers remain analyzed but are excluded from coverage
   calculations; executable scripts and production configuration remain
   coverage-eligible.
+- Vitest and the LCOV guard share `scripts/coverage-scope.mjs`, which reads the
+  existing Sonar exclusions and enumerates tracked and untracked first-party
+  JavaScript/TypeScript files with Git. This includes `next.config.ts` and
+  executable scripts, plus files no test imports. Generated/ignored files follow
+  Git's ignore rules. The existing Sonar source and coverage exclusions are
+  unchanged.
+- `npm run test:coverage` enforces 100% lines, branches, statements and functions
+  per file, then runs `scripts/check-coverage.mjs`. The guard checks complete
+  inventory coverage, unique repository-relative paths, existing source files,
+  raw DA/BRDA hits and matching LF/LH/BRF/BRH counts. A rounded percentage, missing
+  file, zero-hit outcome or entirely empty denominator cannot pass. Type-only
+  files may have zero denominators but must still appear in LCOV.
 - The primary CI job generates and validates `coverage/lcov.info`, then uploads
-  only that report as an artifact. The Sonar job starts from a fresh checkout,
-  downloads the report, validates it, and scans without installing dependencies
-  or running project code in the token-bearing job.
+  it with its SHA-256 checksum and checked-out Git revision in the `vitest-lcov`
+  artifact. The Sonar job downloads that artifact from the same workflow run,
+  verifies checksum and revision against its fresh checkout, checks expected
+  application/configuration/script paths, and scans without installing
+  dependencies or running project code in the token-bearing job.
 - The Sonar job uses `actions/checkout` with `fetch-depth: 0` so SonarCloud
   receives full Git history for branch and pull request analysis.
 - GitHub Actions references touched by the CI repair are pinned to full commit
@@ -60,13 +74,14 @@ The resulting measurement flow is:
 
 ```text
 Primary CI
-  install -> lint -> typecheck -> Vitest/V8 coverage -> validate LCOV
-          -> audit -> build -> size check -> upload coverage/lcov.info
+  install -> lint -> typecheck -> Vitest/V8 coverage -> validate LCOV + scope
+          -> bind report to revision -> audit -> build -> size check
+          -> upload LCOV + checksum + revision
                                                    |
                                                    +-> Playwright e2e job
                                                    `-> Sonar job: fresh checkout
                                                                   -> download LCOV
-                                                                  -> validate + scan
+                                                                  -> verify checksum/revision + scan
 ```
 
 The legacy standalone Sonar workflow was removed after the integrated job
@@ -86,6 +101,11 @@ After pushing the CI repair:
 6. Confirm each pull request update produces exactly one integrated Sonar scan.
 7. Keep SonarCloud out of required branch protection until normal and Dependabot
    pull requests have produced several stable, trustworthy runs.
+
+Local V8 and Sonar executable-line/condition denominators can differ; never
+substitute a local percentage for remote overall or new-code results. Verify
+the analyzed revision, completed background task and raw uncovered counts for
+both scopes. The local coverage report does not define Sonar's new-code period.
 
 ## Later Options
 

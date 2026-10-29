@@ -27,7 +27,7 @@ let settledHref = ''
 
 function clearHighlight() {
   window.clearTimeout(highlightTimer)
-  highlighted.forEach(element => element.removeAttribute('data-content-active'))
+  highlighted.forEach(element => { delete element.dataset.contentActive })
   highlighted = []
 }
 
@@ -76,7 +76,8 @@ function startRequest(href: string, destination?: ContentDestination, paused = f
   // Only a failed/stale destination uses this deadline. Successful navigation is
   // driven by registrations, route commits, fonts and layout, never a fixed delay.
   deadline = window.setTimeout(() => {
-    if (request !== active) return
+    // Cancellation clears the sole stored deadline before a request is replaced;
+    // timer callbacks run to completion, so this callback still owns active.
     if (active.paused || window.location.pathname !== active.url.pathname) {
       cancelContentNavigation()
       return
@@ -84,7 +85,7 @@ function startRequest(href: string, destination?: ContentDestination, paused = f
     active.fallbackOnly = true
     // A fallback may itself need a React disclosure commit. Give that lifecycle
     // a bounded opportunity to finish; this timer never schedules the scroll.
-    deadline = window.setTimeout(() => { if (request === active) cancelContentNavigation() }, 1000)
+    deadline = window.setTimeout(cancelContentNavigation, 1000)
     notifyContentLayout()
   }, 5000)
   const main = document.getElementById('main-content')
@@ -137,38 +138,45 @@ function fallbackTarget(active: NavigationRequest, destination?: ContentDestinat
   return document.querySelector<HTMLElement>('#main-content h1') ?? document.getElementById('main-content')
 }
 
-function attemptNavigation() {
-  const active = request
-  if (!active || active.paused) return
+function isRouteReady(active: NavigationRequest): boolean {
   if (window.location.pathname !== active.url.pathname || window.location.hash !== active.url.hash || renderedPage !== active.url.pathname) {
     // Next may commit a same-page hash without a hashchange event or DOM mutation.
     // Poll just this pending URL, bounded by the stale-request deadline.
     notifyContentLayout()
-    return
+    return false
   }
-  if (!fontsReady && !active.fallbackOnly) return
-  const id = fragment(active.url)
-  const manifest = manifests.get(active.url.pathname)
-  const destination = manifest?.get(id) ?? active.destination
+  return fontsReady || active.fallbackOnly
+}
+
+function revealDeclaredDisclosures(active: NavigationRequest, destination?: ContentDestination): boolean {
   for (const disclosureId of active.fallbackOnly ? [] : destination?.disclosureIds ?? []) {
     const panel = document.getElementById(disclosureId)
     if (!(panel instanceof HTMLDetailsElement)) {
-      if (!active.fallbackOnly) return
-      break
+      // Fallback requests skip this loop; ordinary requests wait for their panel.
+      return false
     }
-    if (!reveal(panel)) return
+    if (!reveal(panel)) return false
   }
+  return true
+}
+
+function resolveTarget(active: NavigationRequest, id: string, manifest: Map<string, ContentDestination> | undefined, destination?: ContentDestination) {
   let target = document.getElementById(id)
   // A ready local manifest can identify an obsolete URL immediately.
   if (!target && (active.fallbackOnly || (manifest && !destination))) target = fallbackTarget(active, destination)
-  if (!target) return
+  return target
+}
+
+function revealTargetAncestors(target: HTMLElement): boolean {
   const ancestors: HTMLDetailsElement[] = []
   for (let element: HTMLElement | null = target; element; element = element.parentElement) {
     if (element instanceof HTMLDetailsElement) ancestors.unshift(element)
   }
-  for (const panel of ancestors) if (!reveal(panel)) return
-  if (!target.getClientRects().length || getComputedStyle(target).visibility === 'hidden') return
+  for (const panel of ancestors) if (!reveal(panel)) return false
+  return true
+}
 
+function positionTarget(target: HTMLElement) {
   const header = document.querySelector<HTMLElement>('body header')
   const clearance = (header?.getBoundingClientRect().height ?? 96) + 16
   target.style.scrollMarginTop = `${clearance}px`
@@ -184,12 +192,29 @@ function attemptNavigation() {
   window.scrollTo({ top: window.scrollY + target.getBoundingClientRect().top - clearance, behavior: 'instant' })
   if (!target.hasAttribute('tabindex')) target.tabIndex = -1
   target.focus({ preventScroll: true })
+}
+
+function highlightTarget(target: HTMLElement) {
   clearHighlight()
   highlighted = [target]
   const row = target.closest('tr')
   if (row && row !== target) highlighted.push(row)
-  highlighted.forEach(element => element.setAttribute('data-content-active', ''))
+  highlighted.forEach(element => { element.dataset.contentActive = '' })
   highlightTimer = window.setTimeout(clearHighlight, 3500)
+}
+
+function attemptNavigation() {
+  const active = request
+  if (!active || active.paused || !isRouteReady(active)) return
+  const id = fragment(active.url)
+  const manifest = manifests.get(active.url.pathname)
+  const destination = manifest?.get(id) ?? active.destination
+  if (!revealDeclaredDisclosures(active, destination)) return
+  const target = resolveTarget(active, id, manifest, destination)
+  if (!target || !revealTargetAncestors(target)) return
+  if (!target.getClientRects().length || getComputedStyle(target).visibility === 'hidden') return
+  positionTarget(target)
+  highlightTarget(target)
   settledHref = active.url.href
   cancelContentNavigation()
 }
@@ -219,7 +244,10 @@ export function mountContentNavigation() {
   settledHref = ''
   fontsReady = !document.fonts || document.fonts.status === 'loaded'
   let mounted = true
-  document.fonts?.ready.then(() => {
+  // FontFaceSet.ready fulfills even if a font fails to load. Intentionally
+  // schedule readiness without awaiting; unexpected callback errors remain
+  // visible rather than being swallowed or treated as font-download failures.
+  void document.fonts?.ready.then(() => {
     if (!mounted) return
     fontsReady = true
     notifyContentLayout()

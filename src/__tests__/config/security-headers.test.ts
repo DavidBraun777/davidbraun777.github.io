@@ -5,6 +5,7 @@ import {
   PHASE_PRODUCTION_SERVER,
 } from 'next/constants'
 import nextConfig from '../../../next.config'
+import { legacyResumeUrls, resumeUrl } from '@/data/resumes'
 
 async function securityPolicy(phase: string) {
   const rules = await nextConfig(phase).headers?.()
@@ -26,6 +27,23 @@ async function securityPolicy(phase: string) {
 }
 
 describe('HTTP security headers', () => {
+  it('keeps development and production output separate and preserves every legacy destination', async () => {
+    expect(nextConfig(PHASE_DEVELOPMENT_SERVER).distDir).toBe('.next-dev')
+    for (const phase of [PHASE_PRODUCTION_BUILD, PHASE_PRODUCTION_SERVER]) {
+      const config = nextConfig(phase)
+      expect(config.distDir).toBe('.next')
+      expect(config.images?.formats).toEqual(['image/avif', 'image/webp'])
+      expect(await config.redirects?.()).toEqual([
+        ...['/about', '/resume', '/background', '/why-work-with-me'].map(source => ({ source, destination: '/experience', permanent: true })),
+        ...legacyResumeUrls.map(source => ({ source, destination: resumeUrl, permanent: true })),
+        { source: '/projects', destination: '/case-studies', permanent: true },
+        { source: '/projects/:slug', destination: '/case-studies/:slug', permanent: true },
+        { source: '/blog', destination: '/writing', permanent: true },
+        { source: '/blog/:slug', destination: '/writing/:slug', permanent: true },
+        { source: '/systems', destination: '/case-studies', permanent: true },
+      ])
+    }
+  })
   it.each([PHASE_PRODUCTION_BUILD, PHASE_PRODUCTION_SERVER])(
     'blocks embedded objects and framing without development allowances in %s',
     async (phase) => {

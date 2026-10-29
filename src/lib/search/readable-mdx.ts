@@ -63,6 +63,18 @@ const skippedNodes = new Set([
   'mdxjsEsm', 'mdxFlowExpression', 'mdxTextExpression', 'html', 'definition', 'code',
 ])
 
+function literalExpressionValue(attributeValue: unknown): unknown {
+  if (!attributeValue || typeof attributeValue !== 'object') return undefined
+  const value = attributeValue as {
+    type?: string
+    data?: { estree?: { body?: { type?: string; expression?: { type?: string; value?: unknown } }[] } }
+  }
+  const statements = value.data?.estree?.body
+  if (value.type !== 'mdxJsxAttributeValueExpression' || statements?.length !== 1 || statements[0].type !== 'ExpressionStatement') return undefined
+  const expression = statements[0].expression
+  return expression?.type === 'Literal' ? expression.value : undefined
+}
+
 function hidesContent(attribute: NonNullable<ContentNode['attributes']>[number]): boolean {
   if (attribute.name !== 'hidden' && attribute.name !== 'aria-hidden') return false
   if (attribute.value === false) return false
@@ -70,21 +82,11 @@ function hidesContent(attribute: NonNullable<ContentNode['attributes']>[number])
     // HTML hidden="false" still hides; aria-hidden="false" does not.
     return attribute.name === 'hidden' || attribute.value.trim().toLowerCase() !== 'false'
   }
-  if (attribute.value && typeof attribute.value === 'object') {
-    const value = attribute.value as {
-      type?: string
-      data?: { estree?: { body?: { type?: string; expression?: { type?: string; value?: unknown } }[] } }
-    }
-    const statements = value.data?.estree?.body
-    const expression = statements?.length === 1 && statements[0].type === 'ExpressionStatement' ? statements[0].expression : undefined
-    if (value.type === 'mdxJsxAttributeValueExpression' && expression?.type === 'Literal') {
-      if (expression.value === false) return false
-      if (attribute.name === 'aria-hidden' && expression.value === 'false') return false
-    }
-  }
+  const literal = literalExpressionValue(attribute.value)
+  if (literal === false) return false
   // Boolean attributes and dynamic visibility expressions stay out of the index.
   // Reading a literal AST node is safe; compiled JavaScript is never evaluated.
-  return true
+  return attribute.name !== 'aria-hidden' || literal !== 'false'
 }
 
 function isExcluded(node: ContentNode): boolean {
@@ -112,6 +114,18 @@ function isElement(node: ContentNode, markdownType: string, htmlName: string): b
   return node.type === markdownType || node.name === htmlName
 }
 
+function headingDepth(node: ContentNode): number | undefined {
+  if (node.type === 'heading') return node.depth
+  if (/^h[1-6]$/.test(node.name ?? '')) return Number(node.name!.slice(1))
+  return undefined
+}
+
+function blockGranularity(kind: Candidate['kind']): MdxContentBlock['granularity'] {
+  if (kind === 'heading') return 'section'
+  if (kind === 'row') return 'row'
+  return 'block'
+}
+
 function headingAncestors(heading?: Heading): Heading[] {
   return heading ? [...headingAncestors(heading.parent), heading] : []
 }
@@ -127,9 +141,21 @@ function setAttributes(node: ContentNode, attributes: Record<string, unknown>) {
   }
 }
 
-/** Comments are neither rendered nor indexed. The shared transform never evaluates MDX. */
+/**
+ * Preprocess repository-authored MDX from src/content/blog for extraction and rendering.
+ * Reconstructed comments can require repeated scans; this is not a general HTML
+ * sanitizer and does not make arbitrary untrusted MDX safe to execute.
+ */
 export function prepareMdxSource(source: string): string {
-  return source.replace(/<!--[\s\S]*?-->/g, '')
+  let prepared = source
+  let previous: string
+  // Every changed pass removes a nonempty complete comment, strictly shortening
+  // the string. Incomplete comments remain unchanged for the MDX parser to handle.
+  do {
+    previous = prepared
+    prepared = prepared.replace(/<!--[\s\S]*?-->/g, '')
+  } while (prepared !== previous)
+  return prepared
 }
 
 /** Both extraction and MDXRemote use this transform, so every indexed ID is rendered. */
@@ -144,46 +170,50 @@ export function remarkContentDestinations(options: {
     const candidates: Candidate[] = []
     const disclosureIds = new Set<string>()
 
+    function visitHeading(node: ContentNode, text: string, depth: number, context: WalkContext): void {
+      while (context.headings.at(-1) && context.headings.at(-1)!.depth >= depth) context.headings.pop()
+      const heading: Heading = { node, text, depth, parent: context.headings.at(-1), scopes: context.scopes }
+      headings.push(heading)
+      candidates.push({ node, kind: 'heading', text, heading, parent: heading.parent, scopes: context.scopes, disclosureIds: context.disclosureIds })
+      context.headings.push(heading)
+    }
+
+    function visitDisclosure(node: ContentNode, context: WalkContext): void {
+      const id = literalAttribute(node, 'id')
+      if (!id || !/^[a-zA-Z][\w-]*$/.test(id)) throw new Error('Searchable MDX disclosures require an explicit, stable id.')
+      if (disclosureIds.has(id)) throw new Error(`Duplicate MDX disclosure id: ${id}`)
+      disclosureIds.add(id)
+      // Explicit JSX names otherwise bypass the MDX intrinsic component mapping.
+      if (node.name === 'details') node.name = 'ContentDetails'
+      const nested = { ...context, headings: [...context.headings], scopes: [...context.scopes, id], disclosureIds: [...context.disclosureIds, id] }
+      node.children?.forEach(child => visit(child, nested))
+    }
+
+    function visitTable(node: ContentNode, context: WalkContext): void {
+      const rows = (node.children ?? []).flatMap(child => ['thead', 'tbody', 'tfoot'].includes(child.name ?? '') ? child.children ?? [] : [child])
+        .filter(child => isElement(child, 'tableRow', 'tr'))
+      const columns = rows[0]?.children?.map(readableText) ?? []
+      const tableScope = literalAttribute(node, 'id') ?? contentId('table', ...columns)
+      rows.slice(1).forEach(row => {
+        const rowText = readableText(row)
+        if (rowText) candidates.push({ node: row, kind: 'row', text: rowText, parent: context.headings.at(-1), scopes: [...context.scopes, tableScope], disclosureIds: context.disclosureIds, cells: row.children, columns })
+      })
+    }
+
+    function visitListItem(node: ContentNode, context: WalkContext): void {
+      const ownText = (node.children ?? []).filter(child => !['list', 'ul', 'ol'].includes(child.type) && !['ul', 'ol'].includes(child.name ?? '')).map(readableText).filter(Boolean).join(' ')
+      if (ownText) candidates.push({ node, kind: 'item', text: ownText, parent: context.headings.at(-1), scopes: context.scopes, disclosureIds: context.disclosureIds })
+      node.children?.forEach(child => visit(child, { ...context, inListItem: true }))
+    }
+
     function visit(node: ContentNode, context: WalkContext): void {
       if (isExcluded(node)) return
       const text = readableText(node)
-      const depth = node.type === 'heading' ? node.depth : /^h[1-6]$/.test(node.name ?? '') ? Number(node.name?.slice(1)) : undefined
-      if (depth && text) {
-        while (context.headings.at(-1) && context.headings.at(-1)!.depth >= depth) context.headings.pop()
-        const heading: Heading = { node, text, depth, parent: context.headings.at(-1), scopes: context.scopes }
-        headings.push(heading)
-        candidates.push({ node, kind: 'heading', text, heading, parent: heading.parent, scopes: context.scopes, disclosureIds: context.disclosureIds })
-        context.headings.push(heading)
-        return
-      }
-      if (['details', 'ContentDetails', 'DisclosurePanel'].includes(node.name ?? '')) {
-        const id = literalAttribute(node, 'id')
-        if (!id || !/^[a-zA-Z][\w-]*$/.test(id)) throw new Error('Searchable MDX disclosures require an explicit, stable id.')
-        if (disclosureIds.has(id)) throw new Error(`Duplicate MDX disclosure id: ${id}`)
-        disclosureIds.add(id)
-        // Explicit JSX names otherwise bypass the MDX intrinsic component mapping.
-        if (node.name === 'details') node.name = 'ContentDetails'
-        const nested = { ...context, headings: [...context.headings], scopes: [...context.scopes, id], disclosureIds: [...context.disclosureIds, id] }
-        node.children?.forEach(child => visit(child, nested))
-        return
-      }
-      if (isElement(node, 'table', 'table')) {
-        const rows = (node.children ?? []).flatMap(child => ['thead', 'tbody', 'tfoot'].includes(child.name ?? '') ? child.children ?? [] : [child])
-          .filter(child => isElement(child, 'tableRow', 'tr'))
-        const columns = rows[0]?.children?.map(readableText) ?? []
-        const tableScope = literalAttribute(node, 'id') ?? contentId('table', ...columns)
-        rows.slice(1).forEach(row => {
-          const rowText = readableText(row)
-          if (rowText) candidates.push({ node: row, kind: 'row', text: rowText, parent: context.headings.at(-1), scopes: [...context.scopes, tableScope], disclosureIds: context.disclosureIds, cells: row.children, columns })
-        })
-        return
-      }
-      if (isElement(node, 'listItem', 'li')) {
-        const ownText = (node.children ?? []).filter(child => !['list', 'ul', 'ol'].includes(child.type) && !['ul', 'ol'].includes(child.name ?? '')).map(readableText).filter(Boolean).join(' ')
-        if (ownText) candidates.push({ node, kind: 'item', text: ownText, parent: context.headings.at(-1), scopes: context.scopes, disclosureIds: context.disclosureIds })
-        node.children?.forEach(child => visit(child, { ...context, inListItem: true }))
-        return
-      }
+      const depth = headingDepth(node)
+      if (depth && text) return visitHeading(node, text, depth, context)
+      if (['details', 'ContentDetails', 'DisclosurePanel'].includes(node.name ?? '')) return visitDisclosure(node, context)
+      if (isElement(node, 'table', 'table')) return visitTable(node, context)
+      if (isElement(node, 'listItem', 'li')) return visitListItem(node, context)
       if (isElement(node, 'paragraph', 'p')) {
         if (text && !context.inListItem) candidates.push({ node, kind: 'paragraph', text, parent: context.headings.at(-1), scopes: context.scopes, disclosureIds: context.disclosureIds })
         return
@@ -209,7 +239,9 @@ export function remarkContentDestinations(options: {
       const parentAnchor = candidate.parent ? headingAnchor(candidate.parent) : undefined
       const anchor = candidate.heading ? headingAnchor(candidate.heading) : literalAttribute(candidate.node, 'id') ?? contentId('article', candidate.kind, parentAnchor ?? 'intro', ...candidate.scopes, contentFingerprint(candidate.text))
       // Local titles do not make every paragraph match its containing heading.
-      const title = candidate.kind === 'row' ? readableText(candidate.cells?.[0] ?? candidate.node) : candidate.text.slice(0, 100)
+      // A row is registered only when its child cells produce nonempty text,
+      // so it necessarily has a first cell; no alternate row-node title exists.
+      const title = candidate.kind === 'row' ? readableText(candidate.cells![0]) : candidate.text.slice(0, 100)
       const ancestors = headingAncestors(candidate.parent).map(item => item.text)
       const label = [options.articleTitle, ...ancestors, title].filter(Boolean).join(' › ')
       const destination: ContentDestination = { page: options.page, anchor, label, disclosureIds: [...candidate.disclosureIds], ...(parentAnchor ? { fallbackAnchor: parentAnchor } : {}) }
@@ -223,7 +255,7 @@ export function remarkContentDestinations(options: {
         destinations.push(cellDestination)
         return { text: cellText, destination: cellDestination }
       })
-      return { granularity: candidate.kind === 'heading' ? 'section' : candidate.kind === 'row' ? 'row' : 'block', destination, title, text: candidate.text, context: [...ancestors, ...(candidate.columns ?? [])].join(' · '), ...(cells ? { cells } : {}) }
+      return { granularity: blockGranularity(candidate.kind), destination, title, text: candidate.text, context: [...ancestors, ...(candidate.columns ?? [])].join(' · '), ...(cells ? { cells } : {}) }
     })
     assertUniqueDestinations(destinations)
     if (destinations.some(destination => disclosureIds.has(destination.anchor))) throw new Error('MDX disclosure id duplicates a content destination.')

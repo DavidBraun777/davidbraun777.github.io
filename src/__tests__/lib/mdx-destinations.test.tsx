@@ -21,6 +21,108 @@ async function renderMdx(source: string, articleTitle?: string) {
 }
 
 describe('MDX content destinations', () => {
+  test('reconstructed comments leave extraction, rendering and disclosure table destinations identical to clean MDX', async () => {
+    const clean = [
+      '## Retrieval comparison', '',
+      '<ContentDetails id="retrieval-notes">', '<summary>Method notes</summary>', '',
+      '| Method | Comparison |', '| --- | --- |', '| BM25 | Lexical relevance |', '',
+      '</ContentDetails>',
+    ].join('\n')
+    const authored = clean.replace('| Method |', '<<<<!-- removed -->!-- removed -->!-- removed -->!-- hidden sentinel -->\n\n| Method |')
+    const [expected, content, cleanRendered, rendered] = await Promise.all([
+      extractReadableMdx(clean, page, 'Retrieval experiments'),
+      extractReadableMdx(authored, page, 'Retrieval experiments'),
+      renderMdx(clean, 'Retrieval experiments'),
+      renderMdx(authored, 'Retrieval experiments'),
+    ])
+    expect(content).toEqual(expected)
+    expect(content.body).toBe('Retrieval comparison Method notes Method Comparison BM25 Lexical relevance')
+    expect(JSON.stringify(content)).not.toContain('sentinel')
+    expect(rendered.innerHTML).not.toContain('sentinel')
+    expect(rendered.textContent).toBe(cleanRendered.textContent)
+
+    const heading = content.blocks.find(block => block.granularity === 'section')!
+    const row = content.blocks.find(block => block.granularity === 'row')!
+    expect(heading.title).toBe('Retrieval comparison')
+    expect(row.title).toBe('BM25')
+    expect(row.destination.disclosureIds).toEqual(['retrieval-notes'])
+    expect(row.cells?.map(cell => cell.text)).toEqual(['BM25', 'Lexical relevance'])
+    const targets = [
+      { destination: heading.destination, tag: 'H2', text: heading.text },
+      { destination: row.destination, tag: 'TR', text: 'BM25Lexical relevance' },
+      ...row.cells!.map(cell => ({ destination: cell.destination, tag: 'TD', text: cell.text })),
+    ]
+    expect(content.destinations).toEqual(targets.map(target => target.destination))
+    for (const { destination, tag, text } of targets) {
+      const matches = rendered.querySelectorAll(`[id="${destination.anchor}"]`)
+      expect(matches).toHaveLength(1)
+      expect(matches[0].tagName).toBe(tag)
+      expect(matches[0].textContent).toBe(text)
+      expect(matches[0].getAttribute('data-content-label')).toBe(destination.label)
+      expect(matches[0].getAttribute('tabindex')).toBe('-1')
+      if (destination.disclosureIds.length) expect(matches[0].closest('details')?.id).toBe('retrieval-notes')
+    }
+  })
+
+  test.each(['<!-- unfinished', '<!-- unfinished --!>', '<!- unfinished'])(
+    'retains parser rejection of malformed authored input: %s', async source => {
+      expect(prepareMdxSource(source)).toBe(source)
+      await expect(extractReadableMdx(source, page)).rejects.toThrow(/Unexpected character/)
+      await expect(renderMdx(source)).rejects.toThrow(/Unexpected character/)
+    }
+  )
+
+  test('preserves stray closing delimiters as accepted public text', async () => {
+    const source = 'Before --> after.'
+    expect((await extractReadableMdx(source, page)).body).toBe(source)
+    expect((await renderMdx(source)).textContent).toBe(source)
+  })
+
+  test('handles authored JSX headings, registered components, empty containers and explicit table cells', async () => {
+    const source = [
+      '<div id="scoped">', '<h2 id="jsx-heading">JSX heading</h2>', '<p>Scoped public prose.</p>', '</div>', '',
+      '<ContentDetails id="component-disclosure">', '<summary>Component detail</summary>', '<p>Component content.</p>', '</ContentDetails>', '',
+      '<table id="jsx-table"><thead><tr><th>Method</th><th></th></tr></thead><tbody><tr><td id="custom-cell">BM25</td><td>Lexical</td></tr><tr></tr></tbody><tfoot /></table>', '',
+      '<table />', '<ul><li /></ul>', '', '<p aria-hidden={"false"}>Visible literal string.</p>', '',
+      '<>Fragment text.</>', '', 'Line with a break.  ', 'Next line.',
+    ].join('\n')
+    const content = await extractReadableMdx(source, page)
+    expect(content.headings).toEqual(['JSX heading'])
+    const row = content.blocks.find(block => block.title === 'BM25')!
+    expect(row.cells?.[0].destination.anchor).toBe('custom-cell')
+    expect(row.cells?.[1].destination.label).toContain('Lexical')
+    expect(content.blocks.find(block => block.text === 'Component content.')?.destination.disclosureIds).toEqual(['component-disclosure'])
+    expect(content.body).toContain('Visible literal string.')
+    const rendered = await renderMdx(source)
+    expect(rendered.querySelector('#jsx-heading')?.tagName).toBe('H2')
+    expect(rendered.querySelector('#custom-cell')?.textContent).toBe('BM25')
+  })
+
+  test('fails when a disclosure and a content target claim the same explicit ID', async () => {
+    await expect(extractReadableMdx('<details id="same"><summary>More</summary><p id="same">Public detail.</p></details>', page)).rejects.toThrow('MDX disclosure id duplicates a content destination')
+  })
+
+  test('handles sparse extension AST nodes without exposing ambiguous hidden content', () => {
+    type Node = Parameters<ReturnType<typeof remarkContentDestinations>>[0]
+    const text = (value: string): Node => ({ type: 'text', value })
+    const visible: Node = { type: 'mdxJsxFlowElement', name: 'p', children: [text('Visible extension paragraph.')] }
+    const tree: Node = { type: 'root', children: [
+      { type: 'text' }, { type: 'inlineCode' }, { type: 'image' },
+      { type: 'mdxJsxFlowElement', children: [text('Anonymous fragment.')] },
+      visible,
+      { type: 'mdxJsxFlowElement', name: 'p', attributes: [{ type: 'mdxJsxAttribute', name: 'hidden', value: false }], children: [text('Explicit visible boolean.')] },
+      { type: 'mdxJsxFlowElement', name: 'p', attributes: [{ type: 'mdxJsxAttribute', name: 'hidden', value: {} }], children: [text('hidden-sentinel')] },
+      { type: 'mdxJsxFlowElement', name: 'p', attributes: [{ type: 'mdxJsxAttribute', name: 'aria-hidden', value: { type: 'mdxJsxAttributeValueExpression', data: { estree: { body: [{ type: 'EmptyStatement' }] } } } }], children: [text('ambiguous-sentinel')] },
+      { type: 'listItem' }, { type: 'table' },
+      { type: 'table', children: [{ type: 'mdxJsxFlowElement', name: 'thead' }] },
+    ] }
+    let collected: Awaited<ReturnType<typeof extractReadableMdx>> | undefined
+    remarkContentDestinations({ page, collect: content => { collected = content } })(tree)
+    expect(collected?.body).toBe('Anonymous fragment. Visible extension paragraph. Explicit visible boolean.')
+    expect(collected?.blocks.map(block => block.text)).toEqual(['Visible extension paragraph.', 'Explicit visible boolean.'])
+    expect(visible.attributes?.some(attribute => attribute.name === 'id')).toBe(true)
+    expect(JSON.stringify(collected)).not.toContain('sentinel')
+  })
   test('renders every published article target as a focusable element using the shared transform', async () => {
     for (const post of getAllPosts()) {
       const source = getPostBySlug(post.slug)!.content

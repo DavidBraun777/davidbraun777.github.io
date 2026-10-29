@@ -206,6 +206,18 @@ describe('distributed production rate limiting', () => {
 })
 
 describe('development and test fallback', () => {
+  it('prunes expired local identities if an empty identity has allowed overflow', async () => {
+    vi.stubEnv('NODE_ENV', 'test')
+    vi.stubEnv('UPSTASH_REDIS_REST_URL', '')
+    // The exported API accepts an empty string as an identity. It can become
+    // the oldest key, so exercise overflow cleanup without accessing module state.
+    await checkRateLimit('')
+    for (let index = 0; index < 10_000; index++) await checkRateLimit(`client-${index}`)
+    await expect(checkRateLimit('client-0')).resolves.toEqual({ limited: false, remaining: 3 })
+    vi.advanceTimersByTime(60_001)
+    await expect(checkRateLimit('new-client')).resolves.toEqual({ limited: false, remaining: 4 })
+    await expect(checkRateLimit('client-0')).resolves.toEqual({ limited: false, remaining: 4 })
+  })
   it.each(['development', 'test'])('allows bounded local requests without Redis in %s', async (environment) => {
     vi.stubEnv('NODE_ENV', environment)
     vi.stubEnv('UPSTASH_REDIS_REST_URL', '')

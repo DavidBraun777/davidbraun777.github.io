@@ -5,8 +5,20 @@ import { describe, expect, test } from 'vitest'
 import CaseStudyDetailPage from '@/app/case-studies/[slug]/page'
 import { allSystems } from '@/data/systems'
 import { createProjectContent, projectContentRecords } from '@/lib/search/project-destinations'
+import { assertUniqueDestinations } from '@/lib/search/destinations'
 
 describe('case-study search destinations', () => {
+  test('supports both public proof types, story details without imagery, and rejects invalid target lookups', () => {
+    const production = { ...allSystems[0], githubUrl: 'https://github.com/example/project', externalUrl: 'https://example.com/' }
+    expect(projectContentRecords(production).find(record => record.title === 'Public Repository and Live Proof')).toBeDefined()
+    const system = allSystems.find(item => item.id === 'time2move')!
+    const content = createProjectContent({ ...system, story: { ...system.story!, illustration: undefined, technicalDetails: [{ title: 'Integration', paragraphs: ['Initial summary.', 'A second detail paragraph.'] }] } })
+    expect(content.records.some(record => record.title === 'Local form feedback capture')).toBe(false)
+    const technical = content.records.find(record => record.title === 'Integration')!
+    expect(technical.destination?.disclosureIds).toEqual([technical.destination?.anchor])
+    expect(() => content.get('nonexistent-target')).toThrow('Missing project destination')
+    expect(() => assertUniqueDestinations([{ page: '/example', anchor: 'invalid anchor', label: 'Example', disclosureIds: [] }])).toThrow('Invalid content anchor')
+  })
   test('renders every indexed target once, with its declared disclosure ancestors', async () => {
     for (const system of allSystems) {
       const content = createProjectContent(system)
