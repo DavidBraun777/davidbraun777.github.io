@@ -15,12 +15,9 @@ export interface CaseStudyStory {
   overview: string[]
   atAGlance: { label: string; value: string }[]
   capabilities: CaseStudyStoryBlock[]
-  architecture: {
-    intro: string
-    flows: { title: string; steps: string[]; boundary: string }[]
-  }
-  workflows: CaseStudyStoryBlock[]
-  tradeoffs: CaseStudyStoryBlock[]
+  decision: string[]
+  stoppingPoint: string[]
+  reflection: string[]
   technicalDetails: CaseStudyStoryBlock[]
   audit: {
     date: string

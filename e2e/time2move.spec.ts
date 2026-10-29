@@ -1,13 +1,12 @@
 import { expect, test } from '@playwright/test'
 import AxeBuilder from '@axe-core/playwright'
 
-const title = 'Time2Move: Real Estate Website & Inquiry Workflows'
+const title = 'Time2Move: Real Estate Lead & CRM Workflows'
 const path = '/case-studies/time2move'
 const successorLabel = 'Current business website — Hombuzz'
 const expectedHeadings = [
-  'Overview', 'What I built', 'Architecture', 'Workflow stories',
-  'Engineering decisions and tradeoffs', 'Technical details',
-  'Verification and limitations', 'Project continuation',
+  'The goal', 'What I built', 'One engineering decision',
+  'Where the work stopped', 'What I carry forward', 'Project continuation',
 ]
 
 test.describe('Time2Move historical case study', () => {
@@ -27,7 +26,7 @@ test.describe('Time2Move historical case study', () => {
     await expect(page).toHaveURL(new RegExp(`${path}$`))
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(title)
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', `https://dbraun.io${path}`)
-    await expect(page.locator('main')).toContainText('Past client project · Continued independently')
+    await expect(page.locator('main')).toContainText('Past client project · Implementation paused')
     await expect(page.getByRole('heading', { name: 'Live Proof', exact: true })).toHaveCount(0)
     await expect(page.getByRole('heading', { name: 'Quantified Outcomes', exact: true })).toHaveCount(0)
     await expect(page.getByRole('link', { name: successorLabel, exact: true })).toHaveAttribute('rel', 'noopener noreferrer')
@@ -42,7 +41,7 @@ test.describe('Time2Move historical case study', () => {
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(title)
   })
 
-  test('keeps the narrative, diagram, disclosure and image accessible on desktop and mobile in both themes', async ({ page }) => {
+  test('keeps the concise narrative and optional evidence accessible on desktop and mobile in both themes', async ({ page }) => {
     for (const colorScheme of ['light', 'dark'] as const) {
       for (const width of [1440, 390]) {
         await page.setViewportSize({ width, height: 900 })
@@ -56,10 +55,10 @@ test.describe('Time2Move historical case study', () => {
           expect(currentIndex, heading).toBeGreaterThan(previousIndex)
           previousIndex = currentIndex
         }
-        const architecture = page.locator('section').filter({ has: page.getByRole('heading', { level: 2, name: 'Architecture', exact: true }) })
-        await expect(architecture).toContainText('IDX')
-        await expect(architecture).toContainText('Follow Up Boss')
-        expect(await architecture.locator('ol').count()).toBeGreaterThan(0)
+        const evidence = page.locator('#content-technical-details')
+        await expect(evidence).not.toHaveAttribute('open')
+        await expect(page.locator('#content-verification')).not.toBeVisible()
+        await expect(page.locator('main figure')).not.toBeVisible()
         expect(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1)).toBe(false)
 
         const summaries = page.locator('main details > summary')
@@ -69,6 +68,7 @@ test.describe('Time2Move historical case study', () => {
           await page.keyboard.press('Enter')
           await expect(summary.locator('..')).toHaveAttribute('open', '')
         }
+        await expect(page.locator('#content-verification')).toBeVisible()
         const illustration = page.locator('main figure')
         await expect(illustration).toBeVisible()
         const image = illustration.getByRole('img')
@@ -120,8 +120,24 @@ test.describe('Time2Move historical case study', () => {
       const hrefs = await results.evaluateAll(links => links.map(link => link.getAttribute('href')))
       expect(new Set(hrefs).size).toBe(hrefs.length)
     }
-    await dialog.locator(`a[href="${path}"], a[href^="${path}#"]`).first().click()
+    const selectedResult = dialog.locator(`a[href="${path}"], a[href^="${path}#"]`).first()
+    const selectedHref = await selectedResult.getAttribute('href')
+    await selectedResult.click()
     await expect(dialog).toBeHidden()
+    await expect(page).toHaveURL(url => `${url.pathname}${url.hash}` === selectedHref)
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(title)
+
+    // The retained evidence link now needs both enclosing disclosures to open.
+    await page.goto(`${path}#content-illustration`)
+    await expect(page.locator('#content-technical-details')).toHaveAttribute('open', '')
+    const capture = page.locator('#content-illustration')
+    await expect(capture).toHaveAttribute('open', '')
+    await expect(capture).toBeFocused()
+    await expect(capture.getByRole('img')).toBeVisible()
+    await expect.poll(() => capture.evaluate(element => {
+      const top = element.getBoundingClientRect().top
+      const headerBottom = document.querySelector('body header')!.getBoundingClientRect().bottom
+      return top >= headerBottom && top < innerHeight
+    })).toBe(true)
   })
 })

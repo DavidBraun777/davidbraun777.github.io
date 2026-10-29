@@ -65,11 +65,12 @@ function createProjectRegistry(system: FeaturedSystemCaseStudy) {
     records.push(record)
     return record
   }
-  const section = (key: string, title: string, body = '') => add([key], title, body, '', 'section')
-  const blocks = (group: string, label: string, items: CaseStudyStoryBlock[], disclosures = false) => {
+  const section = (key: string, title: string, body = '', disclosureIds: string[] = []) => add([key], title, body, '', 'section', disclosureIds)
+  const blocks = (group: string, label: string, items: CaseStudyStoryBlock[], disclosures = false, parentDisclosureIds: string[] = []) => {
     items.forEach(block => {
       const keys = [group, projectBlockKey(block.title, block.paragraphs.join(' '))]
-      add(keys, block.title, block.paragraphs.join(' '), label, 'block', disclosures && block.paragraphs.length > 1 ? [contentId(...keys)] : [])
+      const disclosureIds = disclosures && block.paragraphs.length > 1 ? [...parentDisclosureIds, contentId(...keys)] : parentDisclosureIds
+      add(keys, block.title, block.paragraphs.join(' '), label, 'block', disclosureIds)
     })
   }
 
@@ -80,28 +81,25 @@ type ProjectRegistry = ReturnType<typeof createProjectRegistry>
 
 function registerStoryContent(system: FeaturedSystemCaseStudy, story: NonNullable<FeaturedSystemCaseStudy['story']>, registry: ProjectRegistry) {
   const { add, section, blocks } = registry
-  section('overview', 'Overview', story.overview.join(' '))
-  add(['scope'], 'Scope of this account', story.scopeNote, 'Overview')
+  section('overview', 'The goal', story.overview.join(' '))
   section('capabilities', 'What I built')
   blocks('capability', 'What I built', story.capabilities)
-  section('architecture', 'Architecture', story.architecture.intro)
-  story.architecture.flows.forEach(flow => {
-    add(['flow', projectBlockKey(flow.title, flow.steps.join(' '))], flow.title, text(...flow.steps, flow.boundary), 'Architecture')
-  })
-  section('workflows', 'Workflow stories')
-  blocks('workflow', 'Workflow stories', story.workflows)
-  section('tradeoffs', 'Engineering decisions and tradeoffs')
-  blocks('tradeoff', 'Engineering decisions and tradeoffs', story.tradeoffs)
-  section('technical-details', 'Technical details', system.stack.join(' '))
-  blocks('technical', 'Technical details', story.technicalDetails, true)
+  section('workflows', 'One engineering decision', story.decision.join(' '))
+  section('stopping-point', 'Where the work stopped', story.stoppingPoint.join(' '))
+  section('tradeoffs', 'What I carry forward', story.reflection.join(' '))
+  add(['scope'], 'Evidence and status', story.scopeNote)
+  const technicalDisclosureIds = [contentId('technical-details')]
+  section('technical-details', 'Technical evidence (optional)', text('Implementation notes, recorded local checks, and original project evidence.', ...system.stack), technicalDisclosureIds)
+  section('architecture', 'Implementation notes', '', technicalDisclosureIds)
+  blocks('technical', 'Implementation notes', story.technicalDetails, true, technicalDisclosureIds)
   if (story.illustration) {
     const keys = ['illustration']
-    add(keys, 'Local form feedback capture', story.illustration.caption, 'Technical details', 'block', [contentId(...keys)])
+    add(keys, 'Local form feedback capture', story.illustration.caption, 'Technical evidence (optional)', 'block', [...technicalDisclosureIds, contentId(...keys)])
   }
-  section('verification', 'Verification and limitations')
-  add(['audit'], 'Recorded local audit', text(story.audit.date, story.audit.snapshot), 'Verification and limitations')
-  story.audit.checks.forEach(check => add(['audit-check', projectBlockKey(check.label, check.detail)], check.label, text(check.result, check.detail), 'Recorded local audit'))
-  add(['limitations'], 'Remaining gaps', text(...story.audit.limitations, story.audit.lesson), 'Verification and limitations')
+  section('verification', 'Verification and limitations', '', technicalDisclosureIds)
+  add(['audit'], 'Recorded local audit', text(story.audit.date, story.audit.snapshot), 'Verification and limitations', 'block', technicalDisclosureIds)
+  story.audit.checks.forEach(check => add(['audit-check', projectBlockKey(check.label, check.detail)], check.label, text(check.result, check.detail), 'Recorded local audit', 'block', technicalDisclosureIds))
+  add(['limitations'], 'Remaining gaps', text(...story.audit.limitations, story.audit.lesson), 'Verification and limitations', 'block', technicalDisclosureIds)
 }
 
 function registerRetrievalContent(ladder: NonNullable<FeaturedSystemCaseStudy['retrievalCapabilityLadder']>, registry: ProjectRegistry) {

@@ -15,7 +15,7 @@ describe('case-study search destinations', () => {
     const content = createProjectContent({ ...system, story: { ...system.story!, illustration: undefined, technicalDetails: [{ title: 'Integration', paragraphs: ['Initial summary.', 'A second detail paragraph.'] }] } })
     expect(content.records.some(record => record.title === 'Local form feedback capture')).toBe(false)
     const technical = content.records.find(record => record.title === 'Integration')!
-    expect(technical.destination?.disclosureIds).toEqual([technical.destination?.anchor])
+    expect(technical.destination?.disclosureIds).toEqual(['content-technical-details', technical.destination?.anchor])
     expect(() => content.get('nonexistent-target')).toThrow('Missing project destination')
     expect(() => assertUniqueDestinations([{ page: '/example', anchor: 'invalid anchor', label: 'Example', disclosureIds: [] }])).toThrow('Invalid content anchor')
   })

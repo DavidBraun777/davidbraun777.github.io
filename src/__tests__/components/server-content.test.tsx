@@ -62,8 +62,11 @@ describe('public content components', () => {
     const story = { ...original.story!, illustration: undefined, technicalDetails: [{ title: 'Integration details', paragraphs: ['Visible summary.', 'Specific delivery boundary.'] }] }
     const system = { ...original, story }
     const page = render(<CaseStudyStoryContent story={story} stack={system.stack} content={createProjectContent(system)} />)
-    expect(page.querySelector('details summary')?.textContent).toContain('Visible summary.')
-    expect(page.querySelector('details')?.textContent).toContain('Specific delivery boundary.')
+    const evidence = page.querySelector('#content-technical-details')!
+    expect(evidence.hasAttribute('open')).toBe(false)
+    const technical = evidence.querySelector('details')!
+    expect(technical.querySelector('summary')?.textContent).toContain('Visible summary.')
+    expect(technical.textContent).toContain('Specific delivery boundary.')
     expect(page.querySelector('figure')).toBeNull()
     expect(page.textContent).toContain(story.scopeNote)
   })
