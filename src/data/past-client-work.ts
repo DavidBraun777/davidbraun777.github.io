@@ -9,9 +9,9 @@ export const time2Move = {
   name: 'Time2Move',
   displayTitle: 'Time2Move: Real Estate Automation & AI Development',
   summary:
-    'As sole developer, I designed and built the original Time2Move application for Dustin Marmon, connecting customer-facing tools, a shared inquiry backend and external services. Product AI capabilities remained unfinished when the engagement ended.',
+    'Through People’s Connection LLC, I designed and built the original Time2Move application and integrations for Dustin Marmon. Product AI capabilities remained unfinished when the engagement ended.',
   positioning:
-    'I designed and built the original Time2Move application for Dustin Marmon. The goal was to connect a real estate customer experience with business workflows: helping visitors explore properties, understand their options, and submit inquiries with useful context for follow-up. The broader plan included AI-assisted customer support, content, and website improvement.',
+    'Through People’s Connection LLC, I designed and built the original Time2Move application and integrations for Dustin Marmon. The goal was to connect a real estate customer experience with business workflows: helping visitors explore properties, understand their options, and submit inquiries with useful context for follow-up. The broader plan included AI-assisted customer support, content, and website improvement.',
   contextLabel: 'Past client project',
   caseStudyStage: 'Historical',
   currentState: 'Past client project · Engagement concluded',

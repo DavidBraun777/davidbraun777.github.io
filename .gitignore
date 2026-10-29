@@ -62,3 +62,6 @@ test-results/
 # macOS system junk
 Library/
 Caches/
+
+# Private reference packet; approved visuals/fixtures are adapted explicitly.
+/Time2Move info/

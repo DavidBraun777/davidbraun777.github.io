@@ -86,7 +86,13 @@ The current project evidence remains deliberately classified:
   registry with stage `Historical`, outside featured/current production proof.
   Its optional `story` supplies the concise public narrative, with explicit section
   IDs shared by rendering and search. It contains no audit appendix, evidence
-  disclosure or screenshot. `successorLink` labels
+  disclosure or screenshot. The public architecture overview and optional review-data
+  pipeline show the historical implementation. The optional AI lesson is explicitly
+  an illustrative extension with synthetic, precomputed proposals and local validation;
+  it makes no model or CRM calls. The `Time2Move info/` reference packet is ignored
+  by Git, lint and TypeScript; do not import it or publish its review documents.
+  Only approved diagram content and synthetic fixtures are adapted into `src/`.
+  `successorLink` labels
   Hombuzz as the current business website without routing it through "Live Proof."
   Keep the original engagement named Time2Move and preserve dated audit findings.
 
@@ -349,6 +355,12 @@ through an explicit adapter in the builder. Table targets use semantic row heade
 and `data-content-table` on the horizontal overflow wrapper. Validate every declared
 anchor against rendered output. Historical entries follow the same path and retain
 their clearly labeled successor context.
+
+Time2Move's optional sections share semantic keys in `time2move-extras.ts` with the
+case-study registry. Its graph data supplies both diagrams and public search text.
+The lesson indexes its static teaching copy, not inactive example selections; its
+disclosure opens through the existing navigation controller. Keep supplied fixture
+expectations separate from the locally computed validation results.
 
 The existing scroll controller owns fragment navigation through
 `src/lib/content-navigation.ts`. Search records intent before closing the dialog;

@@ -1,0 +1,69 @@
+{
+  "label": "Illustrative AI design walkthrough — precomputed examples, no model or CRM calls",
+  "cases": [
+    {
+      "id": "clear",
+      "title": "Clear intent",
+      "input": "I want to sell my house and speak with someone about the next steps.",
+      "proposal": {
+        "intent": "seller",
+        "summary": "Interested in selling and requesting guidance.",
+        "evidence": [
+          "sell my house",
+          "speak with someone"
+        ],
+        "needs_review": true
+      },
+      "expected_checks": {
+        "schema": "pass",
+        "evidence_presence": "pass",
+        "semantic_review": "human review required"
+      },
+      "outcome": "Ready for human review; no automatic submission"
+    },
+    {
+      "id": "ambiguous",
+      "title": "Needs clarification",
+      "input": "I need help with a property. What should I do next?",
+      "proposal": {
+        "intent": "unknown",
+        "summary": "The requested type of help is not specified.",
+        "evidence": [],
+        "needs_review": true
+      },
+      "expected_checks": {
+        "schema": "pass",
+        "evidence_presence": "pass",
+        "semantic_review": "clarification required"
+      },
+      "outcome": "Ask whether the visitor wants to buy, sell, or discuss another service"
+    },
+    {
+      "id": "unsupported",
+      "title": "Unsupported detail",
+      "input": "I want to sell my house and speak with someone about the next steps.",
+      "proposal": {
+        "intent": "seller",
+        "summary": "Interested in selling a house for $500,000.",
+        "evidence": [
+          "sell my house",
+          "budget of $500,000"
+        ],
+        "needs_review": true
+      },
+      "expected_checks": {
+        "schema": "pass",
+        "evidence_presence": "fail",
+        "semantic_review": "unsupported factual detail"
+      },
+      "outcome": "Reject the proposal and request a corrected interpretation"
+    }
+  ],
+  "constraints": [
+    "Only intent, summary, evidence, and needs_review are allowed output fields.",
+    "Consent, contact identity, source attribution, and explicit user selections remain outside model control.",
+    "An exact evidence substring match is a limited check; it does not establish semantic correctness.",
+    "Schema validation does not establish factual accuracy or calibrated model confidence.",
+    "Review remains a separate application-controlled gate."
+  ]
+}

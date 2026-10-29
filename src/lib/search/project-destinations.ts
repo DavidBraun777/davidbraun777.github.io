@@ -1,6 +1,9 @@
 import type { FeaturedSystemCaseStudy, RetrievalCapabilityLadderLevel } from '@/data/systems'
 import { assertUniqueDestinations, contentFingerprint, contentId, destinationAttributes, destinationHref, type ContentDestination } from './destinations'
 import type { SearchRecord } from './types'
+import { time2MoveExtras } from '@/data/time2move-extras'
+import { time2moveArchitectureText, time2moveReviewPipelineText } from '@/data/time2move-architecture'
+import { aiLessonCopy } from '@/lib/time2move-ai-lesson'
 
 const text = (...parts: (string | undefined)[]) => parts.filter(Boolean).join(' ')
 
@@ -77,6 +80,15 @@ function registerStoryContent(story: NonNullable<FeaturedSystemCaseStudy['story'
   })
 }
 
+function registerTime2MoveExtras(registry: ProjectRegistry) {
+  const { overview, reviews, lesson } = time2MoveExtras
+  registry.section(overview.id, overview.title, text(overview.caption, time2moveArchitectureText))
+  registry.add([reviews.id], reviews.title, text(reviews.summary, time2moveReviewPipelineText), overview.title, 'section', [contentId(reviews.id)])
+  registry.add([lesson.id], lesson.title, text(lesson.summary, aiLessonCopy.badge, aiLessonCopy.disclaimer,
+    aiLessonCopy.boundary, ...aiLessonCopy.sequence, aiLessonCopy.evidence, aiLessonCopy.review,
+    aiLessonCopy.trustedFields, aiLessonCopy.evaluation), '', 'section', [contentId(lesson.id)])
+}
+
 function registerRetrievalContent(ladder: NonNullable<FeaturedSystemCaseStudy['retrievalCapabilityLadder']>, registry: ProjectRegistry) {
   const { add, register, breadcrumb } = registry
   const disclosure = contentId('retrieval-ladder')
@@ -147,6 +159,7 @@ export function createProjectContent(system: FeaturedSystemCaseStudy) {
     : text('Context', system.contextLabel ?? system.caseStudyStage, 'Current state', system.currentState, 'Role', system.myRole))
   if (story) registerStoryContent(story, registry)
   else registerStandardContent(system, registry)
+  if (system.id === 'time2move') registerTime2MoveExtras(registry)
   if (system.successorLink) section('continuation', system.successorLink.label)
   const destinations = [...byAnchor.values()]
   assertUniqueDestinations(destinations)

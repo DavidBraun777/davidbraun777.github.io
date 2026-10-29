@@ -59,7 +59,7 @@ describe('Time2Move historical case study', () => {
     const text = page.textContent ?? ''
     expect(page.querySelector('h1')?.textContent).toBe(title)
     expect(text).toContain(status)
-    expect(page.querySelector('details, figure, #content-scope, #content-workflows')).toBeNull()
+    expect(page.querySelector('#content-technical-details, #content-illustration, #content-scope, #content-workflows')).toBeNull()
     expect(text).not.toMatch(/Technical evidence|Local form feedback|Evidence and status|One engineering decision|515deb2|29 errors|12 warnings|simulated|Recorded local audit|paused/i)
     expect(page.querySelectorAll('a[href="https://hombuzz.com/"]')).toHaveLength(1)
     const headings = Array.from(page.querySelectorAll('h2, h3')).map(heading => heading.textContent)
@@ -102,7 +102,7 @@ describe('Time2Move historical case study', () => {
     expect(publicOutput).not.toMatch(/\/Users\/|prime-location-site|docs\/audits|technical-audit\.md|case-study-brief\.md|source-manifest\.json|\bE\d{2}\b|api\.vercel\.com\/v1\/integrations\/deploy/i)
     expect(publicOutput).not.toMatch(/Technical evidence|Local form feedback|Recorded local audit|515deb2|29 errors|12 warnings|time2move-contact-simulated-error|paused/i)
     expect(page.querySelector('#content-results')?.textContent).toMatch(/independent direction.*Hombuzz, outside/i)
-    expect(page.querySelector('figure')).toBeNull()
+    expect(page.querySelector('img[src*="simulated-error"]')).toBeNull()
   })
 
   test('retains the original live-proof behavior for existing production projects', async () => {

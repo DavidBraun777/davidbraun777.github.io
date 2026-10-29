@@ -5,6 +5,7 @@ import { ArrowRight, Github } from 'lucide-react'
 import { notFound } from 'next/navigation'
 import { DisclosurePanel } from '@/components/site/disclosure-panel'
 import { CaseStudyStoryContent } from '@/components/site/case-study-story'
+import { Time2MoveSystemOverview, Time2MoveWorkflowLesson } from '@/components/site/time2move-project-extras'
 import { ContentDestinationManifest } from '@/components/site/content-destination-manifest'
 import { MetricCard } from '@/components/site/metric-card'
 import { PageIntro } from '@/components/site/page-intro'
@@ -67,6 +68,12 @@ export default async function CaseStudyDetailPage({ params }: Readonly<Props>) {
 
   const relatedProjects = getRelatedProjects(system)
   const content = createProjectContent(system)
+  const storyAdditions = new Map([
+    ['time2move', {
+      capabilities: <Time2MoveSystemOverview content={content} />,
+      'ai-development': <Time2MoveWorkflowLesson content={content} />,
+    }],
+  ])
   const breadcrumbStructuredData = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
@@ -116,7 +123,7 @@ export default async function CaseStudyDetailPage({ params }: Readonly<Props>) {
         />
 
         {system.story ? (
-          <CaseStudyStoryContent story={system.story} content={content} />
+          <CaseStudyStoryContent story={system.story} content={content} afterSections={storyAdditions.get(system.id)} />
         ) : (
           <StandardCaseStudyContent system={system} content={content} />
         )}

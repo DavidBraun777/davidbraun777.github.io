@@ -5,7 +5,7 @@ const title = 'Time2Move: Real Estate Automation & AI Development'
 const path = '/case-studies/time2move'
 const successorLabel = 'Current business website — Hombuzz'
 const expectedHeadings = [
-  'Engineering ownership', 'AI development and tool use', 'Outcome and lessons', 'Related Case Studies',
+  'Engineering ownership', 'Inside the system', 'AI development and tool use', 'Outcome and lessons', 'Related Case Studies',
 ]
 
 test.describe('Time2Move historical case study', () => {
@@ -49,8 +49,23 @@ test.describe('Time2Move historical case study', () => {
         await expect(page.getByRole('heading', { level: 1 })).toHaveText(title)
         const headings = await page.locator('main h2').allTextContents()
         expect(headings.map(heading => heading.trim())).toEqual(expectedHeadings)
-        await expect(page.locator('main details, main figure, main img, main figcaption, #content-scope')).toHaveCount(0)
+        await expect(page.locator('main img, #content-illustration, #content-technical-details, #content-scope')).toHaveCount(0)
         await expect(page.locator('#content-ai-development ul li')).toHaveCount(3)
+        const overview = page.locator('#content-inside-system')
+        await expect(overview.getByRole('button', { name: 'All', exact: true })).toHaveAttribute('aria-pressed', 'true')
+        const reviews = overview.getByRole('button', { name: 'Reviews', exact: true })
+        await reviews.focus()
+        await page.keyboard.press('Enter')
+        await expect(reviews).toHaveAttribute('aria-pressed', 'true')
+        const pipeline = page.locator('#content-review-data-pipeline')
+        const lesson = page.locator('#content-ai-workflow-lesson')
+        for (const disclosure of [pipeline, lesson]) {
+          await expect(disclosure).not.toHaveAttribute('open')
+          await disclosure.locator(':scope > summary').focus()
+          await page.keyboard.press('Enter')
+          await expect(disclosure).toHaveAttribute('open', '')
+        }
+        await expect(lesson.getByText('Illustrative extension', { exact: true })).toBeVisible()
         for (const section of await page.locator('main section[data-content-target]').all()) {
           expect((await section.innerText()).trim()).not.toBe('')
         }
@@ -68,6 +83,37 @@ test.describe('Time2Move historical case study', () => {
         expect(violations).toEqual([])
       }
     }
+  })
+
+  test('computes the synthetic checks locally and keeps review separate from schema validity', async ({ page }) => {
+    const unexpectedRequests: string[] = []
+    page.on('request', request => {
+      if (request.method() !== 'GET' || (['fetch', 'xhr'].includes(request.resourceType()) && new URL(request.url()).origin !== 'http://localhost:3000')) {
+        unexpectedRequests.push(`${request.method()} ${new URL(request.url()).pathname}`)
+      }
+    })
+    await page.goto(`${path}#content-ai-workflow-lesson`)
+    const lesson = page.locator('#content-ai-workflow-lesson')
+    await expect(lesson).toHaveAttribute('open', '')
+    await expect(lesson).toBeFocused()
+    const check = (label: string) => lesson.locator('dl > div').filter({ has: page.getByText(label, { exact: true }) })
+    await expect(check('Schema check')).toContainText('Passed')
+    await expect(check('Evidence-presence check')).toContainText('Passed')
+    await expect(check('Human-review gate')).toContainText('Required')
+    await lesson.getByRole('button', { name: 'Needs clarification', exact: true }).click()
+    await expect(check('Schema check')).toContainText('Passed')
+    await expect(check('Human-review gate')).toContainText('Clarification needed')
+    const unsupported = lesson.getByRole('button', { name: 'Unsupported detail', exact: true })
+    await unsupported.focus()
+    await page.keyboard.press('Space')
+    await expect(unsupported).toHaveAttribute('aria-pressed', 'true')
+    await expect(check('Schema check')).toContainText('Passed')
+    await expect(check('Evidence-presence check')).toContainText('Failed')
+    await expect(check('Human-review gate')).toContainText('Blocked')
+    await expect(lesson).toContainText('budget of $500,000')
+    expect(unexpectedRequests).toEqual([])
+    await lesson.locator(':scope > summary').click()
+    await expect(lesson).not.toHaveAttribute('open')
   })
 
   test('finds the original project through capabilities and its successor without publishing private audit material', async ({ page, request }) => {
