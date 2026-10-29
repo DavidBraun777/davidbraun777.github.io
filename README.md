@@ -72,28 +72,33 @@ The current project evidence remains deliberately classified:
 - [arklandscaping.net](https://arklandscaping.net) is a current public delivery
   example.
 - Time2Move is past client work for Dustin Marmon: David implemented the original
-  real estate website, customer tools and connected inquiry/CRM workflows. Work
-  paused while the client considered his direction, before the full intended
-  system was completed. AI was part of the intended product direction; later
-  ChatGPT and Codex development assistance does not establish runtime AI. The
+  real estate website, customer tools and connected inquiry/CRM workflows. The
+  engagement concluded before the full intended system and planned validation
+  were completed. The owner's account describes
+  unfinished AI work on website-improvement recommendations, a voice-enabled
+  assistant and regional housing-market news. ChatGPT and Codex also assisted
+  development; do not present the unfinished product capabilities as complete. The
   original `time2move.io` deployment is inactive. The client has since continued
   the project independently as [Hombuzz](https://hombuzz.com/), with changes to its
   brand, design, implementation, and direction. The compact entry under "Past
   client work" links to `/case-studies/time2move`, a historical case study of the
   original website and inquiry workflows. It belongs to the shared case-study
   registry with stage `Historical`, outside featured/current production proof.
-  Its optional `story` supplies a concise implementation and learning narrative;
-  detailed evidence stays in a collapsed technical section. `successorLink` labels
+  Its optional `story` supplies the concise public narrative, with explicit section
+  IDs shared by rendering and search. It contains no audit appendix, evidence
+  disclosure or screenshot. `successorLink` labels
   Hombuzz as the current business website without routing it through "Live Proof."
   Keep the original engagement named Time2Move and preserve dated audit findings.
 
-  The public account records the October 27, 2026 local audit of source revision
+  The preserved October 27, 2026 internal audit records source revision
   `515deb2` plus dependency-lock changes: 34 tests, type checking and build passed;
   lint failed with 29 errors and 12 warnings. These are historical source-project
   checks, separate from portfolio validation. Handoff/involvement dates and live
-  provider receipt remain unconfirmed. Only the manifest-cleared synthetic form
-  failure capture is included, with its simulation/date caption; other captures
-  were omitted. Do not add private audit reports, source paths, evidence IDs or
+  provider receipt remain unconfirmed. The synthetic form-failure screenshot was
+  removed from public delivery; its identical original remains with the internal
+  audit assets, and earlier public versions remain in Git history. Audit findings
+  and captures are not rendered or indexed by the portfolio. Do not add private
+  audit reports, source paths, evidence IDs or
   operational hooks to tracked portfolio content. The portfolio builds independently
   of the source project and its private audit folder.
 - `DealerFlow`, where shown, should be treated cautiously as pilot/proof work

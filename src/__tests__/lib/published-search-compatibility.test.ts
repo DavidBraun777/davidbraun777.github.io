@@ -13,8 +13,22 @@ import type { SearchIndex } from '@/lib/search/types'
 // Reviewed Time2Move editorial update on 2026-10-29 against b75e8c7e488a11fabdaa94f1aacbdace06afc91a:
 // only Time2Move and its People's Connection experience reference changed. All
 // unrelated records, nine other project manifests, and unrelated ranking values
-// and relative order matched exactly. Major section/audit IDs remain; rewritten
+// and relative order matched exactly. Major section/audit IDs remained; rewritten
 // content-derived blocks intentionally changed, with evidence inside a disclosure.
+// Reviewed the concise Time2Move revision on 2026-10-29 against bb0b88bacb3572c5b5cd519df042773fd0971c57:
+// public technical/audit/screenshot evidence and its targets were intentionally
+// removed. Only Time2Move records and its project manifest changed; all 581 other
+// records, nine other project manifests, and unrelated ranking values/order match.
+// Reviewed the subsequent ownership refinement against that captured concise
+// working tree (index 81f642c62b7ab2a33bd40938ee0b0317688a4c83b4201c07a320903606736d44):
+// five Time2Move records changed, including its six-technology stack and two
+// section labels. Record identities/order and navigation targets stayed exact;
+// all unrelated records, manifests and ranking values/order remained unchanged.
+// Reviewed the concluded-engagement copy against the captured ownership working
+// tree (index 7132c87043e734f4690e68870657b6827c12ff4725e87d336fa80aef1059e680):
+// four Time2Move records and its experience reference changed. All destinations,
+// manifests and ranked identities/scores/order stayed exact; snippets changed for
+// four queries. The other 580 records and 16 query expectations stayed unchanged.
 function canonical(value: unknown): unknown {
   if (Array.isArray(value)) return value.map(canonical)
   if (value && typeof value === 'object') return Object.fromEntries(
@@ -33,17 +47,17 @@ const queries = [
   ["Static embeddings",1,"c668f80143157b39867a49d533f45cf0c69263afede4ae1b7eb91cc1e85c379b"],
   ["BM25 keyword",1,"47cced000f89944866711c99a9331ad9f0fdcfd86ae4d61707cdc2ce690f15ae"],
   ["BM25 weak",2,"72ed616f9318954b1becb558c3b9ac9085d22f707b438f11e1e7f30380799c21"],
-  ["Time2Move",3,"08c1f9fd558940a5802ac83d131dc63c19a586327c3ef67960f578c958574b0c"],
-  ["Hombuzz",3,"93ddecb60c68695577c88666a38311c1069e9dc3c3fc166bdc7dffcd07a10cd5"],
+  ["Time2Move",3,"1d5c3cb0351581158ca4078791731c1a2c980b2e6fb98b1dfc2dd713fb8fc7f6"],
+  ["Hombuzz",3,"c51aecc881a1df735ccfebe0b3dab5de5f8182128bd36c1a5d679605d38151e2"],
   ["work arrives unevenly",2,"838a2a186ddf11d069b795a3e58217b172fae0d517dffea6f1e1004ad3cbedc9"],
-  ["AI",33,"e4c7f29c863b9d4311a0ba0a5dd7a19219e677cba158513f6350cbee7ab745c4"],
+  ["AI",36,"e942ce953777c2ec9fd38181bff33c637f0775e4ae42e379a7a07246fdf5ec31"],
   ["ML",3,"11bd4b9108b2a67cbcc441f5d31373d9a8f125b6a4f70c16789b00bf7065db77"],
-  ["Next.js",10,"d142e7af27c964ab64896edc202b8aa166db768b0a688bb2d3e68b73718208fd"],
+  ["Next.js",9,"256d615f7a0363d3ad0ce1c37710fd710224243ffc95fb19af80f89254d9783e"],
   ["Urarina",1,"8bd51e9b2651570c1fe0c8926a4124211740fbe9a23d48219c952d41a854e866"],
   ["VIFG",7,"2c58bb569d9c962ac5b3b27aa7c5dc038eb0077447ec7a47d8962ffec78d5792"],
   ["research",18,"12d5426be8266829c993dc08ac9a114eb9bb16f953024eae23f2ca47350461bd"],
   ["semantic retrieval",4,"6721883c4454c9a2f0547904fd43be2f675c23b2f2bc6c1c3bce81ab03960d77"],
-  ["automation workflow",19,"b5b6bcd9b8e6531cecae345cdb1f037607313626fb20d8791778b35f1195fb84"],
+  ["automation workflow",20,"9fe1633591fafd9c87a0337bc8b0a613eabc834bb77e9221bf6eb8596f44cef5"],
   ["data platform",11,"b5d25e73c3df41fad81d15fe711c1483efc085f21325e0eed14a2fb4c82e2f18"],
   ["north star",0,"4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"],
   ["zzzz-no-match",0,"4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"],
@@ -51,13 +65,13 @@ const queries = [
 
 describe('published search compatibility with ba84b4d and reviewed editorial updates', () => {
   test('preserves all public records, destinations and project target metadata', () => {
-    expect(index.records).toHaveLength(606)
-    expect(digest(index)).toBe('162b1a94f140147de810e81bf0987487444fc0eeab0c0fe99056d2da83599ce2')
+    expect(index.records).toHaveLength(587)
+    expect(digest(index)).toBe('6471cc84afbf7f313335d3caed8a78b972e83cef724a8bdf02525aa20c3cc3b3')
     const inventory = index.records.map(record => ({ id: record.id, href: record.href, destination: record.destination, cells: record.cells }))
-    expect(index.records.reduce((count, record) => count + Number(!!record.destination) + (record.cells?.length ?? 0), 0)).toBe(652)
-    expect(digest(inventory)).toBe('c31d7a160e2309c23357d70f148b9b9f20703f999571925fe369dc31ed40b9d3')
+    expect(index.records.reduce((count, record) => count + Number(!!record.destination) + (record.cells?.length ?? 0), 0)).toBe(633)
+    expect(digest(inventory)).toBe('6d3e40a91d0b121ba0009923795238e918bd6881fa66fcb9e0b4e117feda7cb9')
     const projects = allSystems.map(system => ({ id: system.id, destinations: createProjectContent(system).destinations }))
-    expect(digest(projects)).toBe('59eb317a856d278aa5e82df92ca9158f2eba0268e934cf314c0f55cc784a073a')
+    expect(digest(projects)).toBe('8e2641bf402b04c903da1a92d9539a98cc3fdb9644d29d525259be7adba06792')
   })
 
   test.each(queries)('preserves ordered results, scores, selected targets and snippets for %s', (query, count, expected) => {

@@ -57,18 +57,18 @@ describe('public content components', () => {
     expect(render(<SignalGrid items={[signal]} />).querySelector('h3')?.textContent).toBe(signal.value)
   })
 
-  test('historical stories keep optional technical detail available without requiring an illustration', () => {
-    const original = allSystems.find(system => system.id === 'time2move')!
-    const story = { ...original.story!, illustration: undefined, technicalDetails: [{ title: 'Integration details', paragraphs: ['Visible summary.', 'Specific delivery boundary.'] }] }
-    const system = { ...original, story }
-    const page = render(<CaseStudyStoryContent story={story} stack={system.stack} content={createProjectContent(system)} />)
-    const evidence = page.querySelector('#content-technical-details')!
-    expect(evidence.hasAttribute('open')).toBe(false)
-    const technical = evidence.querySelector('details')!
-    expect(technical.querySelector('summary')?.textContent).toContain('Visible summary.')
-    expect(technical.textContent).toContain('Specific delivery boundary.')
-    expect(page.querySelector('figure')).toBeNull()
-    expect(page.textContent).toContain(story.scopeNote)
+  test('historical story sections render paragraphs, semantic lists and closing copy without evidence UI', () => {
+    const system = allSystems.find(system => system.id === 'time2move')!
+    const story = system.story!
+    const page = render(<CaseStudyStoryContent story={story} content={createProjectContent(system)} />)
+    expect(page.querySelectorAll('section')).toHaveLength(story.sections.length)
+    expect(page.querySelectorAll('h2')).toHaveLength(story.sections.length)
+    expect(page.querySelector('#content-capabilities ul')).toBeNull()
+    const ai = page.querySelector('#content-ai-development')!
+    expect(ai.querySelectorAll('ul li')).toHaveLength(story.sections[1].items!.length)
+    expect(Array.from(ai.querySelectorAll('li strong'), label => label.textContent)).toEqual(story.sections[1].items!.map(item => `${item.label}:`))
+    expect(ai.querySelector('ul + p')?.textContent).toBe(story.sections[1].closing)
+    expect(page.querySelector('details, figure, img, aside')).toBeNull()
   })
 
   test('post cards encode destinations, bound tags, and distinguish optional images and delays', () => {

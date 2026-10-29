@@ -1,6 +1,9 @@
 export interface CaseStudyStoryBlock {
+  id: string
   title: string
   paragraphs: string[]
+  items?: { label: string; description: string }[]
+  closing?: string
 }
 
 export interface CaseStudySuccessorLink {
@@ -9,28 +12,8 @@ export interface CaseStudySuccessorLink {
   context: string
 }
 
-/** Optional long-form delivery narrative within the shared case-study registry. */
+/** Optional concise project narrative within the shared case-study registry. */
 export interface CaseStudyStory {
-  scopeNote: string
-  overview: string[]
   atAGlance: { label: string; value: string }[]
-  capabilities: CaseStudyStoryBlock[]
-  decision: string[]
-  stoppingPoint: string[]
-  reflection: string[]
-  technicalDetails: CaseStudyStoryBlock[]
-  audit: {
-    date: string
-    snapshot: string
-    checks: { label: string; result: 'Passed' | 'Failed' | 'Observed'; detail: string }[]
-    limitations: string[]
-    lesson: string
-  }
-  illustration?: {
-    src: string
-    alt: string
-    width: number
-    height: number
-    caption: string
-  }
+  sections: CaseStudyStoryBlock[]
 }

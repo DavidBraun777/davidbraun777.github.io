@@ -116,25 +116,17 @@ export default async function CaseStudyDetailPage({ params }: Readonly<Props>) {
         />
 
         {system.story ? (
-          <CaseStudyStoryContent story={system.story} stack={system.stack} content={content} />
+          <CaseStudyStoryContent story={system.story} content={content} />
         ) : (
           <StandardCaseStudyContent system={system} content={content} />
         )}
 
         {system.successorLink ? (
-          <section {...content.attrs('continuation')} className="rounded-[1.75rem] border border-border-subtle bg-background-subtle p-6 sm:p-7">
-            <h2 className="text-2xl font-semibold tracking-tight text-text-primary">
-              Project continuation
-            </h2>
-            <p className="mt-4 max-w-3xl text-base leading-8 text-text-secondary">
-              {system.successorLink.context}
-            </p>
-            <div className="mt-5">
-              <ExternalLinkAction href={system.successorLink.href}>
-                {system.successorLink.label}
-              </ExternalLinkAction>
-            </div>
-          </section>
+          <div {...content.attrs('continuation')}>
+            <ExternalLinkAction href={system.successorLink.href}>
+              {system.successorLink.label}
+            </ExternalLinkAction>
+          </div>
         ) : null}
 
         {relatedProjects.length > 0 ? (
