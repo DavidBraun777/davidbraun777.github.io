@@ -10,9 +10,9 @@ import { allSystems, featuredSystems, getSystemById, pilotSystems, productionSys
 import { buildSearchIndex } from '@/lib/search/build-index'
 import { searchContent } from '@/lib/search/search'
 
-const title = 'Time2Move: Real Estate Website & Inquiry Workflows'
+const title = 'Time2Move: Real Estate Lead & CRM Workflows'
 const path = '/case-studies/time2move'
-const status = 'Past client project · Continued independently'
+const status = 'Past client project · Implementation paused'
 const successorLabel = 'Current business website — Hombuzz'
 
 function renderPage(element: React.ReactNode) {
@@ -66,7 +66,7 @@ describe('Time2Move historical case study', () => {
     expect(text).toMatch(/lint/i)
     expect(text).toMatch(/failed/i)
     expect(text).toMatch(/handoff|handed.over/i)
-    expect(text).toMatch(/not verified|not established|unverified|unconfirmed/i)
+    expect(text).toMatch(/not verified|not established|unverified|unconfirmed|do not establish/i)
     const headings = Array.from(page.querySelectorAll('h2, h3')).map(heading => heading.textContent)
     expect(headings).not.toContain('Live Proof')
     expect(headings).not.toContain('Quantified Outcomes')

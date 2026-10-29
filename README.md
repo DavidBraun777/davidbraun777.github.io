@@ -71,15 +71,19 @@ The current project evidence remains deliberately classified:
   production proof.
 - [arklandscaping.net](https://arklandscaping.net) is a current public delivery
   example.
-- Time2Move is past client work: David designed and developed the original real
-  estate website, including its site structure and lead-capture workflows. The
+- Time2Move is past client work for Dustin Marmon: David implemented the original
+  real estate website, customer tools and connected inquiry/CRM workflows. Work
+  paused while the client considered his direction, before the full intended
+  system was completed. AI was part of the intended product direction; later
+  ChatGPT and Codex development assistance does not establish runtime AI. The
   original `time2move.io` deployment is inactive. The client has since continued
   the project independently as [Hombuzz](https://hombuzz.com/), with changes to its
   brand, design, implementation, and direction. The compact entry under "Past
   client work" links to `/case-studies/time2move`, a historical case study of the
   original website and inquiry workflows. It belongs to the shared case-study
   registry with stage `Historical`, outside featured/current production proof.
-  Its optional `story` supplies the long-form account, and `successorLink` labels
+  Its optional `story` supplies a concise implementation and learning narrative;
+  detailed evidence stays in a collapsed technical section. `successorLink` labels
   Hombuzz as the current business website without routing it through "Live Proof."
   Keep the original engagement named Time2Move and preserve dated audit findings.
 
