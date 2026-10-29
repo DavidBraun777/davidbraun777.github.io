@@ -8,14 +8,13 @@ import { createProjectContent, projectContentRecords } from '@/lib/search/projec
 import { assertUniqueDestinations } from '@/lib/search/destinations'
 
 describe('case-study search destinations', () => {
-  test('supports both public proof types, story details without imagery, and rejects invalid target lookups', () => {
+  test('supports public proof and concise story sections, and rejects invalid target lookups', () => {
     const production = { ...allSystems[0], githubUrl: 'https://github.com/example/project', externalUrl: 'https://example.com/' }
     expect(projectContentRecords(production).find(record => record.title === 'Public Repository and Live Proof')).toBeDefined()
     const system = allSystems.find(item => item.id === 'time2move')!
-    const content = createProjectContent({ ...system, story: { ...system.story!, illustration: undefined, technicalDetails: [{ title: 'Integration', paragraphs: ['Initial summary.', 'A second detail paragraph.'] }] } })
+    const content = createProjectContent(system)
     expect(content.records.some(record => record.title === 'Local form feedback capture')).toBe(false)
-    const technical = content.records.find(record => record.title === 'Integration')!
-    expect(technical.destination?.disclosureIds).toEqual(['content-technical-details', technical.destination?.anchor])
+    expect(content.records.find(record => record.title === 'AI development and tool use')?.destination?.disclosureIds).toEqual([])
     expect(() => content.get('nonexistent-target')).toThrow('Missing project destination')
     expect(() => assertUniqueDestinations([{ page: '/example', anchor: 'invalid anchor', label: 'Example', disclosureIds: [] }])).toThrow('Invalid content anchor')
   })
@@ -65,8 +64,8 @@ describe('case-study search destinations', () => {
   test('keeps repeated labels distinct and anchors stable when unrelated content is inserted', () => {
     const system = allSystems.find(item => item.id === 'time2move')!
     const story = system.story!
-    const duplicateLabel = { title: story.capabilities[0].title, paragraphs: ['Another independently described capability.'] }
-    const extended = { ...system, story: { ...story, capabilities: [duplicateLabel, ...story.capabilities] } }
+    const duplicateLabel = { id: 'another-capability', title: story.sections[0].title, paragraphs: ['Another independently described capability.'] }
+    const extended = { ...system, story: { ...story, sections: [duplicateLabel, ...story.sections] } }
     const before = projectContentRecords(system)
     const after = projectContentRecords(extended)
     for (const record of before) {
@@ -75,6 +74,7 @@ describe('case-study search destinations', () => {
     const repeated = after.filter(record => record.title === duplicateLabel.title)
     expect(repeated).toHaveLength(2)
     expect(repeated[0].href).not.toBe(repeated[1].href)
+    expect(() => createProjectContent({ ...system, story: { ...story, sections: [...story.sections, story.sections[0]] } })).toThrow(/Duplicate project anchor/)
     expect(JSON.stringify(after)).not.toMatch(/\/Users\/|docs\/audits|technical-audit\.md|case-study-brief\.md/)
   })
 

@@ -1,12 +1,11 @@
 import { expect, test } from '@playwright/test'
 import AxeBuilder from '@axe-core/playwright'
 
-const title = 'Time2Move: Real Estate Lead & CRM Workflows'
+const title = 'Time2Move: Real Estate Automation & AI Development'
 const path = '/case-studies/time2move'
 const successorLabel = 'Current business website — Hombuzz'
 const expectedHeadings = [
-  'The goal', 'What I built', 'One engineering decision',
-  'Where the work stopped', 'What I carry forward', 'Project continuation',
+  'Engineering ownership', 'AI development and tool use', 'Outcome and lessons', 'Related Case Studies',
 ]
 
 test.describe('Time2Move historical case study', () => {
@@ -26,7 +25,7 @@ test.describe('Time2Move historical case study', () => {
     await expect(page).toHaveURL(new RegExp(`${path}$`))
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(title)
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', `https://dbraun.io${path}`)
-    await expect(page.locator('main')).toContainText('Past client project · Implementation paused')
+    await expect(page.locator('main')).toContainText('Past client project · Engagement concluded')
     await expect(page.getByRole('heading', { name: 'Live Proof', exact: true })).toHaveCount(0)
     await expect(page.getByRole('heading', { name: 'Quantified Outcomes', exact: true })).toHaveCount(0)
     await expect(page.getByRole('link', { name: successorLabel, exact: true })).toHaveAttribute('rel', 'noopener noreferrer')
@@ -41,7 +40,7 @@ test.describe('Time2Move historical case study', () => {
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(title)
   })
 
-  test('keeps the concise narrative and optional evidence accessible on desktop and mobile in both themes', async ({ page }) => {
+  test('keeps the concise narrative accessible without empty or repeated sections on desktop and mobile', async ({ page }) => {
     for (const colorScheme of ['light', 'dark'] as const) {
       for (const width of [1440, 390]) {
         await page.setViewportSize({ width, height: 900 })
@@ -49,34 +48,12 @@ test.describe('Time2Move historical case study', () => {
         await page.goto(path)
         await expect(page.getByRole('heading', { level: 1 })).toHaveText(title)
         const headings = await page.locator('main h2').allTextContents()
-        let previousIndex = -1
-        for (const heading of expectedHeadings) {
-          const currentIndex = headings.findIndex(text => text.trim() === heading)
-          expect(currentIndex, heading).toBeGreaterThan(previousIndex)
-          previousIndex = currentIndex
+        expect(headings.map(heading => heading.trim())).toEqual(expectedHeadings)
+        await expect(page.locator('main details, main figure, main img, main figcaption, #content-scope')).toHaveCount(0)
+        await expect(page.locator('#content-ai-development ul li')).toHaveCount(3)
+        for (const section of await page.locator('main section[data-content-target]').all()) {
+          expect((await section.innerText()).trim()).not.toBe('')
         }
-        const evidence = page.locator('#content-technical-details')
-        await expect(evidence).not.toHaveAttribute('open')
-        await expect(page.locator('#content-verification')).not.toBeVisible()
-        await expect(page.locator('main figure')).not.toBeVisible()
-        expect(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1)).toBe(false)
-
-        const summaries = page.locator('main details > summary')
-        expect(await summaries.count()).toBeGreaterThan(0)
-        for (const summary of await summaries.all()) {
-          await summary.focus()
-          await page.keyboard.press('Enter')
-          await expect(summary.locator('..')).toHaveAttribute('open', '')
-        }
-        await expect(page.locator('#content-verification')).toBeVisible()
-        const illustration = page.locator('main figure')
-        await expect(illustration).toBeVisible()
-        const image = illustration.getByRole('img')
-        await expect(image).toHaveAttribute('alt', /synthetic|example/i)
-        await expect(illustration.locator('figcaption')).toContainText('October 27, 2026')
-        await expect(illustration.locator('figcaption')).toContainText(/simulat/i)
-        await expect(illustration.locator('figcaption')).toContainText(/no lead delivered/i)
-        await expect.poll(() => image.evaluate((element) => (element as HTMLImageElement).naturalWidth)).toBeGreaterThan(0)
         expect(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1)).toBe(false)
 
         const successor = page.getByRole('link', { name: successorLabel, exact: true })
@@ -104,14 +81,12 @@ test.describe('Time2Move historical case study', () => {
     const response = await page.goto(path)
     const publicOutput = `${await response?.text()} ${JSON.stringify(records)}`
     expect(publicOutput).not.toMatch(/\/Users\/|prime-location-site|docs\/audits|technical-audit\.md|case-study-brief\.md|source-manifest\.json|\bE\d{2}\b|api\.vercel\.com\/v1\/integrations\/deploy/i)
-    await expect(page.locator('main')).toContainText('34')
-    await expect(page.locator('main')).toContainText('29 errors')
-    await expect(page.locator('main')).toContainText('12 warnings')
-    await expect(page.locator('main')).toContainText('October 27, 2026')
+    expect(publicOutput).not.toMatch(/Technical evidence|Local form feedback|Recorded local audit|515deb2|29 errors|12 warnings|time2move-contact-simulated-error/i)
+    expect((await request.get('/images/projects/time2move-contact-simulated-error.png')).status()).toBe(404)
     await page.getByRole('button', { name: 'Search site', exact: true }).click()
     const dialog = page.getByRole('dialog', { name: 'Search the site', exact: true })
     const input = dialog.getByRole('searchbox', { name: 'Search site content' })
-    for (const query of ['Time2Move', 'lead processing', 'FastAPI', 'Redis', 'Hombuzz']) {
+    for (const query of ['Time2Move', 'CRM workflows', 'LLM review', 'regional housing-news', 'Hombuzz']) {
       await input.fill(query)
       const results = dialog.locator(`a[href="${path}"], a[href^="${path}#"]`)
       const result = results.first()
@@ -127,17 +102,9 @@ test.describe('Time2Move historical case study', () => {
     await expect(page).toHaveURL(url => `${url.pathname}${url.hash}` === selectedHref)
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(title)
 
-    // The retained evidence link now needs both enclosing disclosures to open.
+    // Removed evidence links use the existing stale-fragment fallback cleanly.
     await page.goto(`${path}#content-illustration`)
-    await expect(page.locator('#content-technical-details')).toHaveAttribute('open', '')
-    const capture = page.locator('#content-illustration')
-    await expect(capture).toHaveAttribute('open', '')
-    await expect(capture).toBeFocused()
-    await expect(capture.getByRole('img')).toBeVisible()
-    await expect.poll(() => capture.evaluate(element => {
-      const top = element.getBoundingClientRect().top
-      const headerBottom = document.querySelector('body header')!.getBoundingClientRect().bottom
-      return top >= headerBottom && top < innerHeight
-    })).toBe(true)
+    await expect(page.getByRole('heading', { level: 1 })).toBeFocused()
+    await expect(page.locator('#content-illustration')).toHaveCount(0)
   })
 })

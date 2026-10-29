@@ -216,7 +216,7 @@ test.describe('site content search', () => {
     await expect(page).toHaveURL(/\/case-studies\/time2move(?:#.*)?$/)
     await expect(dialog).toBeHidden()
     const historicalWork = page.locator('main')
-    await expect(historicalWork).toContainText('Past client project · Implementation paused')
+    await expect(historicalWork).toContainText('Past client project · Engagement concluded')
     await expect(historicalWork.getByRole('heading', { level: 1 })).toContainText('Time2Move')
     await expect(historicalWork.getByRole('link', { name: 'Current business website — Hombuzz' })).toHaveAttribute('href', 'https://hombuzz.com/')
   })

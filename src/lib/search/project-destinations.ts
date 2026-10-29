@@ -1,5 +1,4 @@
 import type { FeaturedSystemCaseStudy, RetrievalCapabilityLadderLevel } from '@/data/systems'
-import type { CaseStudyStoryBlock } from '@/data/case-study-story'
 import { assertUniqueDestinations, contentFingerprint, contentId, destinationAttributes, destinationHref, type ContentDestination } from './destinations'
 import type { SearchRecord } from './types'
 
@@ -65,41 +64,17 @@ function createProjectRegistry(system: FeaturedSystemCaseStudy) {
     records.push(record)
     return record
   }
-  const section = (key: string, title: string, body = '', disclosureIds: string[] = []) => add([key], title, body, '', 'section', disclosureIds)
-  const blocks = (group: string, label: string, items: CaseStudyStoryBlock[], disclosures = false, parentDisclosureIds: string[] = []) => {
-    items.forEach(block => {
-      const keys = [group, projectBlockKey(block.title, block.paragraphs.join(' '))]
-      const disclosureIds = disclosures && block.paragraphs.length > 1 ? [...parentDisclosureIds, contentId(...keys)] : parentDisclosureIds
-      add(keys, block.title, block.paragraphs.join(' '), label, 'block', disclosureIds)
-    })
-  }
+  const section = (key: string, title: string, body = '') => add([key], title, body, '', 'section')
 
-  return { page, records, byAnchor, register, add, section, blocks, breadcrumb }
+  return { page, records, byAnchor, register, add, section, breadcrumb }
 }
 
 type ProjectRegistry = ReturnType<typeof createProjectRegistry>
 
-function registerStoryContent(system: FeaturedSystemCaseStudy, story: NonNullable<FeaturedSystemCaseStudy['story']>, registry: ProjectRegistry) {
-  const { add, section, blocks } = registry
-  section('overview', 'The goal', story.overview.join(' '))
-  section('capabilities', 'What I built')
-  blocks('capability', 'What I built', story.capabilities)
-  section('workflows', 'One engineering decision', story.decision.join(' '))
-  section('stopping-point', 'Where the work stopped', story.stoppingPoint.join(' '))
-  section('tradeoffs', 'What I carry forward', story.reflection.join(' '))
-  add(['scope'], 'Evidence and status', story.scopeNote)
-  const technicalDisclosureIds = [contentId('technical-details')]
-  section('technical-details', 'Technical evidence (optional)', text('Implementation notes, recorded local checks, and original project evidence.', ...system.stack), technicalDisclosureIds)
-  section('architecture', 'Implementation notes', '', technicalDisclosureIds)
-  blocks('technical', 'Implementation notes', story.technicalDetails, true, technicalDisclosureIds)
-  if (story.illustration) {
-    const keys = ['illustration']
-    add(keys, 'Local form feedback capture', story.illustration.caption, 'Technical evidence (optional)', 'block', [...technicalDisclosureIds, contentId(...keys)])
-  }
-  section('verification', 'Verification and limitations', '', technicalDisclosureIds)
-  add(['audit'], 'Recorded local audit', text(story.audit.date, story.audit.snapshot), 'Verification and limitations', 'block', technicalDisclosureIds)
-  story.audit.checks.forEach(check => add(['audit-check', projectBlockKey(check.label, check.detail)], check.label, text(check.result, check.detail), 'Recorded local audit', 'block', technicalDisclosureIds))
-  add(['limitations'], 'Remaining gaps', text(...story.audit.limitations, story.audit.lesson), 'Verification and limitations', 'block', technicalDisclosureIds)
+function registerStoryContent(story: NonNullable<FeaturedSystemCaseStudy['story']>, registry: ProjectRegistry) {
+  story.sections.forEach(block => {
+    registry.section(block.id, block.title, text(...block.paragraphs, ...(block.items ?? []).map(item => `${item.label}: ${item.description}`), block.closing))
+  })
 }
 
 function registerRetrievalContent(ladder: NonNullable<FeaturedSystemCaseStudy['retrievalCapabilityLadder']>, registry: ProjectRegistry) {
@@ -170,9 +145,9 @@ export function createProjectContent(system: FeaturedSystemCaseStudy) {
   section('at-a-glance', 'At a glance', story
     ? text('Status', system.currentState, ...story.atAGlance.map(item => text(item.label, item.value)))
     : text('Context', system.contextLabel ?? system.caseStudyStage, 'Current state', system.currentState, 'Role', system.myRole))
-  if (story) registerStoryContent(system, story, registry)
+  if (story) registerStoryContent(story, registry)
   else registerStandardContent(system, registry)
-  if (system.successorLink) section('continuation', 'Project continuation', text(system.successorLink.context, system.successorLink.label))
+  if (system.successorLink) section('continuation', system.successorLink.label)
   const destinations = [...byAnchor.values()]
   assertUniqueDestinations(destinations)
   const get = (...keys: string[]) => {

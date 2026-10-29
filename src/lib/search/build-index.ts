@@ -38,7 +38,6 @@ function certificationDescription(item: (typeof certifications)[number]): string
 export function projectSearchRecord(system: FeaturedSystemCaseStudy): SearchRecord {
   const ladder = system.retrievalCapabilityLadder
   const story = system.story
-  const storyBlocks = story ? [...story.capabilities, ...story.technicalDetails] : []
   return {
     id: `project-${system.id}`,
     title: system.displayTitle ?? system.name,
@@ -47,16 +46,13 @@ export function projectSearchRecord(system: FeaturedSystemCaseStudy): SearchReco
     description: system.summary,
     tags: [system.name, ...system.stack, system.contextLabel ?? system.caseStudyStage],
     headings: story
-      ? [system.currentState, 'The goal', 'What I built', 'One engineering decision', 'Where the work stopped', 'What I carry forward', 'Evidence and status', 'Technical evidence (optional)', 'Implementation notes', ...storyBlocks.map(block => block.title), 'Verification and limitations', 'Recorded local audit', 'Remaining gaps', ...story.audit.checks.map(check => check.label)]
+      ? [system.currentState, ...story.sections.map(block => block.title)]
       : [system.solutionTitle ?? 'Solution / Implementation', ...system.proofSections.map(section => section.title)],
     body: story ? text(
-      system.positioning, system.currentState, story.scopeNote, ...story.overview,
+      system.positioning, system.currentState,
       ...story.atAGlance.map(item => text(item.label, item.value)),
-      ...storyBlocks.flatMap(block => block.paragraphs),
-      ...story.decision, ...story.stoppingPoint, ...story.reflection,
-      story.audit.date, story.audit.snapshot, ...story.audit.checks.map(check => text(check.result, check.detail)),
-      ...story.audit.limitations, story.audit.lesson, story.illustration?.caption,
-      system.successorLink?.label, system.successorLink?.context,
+      ...story.sections.map(block => text(...block.paragraphs, ...(block.items ?? []).map(item => `${item.label}: ${item.description}`), block.closing)),
+      system.successorLink?.label,
     ) : text(
       system.oneSentenceOutcome, system.positioning, system.problem, system.system,
       system.myRole, system.coreConstraint, system.outcome, system.currentState,
