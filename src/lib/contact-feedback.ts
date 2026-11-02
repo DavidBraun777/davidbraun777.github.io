@@ -24,8 +24,9 @@ export function getContactFailure(response: Pick<Response, 'status' | 'headers'>
     const retryAfterSeconds = Number.isSafeInteger(seconds) && seconds > 0 && seconds <= 2_147_483
       ? seconds
       : 0
+    const unit = retryAfterSeconds === 1 ? ' second' : ' seconds'
     const wait = retryAfterSeconds > 0
-      ? 'Wait ' + retryAfterSeconds + (retryAfterSeconds === 1 ? ' second' : ' seconds') + ' before sending again.'
+      ? 'Wait ' + retryAfterSeconds + unit + ' before sending again.'
       : 'Please wait a moment before trying again.'
     return { message: 'Too many attempts. ' + wait + ' Your draft is still here.', retryAfterSeconds }
   }

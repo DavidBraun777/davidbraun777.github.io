@@ -141,7 +141,7 @@ jobs:
           google-chrome --version
 
       - name: Install WebKit for mobile browser journeys
-        run: npx playwright install --with-deps webkit
+        run: node node_modules/playwright/cli.js install --with-deps webkit
 
       - name: Build
         run: npm run build

@@ -282,22 +282,7 @@ function StandardCaseStudyContent({ system, content }: Readonly<{
         </section>
       ) : null}
 
-      {system.limitations?.length || system.nextImprovements?.length ? (
-        <section className={`grid gap-6 ${system.limitations?.length && system.nextImprovements?.length ? 'lg:grid-cols-2' : ''}`}>
-          {system.limitations?.length ? (
-            <article {...content.attrs('limitations')} className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm">
-              <h2 className="text-2xl font-semibold tracking-tight text-text-primary">Scope and limitations</h2>
-              <DetailList className="mt-5" title="Interpreting this work" items={system.limitations} />
-            </article>
-          ) : null}
-          {system.nextImprovements?.length ? (
-            <article {...content.attrs('improvements')} className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm">
-              <h2 className="text-2xl font-semibold tracking-tight text-text-primary">Further technical work</h2>
-              <DetailList className="mt-5" title="Possible next steps" items={system.nextImprovements} />
-            </article>
-          ) : null}
-        </section>
-      ) : null}
+      <ScopeAndFurtherWork system={system} content={content} />
 
       {system.retrievalComparison ? (
         <RetrievalComparisonSection comparison={system.retrievalComparison} content={content} />
@@ -306,6 +291,28 @@ function StandardCaseStudyContent({ system, content }: Readonly<{
       {system.githubUrl || system.externalUrl ? <ProofLinkSection system={system} content={content} /> : null}
     </>
   )
+}
+
+function ScopeAndFurtherWork({ system, content }: Readonly<{
+  system: FeaturedSystemCaseStudy
+  content: ProjectContent
+}>) {
+  return system.limitations?.length || system.nextImprovements?.length ? (
+    <section className={`grid gap-6 ${system.limitations?.length && system.nextImprovements?.length ? 'lg:grid-cols-2' : ''}`}>
+      {system.limitations?.length ? (
+        <article {...content.attrs('limitations')} className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm">
+          <h2 className="text-2xl font-semibold tracking-tight text-text-primary">Scope and limitations</h2>
+          <DetailList className="mt-5" title="Interpreting this work" items={system.limitations} />
+        </article>
+      ) : null}
+      {system.nextImprovements?.length ? (
+        <article {...content.attrs('improvements')} className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm">
+          <h2 className="text-2xl font-semibold tracking-tight text-text-primary">Further technical work</h2>
+          <DetailList className="mt-5" title="Possible next steps" items={system.nextImprovements} />
+        </article>
+      ) : null}
+    </section>
+  ) : null
 }
 
 function RetrievalComparisonSection({ comparison, content }: Readonly<{

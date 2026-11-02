@@ -5,6 +5,7 @@ import { notFound } from 'next/navigation'
 import { MDXRemote } from 'next-mdx-remote/rsc'
 import remarkGfm from 'remark-gfm'
 import { mdxComponents } from '@/components/blog/mdx-components'
+import { PostDate } from '@/components/blog/post-date'
 import { ContentDestinationManifest } from '@/components/site/content-destination-manifest'
 import { Badge } from '@/components/ui/badge'
 import { getAllPostSlugs, getPostBySlug } from '@/lib/mdx'
@@ -52,20 +53,6 @@ export default async function WritingPostPage({ params }: Readonly<Props>) {
   const page = `/writing/${slug}`
   const { destinations } = await extractReadableMdx(post.content, page, post.title)
 
-  const formattedDate = new Date(post.date).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    timeZone: 'UTC',
-  })
-  const formattedUpdated = post.updated
-    ? new Date(post.updated).toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        timeZone: 'UTC',
-      })
-    : undefined
   const breadcrumbStructuredData = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
@@ -146,9 +133,9 @@ export default async function WritingPostPage({ params }: Readonly<Props>) {
           <div className="mt-6 flex flex-wrap items-center gap-4 text-sm text-text-muted">
             <span className="inline-flex items-center gap-2">
               <Calendar aria-hidden="true" className="h-4 w-4" />
-              <time dateTime={post.date}>Published {formattedDate}</time>
+              <PostDate date={post.date} label="Published" />
             </span>
-            {post.updated ? <time dateTime={post.updated}>Updated {formattedUpdated}</time> : null}
+            {post.updated ? <PostDate date={post.updated} label="Updated" /> : null}
             <span className="inline-flex items-center gap-2">
               <Clock className="h-4 w-4" />
               {post.readingTime}

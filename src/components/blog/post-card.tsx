@@ -1,6 +1,7 @@
 import Link from 'next/link'
 import Image from 'next/image'
 import { Calendar, Clock, ArrowRight } from 'lucide-react'
+import { PostDate } from '@/components/blog/post-date'
 import { Badge } from '@/components/ui/badge'
 import type { BlogPostMeta } from '@/lib/mdx'
 
@@ -10,21 +11,6 @@ interface PostCardProps {
 }
 
 export function PostCard({ post, index = 0 }: PostCardProps) {
-  const formattedDate = new Date(post.date).toLocaleDateString('en-US', {
-    year: 'numeric',
-    month: 'long',
-    day: 'numeric',
-    timeZone: 'UTC',
-  })
-  const formattedUpdated = post.updated
-    ? new Date(post.updated).toLocaleDateString('en-US', {
-        year: 'numeric',
-        month: 'long',
-        day: 'numeric',
-        timeZone: 'UTC',
-      })
-    : undefined
-
   return (
     <article
       className="group overflow-hidden rounded-[1.75rem] border border-border-subtle bg-background-elevated shadow-sm transition-transform duration-200 hover:-translate-y-1"
@@ -65,9 +51,9 @@ export function PostCard({ post, index = 0 }: PostCardProps) {
               <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
                 <span className="flex items-center gap-1">
                   <Calendar aria-hidden="true" className="w-4 h-4 shrink-0" />
-                  <time dateTime={post.date}>Published {formattedDate}</time>
+                  <PostDate date={post.date} label="Published" />
                 </span>
-                {post.updated ? <time dateTime={post.updated}>Updated {formattedUpdated}</time> : null}
+                {post.updated ? <PostDate date={post.updated} label="Updated" /> : null}
               </div>
               <div className="flex flex-wrap items-center justify-between gap-3">
                 <span className="flex items-center gap-1">
