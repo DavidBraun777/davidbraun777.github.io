@@ -44,7 +44,7 @@ const roots = new Set<Root>()
 function createViewport(matches = false) {
   const query = Object.assign(new EventTarget(), {
     matches,
-    media: '(min-width: 1280px)',
+    media: '(min-width: 80rem)',
   }) as MediaQueryList
   const add = vi.spyOn(query, 'addEventListener')
   const remove = vi.spyOn(query, 'removeEventListener')
@@ -292,7 +292,7 @@ describe('mounted Header navigation', () => {
     expect(header.disclosure('Primary', 'Experience').getAttribute('aria-expanded')).toBe('false')
     expect(header.container.querySelector('#mobile-navigation')).toBeNull()
     header.rerender()
-    expect(viewport.matchMedia).toHaveBeenCalledWith('(min-width: 1280px)')
+    expect(viewport.matchMedia).toHaveBeenCalledWith('(min-width: 80rem)')
     expect(viewport.add).toHaveBeenCalledOnce()
     const listener = viewport.add.mock.calls[0][1]
     header.unmount()

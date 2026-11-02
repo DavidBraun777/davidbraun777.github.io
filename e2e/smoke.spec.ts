@@ -72,6 +72,17 @@ test.describe('Smoke tests', () => {
     await expect(main.getByRole('article').getByRole('heading')).toHaveText([
       'VIFG Nonprofit Platform', 'DealerFlow', 'WeatherForge',
     ])
+    for (const [slug, name] of [
+      ['ark-landscaping', /ARK Landscaping/i],
+      ['matt-laur', /Matt Laur/i],
+    ] as const) {
+      const href = `a[href="/case-studies/${slug}"]`
+      const link = main.locator(href)
+      await expect(link).toHaveCount(1)
+      await expect(link).toHaveAccessibleName(name)
+      await expect(link).toBeVisible()
+      await expect(main.locator('article').locator(href)).toHaveCount(0)
+    }
     await expect(
       main.getByRole('heading', {
         level: 1,

@@ -30,7 +30,7 @@ export default function CaseStudiesPage() {
   const experiments = researchSystems.filter(system => !academicProjects.includes(system))
 
   return (
-    <div className="mx-auto max-w-7xl space-y-10 px-4 py-8 sm:px-6 md:space-y-12 lg:px-8">
+    <div className="mx-auto max-w-7xl space-y-10 wrap-anywhere px-4 py-8 sm:px-6 md:space-y-12 lg:px-8">
       <div className="max-w-3xl">
         <h1 className="text-4xl font-semibold tracking-tight text-text-primary sm:text-5xl">Work</h1>
         <p className="mt-3 text-lg leading-8 text-text-secondary">
