@@ -8,19 +8,17 @@ import ResearchPage from '@/app/research/page'
 import { getSystemById } from '@/data/systems'
 
 describe('north-star page content', () => {
-  test('renders the canonical homepage identity and proof-first paths', () => {
+  test('introduces the engineering practice with career and research evidence', () => {
     const markup = renderToStaticMarkup(<Home />)
 
     expect(markup).toContain('AI Systems &amp; Platform Engineer')
-    expect(markup).toContain('Selected work')
-    expect(markup).toContain('VIFG Nonprofit Platform')
-    expect(markup).toContain('DealerFlow')
-    expect(markup).toContain('WeatherForge')
-    expect(markup.match(/<article\b/g)).toHaveLength(3)
-    expect(markup.match(/<dt\b/g)).toHaveLength(3)
-    expect(markup).toContain('three-person University of St. Thomas team')
-    expect(markup).toContain('View all work')
-    expect(markup).toContain('Get in touch')
+    expect(markup).toContain('6+ years')
+    expect(markup).toContain('Approximately 40%')
+    expect(markup).toContain('50+ repositories')
+    expect(markup).toContain('published 2018 JGR article')
+    expect(markup).toContain('accepted for IEEE LA-CCI 2026')
+    expect(markup).toContain('Engineering &amp; Evidence Standards')
+    expect(markup).not.toContain('href="/case-studies/')
   })
 
   test('keeps Experience concise while preserving current role and credentials', () => {

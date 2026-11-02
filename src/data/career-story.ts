@@ -35,7 +35,7 @@ export const canonicalSeoDescription =
   'David Braun is an AI Systems & Platform Engineer building secure, deployable applications, APIs, workflows, cloud infrastructure, and applied AI systems.'
 
 export const professionalAvailability =
-  'Open to select full-time AI systems and platform roles, architecture and engineering partnerships, and consulting engagements where software, cloud infrastructure, data, automation, and AI need to operate as one dependable system.'
+  'Open to select full-time AI systems and platform roles, architecture and engineering partnerships, and consulting engagements.'
 
 export const synthesisBoundary =
   "AI Systems & Platform Engineer is David Braun's canonical professional positioning, not a retroactive employment title. Individual roles, projects, and research remain labeled by their recorded title and evidence maturity."

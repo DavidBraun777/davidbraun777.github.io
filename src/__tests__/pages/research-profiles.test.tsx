@@ -115,15 +115,13 @@ describe('research profile discovery', () => {
     }
   })
 
-  test('links the footer to Research and keeps the external directory on that page', () => {
+  test('keeps the same verified directory in the footer and on the Research page', () => {
     const page = renderPage(<Footer />)
     expect(page.querySelector('a[href="/research"]')?.textContent).toBe('Research')
-    const external = Array.from(page.querySelectorAll('footer a[target="_blank"]'))
-    expect(external.map((link) => link.textContent?.trim())).toEqual(['GitHub', 'LinkedIn'])
-    for (const link of external) expectExternalLink(link)
-    for (const { url } of expectedProfiles) {
-      expect(page.querySelector(`footer a[href="${url}"]`)).toBeNull()
-    }
+    const group = Array.from(page.querySelectorAll('footer h2')).find((heading) => heading.textContent === 'Research Profiles')?.parentElement
+    const links = Array.from(group?.querySelectorAll('a') ?? [])
+    expect(links.map((link) => link.getAttribute('href'))).toEqual(expectedProfiles.map(({ url }) => url))
+    for (const link of links) expectExternalLink(link)
   })
 
   test('includes all profiles in the existing root Person schema and preserves identity relationships', () => {

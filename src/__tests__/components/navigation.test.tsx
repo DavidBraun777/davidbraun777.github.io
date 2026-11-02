@@ -31,8 +31,10 @@ const expectedExperience = [
   { label: 'Resume PDF', href: resumeUrl },
 ]
 const expectedExplore = [
-  ...expectedNavigation,
+  { label: 'Home', href: '/' },
+  ...expectedNavigation.slice(0, 4),
   { label: 'Writing', href: '/writing' },
+  { label: 'Contact', href: '/contact' },
   { label: 'Résumés & CV', href: '/resumes' },
 ]
 
@@ -87,17 +89,18 @@ describe('navigation hierarchy', () => {
     expect(header?.querySelector('[role="menu"], [role="menuitem"]')).toBeNull()
   })
 
-  test('keeps footer navigation and professional profiles compact and independent', () => {
+  test('keeps footer navigation, professional links and research profiles independent', () => {
     const page = render(<Footer />)
     const headings = Array.from(page.querySelectorAll('footer h2'))
     expect(headings.map((heading) => heading.textContent)).toEqual([
-      'Explore', 'Connect',
+      'Explore', 'Connect', 'Research Profiles',
     ])
-    const [explore, connect] = headings.map((heading) => heading.parentElement)
+    const [explore, connect, research] = headings.map((heading) => heading.parentElement)
     expect(linksWithin(explore)).toEqual(expectedExplore)
     expect(linksWithin(connect).map(({ label }) => label)).toEqual(['GitHub', 'LinkedIn'])
     expect(explore?.parentElement).toBe(connect?.parentElement)
-    expect(connect?.parentElement?.children).toHaveLength(3)
+    expect(research?.parentElement).toBe(connect?.parentElement)
+    expect(connect?.parentElement?.children).toHaveLength(4)
 
     const links = Array.from(page.querySelectorAll('footer ul a'))
     const destinations = links.map((link) => link.getAttribute('href'))

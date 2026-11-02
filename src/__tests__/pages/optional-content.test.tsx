@@ -56,11 +56,6 @@ describe('optional portfolio content', () => {
     await expect(detail.default({ params: Promise.resolve({ slug: 'absent' }) })).rejects.toThrow(/NEXT_HTTP_ERROR_FALLBACK;404/)
   })
 
-  test('the homepage fails clearly if required production proof is missing from its data source', async () => {
-    vi.doMock('@/data/systems', () => ({ getSystemById: () => null }))
-    await expect(import('@/app/page')).rejects.toThrow('Missing selected homepage system: vifg-nonprofit-platform')
-  })
-
   test('experience handles incomplete education dates, absent optional links and minimal roles honestly', async () => {
     const experiences: Experience[] = [{ id: 'role', company: 'Example', role: 'Engineer', department: 'Platform', location: 'Remote', startDate: '2020', endDate: null, description: 'A scoped role.', highlights: [] }]
     const education: Education[] = [

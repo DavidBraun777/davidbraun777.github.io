@@ -57,6 +57,9 @@ import type { SearchIndex } from '@/lib/search/types'
 // remaining 590 records match exactly. Every retained URL and anchor is stable.
 // One Matt Laur section has a new label. Unrelated ranked results retain their
 // scores, snippets and relative order across all sampled queries.
+// Reviewed the homepage restoration against master 2c9a8fd. Only the home
+// record changed. All 598 other records, every destination and project manifest,
+// and all non-home ranked results remain identical across the 20 queries.
 function canonical(value: unknown): unknown {
   if (Array.isArray(value)) return value.map(canonical)
   if (value && typeof value === 'object') return Object.fromEntries(
@@ -78,15 +81,15 @@ const queries = [
   ["Time2Move",5,"32187ba37ad5969becb3e6c1f8a04d386ebc1dc20e1ffbc5c30b1cfba300105c"],
   ["property inquiry",1,"e7e822d9b3639aed62b3db76fa9b174e79706faa1d2863caac9f84f9331024c2"],
   ["work arrives unevenly",2,"838a2a186ddf11d069b795a3e58217b172fae0d517dffea6f1e1004ad3cbedc9"],
-  ["AI",36,"290a523afec5b53481d430d9dd0d6679eb2d0b7f22d87a4598b6a1522bd13cc5"],
+  ["AI",36,"cfbd356f361c096299648df973671e2a355b1adafd3f6d428a06789bbb1df688"],
   ["ML",3,"11bd4b9108b2a67cbcc441f5d31373d9a8f125b6a4f70c16789b00bf7065db77"],
   ["Next.js",12,"dda18898f4d41766580c708cd2b23f263966994a4bfc2463facd3ec35640a5f1"],
   ["Urarina",1,"8bd51e9b2651570c1fe0c8926a4124211740fbe9a23d48219c952d41a854e866"],
-  ["VIFG",8,"9a9e9a02d8c518a08ea7538f198d155d0ce53951b1100f3f0a66d7401ad4dd79"],
-  ["research",19,"79048679bf22c0df988ddb290cf9eba418c451ed67c191680dd159b288239c1f"],
+  ["VIFG",7,"2c58bb569d9c962ac5b3b27aa7c5dc038eb0077447ec7a47d8962ffec78d5792"],
+  ["research",19,"c36af019e9dcf714cfa61f39cf584fbde4676ec24a7bb83a99dc3c0972a68b0f"],
   ["semantic retrieval",4,"6721883c4454c9a2f0547904fd43be2f675c23b2f2bc6c1c3bce81ab03960d77"],
   ["automation workflow",15,"5107000eb74c2a7ac383313eabf03596922fa8aedfc5b4747371a1744df2bd19"],
-  ["data platform",11,"9906b4c8dc4be6e01fbdcbb402e8d4ecde603cfbb1dd7468ae8998047e094e3b"],
+  ["data platform",11,"142b154467da73cc271e8ea53f9c4b49f7f3926abcd9408c7ad5a239b7306316"],
   ["north star",0,"4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"],
   ["zzzz-no-match",0,"4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"],
 ] as const
@@ -94,7 +97,7 @@ const queries = [
 describe('published search compatibility with ba84b4d and reviewed editorial updates', () => {
   test('preserves all public records, destinations and project target metadata', () => {
     expect(index.records).toHaveLength(599)
-    expect(digest(index)).toBe('c55391a42325448bd7c435f4ce1a55e91622ffa09374c12b6dafe869058ae3fd')
+    expect(digest(index)).toBe('e9bd73b2028eb00bd21350b71a9bec8cf7a3f8d4e626306b143470ad26bf46c3')
     const inventory = index.records.map(record => ({ id: record.id, href: record.href, destination: record.destination, cells: record.cells }))
     expect(index.records.reduce((count, record) => count + Number(!!record.destination) + (record.cells?.length ?? 0), 0)).toBe(643)
     expect(digest(inventory)).toBe('68ef650108540e7310ccfc3857c33d7d8629a77ecb3ab2d699863960d11c1664')

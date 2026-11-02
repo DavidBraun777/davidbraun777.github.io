@@ -69,19 +69,12 @@ test.describe('Smoke tests', () => {
     await expect(page).toHaveTitle('David Braun | AI Systems & Platform Engineer')
     const main = page.locator('main')
     await expect(main).toBeVisible()
-    await expect(main.getByRole('article').getByRole('heading')).toHaveText([
-      'VIFG Nonprofit Platform', 'DealerFlow', 'WeatherForge',
-    ])
-    for (const [slug, name] of [
-      ['ark-landscaping', /ARK Landscaping/i],
-      ['matt-laur', /Matt Laur/i],
+    for (const [label, href] of [
+      ['View Experience', '/experience'],
+      ['View Services', '/services'],
+      ['View Research', '/research'],
     ] as const) {
-      const href = `a[href="/case-studies/${slug}"]`
-      const link = main.locator(href)
-      await expect(link).toHaveCount(1)
-      await expect(link).toHaveAccessibleName(name)
-      await expect(link).toBeVisible()
-      await expect(main.locator('article').locator(href)).toHaveCount(0)
+      await expect(main.getByRole('link', { name: label, exact: true })).toHaveAttribute('href', href)
     }
     await expect(
       main.getByRole('heading', {
@@ -122,8 +115,8 @@ test.describe('Smoke tests', () => {
       /\/twitter-image/
     )
     await expect(
-      main.getByRole('link', { name: 'View all work', exact: true })
-    ).toHaveAttribute('href', '/case-studies')
+      main.getByRole('link', { name: 'Engineering & Evidence Standards', exact: true })
+    ).toHaveAttribute('href', '/approach/evidence')
   })
 
   test('desktop header preserves familiar navigation and the homepage brand', async ({ page }) => {
@@ -257,21 +250,27 @@ test.describe('Smoke tests', () => {
       '/research'
     )
     const connect = footer.getByRole('heading', { name: 'Connect', exact: true }).locator('..')
-    await expect(footer.getByRole('heading')).toHaveText(['Explore', 'Connect'])
+    await expect(footer.getByRole('heading')).toHaveText(['Explore', 'Connect', 'Research Profiles'])
     const explore = footer.getByRole('navigation', { name: 'Explore' })
     await expect(explore.getByRole('link')).toHaveText([
-      ...primaryJourneys.map(({ label }) => label), 'Writing', 'Résumés & CV',
+      'Home', 'Work', 'Experience', 'Services', 'Research', 'Writing', 'Contact', 'Résumés & CV',
     ])
     await expect(explore.getByRole('link', { name: 'Résumés & CV', exact: true }))
       .toHaveAttribute('href', '/resumes')
     await expect(connect.getByRole('link')).toHaveText(['GitHub', 'LinkedIn'])
-    for (const { url } of researchProfiles) {
-      await expect(footer.locator(`a[href="${url}"]`)).toHaveCount(0)
+    await expect(connect).toContainText('White Bear Lake, MN')
+    const directory = footer.getByRole('heading', { name: 'Research Profiles', exact: true }).locator('..')
+    await expect(directory.getByRole('link')).toHaveCount(researchProfiles.length)
+    for (const [index, { url }] of researchProfiles.entries()) {
+      await expect(directory.getByRole('link').nth(index)).toHaveAttribute('href', url)
     }
     await expect(footer).toContainText(
       'And whatsoever ye do, do it heartily, as to the Lord, and not unto men;'
     )
     await expect(footer).toContainText('Colossians 3:23 (KJV)')
+    await expect(footer).toContainText('My faith shapes how I work')
+    await expect(footer).toContainText('AI Systems & Platform Engineer')
+    await expect(footer).toContainText('Built with Next.js, TypeScript')
   })
 
   test('professional profile links populate Person structured data', async ({ page }) => {
@@ -352,7 +351,9 @@ test.describe('Smoke tests', () => {
   })
 
   test('Work groups client deliveries, applications, and experiments', async ({ page }) => {
-    await page.goto('/case-studies')
+    await page.goto('/')
+    await page.getByRole('main').getByRole('link', { name: 'View Work', exact: true }).click()
+    await expect(page).toHaveURL(/\/case-studies$/)
     const main = page.getByRole('main')
     await expect(main.getByRole('heading', { level: 1, name: 'Work' })).toBeVisible()
     await expect(main.getByRole('heading', { level: 2 })).toHaveText([
@@ -411,19 +412,11 @@ test.describe('Smoke tests', () => {
     await expect(main).not.toContainText('The three-person project team filtered')
   })
 
-  test('homepage primary actions lead to work and the shared contact page', async ({ page }) => {
+  test('the homepage hero and closing invitation share a contact destination', async ({ page }) => {
     await page.goto('/')
-    await expect(
-      page.getByText(
-        'I build applications, cloud infrastructure, and automation that make AI and data useful in everyday operations.',
-        { exact: true }
-      )
-    ).toBeVisible()
-    await expect(page.getByRole('link', { name: /^view work$/i })).toHaveAttribute(
-      'href',
-      '/case-studies'
-    )
-    await page.getByRole('main').getByRole('link', { name: 'Contact', exact: true }).click()
+    const main = page.getByRole('main')
+    await expect(main.getByRole('link', { name: 'Contact', exact: true })).toHaveAttribute('href', '/contact')
+    await main.getByRole('link', { name: 'Contact Me', exact: true }).click()
     await expect(page).toHaveURL(/\/contact$/)
   })
 

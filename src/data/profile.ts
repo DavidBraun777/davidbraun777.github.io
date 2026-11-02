@@ -81,8 +81,6 @@ export const profile = {
   professionalIdentity: northStarIdentity,
   summary: northStarStatement,
   heroHeadline: northStarValueProposition,
-  heroDescription:
-    'I build applications, cloud infrastructure, and automation that make AI and data useful in everyday operations.',
   audience:
     'Best fit when software, cloud infrastructure, data, automation, and AI need to operate as one dependable system.',
   availability: professionalAvailability,

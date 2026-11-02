@@ -7,8 +7,9 @@ import type { SearchRecord } from './types'
 export const staticSearchPages: SearchRecord[] = [
   {
     id: 'page-home', title: 'David Braun: AI Systems & Platform Engineer', href: '/', type: 'Page',
-    description: profile.heroDescription, tags: ['AI', 'Platform Engineering'],
-    headings: ['Career and research highlights', 'Selected work'], body: 'VIFG Nonprofit Platform, DealerFlow, WeatherForge.',
+    description: profile.summary, tags: ['AI', 'Platform Engineering'],
+    headings: ['Career and research highlights', 'Three ways to engage', 'Technical capabilities'],
+    body: `${profile.heroHeadline} Engineering roles. Consulting engagements. Research collaboration.`,
   },
   {
     id: 'page-case-studies', title: 'Work', href: '/case-studies', type: 'Page',
