@@ -4,10 +4,9 @@ import { ArrowRight, FileText } from 'lucide-react'
 import { ClientWorkCard } from '@/components/site/client-work-card'
 import { Badge } from '@/components/ui/badge'
 import { canonicalSeoDescription } from '@/data/career-story'
-import { mattLaur } from '@/data/matt-laur'
 import { profile } from '@/data/profile'
 import { resumeUrl } from '@/data/resumes'
-import { getSystemById, type FeaturedSystemCaseStudy } from '@/data/systems'
+import { getSystemById, liveClientWebsites, type FeaturedSystemCaseStudy } from '@/data/systems'
 import { createPageMetadata } from '@/lib/seo'
 
 export const metadata: Metadata = createPageMetadata({
@@ -189,9 +188,14 @@ export default function Home() {
               <SelectedWorkCard key={system.id} system={system} />
             ))}
           </div>
-          <div className="mt-5">
-            <ClientWorkCard label="More live client work" system={mattLaur} />
-          </div>
+          <section aria-labelledby="live-client-websites" className="mt-8">
+            <h2 id="live-client-websites" className="mb-4 text-2xl font-semibold tracking-tight text-text-primary">
+              Live client websites
+            </h2>
+            <div className="grid gap-5 md:grid-cols-2">
+              {liveClientWebsites.map((system) => <ClientWorkCard key={system.id} system={system} />)}
+            </div>
+          </section>
         </div>
       </section>
 

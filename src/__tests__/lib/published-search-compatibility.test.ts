@@ -48,6 +48,10 @@ import type { SearchIndex } from '@/lib/search/types'
 // Reviewed the Matt Laur addition against master 292d35e. All 590 existing records
 // and ten project manifests match in order and content. Only "Next.js" gains
 // two Matt Laur results. Existing targets, scores and snippets remain intact.
+// Reviewed ARK Landscaping against master 0299abd. Five project records were
+// added and the homepage gained the Live client websites heading. All 595
+// previous records retain their identities, destinations and relative order.
+// All 11 existing project manifests and 20 ranked queries remain identical.
 function canonical(value: unknown): unknown {
   if (Array.isArray(value)) return value.map(canonical)
   if (value && typeof value === 'object') return Object.fromEntries(
@@ -84,13 +88,13 @@ const queries = [
 
 describe('published search compatibility with ba84b4d and reviewed editorial updates', () => {
   test('preserves all public records, destinations and project target metadata', () => {
-    expect(index.records).toHaveLength(595)
-    expect(digest(index)).toBe('2cf56ab39839a2dd29580ff118eea31d1b84ea9afa7f4aca8f809e4bf9d4fd79')
+    expect(index.records).toHaveLength(600)
+    expect(digest(index)).toBe('8a429d02e5589ced1e157c4a6d7cc22ba610ef18af9c979a93a176214df03843')
     const inventory = index.records.map(record => ({ id: record.id, href: record.href, destination: record.destination, cells: record.cells }))
-    expect(index.records.reduce((count, record) => count + Number(!!record.destination) + (record.cells?.length ?? 0), 0)).toBe(640)
-    expect(digest(inventory)).toBe('497781a769f91b88bfbff4f6bfe015ca745a558b23b3db02286c93e128997ced')
+    expect(index.records.reduce((count, record) => count + Number(!!record.destination) + (record.cells?.length ?? 0), 0)).toBe(644)
+    expect(digest(inventory)).toBe('37cbcb217d33039260960346f36dd7773ae0d5ce0e4db51671ca67d981899d38')
     const projects = allSystems.map(system => ({ id: system.id, destinations: createProjectContent(system).destinations }))
-    expect(digest(projects)).toBe('554a5c7b638f8a8da5f574fecb3b2bc6aecc314ed281bcff0750971f99516cc9')
+    expect(digest(projects)).toBe('2a57c34071e471116640cc5102c646a8a8df662fd73b88160cff19b6117b48f5')
   })
 
   test.each(queries)('preserves ordered results, scores, selected targets and snippets for %s', (query, count, expected) => {

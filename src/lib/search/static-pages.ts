@@ -8,7 +8,7 @@ export const staticSearchPages: SearchRecord[] = [
   {
     id: 'page-home', title: 'David Braun: AI Systems & Platform Engineer', href: '/', type: 'Page',
     description: profile.summary, tags: ['AI', 'Platform Engineering'],
-    headings: ['Selected work'], body: [profile.heroDescription, profile.audience, profile.availability].join(' '),
+    headings: ['Selected work', 'Live client websites'], body: [profile.heroDescription, profile.audience, profile.availability].join(' '),
   },
   {
     id: 'page-case-studies', title: 'Case Studies', href: '/case-studies', type: 'Page',

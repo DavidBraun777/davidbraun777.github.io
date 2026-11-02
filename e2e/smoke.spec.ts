@@ -70,6 +70,11 @@ test.describe('Smoke tests', () => {
     await expect(page).toHaveTitle('David Braun | AI Systems & Platform Engineer')
     const main = page.locator('main')
     await expect(main).toBeVisible()
+    const clientWork = main.getByRole('region', { name: 'Live client websites' })
+    await expect(clientWork.getByRole('article').getByRole('heading')).toHaveText([
+      'ARK Landscaping — Service Business Website',
+      'Matt Laur — Athlete & Coaching Website',
+    ])
     await expect(
       main.getByRole('heading', {
         level: 1,
@@ -356,10 +361,18 @@ test.describe('Smoke tests', () => {
       has: page.getByRole('heading', { name: /featured public production proof/i }),
     })
     const cards = production.getByRole('article')
-    await expect(cards.nth(0).getByRole('heading')).toHaveText('VIFG Nonprofit Platform')
-    await expect(cards.nth(1).getByRole('heading')).toHaveText('Matt Laur — Athlete & Coaching Website')
-    await expect(cards.nth(1).getByRole('link')).toHaveText(['View live website', 'Read case study'])
-    await expect(cards.nth(1).getByRole('link', { name: 'Read case study' })).toHaveAttribute('href', '/case-studies/matt-laur')
+    await expect(cards.getByRole('heading')).toHaveText([
+      'VIFG Nonprofit Platform',
+      'ARK Landscaping — Service Business Website',
+      'Matt Laur — Athlete & Coaching Website',
+    ])
+    for (const [index, slug] of ['ark-landscaping', 'matt-laur'].entries()) {
+      const card = cards.nth(index + 1)
+      await expect(card.getByText('Live client website', { exact: true })).toBeVisible()
+      await expect(card.getByRole('img')).toHaveAttribute('alt', /homepage/i)
+      await expect(card.getByRole('link')).toHaveText(['View live website', 'Read case study'])
+      await expect(card.getByRole('link', { name: 'Read case study' })).toHaveAttribute('href', `/case-studies/${slug}`)
+    }
 
     const mainText = await page.locator('main').innerText()
     expect(mainText.indexOf('VIFG Nonprofit Platform')).toBeLessThan(

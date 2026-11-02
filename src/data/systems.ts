@@ -1,4 +1,5 @@
 import type { CaseStudyStory, CaseStudySuccessorLink } from './case-study-story'
+import { arkLandscaping } from './ark-landscaping'
 import { mattLaur } from './matt-laur'
 import { time2Move } from './past-client-work'
 
@@ -103,6 +104,8 @@ export interface SystemTheme {
 export interface FeaturedSystemCaseStudy extends SystemCaseStudy {
   themeTitle: string
 }
+
+export const liveClientWebsites = [arkLandscaping, mattLaur] satisfies SystemCaseStudy[]
 
 export const systemThemes: SystemTheme[] = [
   {
@@ -1186,7 +1189,7 @@ export const systemThemes: SystemTheme[] = [
           },
         ],
       },
-      mattLaur,
+      ...liveClientWebsites,
     ],
   },
   {
