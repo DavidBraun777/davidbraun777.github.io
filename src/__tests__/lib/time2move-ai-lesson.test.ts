@@ -5,6 +5,17 @@ import { evaluateAiProposal, proposedAiSchema, validateAiProposal } from '@/lib/
 const valid = fixtures.cases[0].proposal
 
 describe('illustrative proposal validation', () => {
+  test.each([
+    { field: 'summary', pattern: proposedAiSchema.properties.summary.pattern },
+    { field: 'evidence item', pattern: proposedAiSchema.properties.evidence.items.pattern },
+  ])('requires a non-whitespace character in the $field schema pattern', ({ pattern }) => {
+    const regex = new RegExp(pattern)
+    expect('ordinary text').toMatch(regex)
+    expect('  ordinary text\n').toMatch(regex)
+    expect('').not.toMatch(regex)
+    expect(' \t\n').not.toMatch(regex)
+  })
+
   test.each([undefined, null, false, 42, 'seller', []])('rejects a non-object proposal: %j', value => {
     expect(validateAiProposal(value)).toEqual({ valid: false, reason: 'Expected a structured object.' })
   })
@@ -59,7 +70,7 @@ describe('separate evidence and application review gates', () => {
     expect(invalid.evidence.status).toBe('Not run')
     expect(invalid.humanReview.status).toBe('Blocked')
     const absent = evaluateAiProposal('Sell my house', { ...valid, evidence: ['sell my house', 'unknown'] })
-    expect(absent.evidence.detail).toContain('“sell my house”; “unknown”')
+    expect(absent.evidence.detail).toBe('Not found in the visitor message: “sell my house”; “unknown”.')
     expect(absent.humanReview.status).toBe('Blocked')
   })
 

@@ -26,19 +26,22 @@ export function Time2MoveAiLesson() {
           </li>
         ))}
       </ol>
-      <div role="group" aria-label="Choose a synthetic example" className="flex flex-wrap gap-2">
-        {fixtures.cases.map(fixture => (
-          <button
-            key={fixture.id}
-            type="button"
-            aria-pressed={example.id === fixture.id}
-            onClick={() => setExample(fixture)}
-            className="rounded-full border border-border-strong bg-background-subtle px-4 py-2 text-sm font-semibold text-text-primary aria-pressed:border-primary-500 aria-pressed:bg-primary-500/15 aria-pressed:ring-2 aria-pressed:ring-primary-500"
-          >
-            {fixture.title}
-          </button>
-        ))}
-      </div>
+      <fieldset className="min-w-0">
+        <legend className="sr-only">Choose a synthetic example</legend>
+        <div className="flex flex-wrap gap-2">
+          {fixtures.cases.map(fixture => (
+            <button
+              key={fixture.id}
+              type="button"
+              aria-pressed={example.id === fixture.id}
+              onClick={() => setExample(fixture)}
+              className="rounded-full border border-border-strong bg-background-subtle px-4 py-2 text-sm font-semibold text-text-primary aria-pressed:border-primary-500 aria-pressed:bg-primary-500/15 aria-pressed:ring-2 aria-pressed:ring-primary-500"
+            >
+              {fixture.title}
+            </button>
+          ))}
+        </div>
+      </fieldset>
       <div aria-live="polite" aria-atomic="true" className="space-y-5">
         <div className="grid min-w-0 gap-5 md:grid-cols-2">
           <div className="min-w-0 rounded-xl border border-border-subtle p-4">

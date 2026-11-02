@@ -13,7 +13,9 @@ afterEach(() => { cleanupMountedUi(); vi.unstubAllGlobals() })
 
 test('switches precomputed examples and shows independent schema, evidence and review results without network calls', () => {
   const { container } = mount(<Time2MoveAiLesson />)
-  const buttons = Array.from(container.querySelectorAll<HTMLButtonElement>('button'))
+  const group = element('fieldset', container)
+  expect(element('legend', group).textContent).toBe('Choose a synthetic example')
+  const buttons = Array.from(group.querySelectorAll<HTMLButtonElement>('button'))
   expect(buttons).toHaveLength(3)
   expect(buttons.map(button => button.getAttribute('aria-pressed'))).toEqual(['true', 'false', 'false'])
   const expectedReview = ['Required', 'Clarification needed', 'Blocked']

@@ -25,7 +25,7 @@ export default function nextConfig(phase: string): NextConfig {
     images: {
       formats: ['image/avif', 'image/webp'],
     },
-    async headers() {
+    headers() {
       return [
         {
           source: '/(.*)',
@@ -62,7 +62,7 @@ export default function nextConfig(phase: string): NextConfig {
         },
       ]
     },
-    async redirects() {
+    redirects() {
       return [
         {
           source: '/about',

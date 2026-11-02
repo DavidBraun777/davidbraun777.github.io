@@ -52,10 +52,13 @@ export function Button({
         className
       )}
       disabled={disabled || isLoading}
+      aria-busy={isLoading}
       onClick={onClick}
     >
       {isLoading && (
         <svg
+          aria-hidden="true"
+          focusable="false"
           className="animate-spin h-4 w-4"
           xmlns="http://www.w3.org/2000/svg"
           fill="none"
