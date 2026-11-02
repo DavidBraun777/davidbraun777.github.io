@@ -1,6 +1,5 @@
 import type { CaseStudyStory, CaseStudySuccessorLink } from './case-study-story'
-import { arkLandscaping } from './ark-landscaping'
-import { mattLaur } from './matt-laur'
+import clientWebsiteContent from './live-client-websites.json'
 import { time2Move } from './past-client-work'
 
 export interface ProofSection {
@@ -105,7 +104,26 @@ export interface FeaturedSystemCaseStudy extends SystemCaseStudy {
   themeTitle: string
 }
 
-export const liveClientWebsites = [arkLandscaping, mattLaur] satisfies SystemCaseStudy[]
+const stackList = new Intl.ListFormat('en-US')
+
+export const liveClientWebsites = clientWebsiteContent.map(
+  ({ client, openingSection, sections, ...project }): SystemCaseStudy => ({
+    ...project,
+    caseStudyStage: 'Production',
+    currentState: 'Live client website',
+    image: openingSection.figure.src,
+    imageAlt: openingSection.figure.alt,
+    proofSections: [],
+    story: {
+      atAGlance: [
+        { label: 'Client', value: client },
+        { label: 'My role', value: 'Website development' },
+        { label: 'Built with', value: stackList.format(project.stack) },
+      ],
+      sections: [openingSection, ...sections],
+    },
+  })
+)
 
 export const systemThemes: SystemTheme[] = [
   {

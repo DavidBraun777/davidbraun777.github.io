@@ -27,12 +27,11 @@ function collectTextFiles(directory: string): string[] {
 
 describe('visible content punctuation', () => {
   test('source copy uses em dashes only in explicitly approved labels', () => {
-    const filesWithEmDash = sourceRoots
-      .flatMap((root) => collectTextFiles(root))
-      .filter((filePath) => approvedLabels.reduce(
-        (content, label) => content.replaceAll(label, ''),
-        readFileSync(filePath, 'utf8')
-      ).includes(disallowedCharacter))
+    const copyFiles = [...sourceRoots.flatMap(collectTextFiles), 'src/data/live-client-websites.json']
+    const filesWithEmDash = copyFiles.filter((filePath) => approvedLabels.reduce(
+      (content, label) => content.replaceAll(label, ''),
+      readFileSync(filePath, 'utf8')
+    ).includes(disallowedCharacter))
 
     expect(filesWithEmDash).toEqual([])
   })
