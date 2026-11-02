@@ -65,7 +65,7 @@ test.describe('Accessibility', () => {
           name: width < 1280 ? 'Mobile' : 'Primary', exact: true,
         })
 
-        for (const section of ['Research', 'Experience']) {
+        for (const section of ['Experience', 'Research']) {
           const trigger = navigation.getByRole('button', { name: `${section} navigation`, exact: true })
           await trigger.click()
           await expect(trigger).toHaveAttribute('aria-expanded', 'true')

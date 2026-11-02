@@ -27,7 +27,7 @@ export const experiences: Experience[] = [
       'Own the production VIFG platform across React, Docker, Nginx, AWS Lightsail, Route 53, SSL/TLS, accessibility validation, and ongoing support',
       'Built GitHub Actions workflows for testing, security and dependency checks, Docker publishing to Amazon ECR, and repeatable AWS deployments',
       'Delivered a QR-based wedding media platform, primarily provisioned with AWS CloudFormation, that enabled guests to upload photos and videos to Amazon S3 with Google Photos integration',
-      'Time2Move: original real estate website and CRM workflow implementation; the engagement ended before the full intended system was completed. The client later continued independently as Hombuzz.',
+      'Developed Time2Move’s original real estate website and inquiry-processing backend for CRM follow-up. The engagement ended before the wider roadmap was complete.',
       'Client and partner delivery has included ARK Landscaping, Outerly, 3C1S, and other initiatives',
     ],
     projectLinks: [{ label: 'Read the Time2Move case study', href: '/case-studies/time2move' }],

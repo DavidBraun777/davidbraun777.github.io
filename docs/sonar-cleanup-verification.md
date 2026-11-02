@@ -27,7 +27,7 @@ The owner will reconcile the individual issues in Sonar after reviewing the PR.
 | 10 | `header-navigation-item.tsx`: complexity 16 | Component now 13; presentational `NavigationLinksPanel` is 2 (its mapping callback is 4). Desktop/mobile pointer, keyboard and focus behavior remains covered. |
 | 11 | `site-search.tsx`: complexity 18 | Component now 3; status calculation and result presentation extracted, with helpers at most 5. Loading, retry, empty states, pagination, selection and focus tests pass. |
 | 12 | `site-search.tsx`: nested ternary | `searchStatus` uses explicit branches, retaining every displayed status string and precedence. |
-| 13 | `project-destinations.ts`: complexity 25 | `createProjectContent` now 4; registry, story, standard and retrieval registration are separated. Largest helper is 11. Order, duplicate detection, missing-target errors and successor-site distinction are retained. |
+| 13 | `project-destinations.ts`: complexity 25 | `createProjectContent` now 4; registry, story, standard and retrieval registration are separated. Largest helper is 11. Order, duplicate detection, and missing-target errors are retained. |
 | 14 | `readable-mdx.ts`: hidden-attribute complexity 19 | `hidesContent` now 5; literal AST decoding is separate from visibility policy. Literal/string distinctions and ambiguous-expression exclusions remain tested. |
 | 15 | `readable-mdx.ts`: visitor complexity 25 | Visitor now 11; heading, disclosure, table and list handlers preserve scoped traversal, ordered ancestry and directly owned prose. No expression evaluation added. |
 | 16 | `readable-mdx.ts`: heading-depth nested ternary | `headingDepth` uses clear branches (complexity 2); published article IDs and rendered anchors remain identical. |
@@ -61,10 +61,10 @@ keys while retaining array order and complete field values.
 - All **615 records** and **661 record/cell destination entries** are identical.
   No published anchors changed, so no legacy aliases are required by this change.
 - All **10 project manifests** match, including Time2Move's original-work proof
-  context and separately labeled Hombuzz successor link.
+  context.
 - All **20 query comparisons** match complete ordering, scores, selected row/cell
   destinations and excerpts. Queries include BM25, RAGeATM BM25, RAGeATM, Static
-  embeddings, BM25 keyword, BM25 weak, Time2Move, Hombuzz, article-body prose,
+  embeddings, BM25 keyword, BM25 weak, Time2Move, article-body prose,
   short technology terms, multiword matches, and no-match queries.
 - The MDX-only comparison matched **322 article records / 318 destinations**.
   Existing rendering/extraction consistency and insertion-stability tests pass.

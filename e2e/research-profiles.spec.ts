@@ -28,7 +28,7 @@ test('research profile cards retain responsive layout and keyboard access in bot
       expect(await page.evaluate(() => document.documentElement.scrollWidth <= window.innerWidth + 1)).toBe(true)
     }
 
-    await page.getByRole('link', { name: /^AI Research CV/ }).focus()
+    await page.getByRole('link', { name: 'How I label and verify technical work' }).focus()
     for (const card of await cards.all()) {
       await page.keyboard.press('Tab')
       await expect(card).toBeFocused()

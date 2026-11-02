@@ -73,7 +73,7 @@ export default function EvidenceStandardsPage() {
           title="Engineering & Evidence Standards"
           description="Technical work is most useful when visitors can tell what exists, what was measured, what remains limited, and who owns the final judgment. These standards explain the labels used throughout this site."
           actions={[
-            { label: 'View Case Studies', href: '/case-studies' },
+            { label: 'View Work', href: '/case-studies' },
             { label: 'View Research', href: '/research', variant: 'secondary' },
           ]}
         />

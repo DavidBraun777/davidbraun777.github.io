@@ -10,7 +10,7 @@ import type { SearchRecord, SearchResult } from '@/lib/search/types'
 import { prepareContentNavigation, releaseContentNavigation } from '@/lib/content-navigation'
 
 const suggestions = [
-  { title: 'Case Studies', href: '/case-studies' },
+  { title: 'Work', href: '/case-studies' },
   { title: 'Research', href: '/research' },
   { title: 'Experience', href: '/experience' },
   { title: 'Writing', href: '/writing' },

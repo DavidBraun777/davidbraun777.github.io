@@ -52,7 +52,6 @@ export function projectSearchRecord(system: FeaturedSystemCaseStudy): SearchReco
       system.positioning, system.currentState,
       ...story.atAGlance.map(item => text(item.label, item.value)),
       ...story.sections.map(block => text(...block.paragraphs, ...(block.items ?? []), block.closing, block.figure?.caption)),
-      system.successorLink?.label,
     ) : text(
       system.oneSentenceOutcome, system.positioning, system.problem, system.system,
       system.myRole, system.coreConstraint, system.outcome, system.currentState,

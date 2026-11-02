@@ -99,7 +99,7 @@ export function Header() {
     <header ref={headerRef} className="sticky top-0 z-50 border-b border-[var(--theme-frame-border)] bg-[var(--theme-frame-bg)] text-[var(--theme-frame-text)] backdrop-blur-xl">
       <div className="mx-auto flex max-w-7xl items-center justify-between gap-2 px-4 py-4 sm:gap-3 sm:px-6 lg:px-8">
         <div className="min-w-0">
-          <Link href="/" onClick={closeNavigation} className="inline-flex flex-col">
+          <Link href="/" aria-current={pathname === '/' ? 'page' : undefined} onClick={closeNavigation} className="inline-flex flex-col">
             <span className="text-lg font-semibold tracking-tight text-[var(--theme-frame-text)]">
               {profile.name}
             </span>
@@ -139,13 +139,6 @@ export function Header() {
             <span className="hidden whitespace-nowrap text-sm xl:inline">Search site…</span>
           </button>
           <ThemeToggle />
-          <Link
-            href="/contact"
-            onClick={closeNavigation}
-            className="hidden whitespace-nowrap rounded-full bg-[var(--theme-frame-cta-bg)] px-4 py-2 text-sm font-medium text-[var(--theme-frame-cta-text)] transition-colors hover:bg-[var(--theme-frame-cta-bg-hover)] xl:inline-flex"
-          >
-            Book a Call
-          </Link>
           <button
             ref={mobileTriggerRef}
             type="button"
@@ -181,16 +174,6 @@ export function Header() {
               />
             ))}
           </nav>
-
-          <div className="mt-4 grid gap-2 sm:grid-cols-2">
-            <Link
-              href="/contact"
-              onClick={closeNavigation}
-              className="rounded-2xl bg-[var(--theme-frame-cta-bg)] px-4 py-3 text-center text-sm font-medium text-[var(--theme-frame-cta-text)] transition-colors hover:bg-[var(--theme-frame-cta-bg-hover)] sm:col-span-2"
-            >
-              Book a Call
-            </Link>
-          </div>
         </div>
       ) : null}
       <SiteSearch

@@ -21,11 +21,11 @@ describe('optional portfolio content', () => {
     const { default: Page } = await import('@/app/case-studies/page')
     const page = render(<Page />)
     expect(page.querySelectorAll('article')).toHaveLength(0)
-    expect(page.textContent).not.toContain('Featured public production proof')
-    expect(page.textContent).toContain('Past client work')
+    expect(page.textContent).not.toContain('Applications and data projects')
+    expect(page.textContent).not.toContain('Experiments and work in progress')
   })
 
-  test('case-study cards use semantic fallbacks and keep current-site links separate', async () => {
+  test('work cards distinguish public sites from projects with only a case study', async () => {
     const minimal = { ...base, contextLabel: undefined, externalUrl: undefined }
     vi.doMock('@/data/systems', () => ({
       productionSystems: [minimal, { ...minimal, id: 'production-example' }],
@@ -35,11 +35,11 @@ describe('optional portfolio content', () => {
     }))
     const { default: Page } = await import('@/app/case-studies/page')
     const page = render(<Page />)
-    expect(page.querySelector('a[href="https://www.vifg.org/home"]')).not.toBeNull()
+    expect(page.querySelector('article a[target="_blank"]')).toHaveProperty('href', 'https://example.com/live')
     const secondaryProduction = page.querySelector('a[href="/case-studies/production-example"]')
     expect(secondaryProduction?.textContent).toContain('Read case study')
     expect(secondaryProduction?.closest('article')?.querySelectorAll('a')).toHaveLength(1)
-    expect(page.querySelector('a[href="https://example.com/live"]')?.textContent).toContain('Visit live site')
+    expect(page.querySelector('a[href="https://example.com/live"]')?.textContent).toContain('View live website')
     expect(page.querySelector('#past-client-work h3')?.textContent).toBe(base.name)
   })
 

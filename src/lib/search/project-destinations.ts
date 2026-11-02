@@ -160,7 +160,6 @@ export function createProjectContent(system: FeaturedSystemCaseStudy) {
   if (story) registerStoryContent(story, registry)
   else registerStandardContent(system, registry)
   if (system.id === 'time2move') registerTime2MoveExtras(registry)
-  if (system.successorLink) section('continuation', system.successorLink.label)
   const destinations = [...byAnchor.values()]
   assertUniqueDestinations(destinations)
   const get = (...keys: string[]) => {

@@ -30,7 +30,7 @@ test.describe('site content search', () => {
     await openSearch(page)
     const dialog = searchDialog(page)
     await expect(dialog.getByRole('heading', { name: 'Suggestions', exact: true })).toBeVisible()
-    for (const name of ['Case Studies', 'Research', 'Experience', 'Writing', 'Résumés & CV']) {
+    for (const name of ['Work', 'Research', 'Experience', 'Writing', 'Résumés & CV']) {
       await expect(dialog.getByRole('link', { name, exact: true })).toBeVisible()
     }
     await searchInput(page).fill('VIFG')
@@ -208,7 +208,7 @@ test.describe('site content search', () => {
     await page.goto('/case-studies')
     await openSearch(page)
     const dialog = searchDialog(page)
-    await searchInput(page).fill('Hombuzz')
+    await searchInput(page).fill('Time2Move')
     const historicalResult = dialog.locator('a[href="/case-studies/time2move"], a[href^="/case-studies/time2move#"]').first()
     await expect(historicalResult).toBeVisible()
     await historicalResult.focus()
@@ -216,9 +216,9 @@ test.describe('site content search', () => {
     await expect(page).toHaveURL(/\/case-studies\/time2move(?:#.*)?$/)
     await expect(dialog).toBeHidden()
     const historicalWork = page.locator('main')
-    await expect(historicalWork).toContainText('Past client project · Engagement concluded')
+    await expect(historicalWork).toContainText('Past engagement · Original deployment inactive')
     await expect(historicalWork.getByRole('heading', { level: 1 })).toContainText('Time2Move')
-    await expect(historicalWork.getByRole('link', { name: 'Current business website — Hombuzz' })).toHaveAttribute('href', 'https://hombuzz.com/')
+    await expect(historicalWork.locator('#content-continuation')).toHaveCount(0)
   })
 
   test('keeps mobile search directly available and coordinates navigation menus', async ({ page }) => {

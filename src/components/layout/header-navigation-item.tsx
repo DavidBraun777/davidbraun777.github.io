@@ -71,7 +71,9 @@ export function HeaderNavigationItem({
         href={item.href}
         onClick={onNavigate}
         aria-current={active ? 'page' : undefined}
-        className={cn(linkClass, mobile && 'bg-[var(--theme-frame-overlay)]', tone)}
+        className={cn(linkClass, item.href === '/contact'
+          ? 'bg-[var(--theme-frame-cta-bg)] text-[var(--theme-frame-cta-text)] hover:bg-[var(--theme-frame-cta-bg-hover)]'
+          : cn(mobile && 'bg-[var(--theme-frame-overlay)]', tone))}
       >
         {item.label}
       </Link>

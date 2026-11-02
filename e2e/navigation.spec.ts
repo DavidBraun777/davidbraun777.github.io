@@ -81,7 +81,7 @@ test.describe('contextual header navigation', () => {
       await expect(researchList.getByRole('link', { name, exact: true })).toBeFocused()
     }
     await page.keyboard.press('Tab')
-    await expect(primary.getByRole('link', { name: 'Experience', exact: true })).toBeFocused()
+    await expect(primary.getByRole('link', { name: 'Contact', exact: true })).toBeFocused()
     await expect(researchList).toBeHidden()
 
     await research.focus()
@@ -105,7 +105,7 @@ test.describe('contextual header navigation', () => {
     await expect(resume).toHaveAttribute('target', '_blank')
     await expect(resume).toHaveAttribute('rel', 'noopener noreferrer')
     await page.keyboard.press('Tab')
-    await expect(primary.getByRole('link', { name: 'Contact', exact: true })).toBeFocused()
+    await expect(primary.getByRole('link', { name: 'Services', exact: true })).toBeFocused()
     await expect(experienceList).toBeHidden()
   })
 
@@ -176,7 +176,7 @@ test('footer columns stay independent, readable and keyboard accessible across t
   const links = footer.getByRole('link')
   const brand = footer.getByRole('link', { name: 'David Braun', exact: true })
 
-  await expect(footer.getByRole('heading')).toHaveText(['Explore', 'Connect', 'Research Profiles'])
+  await expect(footer.getByRole('heading')).toHaveText(['Explore', 'Connect'])
   const hrefs = await footer.locator('ul a').evaluateAll((elements) => elements.map((element) => element.getAttribute('href')))
   expect(new Set(hrefs).size).toBe(hrefs.length)
 
@@ -185,14 +185,14 @@ test('footer columns stay independent, readable and keyboard accessible across t
       await page.getByRole('button', { name: /switch to dark theme/i }).click()
       await expect(page.locator('html')).toHaveClass(/dark/)
     }
-    for (const [width, columns] of [[390, 1], [768, 2], [1280, 4]]) {
+    for (const [width, columns] of [[390, 1], [768, 2], [1280, 3]]) {
       await page.setViewportSize({ width, height: 900 })
       await expect.poll(() => footer.evaluate((element) => {
         const children = Array.from(element.firstElementChild?.children ?? [])
         const positions = children.map((column) => Math.round(column.getBoundingClientRect().x))
         return { viewportWidth: window.innerWidth, areas: children.length, columns: new Set(positions).size }
-      })).toEqual({ viewportWidth: width, areas: 4, columns })
-      if (columns === 4) {
+      })).toEqual({ viewportWidth: width, areas: 3, columns })
+      if (columns === 3) {
         const headingRows = await footer.getByRole('heading').evaluateAll((headings) =>
           headings.map((heading) => Math.round(heading.getBoundingClientRect().y))
         )

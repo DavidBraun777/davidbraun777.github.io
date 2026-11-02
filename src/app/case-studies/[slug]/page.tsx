@@ -81,7 +81,7 @@ export default async function CaseStudyDetailPage({ params }: Readonly<Props>) {
       {
         '@type': 'ListItem',
         position: 1,
-        name: 'Case Studies',
+        name: 'Work',
         item: absoluteUrl('/case-studies'),
       },
       {
@@ -106,9 +106,9 @@ export default async function CaseStudyDetailPage({ params }: Readonly<Props>) {
           title={system.displayTitle ?? system.name}
           description={system.positioning ?? system.summary}
           actions={[
-            system.story && system.externalUrl
-              ? { label: 'View live website', href: system.externalUrl, external: true, icon: ArrowUpRight }
-              : { label: 'Book a Call', href: '/contact' },
+            ...(system.story && system.externalUrl
+              ? [{ label: 'View live website', href: system.externalUrl, external: true, icon: ArrowUpRight }]
+              : []),
             ...(system.githubUrl
               ? [
                   {
@@ -130,14 +130,6 @@ export default async function CaseStudyDetailPage({ params }: Readonly<Props>) {
           <StandardCaseStudyContent system={system} content={content} />
         )}
 
-        {system.successorLink ? (
-          <div {...content.attrs('continuation')}>
-            <ExternalLinkAction href={system.successorLink.href}>
-              {system.successorLink.label}
-            </ExternalLinkAction>
-          </div>
-        ) : null}
-
         {relatedProjects.length > 0 ? (
           <section>
             <SectionHeader
@@ -158,7 +150,7 @@ export default async function CaseStudyDetailPage({ params }: Readonly<Props>) {
             href="/case-studies"
             className="inline-flex items-center gap-2 text-sm font-medium text-link-primary transition-colors hover:text-link-primary-hover"
           >
-            Back to all case studies
+            Back to all work
             <ArrowRight className="h-4 w-4" />
           </Link>
         </div>
@@ -435,7 +427,7 @@ function InterpretationTable({
 
 const curatedRelatedIds: Record<string, string[]> = {
   'ark-landscaping': ['matt-laur', 'vifg-nonprofit-platform'],
-  'matt-laur': ['ark-landscaping', 'vifg-nonprofit-platform'],
+  'matt-laur': ['ark-landscaping', 'time2move'],
   time2move: ['vifg-nonprofit-platform', 'dealerflow'],
   'vifg-nonprofit-platform': ['dealerflow', 'dgm'],
   dealerflow: ['vifg-nonprofit-platform', 'dgm'],

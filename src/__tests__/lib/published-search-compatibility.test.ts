@@ -52,6 +52,11 @@ import type { SearchIndex } from '@/lib/search/types'
 // added and the homepage gained the Live client websites heading. All 595
 // previous records retain their identities, destinations and relative order.
 // All 11 existing project manifests and 20 ranked queries remain identical.
+// Reviewed the portfolio and client-copy changes against master a4755af.
+// Nine records changed and one obsolete Time2Move section was retired. The
+// remaining 590 records match exactly. Every retained URL and anchor is stable.
+// One Matt Laur section has a new label. Unrelated ranked results retain their
+// scores, snippets and relative order across all sampled queries.
 function canonical(value: unknown): unknown {
   if (Array.isArray(value)) return value.map(canonical)
   if (value && typeof value === 'object') return Object.fromEntries(
@@ -70,31 +75,31 @@ const queries = [
   ["Static embeddings",1,"c668f80143157b39867a49d533f45cf0c69263afede4ae1b7eb91cc1e85c379b"],
   ["BM25 keyword",1,"47cced000f89944866711c99a9331ad9f0fdcfd86ae4d61707cdc2ce690f15ae"],
   ["BM25 weak",2,"72ed616f9318954b1becb558c3b9ac9085d22f707b438f11e1e7f30380799c21"],
-  ["Time2Move",4,"5d9904adc07e96c7a60f6f8fb4b488d4c2013ed0c10b92ea0bb709e980d689c3"],
-  ["Hombuzz",3,"3c3de55ff9a929f6bbad4faca83cd800c32215b796b52f6577fdaca317d05cef"],
+  ["Time2Move",5,"32187ba37ad5969becb3e6c1f8a04d386ebc1dc20e1ffbc5c30b1cfba300105c"],
+  ["property inquiry",1,"e7e822d9b3639aed62b3db76fa9b174e79706faa1d2863caac9f84f9331024c2"],
   ["work arrives unevenly",2,"838a2a186ddf11d069b795a3e58217b172fae0d517dffea6f1e1004ad3cbedc9"],
-  ["AI",36,"7edeccd19174a69f132c56e66a32f819ec922f5da6c11603fe64c651508f38c6"],
+  ["AI",36,"290a523afec5b53481d430d9dd0d6679eb2d0b7f22d87a4598b6a1522bd13cc5"],
   ["ML",3,"11bd4b9108b2a67cbcc441f5d31373d9a8f125b6a4f70c16789b00bf7065db77"],
-  ["Next.js",12,"88750cc6a14ab04fc8e5d601abecb8fc64a8d2d2d889b63c91f824a9f8717168"],
+  ["Next.js",12,"dda18898f4d41766580c708cd2b23f263966994a4bfc2463facd3ec35640a5f1"],
   ["Urarina",1,"8bd51e9b2651570c1fe0c8926a4124211740fbe9a23d48219c952d41a854e866"],
-  ["VIFG",7,"2c58bb569d9c962ac5b3b27aa7c5dc038eb0077447ec7a47d8962ffec78d5792"],
-  ["research",18,"12d5426be8266829c993dc08ac9a114eb9bb16f953024eae23f2ca47350461bd"],
+  ["VIFG",8,"9a9e9a02d8c518a08ea7538f198d155d0ce53951b1100f3f0a66d7401ad4dd79"],
+  ["research",19,"79048679bf22c0df988ddb290cf9eba418c451ed67c191680dd159b288239c1f"],
   ["semantic retrieval",4,"6721883c4454c9a2f0547904fd43be2f675c23b2f2bc6c1c3bce81ab03960d77"],
-  ["automation workflow",17,"74a3d60c3958e32d6614921a6deb52d2c93e2a0ed2e2c52e1b798dda4a379f1f"],
-  ["data platform",11,"b5d25e73c3df41fad81d15fe711c1483efc085f21325e0eed14a2fb4c82e2f18"],
+  ["automation workflow",15,"5107000eb74c2a7ac383313eabf03596922fa8aedfc5b4747371a1744df2bd19"],
+  ["data platform",11,"9906b4c8dc4be6e01fbdcbb402e8d4ecde603cfbb1dd7468ae8998047e094e3b"],
   ["north star",0,"4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"],
   ["zzzz-no-match",0,"4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"],
 ] as const
 
 describe('published search compatibility with ba84b4d and reviewed editorial updates', () => {
   test('preserves all public records, destinations and project target metadata', () => {
-    expect(index.records).toHaveLength(600)
-    expect(digest(index)).toBe('8a429d02e5589ced1e157c4a6d7cc22ba610ef18af9c979a93a176214df03843')
+    expect(index.records).toHaveLength(599)
+    expect(digest(index)).toBe('c55391a42325448bd7c435f4ce1a55e91622ffa09374c12b6dafe869058ae3fd')
     const inventory = index.records.map(record => ({ id: record.id, href: record.href, destination: record.destination, cells: record.cells }))
-    expect(index.records.reduce((count, record) => count + Number(!!record.destination) + (record.cells?.length ?? 0), 0)).toBe(644)
-    expect(digest(inventory)).toBe('37cbcb217d33039260960346f36dd7773ae0d5ce0e4db51671ca67d981899d38')
+    expect(index.records.reduce((count, record) => count + Number(!!record.destination) + (record.cells?.length ?? 0), 0)).toBe(643)
+    expect(digest(inventory)).toBe('68ef650108540e7310ccfc3857c33d7d8629a77ecb3ab2d699863960d11c1664')
     const projects = allSystems.map(system => ({ id: system.id, destinations: createProjectContent(system).destinations }))
-    expect(digest(projects)).toBe('2a57c34071e471116640cc5102c646a8a8df662fd73b88160cff19b6117b48f5')
+    expect(digest(projects)).toBe('5f1922c5ff2af9abe431400e491d96451df1babef7e0b26b1df5e2c3e398abc0')
   })
 
   test.each(queries)('preserves ordered results, scores, selected targets and snippets for %s', (query, count, expected) => {
