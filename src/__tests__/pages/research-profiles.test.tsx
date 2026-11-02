@@ -84,7 +84,7 @@ describe('research profile discovery', () => {
     expect(new Set(socialLinks.map(({ url }) => url)).size).toBe(socialLinks.length)
   })
 
-  test('places seven descriptive external cards directly after the research and CV actions', () => {
+  test('places seven descriptive external cards after the publication evidence', () => {
     const page = renderPage(<ResearchPage />)
     const hero = page.querySelector('h1')?.closest('section')
     const profiles = page.querySelector('section[aria-labelledby="research-profiles-heading"]')
@@ -96,8 +96,9 @@ describe('research profile discovery', () => {
     ])
     expect(heroLinks[0]?.getAttribute('href')).toBe('/contact?type=research')
     expect(heroLinks[1]?.getAttribute('href')).toBe(researchCv.href ?? researchCv.requestHref)
-    expect(hero?.nextElementSibling).toBe(profiles)
-    expect(profiles?.nextElementSibling?.querySelector('h2')?.textContent).toBe('Research context')
+    expect(hero?.nextElementSibling?.querySelector('h2')?.textContent).toBe('Research context')
+    expect(profiles?.previousElementSibling?.querySelector('h2')?.textContent).toBe('Research and evidence standards')
+    expect(profiles?.nextElementSibling).toBeNull()
     expect(profiles?.querySelector('h2')?.textContent).toBe('Research Profiles')
     expect(profiles?.textContent).toContain(
       'Persistent identifiers, citation indexes, and academic profiles associated with my research record.'
@@ -114,27 +115,14 @@ describe('research profile discovery', () => {
     }
   })
 
-  test('keeps footer professional links separate from concise research links', () => {
+  test('links the footer to Research and keeps the external directory on that page', () => {
     const page = renderPage(<Footer />)
-    const headings = Array.from(page.querySelectorAll('h2'))
-    expect(headings.map((heading) => heading.textContent)).toEqual([
-      'Explore', 'Connect', 'Research Profiles',
-    ])
-    const connect = headings.find((heading) => heading.textContent === 'Connect')?.parentElement
-    const research = headings.find((heading) => heading.textContent === 'Research Profiles')?.parentElement
-    const connectLinks = Array.from(connect?.querySelectorAll('a') ?? [])
-    const researchLinks = Array.from(research?.querySelectorAll('a') ?? [])
-
-    expect(connect).not.toBe(research)
-    expect(connectLinks.map((link) => link.textContent?.trim())).toEqual(['GitHub', 'LinkedIn'])
-    expect(researchLinks.map((link) => link.textContent?.trim())).toEqual([
-      'ORCID', 'Google Scholar', 'IEEE DataPort', 'Scopus', 'Web of Science', 'ResearchGate', 'AGU',
-    ])
-    expect(researchLinks.map((link) => link.getAttribute('href')))
-      .toEqual(expectedProfiles.map(({ url }) => url))
-    for (const link of [...connectLinks, ...researchLinks]) expectExternalLink(link)
-    for (const { description } of expectedProfiles) {
-      expect(research?.textContent).not.toContain(description)
+    expect(page.querySelector('a[href="/research"]')?.textContent).toBe('Research')
+    const external = Array.from(page.querySelectorAll('footer a[target="_blank"]'))
+    expect(external.map((link) => link.textContent?.trim())).toEqual(['GitHub', 'LinkedIn'])
+    for (const link of external) expectExternalLink(link)
+    for (const { url } of expectedProfiles) {
+      expect(page.querySelector(`footer a[href="${url}"]`)).toBeNull()
     }
   })
 

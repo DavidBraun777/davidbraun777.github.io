@@ -69,7 +69,7 @@ export function Header() {
   }, [pathname, closeNavigation])
 
   useEffect(() => {
-    const desktopViewport = window.matchMedia('(min-width: 1280px)')
+    const desktopViewport = window.matchMedia('(min-width: 80rem)')
     desktopViewport.addEventListener('change', closeNavigation)
     return () => desktopViewport.removeEventListener('change', closeNavigation)
   }, [closeNavigation])
@@ -96,10 +96,10 @@ export function Header() {
   }, [menuOpen, closeNavigation])
 
   return (
-    <header ref={headerRef} className="sticky top-0 z-50 border-b border-[var(--theme-frame-border)] bg-[var(--theme-frame-bg)] text-[var(--theme-frame-text)] backdrop-blur-xl">
-      <div className="mx-auto flex max-w-7xl items-center justify-between gap-2 px-4 py-4 sm:gap-3 sm:px-6 lg:px-8">
-        <div className="min-w-0">
-          <Link href="/" onClick={closeNavigation} className="inline-flex flex-col">
+    <header ref={headerRef} className="sticky top-0 z-50 border-b border-[var(--theme-frame-border)] bg-[var(--theme-frame-bg)] text-[var(--theme-frame-text)] backdrop-blur-xl max-xl:flex max-xl:max-h-dvh max-xl:flex-col">
+      <div className="mx-auto flex w-full max-w-7xl shrink-0 flex-wrap items-center justify-between gap-2 px-4 py-4 sm:gap-3 sm:px-6 lg:px-8 xl:flex-nowrap">
+        <div className="min-w-0 max-xl:flex-[1_1_8rem]">
+          <Link href="/" aria-current={pathname === '/' ? 'page' : undefined} onClick={closeNavigation} className="inline-flex flex-col">
             <span className="text-lg font-semibold tracking-tight text-[var(--theme-frame-text)]">
               {profile.name}
             </span>
@@ -122,7 +122,7 @@ export function Header() {
           ))}
         </nav>
 
-        <div className="flex shrink-0 items-center gap-1 sm:gap-2">
+        <div className="flex shrink-0 items-center gap-1 sm:gap-2 max-xl:ml-auto max-xl:[&>button]:size-[44px]">
           <button
             ref={searchTriggerRef}
             type="button"
@@ -139,13 +139,6 @@ export function Header() {
             <span className="hidden whitespace-nowrap text-sm xl:inline">Search site…</span>
           </button>
           <ThemeToggle />
-          <Link
-            href="/contact"
-            onClick={closeNavigation}
-            className="hidden whitespace-nowrap rounded-full bg-[var(--theme-frame-cta-bg)] px-4 py-2 text-sm font-medium text-[var(--theme-frame-cta-text)] transition-colors hover:bg-[var(--theme-frame-cta-bg-hover)] xl:inline-flex"
-          >
-            Book a Call
-          </Link>
           <button
             ref={mobileTriggerRef}
             type="button"
@@ -166,7 +159,7 @@ export function Header() {
       {menuOpen ? (
         <div
           id="mobile-navigation"
-          className="max-h-[calc(100dvh-6.5rem)] overflow-y-auto border-t border-[var(--theme-frame-border)] bg-[var(--theme-frame-bg-solid)] px-4 py-4 shadow-lg xl:hidden"
+          className="min-h-0 overflow-y-auto overscroll-contain border-t border-[var(--theme-frame-border)] bg-[var(--theme-frame-bg-solid)] px-4 py-4 shadow-lg xl:hidden"
         >
           <nav className="flex flex-col gap-2" aria-label="Mobile">
             {primaryNavigation.map((item) => (
@@ -181,16 +174,6 @@ export function Header() {
               />
             ))}
           </nav>
-
-          <div className="mt-4 grid gap-2 sm:grid-cols-2">
-            <Link
-              href="/contact"
-              onClick={closeNavigation}
-              className="rounded-2xl bg-[var(--theme-frame-cta-bg)] px-4 py-3 text-center text-sm font-medium text-[var(--theme-frame-cta-text)] transition-colors hover:bg-[var(--theme-frame-cta-bg-hover)] sm:col-span-2"
-            >
-              Book a Call
-            </Link>
-          </div>
         </div>
       ) : null}
       <SiteSearch

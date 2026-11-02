@@ -9,12 +9,12 @@ export const time2Move = {
   name: 'Time2Move',
   displayTitle: 'Time2Move: Real Estate Workflows & Integrations',
   summary:
-    'Through People’s Connection LLC, I designed and built the original Time2Move application and integrations for Dustin Marmon. The implementation connected customer tools, a shared inquiry backend, and external services.',
+    'Through People’s Connection LLC, I developed the original Time2Move real estate application, its customer tools, and the shared backend for inquiries and CRM follow-up.',
   positioning:
-    'Through People’s Connection LLC, I designed and built the original Time2Move application and integrations for Dustin Marmon. The goal was to connect a real estate customer experience with business workflows: helping visitors explore properties, understand their options, and submit inquiries with useful context for follow-up. The broader plan included AI-assisted customer support, content, and website improvement.',
+    'Through People’s Connection LLC, I developed Time2Move’s original real estate application, including customer tools, a shared inquiry-processing backend, and integrations with external services. The work connected property exploration and customer inquiries with structured follow-up workflows.',
   contextLabel: 'Past client project',
   caseStudyStage: 'Historical',
-  currentState: 'Past client project · Engagement concluded',
+  currentState: 'Past engagement · Original deployment inactive',
   problem:
     'Connect the customer journey from exploring properties and expressing needs to business follow-up.',
   system:
@@ -29,17 +29,11 @@ export const time2Move = {
   coreConstraint:
     'Centralize validation and integration under a shared inquiry contract while preserving each request’s purpose and context.',
   outcome:
-    'The engagement ended before the broader system and planned validation were completed.',
+    'The engagement ended before the wider roadmap and planned validation were complete. The original deployment is inactive.',
   proofSections: [],
-  successorLink: {
-    href: 'https://hombuzz.com/',
-    label: 'Current business website — Hombuzz',
-    context:
-      'The original deployment is inactive. The business later continued independently as Hombuzz, outside my Time2Move work.',
-  },
   story: {
     atAGlance: [
-      { label: 'Client', value: 'Dustin Marmon' },
+      { label: 'Project', value: 'Time2Move' },
       { label: 'Role', value: time2MoveRole },
       { label: 'Scope', value: 'Real estate website, inquiry workflows and service integrations' },
     ],
@@ -72,7 +66,7 @@ export const time2Move = {
         id: 'results',
         title: 'Outcome and lessons',
         paragraphs: [
-          'The engagement concluded before the broader system and planned validation were completed. The original Time2Move deployment is inactive. Dustin subsequently pursued an independent direction, and the business continued as Hombuzz, outside my Time2Move contribution.',
+          'The engagement ended before the wider roadmap and planned validation were complete. The original Time2Move deployment is now inactive.',
           'The practical delivery lesson was to define a useful first release, identify integration dependencies early, and give validation and later AI enhancements explicit milestones.',
         ],
       },

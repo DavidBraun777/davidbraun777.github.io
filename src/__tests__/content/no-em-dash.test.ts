@@ -7,7 +7,6 @@ const textFileExtensions = new Set(['.ts', '.tsx', '.mdx'])
 const disallowedCharacter = String.fromCharCode(0x2014)
 // These labels are explicitly required by the portfolio owner.
 const approvedLabels = [
-  'Current business website — Hombuzz',
   'ARK Landscaping — Service Business Website',
   'Matt Laur — Athlete & Coaching Website',
 ]

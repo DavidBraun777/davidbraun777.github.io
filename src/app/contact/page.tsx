@@ -27,7 +27,7 @@ export default async function ContactPage({
         <PageIntro
           eyebrow="Contact"
           title="Start a focused conversation."
-          description="Choose the kind of inquiry, then share enough context for a useful next step. The same form supports engineering roles, consulting projects, research collaboration, speaking, and other professional conversations."
+          description="Choose an inquiry type and tell me about the role, project, or collaboration you have in mind."
         />
       </div>
       <Contact

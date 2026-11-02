@@ -10,7 +10,7 @@ import type { SearchRecord, SearchResult } from '@/lib/search/types'
 import { prepareContentNavigation, releaseContentNavigation } from '@/lib/content-navigation'
 
 const suggestions = [
-  { title: 'Case Studies', href: '/case-studies' },
+  { title: 'Work', href: '/case-studies' },
   { title: 'Research', href: '/research' },
   { title: 'Experience', href: '/experience' },
   { title: 'Writing', href: '/writing' },
@@ -94,7 +94,7 @@ export function SiteSearch({ open, onOpenChange, returnFocusRef }: Readonly<Site
         <Dialog.Overlay className="fixed inset-0 z-[100] bg-slate-950/65 backdrop-blur-sm" />
         <Dialog.Content
           id="site-search-dialog"
-          className="fixed left-1/2 top-4 z-[101] flex max-h-[calc(100dvh-2rem)] w-[calc(100%_-_1.5rem)] max-w-2xl -translate-x-1/2 flex-col overflow-hidden rounded-2xl border border-border-subtle bg-background-elevated text-text-primary shadow-2xl sm:rounded-[1.5rem]"
+          className="fixed left-1/2 top-4 z-[101] flex max-h-[calc(100dvh-2rem)] w-[calc(100%_-_1.5rem)] max-w-2xl -translate-x-1/2 flex-col overflow-hidden rounded-2xl border border-border-subtle bg-background-elevated wrap-anywhere text-text-primary shadow-2xl sm:rounded-[1.5rem]"
           style={availableHeight ? { maxHeight: `min(84dvh, ${availableHeight}px)` } : undefined}
           onOpenAutoFocus={(event) => {
             event.preventDefault()
@@ -112,7 +112,7 @@ export function SiteSearch({ open, onOpenChange, returnFocusRef }: Readonly<Site
             }
           }}
         >
-          <div className="shrink-0 border-b border-border-subtle p-4 sm:p-5">
+          <div className="shrink-0 border-b border-border-subtle p-2 min-[20rem]:p-4 sm:p-5">
             <div className="flex items-center justify-between gap-3">
               <Dialog.Title className="text-xl font-semibold tracking-tight">
                 Search the site
@@ -128,7 +128,7 @@ export function SiteSearch({ open, onOpenChange, returnFocusRef }: Readonly<Site
               Try VIFG, AWS, or résumé
             </Dialog.Description>
             <div className="mt-4 flex items-center gap-2 rounded-xl border border-border-strong bg-background px-3">
-              <Search className="h-5 w-5 shrink-0 text-text-muted" aria-hidden="true" />
+              <Search className="hidden h-5 w-5 shrink-0 text-text-muted min-[20rem]:block" aria-hidden="true" />
               <input
                 ref={inputRef}
                 id="site-search-input"
@@ -154,7 +154,7 @@ export function SiteSearch({ open, onOpenChange, returnFocusRef }: Readonly<Site
                     setVisibleCount(PAGE_SIZE)
                     inputRef.current?.focus()
                   }}
-                  className="inline-flex h-11 w-11 shrink-0 items-center justify-center rounded-lg text-text-secondary hover:bg-background-subtle motion-reduce:transition-none"
+                  className="inline-flex size-[44px] shrink-0 items-center justify-center rounded-lg text-text-secondary hover:bg-background-subtle motion-reduce:transition-none"
                 >
                   <X className="h-4 w-4" aria-hidden="true" />
                 </button>
@@ -162,7 +162,7 @@ export function SiteSearch({ open, onOpenChange, returnFocusRef }: Readonly<Site
             </div>
           </div>
 
-          <div className="min-h-0 overflow-y-auto overscroll-contain p-4 sm:p-5">
+          <div className="min-h-0 overflow-y-auto overscroll-contain p-2 min-[20rem]:p-4 sm:p-5">
             <p role="status" aria-live="polite" aria-atomic="true" className="mb-3 text-sm leading-6 text-text-secondary">
               {announcement}
             </p>

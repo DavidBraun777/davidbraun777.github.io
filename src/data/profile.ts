@@ -82,7 +82,7 @@ export const profile = {
   summary: northStarStatement,
   heroHeadline: northStarValueProposition,
   heroDescription:
-    'I connect AI and data capabilities to the applications, APIs, workflows, cloud platforms, security controls, evaluation, observability, and human handoffs required for real use.',
+    'I build applications, cloud infrastructure, and automation that make AI and data useful in everyday operations.',
   audience:
     'Best fit when software, cloud infrastructure, data, automation, and AI need to operate as one dependable system.',
   availability: professionalAvailability,
@@ -110,9 +110,17 @@ export const resumeDirectoryLink: NavigationLink = {
 }
 
 export const primaryNavigation: NavigationItem[] = [
-  { label: 'Home', href: '/' },
+  { label: 'Work', href: '/case-studies' },
+  {
+    label: 'Experience',
+    href: '/experience',
+    children: [
+      { label: 'Experience Overview', href: '/experience' },
+      { label: 'Career Story', href: '/experience/career-story' },
+      resumeLink,
+    ],
+  },
   { label: 'Services', href: '/services' },
-  { label: 'Case Studies', href: '/case-studies' },
   {
     label: 'Research',
     href: '/research',
@@ -122,15 +130,6 @@ export const primaryNavigation: NavigationItem[] = [
       { label: 'Research Profiles', href: '/research#research-profiles' },
       { label: 'Evidence Standards', href: '/approach/evidence' },
       { ...writingLink, separatorBefore: true },
-    ],
-  },
-  {
-    label: 'Experience',
-    href: '/experience',
-    children: [
-      { label: 'Experience Overview', href: '/experience' },
-      { label: 'Career Story', href: '/experience/career-story' },
-      resumeLink,
     ],
   },
   { label: 'Contact', href: '/contact' },

@@ -38,11 +38,10 @@ const credlyUrl =
 const previousPrimaryIdentity =
   'AI Systems Engineer · Full-Stack & Platform Engineer · Researcher'
 const primaryJourneys = [
-  { label: 'Home', href: '/' },
-  { label: 'Services', href: '/services' },
-  { label: 'Case Studies', href: '/case-studies' },
-  { label: 'Research', href: '/research' },
+  { label: 'Work', href: '/case-studies' },
   { label: 'Experience', href: '/experience' },
+  { label: 'Services', href: '/services' },
+  { label: 'Research', href: '/research' },
   { label: 'Contact', href: '/contact' },
 ]
 
@@ -70,11 +69,20 @@ test.describe('Smoke tests', () => {
     await expect(page).toHaveTitle('David Braun | AI Systems & Platform Engineer')
     const main = page.locator('main')
     await expect(main).toBeVisible()
-    const clientWork = main.getByRole('region', { name: 'Live client websites' })
-    await expect(clientWork.getByRole('article').getByRole('heading')).toHaveText([
-      'ARK Landscaping — Service Business Website',
-      'Matt Laur — Athlete & Coaching Website',
+    await expect(main.getByRole('article').getByRole('heading')).toHaveText([
+      'VIFG Nonprofit Platform', 'DealerFlow', 'WeatherForge',
     ])
+    for (const [slug, name] of [
+      ['ark-landscaping', /ARK Landscaping/i],
+      ['matt-laur', /Matt Laur/i],
+    ] as const) {
+      const href = `a[href="/case-studies/${slug}"]`
+      const link = main.locator(href)
+      await expect(link).toHaveCount(1)
+      await expect(link).toHaveAccessibleName(name)
+      await expect(link).toBeVisible()
+      await expect(main.locator('article').locator(href)).toHaveCount(0)
+    }
     await expect(
       main.getByRole('heading', {
         level: 1,
@@ -114,8 +122,8 @@ test.describe('Smoke tests', () => {
       /\/twitter-image/
     )
     await expect(
-      main.getByRole('link', { name: 'View Experience', exact: true })
-    ).toHaveAttribute('href', '/experience')
+      main.getByRole('link', { name: 'View all work', exact: true })
+    ).toHaveAttribute('href', '/case-studies')
   })
 
   test('desktop header preserves familiar navigation and the homepage brand', async ({ page }) => {
@@ -129,9 +137,9 @@ test.describe('Smoke tests', () => {
       await expect(navigation.getByRole('link', { name: label, exact: true })).toHaveAttribute('href', href)
     }
     await expect(header.getByRole('link', { name: /^David Braun/ })).toHaveAttribute('href', '/')
-    await expect(header.getByRole('link', { name: 'Book a Call', exact: true })).toBeVisible()
+    await expect(header.getByRole('link', { name: 'Contact', exact: true })).toBeVisible()
     await expect(header.getByRole('button', { name: /switch to .* theme/i })).toBeVisible()
-    await expect(header.getByRole('link')).toHaveCount(primaryJourneys.length + 2)
+    await expect(header.getByRole('link')).toHaveCount(primaryJourneys.length + 1)
     await expect(header.getByRole('link', { name: /^(Writing|Resume|Career Story|Evidence Standards|GitHub|LinkedIn)$/i })).toHaveCount(0)
   })
 
@@ -249,28 +257,21 @@ test.describe('Smoke tests', () => {
       '/research'
     )
     const connect = footer.getByRole('heading', { name: 'Connect', exact: true }).locator('..')
-    const profiles = footer.getByRole('heading', { name: 'Research Profiles', exact: true }).locator('..')
-    await expect(footer.getByRole('heading')).toHaveText(['Explore', 'Connect', 'Research Profiles'])
-    const explore = footer.getByRole('heading', { name: 'Explore', exact: true }).locator('..')
+    await expect(footer.getByRole('heading')).toHaveText(['Explore', 'Connect'])
+    const explore = footer.getByRole('navigation', { name: 'Explore' })
     await expect(explore.getByRole('link')).toHaveText([
-      'Home', 'Services', 'Case Studies', 'Research', 'Experience', 'Writing', 'Contact', 'Résumés & CV',
+      ...primaryJourneys.map(({ label }) => label), 'Writing', 'Résumés & CV',
     ])
     await expect(explore.getByRole('link', { name: 'Résumés & CV', exact: true }))
       .toHaveAttribute('href', '/resumes')
     await expect(connect.getByRole('link')).toHaveText(['GitHub', 'LinkedIn'])
-    await expect(profiles.getByRole('link')).toHaveText([
-      'ORCID', 'Google Scholar', 'IEEE DataPort', 'Scopus', 'Web of Science', 'ResearchGate', 'AGU',
-    ])
-    for (const [index, { url }] of researchProfiles.entries()) {
-      await expect(profiles.getByRole('link').nth(index)).toHaveAttribute('href', url)
+    for (const { url } of researchProfiles) {
+      await expect(footer.locator(`a[href="${url}"]`)).toHaveCount(0)
     }
     await expect(footer).toContainText(
       'And whatsoever ye do, do it heartily, as to the Lord, and not unto men;'
     )
     await expect(footer).toContainText('Colossians 3:23 (KJV)')
-    await expect(footer).toContainText(
-      'My faith shapes how I work: honest communication, clear commitments, stewardship, and respect for the people who have to live with the system after launch.'
-    )
   })
 
   test('professional profile links populate Person structured data', async ({ page }) => {
@@ -337,8 +338,8 @@ test.describe('Smoke tests', () => {
     }
     const header = page.locator('header')
     await expect(header.getByRole('link', { name: /^David Braun/ })).toHaveAttribute('href', '/')
-    await expect(header.getByRole('link', { name: 'Book a Call', exact: true })).toBeVisible()
-    await expect(header.getByRole('link')).toHaveCount(primaryJourneys.length + 2)
+    await expect(header.getByRole('link', { name: 'Contact', exact: true })).toBeVisible()
+    await expect(header.getByRole('link')).toHaveCount(primaryJourneys.length + 1)
     const researchLink = mobileNavigation.getByRole('link', { name: /^research$/i })
     await expect(researchLink).toBeVisible()
     await expect(researchLink).toHaveAttribute('href', '/research')
@@ -350,21 +351,19 @@ test.describe('Smoke tests', () => {
     ).toHaveAttribute('href', googleScholarUrl)
   })
 
-  test('case studies page shows VIFG before secondary technical proof', async ({ page }) => {
+  test('Work groups client deliveries, applications, and experiments', async ({ page }) => {
     await page.goto('/case-studies')
-    await expect(page.getByRole('heading', { name: /featured public production proof/i })).toBeVisible()
-    await expect(page.getByRole('heading', { name: /vifg nonprofit platform/i }).first()).toBeVisible()
-    await expect(page.getByRole('heading', { name: /weatherforge/i })).toBeVisible()
-    await expect(page.getByRole('heading', { name: /rageatm/i })).toBeVisible()
-
-    const production = page.locator('section').filter({
-      has: page.getByRole('heading', { name: /featured public production proof/i }),
-    })
-    const cards = production.getByRole('article')
+    const main = page.getByRole('main')
+    await expect(main.getByRole('heading', { level: 1, name: 'Work' })).toBeVisible()
+    await expect(main.getByRole('heading', { level: 2 })).toHaveText([
+      'Client work', 'Applications and data projects', 'Experiments and work in progress',
+    ])
+    const cards = main.getByRole('region', { name: 'Client work', exact: true }).getByRole('article')
     await expect(cards.getByRole('heading')).toHaveText([
       'VIFG Nonprofit Platform',
       'ARK Landscaping — Service Business Website',
       'Matt Laur — Athlete & Coaching Website',
+      'Time2Move',
     ])
     for (const [index, slug] of ['ark-landscaping', 'matt-laur'].entries()) {
       const card = cards.nth(index + 1)
@@ -374,10 +373,10 @@ test.describe('Smoke tests', () => {
       await expect(card.getByRole('link', { name: 'Read case study' })).toHaveAttribute('href', `/case-studies/${slug}`)
     }
 
-    const mainText = await page.locator('main').innerText()
-    expect(mainText.indexOf('VIFG Nonprofit Platform')).toBeLessThan(
-      mainText.indexOf('WeatherForge')
-    )
+    await expect(main.getByRole('region', { name: 'Applications and data projects' }).getByRole('heading', { level: 3 })).toHaveText([
+      'DealerFlow', 'WeatherForge', 'RAGeATM',
+    ])
+    await expect(cards.last()).toContainText('Original deployment inactive')
   })
 
   test('WeatherForge credits the team and states the established implementation role', async ({
@@ -416,7 +415,7 @@ test.describe('Smoke tests', () => {
     await page.goto('/')
     await expect(
       page.getByText(
-        'Turn AI and data capabilities into secure, deployable systems that hold up in production.',
+        'I build applications, cloud infrastructure, and automation that make AI and data useful in everyday operations.',
         { exact: true }
       )
     ).toBeVisible()
@@ -424,7 +423,7 @@ test.describe('Smoke tests', () => {
       'href',
       '/case-studies'
     )
-    await page.getByRole('link', { name: /^contact me$/i }).first().click()
+    await page.getByRole('main').getByRole('link', { name: 'Contact', exact: true }).click()
     await expect(page).toHaveURL(/\/contact$/)
   })
 

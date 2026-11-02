@@ -42,51 +42,6 @@ export default function ResearchPage() {
           ]}
         />
 
-        <section
-          id="research-profiles"
-          aria-labelledby="research-profiles-heading"
-          tabIndex={-1}
-          className="scroll-mt-28"
-        >
-          <h2
-            id="research-profiles-heading"
-            className="text-xl font-semibold tracking-tight text-text-primary"
-          >
-            Research Profiles
-          </h2>
-          <p className="mt-2 text-sm leading-7 text-text-secondary">
-            Persistent identifiers, citation indexes, and academic profiles associated with my research record.
-          </p>
-          <ul className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
-            {researchProfileLinks.map((profile) => {
-              const Icon = profile.icon
-
-              return (
-                <li key={profile.url}>
-                  <a
-                    href={profile.url}
-                    target="_blank"
-                    rel="noopener noreferrer"
-                    className="block h-full rounded-2xl border border-border-subtle bg-background-elevated p-4 transition-colors hover:border-border-strong hover:bg-background-subtle"
-                  >
-                    <span className="flex items-center gap-3">
-                      <Icon aria-hidden="true" className="h-5 w-5 shrink-0 text-link-primary" />
-                      <span className="flex-1 text-sm font-semibold text-text-primary">
-                        {profile.name}
-                      </span>
-                      <ArrowUpRight aria-hidden="true" className="h-4 w-4 shrink-0 text-text-muted" />
-                    </span>
-                    <span className="mt-2 block text-sm leading-6 text-text-secondary">
-                      {profile.description}
-                    </span>
-                    <span className="sr-only"> (opens in a new tab)</span>
-                  </a>
-                </li>
-              )
-            })}
-          </ul>
-        </section>
-
         <section className="grid gap-5 lg:grid-cols-2">
           <div className="lg:col-span-2">
             <SectionHeader
@@ -326,6 +281,51 @@ export default function ResearchPage() {
             How I label and verify technical work
             <ArrowRight className="h-4 w-4" />
           </Link>
+        </section>
+
+        <section
+          id="research-profiles"
+          aria-labelledby="research-profiles-heading"
+          tabIndex={-1}
+          className="scroll-mt-28"
+        >
+          <h2
+            id="research-profiles-heading"
+            className="text-xl font-semibold tracking-tight text-text-primary"
+          >
+            Research Profiles
+          </h2>
+          <p className="mt-2 text-sm leading-7 text-text-secondary">
+            Persistent identifiers, citation indexes, and academic profiles associated with my research record.
+          </p>
+          <ul className="mt-4 grid gap-3 sm:grid-cols-2 lg:grid-cols-3">
+            {researchProfileLinks.map((profile) => {
+              const Icon = profile.icon
+
+              return (
+                <li key={profile.url}>
+                  <a
+                    href={profile.url}
+                    target="_blank"
+                    rel="noopener noreferrer"
+                    className="block h-full rounded-2xl border border-border-subtle bg-background-elevated p-4 transition-colors hover:border-border-strong hover:bg-background-subtle"
+                  >
+                    <span className="flex items-center gap-3">
+                      <Icon aria-hidden="true" className="h-5 w-5 shrink-0 text-link-primary" />
+                      <span className="flex-1 text-sm font-semibold text-text-primary">
+                        {profile.name}
+                      </span>
+                      <ArrowUpRight aria-hidden="true" className="h-4 w-4 shrink-0 text-text-muted" />
+                    </span>
+                    <span className="mt-2 block text-sm leading-6 text-text-secondary">
+                      {profile.description}
+                    </span>
+                    <span className="sr-only"> (opens in a new tab)</span>
+                  </a>
+                </li>
+              )
+            })}
+          </ul>
         </section>
       </div>
     </div>

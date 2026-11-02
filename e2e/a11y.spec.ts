@@ -47,6 +47,43 @@ test.describe('Accessibility', () => {
     })
   }
 
+  test('Home and Work reflow at 320px with an enlarged browser font', async ({ page, context }) => {
+    await page.setViewportSize({ width: 320, height: 800 })
+    const session = await context.newCDPSession(page)
+    await session.send('Page.setFontSizes', { fontSizes: { standard: 32 } })
+    await page.goto('/')
+    const root = page.locator('html')
+    await expect(root).toHaveCSS('font-size', '32px')
+    expect(await root.evaluate(el => el.scrollWidth)).toBeLessThanOrEqual(320)
+
+    const header = page.getByRole('banner')
+    const brand = await header.getByRole('link', { name: /David Braun/ }).boundingBox()
+    const search = header.getByRole('button', { name: 'Search site', exact: true })
+    const menu = header.getByRole('button', { name: 'Open navigation menu', exact: true })
+    for (const control of [search, menu]) {
+      const box = await control.boundingBox()
+      expect(brand && box && (brand.x + brand.width <= box.x || brand.y + brand.height <= box.y)).toBe(true)
+    }
+    await search.click()
+    await expect(page.getByRole('searchbox')).toBeFocused()
+    await page.keyboard.press('Escape')
+    await menu.click()
+    await page.getByRole('navigation', { name: 'Mobile' }).getByRole('link', { name: 'Work', exact: true }).click()
+    await expect(page.getByRole('heading', { level: 1, name: 'Work', exact: true })).toBeVisible()
+    expect(await root.evaluate(el => el.scrollWidth)).toBeLessThanOrEqual(320)
+
+    const titles = page.locator('article').getByRole('heading')
+    await expect(titles.filter({ hasText: 'RoboReceptionist' })).toBeVisible()
+    const clipped = await titles.evaluateAll(headings => headings.filter(heading => {
+      const card = heading.closest('article')!.getBoundingClientRect()
+      const text = document.createRange()
+      text.selectNodeContents(heading)
+      const bounds = text.getBoundingClientRect()
+      return bounds.left < card.left || bounds.right > card.right || bounds.bottom > card.bottom
+    }).map(heading => heading.textContent))
+    expect(clipped).toEqual([])
+  })
+
   test('expanded navigation has no critical or serious violations in either theme or viewport', async ({ page }) => {
     for (const colorScheme of ['light', 'dark'] as const) {
       await page.emulateMedia({ colorScheme })
@@ -65,7 +102,7 @@ test.describe('Accessibility', () => {
           name: width < 1280 ? 'Mobile' : 'Primary', exact: true,
         })
 
-        for (const section of ['Research', 'Experience']) {
+        for (const section of ['Experience', 'Research']) {
           const trigger = navigation.getByRole('button', { name: `${section} navigation`, exact: true })
           await trigger.click()
           await expect(trigger).toHaveAttribute('aria-expanded', 'true')

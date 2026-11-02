@@ -44,7 +44,7 @@ const roots = new Set<Root>()
 function createViewport(matches = false) {
   const query = Object.assign(new EventTarget(), {
     matches,
-    media: '(min-width: 1280px)',
+    media: '(min-width: 80rem)',
   }) as MediaQueryList
   const add = vi.spyOn(query, 'addEventListener')
   const remove = vi.spyOn(query, 'removeEventListener')
@@ -207,7 +207,6 @@ describe('mounted Header navigation', () => {
     ['same-page anchor', '#mobile-research-navigation a[href="/research#publications"]', 'Research'],
     ['external resume', '#mobile-experience-navigation a[target="_blank"]', 'Experience'],
     ['brand', 'header > div a[href="/"]', undefined],
-    ['Book a Call', '#mobile-navigation > div a[href="/contact"]', undefined],
   ] as const)('closes mobile navigation after selecting %s', (_label, selector, section) => {
     router.pathname = '/research'
     createViewport()
@@ -293,7 +292,7 @@ describe('mounted Header navigation', () => {
     expect(header.disclosure('Primary', 'Experience').getAttribute('aria-expanded')).toBe('false')
     expect(header.container.querySelector('#mobile-navigation')).toBeNull()
     header.rerender()
-    expect(viewport.matchMedia).toHaveBeenCalledWith('(min-width: 1280px)')
+    expect(viewport.matchMedia).toHaveBeenCalledWith('(min-width: 80rem)')
     expect(viewport.add).toHaveBeenCalledOnce()
     const listener = viewport.add.mock.calls[0][1]
     header.unmount()
@@ -301,8 +300,10 @@ describe('mounted Header navigation', () => {
   })
 
   it.each([
-    ['/', ['Home', 'Home section']],
+    ['/', ['Home section']],
     ['/services', ['Services']],
+    ['/case-studies/matt-laur', ['Work']],
+    ['/contact', ['Contact']],
     ['/research', ['Research', 'Research section']],
     ['/research/urarina-hybrid-retrieval', ['Research', 'Research section']],
     ['/experience/career-story', ['Experience']],

@@ -69,49 +69,20 @@ The current project evidence remains deliberately classified:
 
 - [VIFG nonprofit platform](https://www.vifg.org/home) is the strongest public
   production proof.
-- David built two live client websites featured beneath VIFG in the production section.
+- David built the two live client websites featured beneath VIFG in the Work index.
   `/case-studies/ark-landscaping` covers the service business website for
   [ARK Landscaping](https://www.arklandscaping.net/). `/case-studies/matt-laur`
   covers the athlete and coaching website for [Matt Laur](https://www.mattlaur.com/).
-- Time2Move is past client work for Dustin Marmon: David implemented the original
-  real estate website, customer tools and connected inquiry/CRM workflows. The
-  engagement concluded before the full intended system and planned validation
-  were completed. The owner's account describes
-  unfinished AI work on website-improvement recommendations, a voice-enabled
-  assistant and regional housing-market news. ChatGPT and Codex also assisted
-  development; do not present the unfinished product capabilities as complete. The
-  original `time2move.io` deployment is inactive. The client has since continued
-  the project independently as [Hombuzz](https://hombuzz.com/), with changes to its
-  brand, design, implementation, and direction. The compact entry under "Past
-  client work" links to `/case-studies/time2move`, a historical case study of the
-  original website and inquiry workflows. It belongs to the shared case-study
-  registry with stage `Historical`, outside featured/current production proof.
-  Its optional `story` supplies the concise public narrative, with explicit section
-  IDs shared by rendering and search. It contains no audit appendix, evidence
-  disclosure or screenshot. “Time2Move: Real Estate Workflows & Integrations” keeps
-  one primary inquiry-processing diagram with no architecture selector. The optional
-  review-data pipeline retains ingestion, canonical records, migration and public-cache
-  rebuilding. Rates, calculators, reviews and property-search integration remain in
-  the concise engineering narrative. The optional AI lesson is explicitly
-  an illustrative extension with synthetic, precomputed proposals and local validation;
-  it makes no model or CRM calls. Keep private reference packets outside public
-  delivery; do not import or publish their source archives or review documents.
-  Only approved diagram content and synthetic fixtures are adapted into `src/`.
-  `successorLink` labels
-  Hombuzz as the current business website without routing it through "Live Proof."
-  Keep the original engagement named Time2Move and preserve dated audit findings.
-
-  The preserved October 27, 2026 internal audit records source revision
-  `515deb2` plus dependency-lock changes: 34 tests, type checking and build passed;
-  lint failed with 29 errors and 12 warnings. These are historical source-project
-  checks, separate from portfolio validation. Handoff/involvement dates and live
-  provider receipt remain unconfirmed. The synthetic form-failure screenshot was
-  removed from public delivery; its identical original remains with the internal
-  audit assets, and earlier public versions remain in Git history. Audit findings
-  and captures are not rendered or indexed by the portfolio. Do not add private
-  audit reports, source paths, evidence IDs or
-  operational hooks to tracked portfolio content. The portfolio builds independently
-  of the source project and its private audit folder.
+- Time2Move is a past client engagement. Through People’s Connection LLC, David
+  developed the real estate application, customer tools, and shared inquiry backend.
+  The original deployment is inactive. The engagement ended before the wider roadmap
+  and planned validation were complete. The Work index links to the historical
+  case study at `/case-studies/time2move`.
+  Its inquiry-processing diagram traces six inquiry types into a shared backend.
+  The optional review-data pipeline covers ingestion, canonical records, migration,
+  and public-cache rebuilding. The illustrative AI lesson uses synthetic proposals
+  and local validation. Keep source archives, private audit reports, and internal
+  screenshots outside the public portfolio.
 - `DealerFlow`, where shown, should be treated cautiously as pilot/proof work
   unless stronger artifacts and bounded pilot facts are added.
 - `WeatherForge` is a collaborative University of St. Thomas SEIS 745 project on
@@ -358,8 +329,7 @@ to the meaningful rendered element, and render a `ContentDestinationManifest`
 outside any disclosures that may unmount their children. Add its public records
 through an explicit adapter in the builder. Table targets use semantic row headers
 and `data-content-table` on the horizontal overflow wrapper. Validate every declared
-anchor against rendered output. Historical entries follow the same path and retain
-their clearly labeled successor context.
+anchor against rendered output. Historical entries follow the same path and carry the project’s original scope and status.
 
 Time2Move's optional sections share semantic keys in `time2move-extras.ts` with the
 case-study registry. Its graph data supplies both diagrams and public search text.
@@ -380,7 +350,7 @@ Ranking requires every query term and prioritizes exact titles, title phrases,
 title words/prefixes, tags/headings/descriptions, then body text. Case, accents, and
 whitespace are normalized while technology punctuation is retained. Short terms
 match whole words; longer terms can match prefixes. The small aliases are Blog
-and Articles for Writing, Projects for Case Studies, and ML for Machine Learning.
+and Articles for Writing, Projects for the Work index, and ML for Machine Learning.
 Precise matches outrank aggregate body mentions, and at most three granular hits
 per page keep the list compact. Destinations, including fragments, are deduplicated.
 There is no fuzzy matching or added search dependency. Run the search and destination

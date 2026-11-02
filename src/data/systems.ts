@@ -1,4 +1,4 @@
-import type { CaseStudyStory, CaseStudySuccessorLink } from './case-study-story'
+import type { CaseStudyStory } from './case-study-story'
 import clientWebsiteContent from './live-client-websites.json'
 import { time2Move } from './past-client-work'
 
@@ -81,7 +81,6 @@ export interface SystemCaseStudy {
   visualSurface?: 'dark' | 'light'
   visualAspect?: 'landscape' | 'portrait'
   externalUrl?: string
-  successorLink?: CaseStudySuccessorLink
   story?: CaseStudyStory
   githubUrl?: string
   /** What I personally owned on this project */

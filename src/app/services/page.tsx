@@ -47,12 +47,12 @@ export default function ServicesPage() {
       <div className="mx-auto max-w-7xl space-y-12 px-4 sm:px-6 lg:px-8">
         <PageIntro
           eyebrow="Services"
-          title="Practical engineering engagements for systems that need to work beyond the demo."
-          description="I help turn workflow, platform, AI, and data problems into reviewable plans, scoped builds, and maintainable operating systems. Each engagement starts with the actual business and technical boundary."
+          title="Architecture reviews, scoped builds, and platform support."
+          description="Choose a review of an existing system, a build with defined deliverables, or ongoing support. The options below include typical deliverables and pricing ranges."
           actions={[
             { label: 'Discuss a Project', href: '/contact?type=consulting' },
             {
-              label: 'View Case Studies',
+              label: 'View Work',
               href: '/case-studies',
               variant: 'secondary',
             },
@@ -232,7 +232,7 @@ export default function ServicesPage() {
               href="/case-studies"
               className="inline-flex items-center gap-2 text-sm font-medium text-link-primary transition-colors hover:text-link-primary-hover"
             >
-              View all case studies
+              View all work
               <ArrowRight className="h-4 w-4" />
             </Link>
           </div>

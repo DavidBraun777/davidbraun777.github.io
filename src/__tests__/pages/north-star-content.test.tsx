@@ -16,8 +16,11 @@ describe('north-star page content', () => {
     expect(markup).toContain('VIFG Nonprofit Platform')
     expect(markup).toContain('DealerFlow')
     expect(markup).toContain('WeatherForge')
-    expect(markup).toContain('View Experience')
-    expect(markup).toContain('Engineering &amp; Evidence Standards')
+    expect(markup.match(/<article\b/g)).toHaveLength(3)
+    expect(markup.match(/<dt\b/g)).toHaveLength(3)
+    expect(markup).toContain('three-person University of St. Thomas team')
+    expect(markup).toContain('View all work')
+    expect(markup).toContain('Get in touch')
   })
 
   test('keeps Experience concise while preserving current role and credentials', () => {

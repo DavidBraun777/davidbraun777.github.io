@@ -3,7 +3,6 @@ import AxeBuilder from '@axe-core/playwright'
 
 const title = 'Time2Move: Real Estate Workflows & Integrations'
 const path = '/case-studies/time2move'
-const successorLabel = 'Current business website — Hombuzz'
 const expectedHeadings = [
   'Engineering ownership', 'Inside the system', 'AI development and tool use', 'Outcome and lessons', 'Related Case Studies',
 ]
@@ -12,25 +11,25 @@ test.describe('Time2Move historical case study', () => {
     await page.emulateMedia({ reducedMotion: 'reduce' })
   })
 
-  test('connects the historical card and experience to a canonical page with contextual onward navigation', async ({ page }) => {
+  test('connects the historical card and experience to the original implementation', async ({ page }) => {
     await page.goto('/case-studies')
-    const historical = page.locator('#past-client-work')
-    await expect(historical.getByRole('heading', { name: title, exact: true })).toBeVisible()
+    const historical = page.locator('article').filter({ has: page.getByRole('heading', { name: 'Time2Move', exact: true }) })
+    await expect(historical.getByRole('heading', { name: 'Time2Move', exact: true })).toBeVisible()
     const primaryLink = historical.locator(`a[href="${path}"]`)
     await expect(primaryLink).toHaveText(/Read case study/i)
-    await expect(historical.getByRole('link', { name: successorLabel, exact: true })).toHaveAttribute('href', 'https://hombuzz.com/')
+    await expect(historical.locator('a[href^="http"]')).toHaveCount(0)
     await primaryLink.focus()
     await page.keyboard.press('Enter')
     await expect(page).toHaveURL(new RegExp(`${path}$`))
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(title)
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', `https://dbraun.io${path}`)
-    await expect(page.locator('main')).toContainText('Past client project · Engagement concluded')
+    await expect(page.locator('main')).toContainText('Past engagement · Original deployment inactive')
     await expect(page.getByRole('heading', { name: 'Live Proof', exact: true })).toHaveCount(0)
     await expect(page.getByRole('heading', { name: 'Quantified Outcomes', exact: true })).toHaveCount(0)
-    await expect(page.getByRole('link', { name: successorLabel, exact: true })).toHaveAttribute('rel', 'noopener noreferrer')
+    await expect(page.locator('#content-continuation')).toHaveCount(0)
     await expect(page.locator('main a[href="/case-studies/vifg-nonprofit-platform"]')).toBeVisible()
     await expect(page.locator('main a[href="/case-studies/dealerflow"]')).toBeVisible()
-    await page.getByRole('link', { name: 'Back to all case studies', exact: true }).click()
+    await page.getByRole('link', { name: 'Back to all work', exact: true }).click()
     await expect(page).toHaveURL(/\/case-studies$/)
     await page.goto('/experience')
     const experienceLink = page.locator(`main a[href="${path}"]`)
@@ -82,13 +81,13 @@ test.describe('Time2Move historical case study', () => {
         }
         expect(await page.evaluate(() => document.documentElement.scrollWidth > innerWidth + 1)).toBe(false)
 
-        const successor = page.getByRole('link', { name: successorLabel, exact: true })
-        await successor.focus()
+        const backToWork = page.getByRole('link', { name: 'Back to all work', exact: true })
+        await backToWork.focus()
         await page.keyboard.press('Shift+Tab')
         await page.keyboard.press('Tab')
-        await expect(successor).toBeFocused()
-        expect(await successor.evaluate(element => element.matches(':focus-visible'))).toBe(true)
-        expect(await successor.evaluate(element => getComputedStyle(element).boxShadow)).not.toBe('none')
+        await expect(backToWork).toBeFocused()
+        expect(await backToWork.evaluate(element => element.matches(':focus-visible'))).toBe(true)
+        expect(await backToWork.evaluate(element => getComputedStyle(element).boxShadow)).not.toBe('none')
 
         const violations = (await new AxeBuilder({ page }).analyze()).violations.filter(item => ['critical', 'serious'].includes(item.impact ?? ''))
         expect(violations).toEqual([])
@@ -134,7 +133,7 @@ test.describe('Time2Move historical case study', () => {
     await expect(lesson).not.toHaveAttribute('open')
   })
 
-  test('finds the original project through capabilities and its successor without publishing private audit material', async ({ page, request }) => {
+  test('finds the original project through its capabilities without publishing private audit material', async ({ page, request }) => {
     const indexResponse = await request.get('/search-index.json')
     expect(indexResponse.ok()).toBe(true)
     const index = await indexResponse.json()
@@ -150,7 +149,7 @@ test.describe('Time2Move historical case study', () => {
     await page.getByRole('button', { name: 'Search site', exact: true }).click()
     const dialog = page.getByRole('dialog', { name: 'Search the site', exact: true })
     const input = dialog.getByRole('searchbox', { name: 'Search site content' })
-    for (const query of ['Time2Move', 'CRM workflows', 'visitor-interaction analysis', 'housing-market content', 'Hombuzz']) {
+    for (const query of ['Time2Move', 'CRM workflows', 'visitor-interaction analysis', 'housing-market content']) {
       await input.fill(query)
       const results = dialog.locator(`a[href="${path}"], a[href^="${path}#"]`)
       const result = results.first()

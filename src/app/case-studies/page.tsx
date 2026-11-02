@@ -1,272 +1,56 @@
 import type { Metadata } from 'next'
-import Link from 'next/link'
-import { ArrowRight } from 'lucide-react'
-import { ClientWorkCard } from '@/components/site/client-work-card'
-import { PageIntro } from '@/components/site/page-intro'
-import { TechTag } from '@/components/site/tech-tag'
-import { Badge } from '@/components/ui/badge'
-import { ExternalLinkAction } from '@/components/ui/external-link-action'
-import {
-  historicalSystems,
-  pilotSystems,
-  productionSystems,
-  researchSystems,
-  type FeaturedSystemCaseStudy,
-} from '@/data/systems'
+import { WorkCard } from '@/components/site/work-card'
+import { historicalSystems, pilotSystems, productionSystems, researchSystems, type FeaturedSystemCaseStudy } from '@/data/systems'
 import { createPageMetadata } from '@/lib/seo'
 
 export const metadata: Metadata = createPageMetadata({
-  title: 'Case Studies',
-  description:
-    'Production, pilot, prototype, and R&D case studies showing workflow automation, system integration, data systems, and delivery work.',
+  title: 'Work',
+  description: 'Client websites, applications, data projects, and experiments. Explore the contribution, decisions, and delivery status behind each case study.',
   path: '/case-studies',
 })
 
-function isPrototypeOrAcademic(system: FeaturedSystemCaseStudy) {
-  return (
-    system.contextLabel?.includes('Prototype') ||
-    system.currentState === 'Applied dashboard prototype' ||
-    system.currentState === 'Local RAG prototype' ||
-    system.currentState === 'Prototype'
-  )
-}
-
-function StageSection({
-  eyebrow,
-  title,
-  subtitle,
-  systems,
-}: Readonly<{
-  eyebrow: string
+function ProjectGroup({ title, systems }: Readonly<{
   title: string
-  subtitle: string
   systems: FeaturedSystemCaseStudy[]
 }>) {
-  if (systems.length === 0) {
-    return null
-  }
-
+  if (!systems.length) return null
   return (
-    <section className="space-y-5">
-      <div>
-        <p className="font-mono text-xs uppercase tracking-[0.22em] text-link-primary">
-          {eyebrow}
-        </p>
-        <h2 className="mt-3 text-3xl font-semibold tracking-tight text-text-primary">
-          {title}
-        </h2>
-        <p className="mt-3 max-w-3xl text-base leading-8 text-text-secondary">{subtitle}</p>
-      </div>
-      <div className="grid gap-4 xl:grid-cols-2">
-        {systems.map((system) => (
-          <CaseStudyCard key={system.id} system={system} />
-        ))}
+    <section aria-label={title}>
+      <h2 className="mb-5 text-3xl font-semibold tracking-tight text-text-primary">{title}</h2>
+      <div className="grid gap-4 md:grid-cols-2 xl:grid-cols-3">
+        {systems.map((system) => <WorkCard key={system.id} system={system} />)}
       </div>
     </section>
   )
 }
 
 export default function CaseStudiesPage() {
-  const [featuredProduction, ...otherProduction] = productionSystems
-  const prototypeSystems = researchSystems.filter(isPrototypeOrAcademic)
-  const activeResearchSystems = researchSystems.filter((system) => !isPrototypeOrAcademic(system))
+  const [lead, ...clientWebsites] = productionSystems
+  const academicProjects = researchSystems.filter(system => system.contextLabel?.includes('Academic'))
+  const experiments = researchSystems.filter(system => !academicProjects.includes(system))
 
   return (
-    <div className="min-h-screen pb-12 pt-8 md:pt-10">
-      <div className="mx-auto max-w-7xl space-y-12 px-4 sm:px-6 lg:px-8">
-        <PageIntro
-          eyebrow="Case Studies"
-          title="A portfolio of production, pilot, prototype, and R&D work."
-          description="Visit the production sites or explore the engineering behind a pilot, an academic prototype, or an active research project. Past client work has its own section."
-          actions={[{ label: 'Book a Call', href: '/contact' }]}
-        />
-
-        {featuredProduction ? (
-          <section className="space-y-5">
-            <div>
-              <p className="font-mono text-xs uppercase tracking-[0.22em] text-link-primary">
-                Production
-              </p>
-              <h2 className="mt-3 text-3xl font-semibold tracking-tight text-text-primary">
-                Featured public production proof
-              </h2>
-              <p className="mt-3 max-w-3xl text-base leading-8 text-text-secondary">
-                VIFG leads with long-term accessibility and operational work. The two client websites
-                below it show what I built for a landscaping business and a professional athlete.
-              </p>
-            </div>
-
-            <article className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm sm:p-7">
-              <div className="flex flex-wrap items-center gap-2">
-                <Badge variant="secondary">
-                  {featuredProduction.contextLabel ?? featuredProduction.caseStudyStage}
-                </Badge>
-                <Badge variant="outline">{featuredProduction.currentState}</Badge>
-                <Badge variant="outline">Featured proof</Badge>
-              </div>
-
-              <div className="mt-4 grid gap-6 lg:grid-cols-[1.08fr_0.92fr]">
-                <div>
-                  <h3 className="text-2xl font-semibold tracking-tight text-text-primary">
-                    {featuredProduction.name}
-                  </h3>
-                  <p className="mt-3 text-base leading-8 text-text-secondary">
-                    {featuredProduction.summary}
-                  </p>
-
-                  <div className="mt-5 grid gap-4 sm:grid-cols-2">
-                    <div className="rounded-[1.25rem] border border-border-subtle bg-background-subtle p-4">
-                      <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-text-secondary">
-                        Problem
-                      </p>
-                      <p className="mt-2 text-sm leading-7 text-text-secondary">
-                        {featuredProduction.problem}
-                      </p>
-                    </div>
-                    <div className="rounded-[1.25rem] border border-border-subtle bg-background-subtle p-4">
-                      <p className="font-mono text-[10px] uppercase tracking-[0.18em] text-text-secondary">
-                        Result
-                      </p>
-                      <p className="mt-2 text-sm leading-7 text-text-secondary">
-                        {featuredProduction.outcome}
-                      </p>
-                    </div>
-                  </div>
-                </div>
-
-                <div className="rounded-[1.5rem] border border-border-subtle bg-background-subtle p-5">
-                  <p className="font-mono text-xs uppercase tracking-[0.22em] text-link-primary">
-                    What I owned
-                  </p>
-                  <p className="mt-3 text-sm leading-7 text-text-secondary">
-                    {featuredProduction.myRole}
-                  </p>
-                  <p className="mt-5 font-mono text-xs uppercase tracking-[0.22em] text-link-primary">
-                    Public-facing proof
-                  </p>
-                  <p className="mt-3 text-sm leading-7 text-text-secondary">
-                    Live site at vifg.org/home, backed by repeatable deployment,
-                    accessibility support, and ongoing nonprofit operational stewardship.
-                  </p>
-                  <div className="mt-5 flex flex-wrap gap-4">
-                    <Link
-                      href={`/case-studies/${featuredProduction.id}`}
-                      className="inline-flex items-center gap-2 text-sm font-medium text-link-primary transition-colors hover:text-link-primary-hover"
-                    >
-                      Read full case study
-                      <ArrowRight className="h-4 w-4" />
-                    </Link>
-                    <ExternalLinkAction
-                      href={featuredProduction.externalUrl ?? 'https://www.vifg.org/home'}
-                    >
-                      Visit live site
-                    </ExternalLinkAction>
-                  </div>
-                </div>
-              </div>
-            </article>
-            <div className="grid gap-5 md:grid-cols-2">
-              {otherProduction.map((system) => (
-                <ClientWorkCard key={system.id} system={system} showScreenshot />
-              ))}
-            </div>
-          </section>
-        ) : null}
-
-        <StageSection
-          eyebrow="Pilot / client-facing"
-          title="Operational workflows being tested in the field"
-          subtitle="Pilot systems show where real workflows are already moving through the software, even if the product is not yet at full production maturity."
-          systems={pilotSystems}
-        />
-
-        <StageSection
-          eyebrow="Prototype / academic"
-          title="Technical proof with honest limits"
-          subtitle="Prototype and academic work stays visible for technical review, but it does not outrank public production proof. WeatherForge and RAGeATM belong here until they have production usage evidence."
-          systems={prototypeSystems}
-        />
-
-        <StageSection
-          eyebrow="R&D / active build"
-          title="Early-stage systems with clear architecture and workflow logic"
-          subtitle="R&D work shows how automation boundaries, validation, data movement, and system design are handled before production rollout. DGM and StormIQ stay positioned as active build direction, not finished products."
-          systems={activeResearchSystems}
-        />
-
-        <section id="past-client-work" tabIndex={-1} className="scroll-mt-28 space-y-5">
-          <h2 className="text-2xl font-semibold tracking-tight text-text-primary">
-            Past client work
-          </h2>
-          {historicalSystems.map((system) => (
-            <CaseStudyCard key={system.id} system={system} />
-          ))}
-        </section>
-
-        <div className="flex flex-wrap gap-x-8 gap-y-4">
-          <Link
-            href="/contact?type=consulting"
-            className="inline-flex items-center gap-2 text-sm font-medium text-link-primary transition-colors hover:text-link-primary-hover"
-          >
-            Need to talk through a similar workflow?
-            <ArrowRight className="h-4 w-4" />
-          </Link>
-          <Link
-            href="/approach/evidence"
-            className="inline-flex items-center gap-2 text-sm font-medium text-link-primary transition-colors hover:text-link-primary-hover"
-          >
-            How I label and verify technical work
-            <ArrowRight className="h-4 w-4" />
-          </Link>
-        </div>
+    <div className="mx-auto max-w-7xl space-y-10 wrap-anywhere px-4 py-8 sm:px-6 md:space-y-12 lg:px-8">
+      <div className="max-w-3xl">
+        <h1 className="text-4xl font-semibold tracking-tight text-text-primary sm:text-5xl">Work</h1>
+        <p className="mt-3 text-lg leading-8 text-text-secondary">
+          Explore the websites and systems I’ve built, the decisions behind them, and what each project delivered.
+        </p>
       </div>
+
+      <section aria-labelledby="client-work" className="space-y-5">
+        <h2 id="client-work" className="text-3xl font-semibold tracking-tight text-text-primary">Client work</h2>
+        {lead && <WorkCard system={lead} layout="lead" />}
+        <div className="grid gap-5 md:grid-cols-2">
+          {clientWebsites.map((system) => <WorkCard key={system.id} system={system} layout="screenshot" />)}
+        </div>
+        <div id="past-client-work" tabIndex={-1} className="scroll-mt-28 space-y-4">
+          {historicalSystems.map((system) => <WorkCard key={system.id} system={system} />)}
+        </div>
+      </section>
+
+      <ProjectGroup title="Applications and data projects" systems={[...pilotSystems, ...academicProjects]} />
+      <ProjectGroup title="Experiments and work in progress" systems={experiments} />
     </div>
-  )
-}
-
-function CaseStudyCard({ system }: Readonly<{ system: FeaturedSystemCaseStudy }>) {
-  const historical = system.caseStudyStage === 'Historical'
-  return (
-    <article className="rounded-[1.5rem] border border-border-subtle bg-background-elevated p-5 shadow-sm">
-      <div className="flex flex-wrap items-center gap-2">
-        {!historical ? <Badge variant="secondary">{system.contextLabel ?? system.caseStudyStage}</Badge> : null}
-        <Badge variant="outline">{system.currentState}</Badge>
-        {!historical ? <Badge variant="outline">{system.themeTitle}</Badge> : null}
-      </div>
-
-      <h3 className="mt-4 text-xl font-semibold tracking-tight text-text-primary">
-        {historical ? system.displayTitle ?? system.name : system.name}
-      </h3>
-      <p className="mt-3 text-sm leading-7 text-text-secondary">{system.summary}</p>
-
-      {!historical ? <div className="mt-5 flex flex-wrap gap-2">
-        {system.stack.slice(0, 5).map((item) => (
-          <TechTag key={item}>{item}</TechTag>
-        ))}
-      </div> : null}
-
-      <div className="mt-5 flex flex-wrap gap-4">
-        <Link
-          href={`/case-studies/${system.id}`}
-          className="inline-flex items-center gap-2 text-sm font-medium text-link-primary transition-colors hover:text-link-primary-hover"
-        >
-          Read case study
-          <ArrowRight className="h-4 w-4" />
-        </Link>
-        {system.externalUrl ? (
-          <ExternalLinkAction href={system.externalUrl}>Visit live site</ExternalLinkAction>
-        ) : null}
-      </div>
-      {system.successorLink ? (
-        <div className="mt-5 border-t border-border-subtle pt-4">
-          <p className="mb-3 max-w-3xl text-sm leading-7 text-text-secondary">
-            {system.successorLink.context}
-          </p>
-          <ExternalLinkAction href={system.successorLink.href}>
-            {system.successorLink.label}
-          </ExternalLinkAction>
-        </div>
-      ) : null}
-    </article>
   )
 }

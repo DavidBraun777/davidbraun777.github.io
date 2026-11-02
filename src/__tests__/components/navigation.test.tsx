@@ -12,11 +12,10 @@ import { resumeUrl } from '@/data/resumes'
 vi.mock('next/navigation', () => ({ usePathname: () => '/research' }))
 
 const expectedNavigation = [
-  { label: 'Home', href: '/' },
-  { label: 'Services', href: '/services' },
-  { label: 'Case Studies', href: '/case-studies' },
-  { label: 'Research', href: '/research' },
+  { label: 'Work', href: '/case-studies' },
   { label: 'Experience', href: '/experience' },
+  { label: 'Services', href: '/services' },
+  { label: 'Research', href: '/research' },
   { label: 'Contact', href: '/contact' },
 ]
 const expectedResearch = [
@@ -32,9 +31,8 @@ const expectedExperience = [
   { label: 'Resume PDF', href: resumeUrl },
 ]
 const expectedExplore = [
-  ...expectedNavigation.slice(0, 5),
+  ...expectedNavigation,
   { label: 'Writing', href: '/writing' },
-  expectedNavigation[5],
   { label: 'Résumés & CV', href: '/resumes' },
 ]
 
@@ -60,19 +58,19 @@ describe('navigation hierarchy', () => {
       href: resumeUrl, external: true,
     })
     expect(primaryNavigation.filter(({ children }) => children?.length).map(({ label }) => label))
-      .toEqual(['Research', 'Experience'])
+      .toEqual(['Experience', 'Research'])
     for (const links of [primaryNavigation, research?.children ?? [], experience?.children ?? []]) {
       expect(new Set(links.map(({ href }) => href)).size).toBe(links.length)
     }
   })
 
-  test('retains explicit Home and brand links with collapsed semantic disclosure controls', () => {
+  test('links the brand to Home and keeps the primary disclosure controls collapsed', () => {
     const page = render(<Header />)
     const header = page.querySelector('header')
     const primary = header?.querySelector('nav[aria-label="Primary"]')
 
     expect(linksWithin(primary)).toEqual(expectedNavigation)
-    expect(header?.querySelectorAll('a[href="/"]')).toHaveLength(2)
+    expect(header?.querySelectorAll('a[href="/"]')).toHaveLength(1)
     expect(header?.querySelector('a[href="/"]')?.textContent).toContain('David Braun')
     expect(header?.querySelector('a[href="/"]')?.textContent).toContain('AI Systems & Platform Engineer')
     expect(primary?.querySelector('[aria-current="page"]')?.textContent).toBe('Research')
@@ -82,29 +80,24 @@ describe('navigation hierarchy', () => {
       expect(button?.getAttribute('aria-controls')).toBe(`desktop-${label.toLowerCase()}-navigation`)
     }
     expect(primary?.querySelectorAll('button')).toHaveLength(2)
-    expect(linksWithin(header).filter(({ label }) => label === 'Book a Call')).toEqual([
-      { label: 'Book a Call', href: '/contact' },
+    expect(linksWithin(header).filter(({ href }) => href === '/contact')).toEqual([
+      { label: 'Contact', href: '/contact' },
     ])
     expect(header?.querySelector('button[aria-label*="theme"]')).not.toBeNull()
     expect(header?.querySelector('[role="menu"], [role="menuitem"]')).toBeNull()
   })
 
-  test('keeps Explore, Connect and Research Profiles as independent footer areas', () => {
+  test('keeps footer navigation and professional profiles compact and independent', () => {
     const page = render(<Footer />)
     const headings = Array.from(page.querySelectorAll('footer h2'))
     expect(headings.map((heading) => heading.textContent)).toEqual([
-      'Explore', 'Connect', 'Research Profiles',
+      'Explore', 'Connect',
     ])
-    const [explore, connect, research] = headings.map((heading) => heading.parentElement)
+    const [explore, connect] = headings.map((heading) => heading.parentElement)
     expect(linksWithin(explore)).toEqual(expectedExplore)
     expect(linksWithin(connect).map(({ label }) => label)).toEqual(['GitHub', 'LinkedIn'])
-    expect(linksWithin(research).map(({ label }) => label)).toEqual([
-      'ORCID', 'Google Scholar', 'IEEE DataPort', 'Scopus', 'Web of Science', 'ResearchGate', 'AGU',
-    ])
-    expect(connect?.contains(research)).toBe(false)
     expect(explore?.parentElement).toBe(connect?.parentElement)
-    expect(research?.parentElement).toBe(connect?.parentElement)
-    expect(connect?.parentElement?.children).toHaveLength(4)
+    expect(connect?.parentElement?.children).toHaveLength(3)
 
     const links = Array.from(page.querySelectorAll('footer ul a'))
     const destinations = links.map((link) => link.getAttribute('href'))

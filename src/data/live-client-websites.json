@@ -67,8 +67,8 @@
     "id": "matt-laur",
     "name": "Matt Laur — Athlete & Coaching Website",
     "client": "Matt Laur",
-    "summary": "I built a public website for professional football player and coach Matt Laur that brings together his career history, game film, résumé, and recruiting and coaching contacts.",
-    "positioning": "I built this website for Matt Laur, a professional football player and coach. A team considering Matt as a player can look up a season and watch him on the field. A program considering him as a coach can review the positions he has held and reach out about a role.",
+    "summary": "An athlete and coaching website that brings together career history, game film, a résumé, and recruiting and coaching contact options.",
+    "positioning": "I built this website for professional football player and coach Matt Laur. Teams can look up a season and watch the film. Coaching programs can review his experience on the sideline and get in touch about a role.",
     "externalUrl": "https://www.mattlaur.com/",
     "problem": "Help prospective teams and coaching contacts find the parts of Matt’s career relevant to their inquiry.",
     "system": "An athlete profile with playing and coaching timelines, a filterable Film Room, a PDF résumé, and separate contact options.",
@@ -87,10 +87,10 @@
     "outcome": "Matt’s public website connects his playing and coaching record with the material a team can review before contacting him.",
     "openingSection": {
       "id": "career",
-      "title": "Two ways into Matt’s career",
+      "title": "Playing and coaching history",
       "paragraphs": [
-        "The homepage introduces Matt as a wide receiver and defensive back. A scout who came to see him play can go straight to the film. Farther down the page, a snapshot of recent teams leads to his full playing history. A separate coaching snapshot leads to the roles he has held on the sideline.",
-        "Both timelines group entries by year, with recent seasons first. On the playing side, the team, league, and position give context to the season’s statistics. On the coaching side, the entries pair each program with Matt’s responsibilities, such as coaching receivers or calling plays. The overview and the detailed pages draw from the same profile data, so a season can appear in both places from a single entry."
+        "The homepage takes a scout straight to the game film. Farther down the page, a snapshot of recent teams leads to his full playing history. A separate coaching snapshot leads to the roles he has held on the sideline.",
+        "Both timelines group entries by year, with recent seasons first. On the playing side, the team, league, and position give context to the season’s statistics. Coaching entries pair each program with responsibilities such as coaching receivers or calling plays. The overview and the detailed pages draw from the same profile data, so a season can appear in both places from a single entry."
       ],
       "figure": {
         "src": "/images/projects/matt-laur-home.webp",
@@ -113,7 +113,7 @@
           "alt": "The Film Room on mobile with 2023 selected and the Tollense Sharks championship highlights as the single result.",
           "width": 860,
           "height": 1824,
-          "caption": "Selecting 2023 narrows the Film Room to Matt’s Tollense Sharks highlights."
+          "caption": "Selecting 2023 narrows the Film Room to the Tollense Sharks highlights."
         }
       },
       {
