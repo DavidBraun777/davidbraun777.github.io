@@ -69,6 +69,9 @@ The current project evidence remains deliberately classified:
 
 - [VIFG nonprofit platform](https://www.vifg.org/home) is the strongest public
   production proof.
+- David built Matt Laur’s athlete and coaching website. Its case study at
+  `/case-studies/matt-laur` follows VIFG in the production section and links to
+  [Matt’s live site](https://www.mattlaur.com/).
 - [arklandscaping.net](https://arklandscaping.net) is a current public delivery
   example.
 - Time2Move is past client work for Dustin Marmon: David implemented the original

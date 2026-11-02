@@ -1,7 +1,7 @@
 import type { Metadata } from 'next'
 import Image from 'next/image'
 import Link from 'next/link'
-import { ArrowRight, Github } from 'lucide-react'
+import { ArrowRight, ArrowUpRight, Github } from 'lucide-react'
 import { notFound } from 'next/navigation'
 import { DisclosurePanel } from '@/components/site/disclosure-panel'
 import { CaseStudyStoryContent } from '@/components/site/case-study-story'
@@ -106,7 +106,9 @@ export default async function CaseStudyDetailPage({ params }: Readonly<Props>) {
           title={system.displayTitle ?? system.name}
           description={system.positioning ?? system.summary}
           actions={[
-            { label: 'Book a Call', href: '/contact' },
+            system.story && system.externalUrl
+              ? { label: 'View live website', href: system.externalUrl, external: true, icon: ArrowUpRight }
+              : { label: 'Book a Call', href: '/contact' },
             ...(system.githubUrl
               ? [
                   {
@@ -432,6 +434,7 @@ function InterpretationTable({
 }
 
 const curatedRelatedIds: Record<string, string[]> = {
+  'matt-laur': ['vifg-nonprofit-platform', 'time2move'],
   time2move: ['vifg-nonprofit-platform', 'dealerflow'],
   'vifg-nonprofit-platform': ['dealerflow', 'dgm'],
   dealerflow: ['vifg-nonprofit-platform', 'dgm'],

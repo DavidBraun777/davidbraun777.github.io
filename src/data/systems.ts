@@ -1,4 +1,5 @@
 import type { CaseStudyStory, CaseStudySuccessorLink } from './case-study-story'
+import { mattLaur } from './matt-laur'
 import { time2Move } from './past-client-work'
 
 export interface ProofSection {
@@ -1185,6 +1186,7 @@ export const systemThemes: SystemTheme[] = [
           },
         ],
       },
+      mattLaur,
     ],
   },
   {
@@ -1235,7 +1237,7 @@ export const allSystems: FeaturedSystemCaseStudy[] = [
     .filter((system) => !orderedSystemIds.includes(system.id)),
 ]
 
-export const productionSystems = featuredSystems.filter(
+export const productionSystems = allSystems.filter(
   (system) => system.caseStudyStage === 'Production'
 )
 

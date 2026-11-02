@@ -28,7 +28,7 @@ describe('optional portfolio content', () => {
   test('case-study cards use semantic fallbacks and keep current-site links separate', async () => {
     const minimal = { ...base, contextLabel: undefined, externalUrl: undefined }
     vi.doMock('@/data/systems', () => ({
-      productionSystems: [minimal],
+      productionSystems: [minimal, { ...minimal, id: 'production-example' }],
       pilotSystems: [{ ...minimal, id: 'pilot-example', caseStudyStage: 'Pilot', externalUrl: 'https://example.com/live' }],
       researchSystems: [minimal, { ...minimal, id: 'applied', currentState: 'Applied dashboard prototype' }, { ...minimal, id: 'prototype', currentState: 'Prototype' }],
       historicalSystems: [{ ...minimal, id: 'past-example', caseStudyStage: 'Historical', displayTitle: undefined }],
@@ -36,6 +36,9 @@ describe('optional portfolio content', () => {
     const { default: Page } = await import('@/app/case-studies/page')
     const page = render(<Page />)
     expect(page.querySelector('a[href="https://www.vifg.org/home"]')).not.toBeNull()
+    const secondaryProduction = page.querySelector('a[href="/case-studies/production-example"]')
+    expect(secondaryProduction?.textContent).toContain('Read case study')
+    expect(secondaryProduction?.closest('article')?.querySelectorAll('a')).toHaveLength(1)
     expect(page.querySelector('a[href="https://example.com/live"]')?.textContent).toContain('Visit live site')
     expect(page.querySelector('#past-client-work h3')?.textContent).toBe(base.name)
   })

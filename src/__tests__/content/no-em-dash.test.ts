@@ -5,8 +5,8 @@ import path from 'node:path'
 const sourceRoots = ['src/app', 'src/components', 'src/data', 'src/lib']
 const textFileExtensions = new Set(['.ts', '.tsx', '.mdx'])
 const disallowedCharacter = String.fromCharCode(0x2014)
-// This successor-site label is explicitly required by the portfolio owner.
-const approvedLabels = ['Current business website — Hombuzz']
+// These labels are explicitly required by the portfolio owner.
+const approvedLabels = ['Current business website — Hombuzz', 'Matt Laur — Athlete & Coaching Website']
 
 function collectTextFiles(directory: string): string[] {
   return readdirSync(directory).flatMap((entry) => {

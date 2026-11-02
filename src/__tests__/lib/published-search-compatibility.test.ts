@@ -45,6 +45,9 @@ import type { SearchIndex } from '@/lib/search/types'
 // Five query expectations changed; the other 15 remain from the prior baseline.
 // PR #154's merge repair replaces the stale four-workflow overview caption with
 // the single-inquiry description. Record destinations and ranked queries stay exact.
+// Reviewed the Matt Laur addition against master 292d35e. All 590 existing records
+// and ten project manifests match in order and content. Only "Next.js" gains
+// two Matt Laur results. Existing targets, scores and snippets remain intact.
 function canonical(value: unknown): unknown {
   if (Array.isArray(value)) return value.map(canonical)
   if (value && typeof value === 'object') return Object.fromEntries(
@@ -68,7 +71,7 @@ const queries = [
   ["work arrives unevenly",2,"838a2a186ddf11d069b795a3e58217b172fae0d517dffea6f1e1004ad3cbedc9"],
   ["AI",36,"7edeccd19174a69f132c56e66a32f819ec922f5da6c11603fe64c651508f38c6"],
   ["ML",3,"11bd4b9108b2a67cbcc441f5d31373d9a8f125b6a4f70c16789b00bf7065db77"],
-  ["Next.js",10,"5ade501b8496b3a078dc601ade765abaf9ca782760616a99ee9120a76bfbf7fa"],
+  ["Next.js",12,"88750cc6a14ab04fc8e5d601abecb8fc64a8d2d2d889b63c91f824a9f8717168"],
   ["Urarina",1,"8bd51e9b2651570c1fe0c8926a4124211740fbe9a23d48219c952d41a854e866"],
   ["VIFG",7,"2c58bb569d9c962ac5b3b27aa7c5dc038eb0077447ec7a47d8962ffec78d5792"],
   ["research",18,"12d5426be8266829c993dc08ac9a114eb9bb16f953024eae23f2ca47350461bd"],
@@ -81,13 +84,13 @@ const queries = [
 
 describe('published search compatibility with ba84b4d and reviewed editorial updates', () => {
   test('preserves all public records, destinations and project target metadata', () => {
-    expect(index.records).toHaveLength(590)
-    expect(digest(index)).toBe('98e15b1df9290fb0a5f3081e5b7df05155e63a3d070e75e9bb7889a37798dbe5')
+    expect(index.records).toHaveLength(595)
+    expect(digest(index)).toBe('2cf56ab39839a2dd29580ff118eea31d1b84ea9afa7f4aca8f809e4bf9d4fd79')
     const inventory = index.records.map(record => ({ id: record.id, href: record.href, destination: record.destination, cells: record.cells }))
-    expect(index.records.reduce((count, record) => count + Number(!!record.destination) + (record.cells?.length ?? 0), 0)).toBe(636)
-    expect(digest(inventory)).toBe('ff15a266cb6ce35acd87cbf13550648e31ed3e6a3fa1d70ed1406adb13b2a6bb')
+    expect(index.records.reduce((count, record) => count + Number(!!record.destination) + (record.cells?.length ?? 0), 0)).toBe(640)
+    expect(digest(inventory)).toBe('497781a769f91b88bfbff4f6bfe015ca745a558b23b3db02286c93e128997ced')
     const projects = allSystems.map(system => ({ id: system.id, destinations: createProjectContent(system).destinations }))
-    expect(digest(projects)).toBe('d77c5110dda5d3c52d030dc90fb73a3c453b166ac5ea78e67d532cd676165580')
+    expect(digest(projects)).toBe('554a5c7b638f8a8da5f574fecb3b2bc6aecc314ed281bcff0750971f99516cc9')
   })
 
   test.each(queries)('preserves ordered results, scores, selected targets and snippets for %s', (query, count, expected) => {

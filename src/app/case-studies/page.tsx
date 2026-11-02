@@ -1,6 +1,7 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { ArrowRight } from 'lucide-react'
+import { ClientWorkCard } from '@/components/site/client-work-card'
 import { PageIntro } from '@/components/site/page-intro'
 import { TechTag } from '@/components/site/tech-tag'
 import { Badge } from '@/components/ui/badge'
@@ -66,7 +67,7 @@ function StageSection({
 }
 
 export default function CaseStudiesPage() {
-  const featuredProduction = productionSystems[0]
+  const [featuredProduction, ...otherProduction] = productionSystems
   const prototypeSystems = researchSystems.filter(isPrototypeOrAcademic)
   const activeResearchSystems = researchSystems.filter((system) => !isPrototypeOrAcademic(system))
 
@@ -164,6 +165,9 @@ export default function CaseStudiesPage() {
                 </div>
               </div>
             </article>
+            {otherProduction.map((system) => (
+              <ClientWorkCard key={system.id} system={system} />
+            ))}
           </section>
         ) : null}
 
