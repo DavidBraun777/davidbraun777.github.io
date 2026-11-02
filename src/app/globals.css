@@ -130,8 +130,8 @@ body {
   background: rgba(58, 210, 255, 0.14);
 }
 
-a,
-button {
+/* Keep control defaults at zero specificity so reduced motion can override them. */
+:where(a, button) {
   transition-property: color, background-color, border-color, transform, box-shadow;
   transition-duration: 180ms;
   transition-timing-function: ease;
@@ -209,9 +209,9 @@ summary::-webkit-details-marker {
   *,
   *::before,
   *::after {
-    animation-duration: 0.01ms !important;
-    animation-iteration-count: 1 !important;
-    transition-duration: 0.01ms !important;
+    animation-duration: 0.01ms;
+    animation-iteration-count: 1;
+    transition-duration: 0.01ms;
   }
 }
 

@@ -13,9 +13,12 @@ export const aiLessonCopy = {
 
 const intents = ['buyer', 'seller', 'consultation', 'unknown'] as const
 const fields = ['intent', 'summary', 'evidence', 'needs_review'] as const
+const allowedIntents: readonly string[] = intents
+const allowedFields: readonly string[] = fields
 const summaryLimit = 240
 const evidenceLimit = 160
 const maxEvidence = 3
+const nonWhitespacePattern = String.raw`\S`
 
 export interface AiProposal {
   intent: typeof intents[number]
@@ -30,8 +33,8 @@ export const proposedAiSchema = {
   required: fields,
   properties: {
     intent: { type: 'string', enum: intents },
-    summary: { type: 'string', minLength: 1, maxLength: summaryLimit, pattern: '\\S' },
-    evidence: { type: 'array', minItems: 0, maxItems: maxEvidence, items: { type: 'string', minLength: 1, maxLength: evidenceLimit, pattern: '\\S' } },
+    summary: { type: 'string', minLength: 1, maxLength: summaryLimit, pattern: nonWhitespacePattern },
+    evidence: { type: 'array', minItems: 0, maxItems: maxEvidence, items: { type: 'string', minLength: 1, maxLength: evidenceLimit, pattern: nonWhitespacePattern } },
     needs_review: { type: 'boolean' },
   },
 } as const
@@ -49,10 +52,10 @@ export function validateAiProposal(value: unknown): ValidationResult {
   }
   const proposal = value as Record<string, unknown>
   const keys = Object.keys(proposal)
-  if (keys.length !== fields.length || keys.some(key => !fields.some(field => field === key))) {
+  if (keys.length !== fields.length || keys.some(key => !allowedFields.includes(key))) {
     return { valid: false, reason: 'Only the four required fields are accepted.' }
   }
-  if (!intents.some(intent => intent === proposal.intent)) {
+  if (typeof proposal.intent !== 'string' || !allowedIntents.includes(proposal.intent)) {
     return { valid: false, reason: 'Intent must be buyer, seller, consultation, or unknown.' }
   }
   if (!boundedText(proposal.summary, summaryLimit)) {
@@ -96,9 +99,10 @@ export function evaluateAiProposal(message: string, candidate: unknown): AiLesso
   const schemaCheck = { status: 'Passed', detail: 'All four fields satisfy the proposed strict schema.' }
   const absent = schema.proposal.evidence.filter(span => !message.includes(span))
   if (absent.length > 0) {
+    const quotedAbsentPhrases = absent.map(span => `“${span}”`).join('; ')
     return {
       schema: schemaCheck,
-      evidence: { status: 'Failed', detail: `Not found in the visitor message: ${absent.map(span => `“${span}”`).join('; ')}.` },
+      evidence: { status: 'Failed', detail: `Not found in the visitor message: ${quotedAbsentPhrases}.` },
       humanReview: { status: 'Blocked', detail: 'Unsupported evidence must be resolved before review or routing.' },
       outcome: 'Reject the unsupported proposal. A valid shape did not make its supporting claim true.',
     }
