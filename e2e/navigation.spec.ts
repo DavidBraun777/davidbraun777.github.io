@@ -109,7 +109,7 @@ test.describe('contextual header navigation', () => {
     await expect(experienceList).toBeHidden()
   })
 
-  test('mobile disclosures use taps and close after same-page anchors and a PDF selection', async ({ page }) => {
+  test('mobile disclosures use taps and close after same-page anchors and a PDF selection', { tag: '@cross-browser' }, async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 })
     await page.goto('/research')
     const mobile = page.getByRole('navigation', { name: 'Mobile', exact: true })
@@ -169,7 +169,7 @@ test.describe('contextual header navigation', () => {
   })
 })
 
-test('footer columns stay independent, readable and keyboard accessible across themes and viewports', async ({ page }) => {
+test('footer columns stay independent, readable and keyboard accessible across themes and viewports', { tag: '@cross-browser' }, async ({ page }) => {
   await page.emulateMedia({ reducedMotion: 'reduce', colorScheme: 'light' })
   await page.goto('/')
   const footer = page.locator('footer')

@@ -13,6 +13,7 @@ interface CreatePageMetadataOptions {
   imageAlt?: string
   type?: 'website' | 'article'
   publishedTime?: string
+  modifiedTime?: string
   authors?: string[]
   tags?: string[]
 }
@@ -29,6 +30,7 @@ export function createPageMetadata({
   imageAlt,
   type = 'website',
   publishedTime,
+  modifiedTime,
   authors,
   tags,
 }: CreatePageMetadataOptions): Metadata {
@@ -54,6 +56,7 @@ export function createPageMetadata({
         },
       ],
       ...(publishedTime ? { publishedTime } : {}),
+      ...(modifiedTime ? { modifiedTime } : {}),
       ...(authors ? { authors } : {}),
       ...(tags ? { tags } : {}),
     },

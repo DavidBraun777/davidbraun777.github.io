@@ -1,5 +1,9 @@
 # Urarina research-status page: provenance update review
 
+> **Historical report.** Findings, commands, verification counts and deployment
+> statements below describe the original review, not the current site. Use the
+> [documentation index](README.md) for current setup, maintenance and architecture.
+
 This report supersedes the initial page-creation review and describes the current local implementation. Nothing has been deployed or pushed.
 
 ## Route and preview

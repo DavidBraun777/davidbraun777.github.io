@@ -1,96 +1,90 @@
-# dbraun.io Information Architecture
+# dbraun.io information architecture
 
-This document records the implemented information architecture for `dbraun.io`.
-The site supports three professional goals without splitting into separate public
-funnels:
+This document describes the implemented portfolio, reviewed November 2, 2026.
+The three audience paths are engineering employment, consulting, and research.
+The shared identity is **AI Systems & Platform Engineer**; historical employer
+titles and project maturity remain unchanged.
 
-1. Employment opportunities for AI systems, platform, and software engineering.
-2. Qualified consulting leads for People's Connection LLC.
-3. Research inquiries and collaborations.
+## Navigation and homepage
 
-## Primary Navigation
+Primary navigation, in order: **Work, Experience, Services, Research, Contact**.
+The David Braun brand is the home link. Research and Experience have contextual
+submenus. The mobile menu preserves the same primary order; desktop navigation
+appears when the layout has room at the `xl` breakpoint.
 
-1. Home
-2. Services
-3. Case Studies
-4. Research
-5. Experience
-6. Contact
+The homepage presents:
 
-The canonical professional identity across these routes is **AI Systems & Platform
-Engineer**. Architecture remains a capability, not a retroactive employment title.
+1. Wide hero with professional identity, value proposition and primary actions.
+2. Four career/research highlights with context.
+3. Employer, client and researcher pathways.
+4. Technical capabilities and evidence-standards link.
+5. Contact invitation.
+6. Full footer: identity/faith, Explore, Connect and Research Profiles.
 
-## Canonical Sitemap
+Phone layouts use compact spacing and reflow the same essential information.
+The homepage does not render project cards or a live-client row. Work owns those
+lists. Preserve the desktop presence and full footer rather than compressing all
+viewports to the phone layout.
 
-```text
-/
-|-- /services
-|-- /case-studies
-|   |-- /case-studies/[system-id]
-|-- /research
-|-- /experience
-|   |-- /experience/career-story
-|-- /approach/evidence
-|-- /writing
-|   |-- /writing/[slug]
-|-- /contact
-|-- /David-J-Braun-Resume-2026.pdf
-```
+## Canonical routes
 
-The career-story and evidence-standards pages are deeper supporting routes. They
-are linked contextually but intentionally omitted from primary navigation.
+| Route | Purpose / next step |
+| --- | --- |
+| `/` | Positioning and audience paths → Work, Contact, résumé |
+| `/case-studies` | Work index grouped into Client work, Applications and data projects, and Experiments and work in progress |
+| `/case-studies/[system-id]` | Specific ownership, implementation, artifacts, status and limitations |
+| `/experience` | Employment, education, credentials → employment inquiry or résumé |
+| `/experience/career-story` | Deeper career narrative |
+| `/services` | Consulting offers, scope, deliverables and planning ranges → consulting inquiry |
+| `/research` | Accepted and published work, attribution and researcher profiles |
+| `/research/urarina-hybrid-retrieval` | Current accepted research status and public provenance |
+| `/approach/evidence` | Evidence, maturity and review standards |
+| `/writing` | Published articles |
+| `/writing/[slug]` | Article with publication and optional substantive-revision date |
+| `/resumes` | Approved industry résumé and research CV; request fallback when an asset is not cleared |
+| `/contact` | Single form for all professional inquiry types and optional scheduling link |
 
-## Page Roles and Conversion Paths
+The sitemap includes canonical public page routes, case studies and published
+articles. Draft articles and redirects are excluded. Writing modification dates
+use the actual `updated` date when supplied, not the build date. Public document
+URLs are defined in `src/data/resumes.ts` and are not researcher identities.
 
-| Page | Primary purpose | Primary path |
-| --- | --- | --- |
-| Home | Establish positioning, proof, and audience paths | View Work / Contact Me |
-| Services | Explain purchasable consulting engagements | Discuss a Project |
-| Case Studies | Show maturity-labeled engineering proof | Discuss a similar workflow |
-| Research | Present accepted and published research accurately | Discuss Research |
-| Experience | Provide a concise professional record | Discuss a Role |
-| Career Story | Preserve the deeper five-chapter through-line | Experience / Evidence Standards |
-| Evidence Standards | Explain maturity, claim, and review discipline | Case Studies / Research |
-| Contact | Route all professional inquiry types through one form | Send inquiry |
+## Inquiry routing
 
-## Contact Intents
+`/contact?type=employment`, `consulting`, `research`, `speaking`, or `other`
+preselects the matching inquiry type. Invalid values fall back to an unselected
+form. The consulting option reveals the optional service selector. A valid
+`CAL_LINK` enables the additional booking action; without it, the form remains
+the contact path.
 
-The single `/contact` route supports these query parameters and preselected
-inquiry types:
+## Permanent redirects
 
-- `/contact?type=employment`
-- `/contact?type=consulting`
-- `/contact?type=research`
-
-Speaking and other professional inquiries use the same form selector without a
-separate public route.
-
-## Permanent Redirects
-
-Legacy aliases resolve directly to the current canonical destination:
+`next.config.ts` owns these aliases. Do not add obsolete URLs to new internal
+links or to the sitemap.
 
 | Source | Destination |
 | --- | --- |
-| `/why-work-with-me` | `/experience` |
-| `/about` | `/experience` |
-| `/background` | `/experience` |
-| `/resume` | `/experience` |
-| `/resume.pdf` | `/David-J-Braun-Resume-2026.pdf` |
-| `/Resume.pdf` | `/David-J-Braun-Resume-2026.pdf` |
-| `/projects` | `/case-studies` |
+| `/about`, `/background`, `/resume`, `/why-work-with-me` | `/experience` |
+| `/resume.pdf`, `/David-J-Braun-Resume-2026.pdf` | `/resumes/David-J-Braun-Resume-Software-Platform-2026.pdf` |
+| `/projects`, `/systems` | `/case-studies` |
 | `/projects/[slug]` | `/case-studies/[slug]` |
 | `/blog` | `/writing` |
 | `/blog/[slug]` | `/writing/[slug]` |
-| `/systems` | `/case-studies` |
 
-Aliases are not sitemap entries and must not emit obsolete canonical metadata.
-The capitalized `/Resume.pdf` alias is covered by Next.js's case-insensitive
-matching of the configured `/resume.pdf` redirect.
+The capitalized `/Resume.pdf` alias follows Next.js's case-insensitive matching
+of the configured `/resume.pdf` redirect. The research CV's canonical path is
+`/resumes/David-J-Braun-CV-AI-Research-2026.pdf`.
 
-## Evidence Hierarchy
+## Evidence and discovery
 
-Primary pages show proof and retain visible Production, Pilot, and R&D labels.
-The rationale behind those labels, research publication status, limitations,
-AI-assisted work, and quality evidence lives on `/approach/evidence`. This keeps
-the main visitor journey concise while preserving claim discipline for readers
-who want the deeper standard.
+VIFG leads Client work, followed by ARK Landscaping, Matt Laur and the historical
+Time2Move engagement. DealerFlow, WeatherForge and RAGeATM retain their pilot or
+academic/prototype labels. Do not promote an inactive or experimental system to
+production because its case study is polished.
+
+Search builds from the same public data and MDX sources. Deep links can target
+specific paragraphs, diagrams and comparison cells inside disclosures. Preserve
+semantic destinations when editing content; see [search maintenance](search.md).
+Writing, the résumé directory, career narrative and evidence standards remain
+available through contextual links, search and the footer without expanding the
+primary navigation.

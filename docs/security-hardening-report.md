@@ -1,5 +1,9 @@
 # Security hardening report
 
+> **Historical report.** Findings, commands, verification counts and deployment
+> statements below describe the original review, not the current site. Use the
+> [documentation index](README.md) for current setup, maintenance and architecture.
+
 Date: October 26, 2026  
 Repository: `DavidBraun777/davidbraun777.github.io`  
 Working branch: `feat/ieee-dataport-profile`

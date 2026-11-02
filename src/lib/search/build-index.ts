@@ -10,22 +10,18 @@ import { allSystems, type FeaturedSystemCaseStudy } from '@/data/systems'
 import { urarinaResearch } from '@/data/urarina-research'
 import { getAllPosts, getPostBySlug } from '@/lib/mdx'
 import { extractReadableMdx } from './readable-mdx'
-import { projectContentRecords } from './project-destinations'
+import { projectContentRecords, publishedProofSections } from './project-destinations'
 import { assertUniqueDestinations, destinationHref } from './destinations'
 import { staticSearchPages } from './static-pages'
 import type { SearchIndex, SearchRecord } from './types'
 
 const text = (...parts: (string | undefined)[]) => parts.filter(Boolean).join(' ').replace(/\s+/g, ' ').trim()
 
-function retrievalSearchText(ladder: FeaturedSystemCaseStudy['retrievalCapabilityLadder']): string[] {
-  if (!ladder) return []
+function retrievalSearchText(comparison: FeaturedSystemCaseStudy['retrievalComparison']): string[] {
+  if (!comparison) return []
   return [
-    ladder.title, ladder.summary, ladder.intro, ladder.safeClaim, ladder.guardrail,
-    ladder.heuristicNote, ladder.futureWork,
-    ...ladder.interpretations.map(item => text(item.method, item.meaning)),
-    ...ladder.levels.map(level => text(level.systemType, level.compares, level.meaningCaptured,
-      level.questionUnderQuestionAbility, level.personalContextAbility, level.realWorldGrounding,
-      level.bestUseCase, level.fatalWeakness)),
+    comparison.title, comparison.summary, comparison.intro, comparison.futureWork,
+    ...comparison.methods.map(method => text(method.systemType, method.compares, method.bestUseCase, method.fatalWeakness)),
   ]
 }
 
@@ -36,7 +32,8 @@ function certificationDescription(item: (typeof certifications)[number]): string
 
 /** Explicit public fields only, including the limits rendered on the detail page. */
 export function projectSearchRecord(system: FeaturedSystemCaseStudy): SearchRecord {
-  const ladder = system.retrievalCapabilityLadder
+  const comparison = system.retrievalComparison
+  const proof = publishedProofSections(system)
   const story = system.story
   return {
     id: `project-${system.id}`,
@@ -47,7 +44,7 @@ export function projectSearchRecord(system: FeaturedSystemCaseStudy): SearchReco
     tags: [system.name, ...system.stack, system.contextLabel ?? system.caseStudyStage],
     headings: story
       ? [system.currentState, ...story.sections.map(block => block.title)]
-      : [system.solutionTitle ?? 'Solution / Implementation', ...system.proofSections.map(section => section.title)],
+      : [system.solutionTitle ?? 'Solution / Implementation', ...proof.map(section => section.title)],
     body: story ? text(
       system.positioning, system.currentState,
       ...story.atAGlance.map(item => text(item.label, item.value)),
@@ -60,8 +57,8 @@ export function projectSearchRecord(system: FeaturedSystemCaseStudy): SearchReco
       ...(system.architecture ?? []).map(step => text(step.label, step.detail)),
       ...(system.dataSources ?? []), ...(system.dashboardViews ?? []),
       ...(system.realWorldRelevance ?? []), ...(system.limitations ?? []), ...(system.nextImprovements ?? []),
-      ...system.proofSections.map(section => text(section.summary, ...section.items)),
-      ...retrievalSearchText(ladder),
+      ...proof.map(section => text(section.summary, ...section.items, ...(section.links ?? []).map(link => link.label))),
+      ...retrievalSearchText(comparison),
     ),
   }
 }

@@ -8,6 +8,24 @@ export interface ProofSection {
   status: 'available' | 'planned'
   summary: string
   items: string[]
+  links?: { label: string; href: string }[]
+}
+
+function availableProofSection(
+  id: ProofSection['id'],
+  title: string,
+  summary: string,
+  items: ProofSection['items'],
+  links?: ProofSection['links'],
+): ProofSection {
+  return {
+    id,
+    title,
+    status: 'available',
+    summary,
+    items,
+    ...(links ? { links } : {}),
+  }
 }
 
 export interface CaseStudyMetric {
@@ -21,34 +39,20 @@ export interface ArchitectureStep {
   detail: string
 }
 
-export interface RetrievalCapabilityLadderLevel {
+export interface RetrievalComparisonMethod {
   /** Stable semantic key only needed when system-type labels would collide. */
   id?: string
-  level: number
   systemType: string
   compares: string
-  meaningCaptured: string
-  questionUnderQuestionAbility: string
-  personalContextAbility: string
-  realWorldGrounding: string
   bestUseCase: string
   fatalWeakness: string
 }
 
-export interface RetrievalCapabilityInterpretation {
-  method: string
-  meaning: string
-}
-
-export interface RetrievalCapabilityLadder {
+export interface RetrievalComparison {
   title: string
   summary: string
   intro: string
-  safeClaim: string
-  guardrail: string
-  levels: RetrievalCapabilityLadderLevel[]
-  heuristicNote: string
-  interpretations: RetrievalCapabilityInterpretation[]
+  methods: RetrievalComparisonMethod[]
   futureWork: string
 }
 
@@ -74,7 +78,7 @@ export interface SystemCaseStudy {
   realWorldRelevance?: string[]
   limitations?: string[]
   nextImprovements?: string[]
-  retrievalCapabilityLadder?: RetrievalCapabilityLadder
+  retrievalComparison?: RetrievalComparison
   currentState: string
   image?: string
   imageAlt?: string
@@ -237,12 +241,12 @@ export const systemThemes: SystemTheme[] = [
           'Same-day statewide weather averages are context, not exact event-local station readings.',
           'The current version is Minnesota-focused.',
           'This is a decision-support prototype, not a forecasting or actuarial model.',
+          'Rebuilding the packaged data requires the raw NOAA inputs and adjustments to paths preserved from the original working environment.',
         ],
         nextImprovements: [
-          'Add polished screenshot evidence from the dashboard views.',
-          'Document reproducible data refresh steps for the Parquet analytics layers.',
-          'Expand validation notes around county joins, population anchors, and historical-data caveats.',
-          'Explore additional states only after the Minnesota workflow is fully documented.',
+          'Parameterize raw-data paths so a rebuild can use an explicit input and output layout.',
+          'Extend validation of county and zone joins, population anchors, and historical coverage.',
+          'Compare statewide weather context with event-local station matching before drawing more local conclusions.',
         ],
         currentState: 'Applied dashboard prototype',
         githubUrl: 'https://github.com/DavidBraun777/WeatherForge',
@@ -252,53 +256,57 @@ export const systemThemes: SystemTheme[] = [
         outcome:
           'I led implementation of the code that curated 55,384 cleaned Minnesota storm-event records and 9,008,748 station-day observations into reusable Parquet layers and a Python Shiny + Plotly dashboard spanning all 87 Minnesota counties.',
         proofSections: [
-          {
-            id: 'walkthrough',
-            title: 'Dashboard Views',
-            status: 'available',
-            summary:
-              'The project contains a dashboard structure with multiple decision-support views rather than a single static chart.',
-            items: [
+          availableProofSection(
+            'walkthrough',
+            'Dashboard Views',
+            'The dashboard source and guide describe how the curated Minnesota data is explored.',
+            [
               'Overview, County Impacts, Weather Context, Time Progression, Statewide Trends, Methods/Pipeline, and Live Alerts views.',
-              'Screenshot placeholders remain on the portfolio page until final dashboard captures are added.',
+              'Historical views read local Parquet files; Live Alerts uses the National Weather Service API.',
             ],
-          },
-          {
-            id: 'architecture',
-            title: 'Architecture / Pipeline',
-            status: 'available',
-            summary:
-              'The pipeline runs from raw public archives through filtering, cleaning, Parquet outputs, county joins, and an interactive Shiny/Plotly surface.',
-            items: [
+            [
+              { label: 'Read the dashboard guide', href: 'https://github.com/DavidBraun777/WeatherForge/blob/master/docs/dashboard-guide.md' },
+              { label: 'Inspect the Shiny application', href: 'https://github.com/DavidBraun777/WeatherForge/blob/master/app.py' },
+            ],
+          ),
+          availableProofSection(
+            'architecture',
+            'Architecture / Pipeline',
+            'The pipeline runs from raw public archives through filtering, cleaning, Parquet outputs, county joins, and an interactive Shiny/Plotly surface.',
+            [
               'Raw NOAA files -> Minnesota filtering -> cleaning/unit conversion -> Parquet outputs.',
               'County joins and population normalization make county-level comparisons possible.',
               'Shiny and Plotly expose the curated analytics layers through dashboard views.',
             ],
-          },
-          {
-            id: 'operations',
-            title: 'Applied Decision-Support Surfaces',
-            status: 'available',
-            summary:
-              'The project demonstrates how public data can be productized into reporting surfaces without claiming forecasting or actuarial precision.',
-            items: [
+            [
+              { label: 'Read the pipeline documentation', href: 'https://github.com/DavidBraun777/WeatherForge/blob/master/docs/data-pipeline.md' },
+              { label: 'Inspect the data-preparation scripts', href: 'https://github.com/DavidBraun777/WeatherForge/tree/master/pipeline' },
+            ],
+          ),
+          availableProofSection(
+            'operations',
+            'Applied Decision-Support Surfaces',
+            'The project demonstrates how public data can be productized into reporting surfaces without claiming forecasting or actuarial precision.',
+            [
               'County-level severe-weather comparisons.',
               'Historical trend and time-progression views.',
               'Methods view that explains the data pipeline and caveats.',
             ],
-          },
-          {
-            id: 'artifacts',
-            title: 'Artifacts & Evidence',
-            status: 'available',
-            summary:
-              'The case study uses verified project artifact counts and keeps limitations explicit.',
-            items: [
+          ),
+          availableProofSection(
+            'artifacts',
+            'Artifacts & Evidence',
+            'The public repository includes the curated data, data dictionary, and instructions for running the academic dashboard.',
+            [
               '~35 GB raw NOAA source archive used in the working project.',
               '55,384 cleaned Minnesota storm-event records and 9,008,748 station-day observations.',
               'Public GitHub repository linked for code review.',
             ],
-          },
+            [
+              { label: 'Review setup and reproducibility notes', href: 'https://github.com/DavidBraun777/WeatherForge/blob/master/README.md' },
+              { label: 'Inspect the packaged data', href: 'https://github.com/DavidBraun777/WeatherForge/tree/master/data' },
+            ],
+          ),
         ],
       },
       {
@@ -403,187 +411,57 @@ export const systemThemes: SystemTheme[] = [
           'Expand the benchmark beyond seven sanity-check questions.',
           'Add richer citation display and evaluation logging before claiming broader quality.',
         ],
-        retrievalCapabilityLadder: {
-          title: 'Future Work: Retrieval Capability Ladder',
-          summary:
-            'A staged view of how RAGeATM could grow from simple lexical retrieval into a more measurable, semantic, context-aware, and eventually multimodal research-assistant harness.',
+        retrievalComparison: {
+          title: 'Retrieval methods and tradeoffs',
+          summary: 'How the implemented TF-IDF baseline differs from other retrieval options.',
           intro:
-            'RAGeATM is currently best understood as a small but useful RAG prototype: enough to demonstrate retrieval, grounding, and evaluation discipline, but not yet a production research platform. The next work is not simply to make it bigger. The stronger path is to make retrieval more measurable, reproducible, semantic, and context-aware while avoiding overclaims about what current AI systems truly understand.',
-          safeClaim:
-            'TF-IDF and BM25 retrieve based primarily on lexical overlap, while embedding-based and LLM-assisted retrieval can better capture semantic similarity, paraphrase, and conceptual relevance. This makes them more capable of retrieving documents related to the user’s underlying intent, although they should not be described as fully understanding the ‘question beneath the question’ in a human sense.',
-          guardrail:
-            'LLMs can approximate deeper intent by modeling semantic context, conversational history, and inferred goals, but this remains probabilistic pattern-based reasoning rather than true human understanding.',
-          levels: [
+            'RAGeATM implements TF-IDF with cosine similarity and a refusal threshold. The other methods below are comparison options, not implemented features or a universal ranking. Their usefulness depends on the corpus, query types, evaluation set, and operating constraints.',
+          methods: [
             {
-              level: 1,
               systemType: 'Exact keyword search',
-              compares: 'Literal word/string overlap',
-              meaningCaptured: '5%',
-              questionUnderQuestionAbility: '0%',
-              personalContextAbility: '0%',
-              realWorldGrounding: '0%',
-              bestUseCase: 'Finding exact names, IDs, phrases, codes',
-              fatalWeakness: 'Misses anything phrased differently',
+              compares: 'Literal words or phrases in a query and document.',
+              bestUseCase: 'Finding an exact identifier, name, or known phrase.',
+              fatalWeakness: 'Misses relevant passages that use different wording.',
             },
             {
-              level: 2,
               systemType: 'TF-IDF',
-              compares: 'Weighted term overlap',
-              meaningCaptured: '10-20%',
-              questionUnderQuestionAbility: '0-5%',
-              personalContextAbility: '0%',
-              realWorldGrounding: '0%',
-              bestUseCase: 'Simple document retrieval where vocabulary matches',
-              fatalWeakness: 'No real semantics; treats text as bag-of-words',
+              compares: 'Weighted term overlap using cosine similarity; implemented in this prototype.',
+              bestUseCase: 'A small, inspectable lexical baseline when queries and documents share vocabulary.',
+              fatalWeakness: 'Word overlap can miss paraphrases or retrieve passages with the right terms but the wrong meaning.',
             },
             {
-              level: 3,
               systemType: 'BM25',
-              compares: 'Improved keyword relevance with saturation/length normalization',
-              meaningCaptured: '20-35%',
-              questionUnderQuestionAbility: '5%',
-              personalContextAbility: '0%',
-              realWorldGrounding: '0%',
-              bestUseCase: 'Strong classic search baseline',
-              fatalWeakness: 'Still mostly lexical; synonyms and paraphrases are weak',
+              compares: 'Improved keyword relevance with term-frequency saturation and document-length normalization.',
+              bestUseCase: 'A lexical baseline to compare against TF-IDF on the same documents and queries.',
+              fatalWeakness: 'Lexical matching remains weak for synonyms and paraphrases without matching terms.',
             },
             {
-              level: 4,
               systemType: 'Static embeddings',
-              compares: 'Word/document vectors learned from language patterns',
-              meaningCaptured: '35-50%',
-              questionUnderQuestionAbility: '10-20%',
-              personalContextAbility: '0-5%',
-              realWorldGrounding: '0%',
-              bestUseCase: 'Finding semantically related text',
-              fatalWeakness: 'Limited context sensitivity',
+              compares: 'Fixed word vectors combined into a representation of a query or passage.',
+              bestUseCase: 'Exploring similarity beyond literal word overlap with a simple vector representation.',
+              fatalWeakness: 'A fixed vector for a word does not adapt to its meaning in each sentence.',
             },
             {
-              level: 5,
               systemType: 'Modern embedding models',
-              compares: 'Query/document meaning vectors',
-              meaningCaptured: '55-75%',
-              questionUnderQuestionAbility: '25-45%',
-              personalContextAbility: '5-15%',
-              realWorldGrounding: '0-5%',
-              bestUseCase: 'RAG retrieval, semantic search, paraphrase matching',
-              fatalWeakness: 'Can retrieve conceptually similar but wrong context',
+              compares: 'Learned query and passage vectors compared by similarity.',
+              bestUseCase: 'Testing semantic retrieval for varied wording and paraphrases.',
+              fatalWeakness: 'Similar passages can still be irrelevant; model choice, language coverage, and corpus fit matter.',
             },
             {
-              level: 6,
               systemType: 'Hybrid search',
-              compares: 'BM25 + embeddings',
-              meaningCaptured: '65-85%',
-              questionUnderQuestionAbility: '30-50%',
-              personalContextAbility: '5-15%',
-              realWorldGrounding: '0-5%',
-              bestUseCase: 'Serious RAG systems',
-              fatalWeakness: 'More complex; requires tuning and evaluation',
+              compares: 'Lexical and embedding retrieval combined into one candidate set or ranking.',
+              bestUseCase: 'Corpora where both exact terminology and varied wording matter.',
+              fatalWeakness: 'Fusion choices need evaluation and add indexing and operational complexity.',
             },
             {
-              level: 7,
               systemType: 'Reranked retrieval',
-              compares: 'Initial retrieval + LLM/cross-encoder relevance judgment',
-              meaningCaptured: '75-90%',
-              questionUnderQuestionAbility: '40-60%',
-              personalContextAbility: '10-20%',
-              realWorldGrounding: '0-5%',
-              bestUseCase: 'High-quality RAG retrieval',
-              fatalWeakness: 'Slower/costlier; still depends on retrieved candidates',
-            },
-            {
-              level: 8,
-              systemType: 'LLM reading retrieved context',
-              compares: 'Retrieved docs + generated reasoning',
-              meaningCaptured: '80-95% for answer synthesis',
-              questionUnderQuestionAbility: '50-70%',
-              personalContextAbility: '15-35%',
-              realWorldGrounding: '0-10%',
-              bestUseCase: 'Answering from documents with explanation',
-              fatalWeakness: 'Can hallucinate, overgeneralize, or sound more certain than it is',
-            },
-            {
-              level: 9,
-              systemType: 'LLM with memory/user profile',
-              compares: 'Query + history + user goals + documents',
-              meaningCaptured: '80-95%',
-              questionUnderQuestionAbility: '65-80%',
-              personalContextAbility: '50-75%',
-              realWorldGrounding: '5-15%',
-              bestUseCase: 'Personalized assistants, tutoring, coaching, project guidance',
-              fatalWeakness: 'Risk of assuming too much about the user',
-            },
-            {
-              level: 10,
-              systemType: 'Agentic AI with tools',
-              compares: 'Text + memory + documents + actions + external systems',
-              meaningCaptured: '85-95%',
-              questionUnderQuestionAbility: '70-85%',
-              personalContextAbility: '60-80%',
-              realWorldGrounding: '20-45%',
-              bestUseCase: 'Research assistants, workflow automation, coding agents',
-              fatalWeakness: 'Tool errors, bad planning, weak verification',
-            },
-            {
-              level: 11,
-              systemType: 'Multimodal grounded AI',
-              compares: 'Text + vision + audio + environment + actions',
-              meaningCaptured: '85-98%',
-              questionUnderQuestionAbility: '75-90%',
-              personalContextAbility: '70-85%',
-              realWorldGrounding: '50-75%',
-              bestUseCase: 'Real-world assistance, robotics, field analysis',
-              fatalWeakness: 'Still not human lived experience',
-            },
-            {
-              level: 12,
-              systemType: 'Human-level social/contextual understanding',
-              compares: 'Language + memory + embodiment + relationships + lived experience',
-              meaningCaptured: '95-100%',
-              questionUnderQuestionAbility: '90-100%',
-              personalContextAbility: '90-100%',
-              realWorldGrounding: '90-100%',
-              bestUseCase: 'Real relational discernment',
-              fatalWeakness: 'Current AI does not truly have this',
-            },
-          ],
-          heuristicNote:
-            'These percentages are heuristic gauges, not universal benchmark results. They are meant to communicate increasing capability scope, not claim exact measured performance.',
-          interpretations: [
-            {
-              method: 'TF-IDF',
-              meaning: 'These documents share important words with the query.',
-            },
-            {
-              method: 'BM25',
-              meaning: 'These documents share important words in a more search-optimized way.',
-            },
-            {
-              method: 'Embeddings',
-              meaning: 'These documents are conceptually close to the query.',
-            },
-            {
-              method: 'Hybrid retrieval',
-              meaning: 'These documents match both the words and the meaning.',
-            },
-            {
-              method: 'Reranking',
-              meaning:
-                'Of the retrieved documents, these are probably most relevant to the user’s actual question.',
-            },
-            {
-              method: 'LLM + memory',
-              meaning:
-                'Given this user’s history, goals, and wording, this may be what they are really asking.',
-            },
-            {
-              method: 'Grounded AI',
-              meaning:
-                'Given the person’s behavior, environment, constraints, and history, this is probably the deeper issue.',
+              compares: 'A second model scores query–passage relevance within an initial candidate set.',
+              bestUseCase: 'Testing whether a smaller set of more relevant passages improves downstream answers.',
+              fatalWeakness: 'Adds latency and cost, and cannot recover relevant passages missing from the candidate set.',
             },
           ],
           futureWork:
-            'The practical future work for RAGeATM is to climb this ladder carefully: first by improving reproducibility and evaluation, then by comparing lexical, embedding, hybrid, and reranked retrieval, then by testing whether memory, user goals, and multimodal inputs actually improve retrieval quality without creating unjustified confidence.',
+            'A useful next evaluation would compare TF-IDF, BM25, and an embedding retriever on the same documented queries, including paraphrases, ambiguous requests, and unsupported questions. Report retrieval relevance, refusal errors, latency, and run conditions before drawing broader conclusions.',
         },
         currentState: 'Local RAG prototype',
         githubUrl: 'https://github.com/DavidBraun777/RAGeATM',
@@ -593,53 +471,49 @@ export const systemThemes: SystemTheme[] = [
         outcome:
           'Indexed 7 local source documents into 15 searchable chunks and produced 7/7 useful retrieval/refusal decisions on a small sanity benchmark using TF-IDF + cosine similarity with a default 0.12 threshold.',
         proofSections: [
-          {
-            id: 'walkthrough',
-            title: 'Demo Behavior',
-            status: 'available',
-            summary:
-              'The prototype demonstrates both grounded answers and explicit refusal when the local corpus does not support a question.',
-            items: [
+          availableProofSection(
+            'walkthrough',
+            'Demo Behavior',
+            'The prototype demonstrates both grounded answers and explicit refusal when the local corpus does not support a question.',
+            [
               'In-domain questions retrieve local context and answer from that evidence.',
               'An out-of-domain question such as "What is the capital of France?" refuses because the local corpus does not support the answer.',
             ],
-          },
-          {
-            id: 'architecture',
-            title: 'Architecture / Pipeline',
-            status: 'available',
-            summary:
-              'The flow is intentionally small and inspectable: local files become chunks, chunks become TF-IDF features, retrieval is thresholded, and generation depends on retrieved evidence.',
-            items: [
+          ),
+          availableProofSection(
+            'architecture',
+            'Architecture / Pipeline',
+            'The flow is intentionally small and inspectable: local files become chunks, chunks become TF-IDF features, retrieval is thresholded, and generation depends on retrieved evidence.',
+            [
               'data/raw text files -> ingestion -> chunking -> TF-IDF index.',
               'Cosine similarity returns top-k local evidence.',
               'Minimum relevance threshold decides whether to answer or refuse.',
             ],
-          },
-          {
-            id: 'operations',
-            title: 'Grounding Controls',
-            status: 'available',
-            summary:
-              'The main applied lesson is the refusal boundary, not broad RAG accuracy.',
-            items: [
+          ),
+          availableProofSection(
+            'operations',
+            'Grounding Controls',
+            'The main applied lesson is the refusal boundary, not broad RAG accuracy.',
+            [
               'Top-k retrieval with minimum relevance threshold.',
               'Offline retrieval-conditioned generation by default.',
               'Optional OpenAI mode only when configured.',
             ],
-          },
-          {
-            id: 'artifacts',
-            title: 'Artifacts & Evidence',
-            status: 'available',
-            summary:
-              'The evidence is intentionally modest and quantified as a sanity benchmark.',
-            items: [
+          ),
+          availableProofSection(
+            'artifacts',
+            'Artifacts & Evidence',
+            'The evidence is intentionally modest and quantified as a sanity benchmark.',
+            [
               '7 local source documents, 15 searchable chunks, and 15 × 772 TF-IDF feature matrix.',
               '7-question sanity benchmark with 7/7 useful retrieval/refusal decisions.',
               'Public GitHub repository linked for code review.',
             ],
-          },
+            [
+              { label: 'Read the recorded evaluation', href: 'https://github.com/DavidBraun777/RAGeATM/blob/master/docs/evaluation_results.md' },
+              { label: 'Inspect the evaluation runner', href: 'https://github.com/DavidBraun777/RAGeATM/blob/master/scripts/run_evaluation.py' },
+            ],
+          ),
         ],
       },
       {
@@ -1051,7 +925,7 @@ export const systemThemes: SystemTheme[] = [
         problem:
           'Wholesale vehicle buyers and sellers lose time when fresh inventory, offer status, and lifecycle changes are spread across slow manual workflows.',
         system:
-          'Built as a production-lean mobile system with a NestJS API, BullMQ-backed worker processing, persisted notifications, and lifecycle-safe inventory transitions. Buyers get scored matches and alerts, while sellers manage inventory, offers, and inbound inquiries from a mobile workflow.',
+          'I built a mobile system with a NestJS API, BullMQ-backed worker processing, persisted notifications, and inventory lifecycle rules. Buyers get scored matches and alerts, while sellers manage inventory, offers, and inbound inquiries from a mobile workflow.',
         systemHighlights: [
           'Worker pipeline computes match scores and notification fan-out.',
           'Vehicle lifecycle rules keep buyer and seller state transitions safe.',
@@ -1068,53 +942,38 @@ export const systemThemes: SystemTheme[] = [
           'State consistency: vehicle lifecycle transitions must keep buyer and seller state safe across concurrent offer and inventory workflows',
         outcome:
           'Beta pilot with working mobile workflows for buyer matching, seller inventory management, and real-time notification delivery',
+        realWorldRelevance: [
+          'Wholesale inventory discovery and buyer matching.',
+          'Mobile inventory, offer, and inquiry workflows.',
+          'Background notification processing tied to inventory changes.',
+        ],
+        limitations: [
+          'The system remains a beta pilot; broad adoption, production scale, and long-term reliability are not established by this case study.',
+          'The public screenshot shows the inventory feed. It does not independently demonstrate every lifecycle transition or queue failure mode.',
+        ],
         proofSections: [
-          {
-            id: 'walkthrough',
-            title: 'System Walkthrough',
-            status: 'available',
-            summary:
-              'The mobile workflow shown on this page is still the clearest existing proof surface for DealerFlow.',
-            items: [
-              'Buyer-facing inventory feed and match workflow are visible through the mobile screenshot.',
-              'Pilot status is real, but the fuller walkthrough needs stronger artifact coverage than it has today.',
+          availableProofSection(
+            'walkthrough',
+            'Mobile inventory feed',
+            'The captured mobile feed shows how newly published wholesale inventory appears to a buyer.',
+            [
+              'The screenshot is an existing application capture.',
+              'Buyer matching, seller inventory, and offers are the pilot workflows described in this case study.',
             ],
-          },
-          {
-            id: 'architecture',
-            title: 'Architecture / Flow',
-            status: 'planned',
-            summary:
-              'The system architecture is real, but the dedicated diagram and lifecycle artifact still need to be added.',
-            items: [
-              'Notification pipeline diagram is still to be added.',
-              'Lifecycle-safe inventory model artifact is in progress.',
+            [
+              { label: 'Open the mobile feed screenshot', href: '/images/projects/dealerflow-feed.png' },
             ],
-          },
-          {
-            id: 'operations',
-            title: 'Operational Surfaces',
-            status: 'available',
-            summary:
-              'This system already has real operational surfaces even though the proof set is still thinner than it should be.',
-            items: [
-              'Mobile buyer workflow for incoming inventory.',
-              'Seller inventory and offer management flow.',
-              'BullMQ-backed notification handling for match and lifecycle changes.',
+          ),
+          availableProofSection(
+            'operations',
+            'Implementation scope',
+            'I built the NestJS backend and Expo mobile client around inventory changes and the notifications they produce.',
+            [
+              'PostgreSQL and Prisma store application state.',
+              'BullMQ and Redis handle background notification work.',
+              'Inventory and offer transitions are the central state-consistency constraint.',
             ],
-          },
-          {
-            id: 'artifacts',
-            title: 'Artifacts & Evidence',
-            status: 'planned',
-            summary:
-              'DealerFlow still needs stronger embedded artifacts to become a more believable flagship.',
-            items: [
-              'Dedicated lifecycle diagram to be added.',
-              'Notification and queue artifact to be added.',
-              'More complete mobile workflow proof to be added.',
-            ],
-          },
+          ),
         ],
       },
     ],
@@ -1136,7 +995,7 @@ export const systemThemes: SystemTheme[] = [
         problem:
           'Mission-driven organizations need dependable public systems, but production reliability and accessibility often get treated as separate concerns instead of one delivery problem.',
         system:
-          'Built as an accessibility-first web platform deployed on AWS Lightsail with host-level Nginx, Dockerized frontend delivery, SSL automation, scheduled maintenance, and CI-driven image publishing. The system supports real nonprofit operations instead of acting like a brochure site.',
+          'I build and maintain the React application and its delivery path on AWS Lightsail. Nginx handles incoming traffic and TLS, Docker packages the frontend, and GitHub Actions supports repeatable releases. Accessibility review and infrastructure maintenance remain part of the same engineering responsibility.',
         systemHighlights: [
           'Production deployment runs behind Nginx with TLS termination.',
           'Dockerized delivery and GitHub Actions keep releases repeatable.',
@@ -1155,55 +1014,51 @@ export const systemThemes: SystemTheme[] = [
           'Accessibility as a system constraint: screen reader compatibility, keyboard navigation, and contrast requirements treated as first-class delivery requirements',
         outcome:
           'Production site serving VIFG nonprofit since 2020, deployed on AWS Lightsail with automated CI/CD and TLS termination',
+        realWorldRelevance: [
+          'Accessible public services for a nonprofit community.',
+          'Repeatable application releases on a maintained cloud host.',
+          'Ongoing ownership of application, deployment, and infrastructure changes.',
+        ],
+        limitations: [
+          'The live website and deployment diagram show the public surface and architecture. This page does not publish an uptime measurement or an independent accessibility audit.',
+          'Serving the nonprofit since 2020 describes the engagement history, not a measured availability percentage.',
+        ],
         proofSections: [
-          {
-            id: 'walkthrough',
-            title: 'System Walkthrough',
-            status: 'available',
-            summary:
-              'This is the clearest public proof on the site because both the public surface and the delivery stack are visible.',
-            items: [
-              'Live public site at vifg.org/home.',
-              'Production platform has stayed in service since 2020.',
-              'Accessibility and operations are part of the same delivery story, not separate claims.',
+          availableProofSection(
+            'walkthrough',
+            'Live nonprofit website',
+            'The public website is the visitor-facing part of the platform I build and maintain for VIFG.',
+            [
+              'The engagement spans application development, infrastructure, and releases.',
+              'Screen-reader compatibility, keyboard navigation, and contrast are delivery requirements for the community it serves.',
             ],
-          },
-          {
-            id: 'architecture',
-            title: 'Architecture / Flow',
-            status: 'available',
-            summary:
-              'The deployment diagram on this page shows the infrastructure and release path that make the system believable.',
-            items: [
-              'AWS Lightsail host running behind Nginx with TLS termination.',
-              'Dockerized delivery surface for repeatable deployments.',
-              'GitHub Actions publishing and release flow supporting production updates.',
+            [
+              { label: 'Visit the VIFG website', href: 'https://www.vifg.org/home' },
             ],
-          },
-          {
-            id: 'operations',
-            title: 'Operational Surfaces',
-            status: 'available',
-            summary:
-              'The project includes real production surfaces beyond the public pages themselves.',
-            items: [
-              'Host-level web serving and TLS maintenance.',
-              'Scheduled maintenance and release discipline.',
-              'Accessibility review and fixes as part of ongoing operational ownership.',
+          ),
+          availableProofSection(
+            'architecture',
+            'Deployment architecture',
+            'The diagram shows the request path and how application changes reach the AWS host.',
+            [
+              'Nginx terminates TLS and forwards traffic to the Dockerized frontend on Lightsail.',
+              'GitHub Actions supports the image-publishing and deployment path.',
+              'The diagram describes the architecture; it is not a monitoring report.',
             ],
-          },
-          {
-            id: 'artifacts',
-            title: 'Artifacts & Evidence',
-            status: 'available',
-            summary:
-              'This project already has the strongest current evidence set in the portfolio.',
-            items: [
-              'Live nonprofit site.',
-              'Deployment diagram on this page.',
-              'Repeatable release path and infrastructure ownership described concretely.',
+            [
+              { label: 'Open the deployment diagram', href: '/images/projects/vifg-deployment.svg' },
             ],
-          },
+          ),
+          availableProofSection(
+            'operations',
+            'Ongoing delivery responsibilities',
+            'My role continues beyond the application code into the infrastructure and release process.',
+            [
+              'Maintain host-level web serving and TLS configuration.',
+              'Keep Docker packaging and the release workflow aligned with application changes.',
+              'Review accessibility issues alongside feature work and maintenance.',
+            ],
+          ),
         ],
       },
       ...liveClientWebsites,

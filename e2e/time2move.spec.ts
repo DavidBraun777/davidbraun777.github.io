@@ -102,10 +102,10 @@ test.describe('Time2Move historical case study', () => {
     }
   })
 
-  test('computes the synthetic checks locally and keeps review separate from schema validity', async ({ page }) => {
+  test('computes the synthetic checks locally and keeps review separate from schema validity', async ({ page, baseURL }) => {
     const unexpectedRequests: string[] = []
     page.on('request', request => {
-      if (request.method() !== 'GET' || (['fetch', 'xhr'].includes(request.resourceType()) && new URL(request.url()).origin !== 'http://localhost:3000')) {
+      if (request.method() !== 'GET' || (['fetch', 'xhr'].includes(request.resourceType()) && new URL(request.url()).origin !== new URL(baseURL!).origin)) {
         unexpectedRequests.push(`${request.method()} ${new URL(request.url()).pathname}`)
       }
     })

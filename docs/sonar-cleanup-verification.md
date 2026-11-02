@@ -1,5 +1,9 @@
 # Sonar cleanup verification — October 28, 2026
 
+> **Historical report.** Findings, commands, verification counts and deployment
+> statements below describe the original review, not the current site. Use the
+> [documentation index](README.md) for current setup, maintenance and architecture.
+
 This cleanup addresses the 26 supplied new-code findings against published
 `master` revision `ba84b4d73d6f93a8af7622737cdc6c12998d2fa7` (including PR #147).
 It preserves the existing local work. No Sonar scope, exclusions, quality profile,

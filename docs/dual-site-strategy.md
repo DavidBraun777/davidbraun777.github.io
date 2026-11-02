@@ -1,5 +1,10 @@
 # Dual-Site Strategy: dbraun.io + People's Connection LLC
 
+> **Planning reference.** This describes optional future business-site work.
+> It is not a record of deployed features, current commitments or measured
+> outcomes. Follow the [current information architecture](ia-sitemap.md) and
+> [backlog](../TODO.md) for the implemented portfolio and remaining priorities.
+
 ## Decision
 
 Keep `dbraun.io` as the personal portfolio and launch a separate business

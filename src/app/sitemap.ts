@@ -7,7 +7,9 @@ export default function sitemap(): MetadataRoute.Sitemap {
   const baseUrl = 'https://dbraun.io'
   const posts = getAllPosts()
   const latestPostDate =
-    posts.length > 0 ? new Date(posts[0].date) : new Date('2026-03-24')
+    posts.length > 0
+      ? new Date(Math.max(...posts.map((post) => new Date(post.updated ?? post.date).getTime())))
+      : new Date('2026-03-24')
 
   const coreRoutes = [
     {
@@ -76,7 +78,7 @@ export default function sitemap(): MetadataRoute.Sitemap {
 
   const writingRoutes = posts.map((post) => ({
     url: `${baseUrl}/writing/${post.slug}`,
-    lastModified: new Date(post.date),
+    lastModified: new Date(post.updated ?? post.date),
     changeFrequency: 'monthly' as const,
     priority: 0.7,
   }))

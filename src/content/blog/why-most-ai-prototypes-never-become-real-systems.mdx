@@ -1,20 +1,17 @@
 ---
-title: "Why Most AI Prototypes Never Become Real Systems"
-description: "The missing layers between an impressive AI demo and software that can survive real operational workflows."
+title: "What an AI Prototype Needs Before Production"
+description: "Six architecture questions for moving from an AI demo to an operational workflow."
 date: "2026-03-15"
+updated: "2026-11-02"
 author: "David Braun"
 tags: ["AI Systems", "Operational Software", "Architecture"]
 ---
 
-Most AI prototypes fail for a boring reason:
+An AI demo can answer a useful question: does this model or prompt help with this
+task? Moving that demo into an operational workflow raises a different set of
+questions about validation, state, delivery, and ownership.
 
-they are not actually systems yet.
-
-They are often a prompt, a UI, and a response box with just enough code around
-them to look finished in a demo.
-
-That can be useful for learning, but it is not the same thing as operational
-software.
+This is the architecture checklist I would use to review that transition.
 
 Real systems have to answer harder questions:
 
@@ -28,12 +25,12 @@ Real systems have to answer harder questions:
 Without those layers, the prototype is doing something interesting, but it is not
 yet dependable.
 
-## The model is rarely the whole product
+<h2 id="content-article--heading--root--the-model-is-rarely-the-whole-product--1wqwzos">The model and the surrounding workflow</h2>
 
-In most useful AI systems, the model is just one component in a larger
-architecture.
+Consider a workflow that receives a request, asks a model to summarize it, and
+routes it to a person for review. The model is one component in that architecture.
 
-That architecture usually needs:
+The surrounding workflow needs:
 
 - ingestion
 - validation
@@ -46,15 +43,16 @@ That architecture usually needs:
 If those pieces are weak, the system will feel fragile even if the model itself is
 strong.
 
-That is why so many prototypes stall after the first wave of excitement. The demo
-was showing the easiest layer.
+Testing the model's response is useful, but it leaves those other behaviors
+unproven.
 
-## Six missing layers
+<h2 id="content-article--heading--root--six-missing-layers--rj53sj">Six layers to review</h2>
 
-When I look at AI projects that fail to mature, they are usually missing some mix
-of these six layers.
+These are six areas I would make explicit before deciding whether a prototype is
+ready for a particular use case. The required controls depend on the consequences
+of an error and the workflow's constraints.
 
-### 1. Deterministic rules
+<h3 id="content-article--heading--content-article-heading-root-six-missing-layers-rj53sj--1-deterministic-rules--1o3724n">1. Deterministic rules</h3>
 
 Not every decision should be delegated to an LLM.
 
@@ -64,13 +62,12 @@ safety gates are often better handled deterministically.
 If a system has no clear policy boundary, the model ends up carrying product logic
 it should never own.
 
-### 2. State management
+<h3 id="content-article--heading--content-article-heading-root-six-missing-layers-rj53sj--2-state-management--13jxmox">2. State management</h3>
 
-A lot of prototypes behave as if every interaction is stateless.
+If a request passes through several steps, a stateless response box is not enough
+to describe its progress.
 
-Real workflows are not.
-
-Systems usually need to remember:
+The system may need to remember:
 
 - prior user actions
 - pending tasks
@@ -80,19 +77,16 @@ Systems usually need to remember:
 
 Without state, the system cannot behave consistently over time.
 
-### 3. Human handoff
+<h3 id="content-article--heading--content-article-heading-root-six-missing-layers-rj53sj--3-human-handoff--j28zqs">3. Human handoff</h3>
 
-Many AI demos assume the model is the endpoint.
+When a person must approve or act on the result, the design needs a review path.
+AI can prepare, summarize, classify, or route the work; the interface should make
+the reviewer's responsibility clear.
 
-Operational systems usually need the opposite.
+Specify what the reviewer sees, what they can change, and where rejected or
+uncertain results go next.
 
-They need AI to prepare, summarize, classify, or route work so a human can make a
-better decision faster.
-
-If the handoff path is unclear, the system becomes a dead end instead of a force
-multiplier.
-
-### 4. Delivery path
+<h3 id="content-article--heading--content-article-heading-root-six-missing-layers-rj53sj--4-delivery-path--13x79m7">4. Delivery path</h3>
 
 What artifact actually leaves the system?
 
@@ -104,25 +98,25 @@ Common answers are:
 - a structured transcript and summary
 - a push notification
 
-If the output never reaches a useful destination, the system has no operational
-gravity.
+Define the destination and what counts as successful delivery. Generating an
+artifact and delivering it are separate events.
 
-### 5. Observability
+<h3 id="content-article--heading--content-article-heading-root-six-missing-layers-rj53sj--5-observability--ctt9wx">5. Observability</h3>
 
-Teams often discover too late that they cannot answer simple questions like:
+A supportable workflow should make questions like these answerable:
 
 - Which step is failing?
 - What inputs triggered this output?
 - Which jobs are stuck?
 - How often are humans overriding the AI?
 
-Observability is not "enterprise polish." It is part of whether the system can be
-maintained at all.
+Choose logs and metrics that help diagnose those problems without collecting
+more sensitive content than the task requires.
 
-### 6. Workflow ownership
+<h3 id="content-article--heading--content-article-heading-root-six-missing-layers-rj53sj--6-workflow-ownership--19lgpqq">6. Workflow ownership</h3>
 
-The final failure mode is building around the model instead of around the actual
-work.
+Name the person or team responsible for the workflow and for responding when it
+stops working.
 
 A system should be shaped by the workflow it is supposed to improve:
 
@@ -133,10 +127,10 @@ A system should be shaped by the workflow it is supposed to improve:
 - summarization
 - delivery
 
-When the workflow is clear, AI can slot into the architecture naturally.
-When the workflow is fuzzy, AI becomes decorative.
+That owner should be able to explain the useful result, the acceptable failure
+behavior, and when the system should ask for help.
 
-## A better question to ask
+<h2 id="content-article--heading--root--a-better-question-to-ask--yhwjvd">A better question to ask</h2>
 
 Instead of asking:
 
@@ -151,30 +145,23 @@ That reframes the system around operational usefulness.
 
 Sometimes the answer involves an LLM.
 Sometimes it involves rules, queues, lifecycle guards, and human review.
-Usually it involves all of them.
+The architecture should follow those needs.
 
-## What technical hiring managers and founders actually care about
+<h2 id="content-article--heading--root--what-technical-hiring-managers-and-founders-actually-care-about--r404dw">Questions for a technical review</h2>
 
-The people evaluating serious systems work are usually looking for signals like:
+To review the engineering judgment behind an AI project, I would ask:
 
 - Can this person design boundaries, not just prompts?
 - Do they understand state, reliability, and delivery paths?
 - Can they use AI without letting it destabilize the system?
 - Can they turn a rough concept into software that operates under constraints?
 
-That is why a portfolio full of isolated experiments usually feels weaker than a
-portfolio full of systems.
+An experiment can be valuable evidence if its question and limits are clear. A
+production claim needs additional evidence about how the system behaves in use.
 
-Experiments show curiosity.
-Systems show judgment.
+<h2 id="content-article--heading--root--closing-thought--14rto61">Closing thought</h2>
 
-## Closing thought
-
-Most AI prototypes do not fail because the model was not advanced enough.
-
-They fail because the surrounding architecture never matured.
-
-The job is not to make AI look clever in isolation.
-
-The job is to build systems where AI contributes to a workflow that can actually be
-trusted, operated, and extended.
+A prototype demonstrates a capability under particular conditions. Moving it
+toward production means defining the surrounding workflow, testing its failure
+paths, and making its operating responsibilities explicit. A more capable model
+does not remove those requirements.

@@ -1,61 +1,85 @@
-# dbraun.io TODO
+# dbraun.io backlog
 
-This backlog separates true launch checks from proof work, optional polish, and
-retired recommendations. Do not use it as a redesign queue.
+Reviewed November 2, 2026. This list tracks remaining work, not unverified
+portfolio claims or a queue for another homepage redesign. Setup and verification
+commands live in [README](README.md); operating rules live in
+[maintenance](docs/maintenance.md).
 
-## P0 Launch Blockers
+## Operational checks
 
-- [ ] Verify the live contact form end to end with one controlled production submission.
-- [ ] Decide whether Google Analytics should collect now. If yes, verify no browser console block; if no, keep `NEXT_PUBLIC_GA_ID` unset.
-- [ ] Before dependency/security work, verify with Node 20 and a clean `npm ci --ignore-scripts` environment so local drift does not hide lockfile issues.
+- [ ] Verify real contact delivery with one explicitly authorized, controlled
+  production submission; record the tested deployment, receipt and failure/retry
+  behavior. Mocked tests and successful builds do not establish delivery.
+- [ ] Confirm production Resend sender/recipient and Upstash configuration remain
+  correct. Verify fail-closed behavior in a controlled environment.
+- [ ] Decide whether GA should collect data. If enabled, verify its actual behavior
+  and publish an accurate privacy notice based on the deployed setup; if disabled,
+  keep `NEXT_PUBLIC_GA_ID` unset. Do not invent retention or compliance claims.
+- [ ] Review branch protection/rulesets and required checks against current GitHub
+  settings. Historical audit observations do not establish today's settings.
+- [ ] Check current Sonar overall/new-code results for the exact deployed revision;
+  local V8 coverage is a separate measurement.
 
-## P1 Buyer/Portfolio Improvements
+## Evidence that would materially strengthen the portfolio
 
-Proof-pack work below requires real artifacts, facts, screenshots, logs, diagrams, or
-operational details from David. Do not invent proof.
+Add only artifacts or measurements that actually exist and are cleared for public
+release. Prioritize one complete case study over many incomplete additions.
 
-- [ ] Add a DealerFlow proof pack: walkthrough GIF/video, lifecycle diagram, notification/queue artifact, and bounded pilot facts.
-- [ ] Add VIFG bounded operational facts: release cadence, maintenance scope, accessibility evidence, traffic/user range, uptime window, or equivalent defensible facts.
-- [ ] Add one real VIFG artifact beyond the deployment diagram.
-- [ ] Add WeatherForge dashboard screenshots and reproducible data-refresh/validation notes.
-- [ ] Add a small RAGeATM demo surface or terminal/log proof, then mirror the retrieval ladder into the RAGeATM GitHub README/docs.
-- [ ] Human-review ownership, status, and production/pilot/prototype wording line by line.
-- [ ] Re-check current public proof links monthly: VIFG, arklandscaping, WeatherForge GitHub, RAGeATM GitHub, resume PDF.
+- [ ] DealerFlow: walkthrough, lifecycle/notification evidence, bounded pilot facts
+  and David's operational responsibility. Retain the existing real screenshot.
+- [ ] VIFG: one additional useful real artifact and bounded operational facts such
+  as release cadence, maintenance scope, measured accessibility or a defined
+  reliability window. No inferred uptime, traffic or adoption figures.
+- [ ] WeatherForge: actual dashboard captures and reproducible data preparation/
+  validation instructions; retain the team attribution and implementation role.
+- [ ] RAGeATM: inspectable run output and a broader evaluation set with failure
+  cases. The current seven-question check is not general accuracy. Any separate
+  repo update should use the qualitative comparison, not unsupported percentages.
+- [ ] A real deployed AI/data workflow with evaluation, failure handling, latency,
+  cost where relevant, monitoring and a measurable user/operational result.
+- [ ] Research: update the accepted conference work only when public proceedings,
+  DOI or other verified records become available; keep restricted data private.
+- [ ] Testimonials or commercial outcomes only when real, specific and approved.
 
-## P2 Technical Polish
+## Ongoing maintenance
 
-- [ ] Broaden Playwright coverage beyond the current smoke/a11y suite when it catches real deployment risk.
-- [ ] Confirm the integrated Sonar job remains the sole scan path on normal and Dependabot pull requests while retaining LCOV import and explicit test classification.
-- [ ] Keep SonarCloud out of required branch protection until it has a few stable runs on normal and Dependabot pull requests.
-- [ ] Add Service or CreativeWork schema only where it maps to real pages and proof.
-- [ ] Add a simple privacy page if GA/contact intake remain live.
-- [ ] Formalize screenshot/diagram naming and placement after the first new proof pack exists.
-- [ ] Remove any future generated browser/tool logs from Git tracking and keep them ignored.
+- [ ] Review public project, résumé, research and scheduling links monthly,
+  including VIFG, ARK Landscaping, Matt Laur, WeatherForge and RAGeATM.
+- [ ] Update actual job/degree/credential changes and separately reviewed résumé
+  PDFs when they occur. Verify external profiles before changing them.
+- [ ] Record a production performance baseline if optimizing speed; the aggregate
+  bundle budget is not a Lighthouse score or field Core Web Vitals measurement.
+- [ ] Perform periodic manual keyboard and physical-phone checks alongside the
+  automated Chromium/mobile WebKit journeys and axe checks.
+- [ ] Keep dependency updates compatible with Node 24 and the committed lockfile;
+  run the existing audit, coverage and browser gates without weakening them.
+- [ ] Track [the minimatch amplification advisory](https://github.com/advisories/GHSA-g3hv-75wg-m249)
+  in the development lint toolchain. The November 2 audit still reports moderate
+  findings through older transitive minimatch consumers; the production-only
+  audit reports none. Do not apply the audit tool's suggested breaking ESLint
+  downgrade or force incompatible major overrides merely to clear the report.
 
-## P3 Backlog / Later
+## Optional later work
 
-- [ ] Build the separate People's Connection LLC site only when offers, pricing, CRM, and cross-domain measurement are ready.
-- [ ] Use the niche playbooks after one current proof pack is complete.
-- [ ] Add blog cross-links to case studies when the linked case studies have stronger artifacts.
-- [ ] Publish more thought-leadership only after proof density improves.
-- [ ] Add testimonials only if they are real, specific, and strong.
-- [ ] Do non-essential UI polish only when attached to a real buyer-facing improvement.
-- [ ] Revisit CPD exclusions and New Code configuration only after the repaired Sonar measurement pipeline has a trustworthy baseline.
-- [ ] Consider OSSF Scorecard or OSV Scanner later; do not add either until current CI/security signals are stable.
+- [ ] Build a separate People's Connection LLC site when its scope, offers and
+  operations are ready. Planning references do not establish a live second site.
+- [ ] Use a niche playbook after a current evidence pack is complete.
+- [ ] Add new articles when there is a specific engineering decision or result to
+  explain. Link existing articles to relevant real evidence.
 
-## Done / Retired
+## Implemented decisions to preserve
 
-- [x] VIFG restored as first public production proof.
-- [x] Workflow-first homepage/contact/services framing completed during an earlier
-  positioning phase; the homepage and services framing is now superseded by the
-  AI Systems & Platform Engineer north star while contact remains a consulting path.
-- [x] Primary CTA restored to `Book a Call`.
-- [x] Resume versioned at `/David-J-Braun-Resume-2026.pdf`, with `/resume.pdf`
-  preserved as a permanent compatibility redirect.
-- [x] Case-study index restored to production/pilot/prototype/R&D hierarchy.
-- [x] WeatherForge and RAGeATM kept secondary and honestly labeled.
-- [x] RAGeATM retrieval ladder added collapsed by default with overclaim guardrails.
-- [x] Header, footer, metadata, and social card aligned during the earlier consulting
-  phase; they are now superseded by the AI Systems & Platform Engineer identity.
-- [x] Old live-vs-local restoration recommendations retired as historical context.
-- [x] Lightweight Playwright coverage added for console errors, mobile rendering, and additional axe scans.
+- [x] Wide desktop homepage, responsive phone layout and complete footer restored;
+  project showcases stay on Work.
+- [x] ARK Landscaping and Matt Laur live client stories included in Work.
+- [x] Time2Move public content uses project-level historical attribution and keeps
+  personal client identifiers/private materials out.
+- [x] VIFG production, DealerFlow pilot and academic/R&D work remain distinct.
+- [x] Approved industry résumé and research CV have canonical `/resumes/` URLs,
+  with legacy résumé redirects retained.
+- [x] Unsupported retrieval capability percentages and public screenshot
+  placeholders removed; qualitative tradeoffs and actual limitations retained.
+- [x] Contact feedback persists, failed drafts are retained, retry guidance uses
+  the API response, and booking links require a valid configuration.
+- [x] Article revision dates are separate from publication dates.
+- [x] Current README/docs separated from historical reports and optional plans.

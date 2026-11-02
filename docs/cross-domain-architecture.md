@@ -1,5 +1,10 @@
 # Cross-Domain Architecture and Content Flow
 
+> **Planning reference.** This describes optional future business-site work.
+> It is not a record of deployed features, current commitments or measured
+> outcomes. Follow the [current information architecture](ia-sitemap.md) and
+> [backlog](../TODO.md) for the implemented portfolio and remaining priorities.
+
 This document defines how `dbraun.io` and the People's Connection LLC site
 work as one system while preserving clean brand roles.
 

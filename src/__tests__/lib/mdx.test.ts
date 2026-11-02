@@ -49,6 +49,7 @@ const POST_OLDEST = [
   'title: "Getting Started with TypeScript"',
   'description: "A beginner-friendly guide to TypeScript for JavaScript developers."',
   'date: "2025-01-05"',
+  'updated: "2026-11-02"',
   'author: "Jane Smith"',
   'tags: ["typescript", "javascript", "beginner"]',
   '---',
@@ -104,6 +105,8 @@ describe('getAllPosts', () => {
     expect(posts[1].date).toBe('2025-02-10')
     expect(posts[2].slug).toBe('getting-started-with-typescript')
     expect(posts[2].date).toBe('2025-01-05')
+    expect(posts[2].updated).toBe('2026-11-02')
+    expect(posts[0].updated).toBeUndefined()
   })
 
   it('skips files with invalid slug format and logs a warning', () => {
@@ -240,6 +243,7 @@ describe('getPostBySlug', () => {
       'A beginner-friendly guide to TypeScript for JavaScript developers.'
     )
     expect(post!.date).toBe('2025-01-05')
+    expect(post!.updated).toBe('2026-11-02')
     expect(post!.author).toBe('Jane Smith')
     expect(post!.tags).toEqual(['typescript', 'javascript', 'beginner'])
     expect(post!.image).toBeUndefined()
@@ -258,6 +262,7 @@ describe('getPostBySlug', () => {
     expect(post!.image).toBeUndefined()
     // date should default to an ISO string (current date)
     expect(post!.date).toBeTruthy()
+    expect(post!.updated).toBeUndefined()
   })
 })
 

@@ -60,6 +60,16 @@ import type { SearchIndex } from '@/lib/search/types'
 // Reviewed the homepage restoration against master 2c9a8fd. Only the home
 // record changed. All 598 other records, every destination and project manifest,
 // and all non-home ranked results remain identical across the 20 queries.
+// Reviewed the evidence and editorial pass against master 2826fa9 on 2026-11-02.
+// All 505 retained records preserve their hrefs and relative order; 355 retain
+// their complete values. The 94 retired and 46 new records come from rewritten
+// articles, removed capability scores, and unpublished/duplicate project proof.
+// All 23 section URLs in the two rewritten articles remain valid. RAG's surviving
+// method rows and cells retain their URLs; removed score/interpretation links
+// resolve to visible comparison ancestors. Planned proof and generic editorial
+// placeholders no longer publish search targets. Time2Move, Matt Laur, and ARK
+// manifests stay exact, as do seven sampled queries. Other changed manifests
+// reflect evidence labels and removal of generic unpublished sections.
 function canonical(value: unknown): unknown {
   if (Array.isArray(value)) return value.map(canonical)
   if (value && typeof value === 'object') return Object.fromEntries(
@@ -72,37 +82,37 @@ let index: SearchIndex
 beforeAll(async () => { index = await buildSearchIndex() })
 
 const queries = [
-  ["BM25",3,"ad756a399749d71db3c77a4427c617d7bc345eaa5e99e64e9717e29a37444483"],
-  ["RAGeATM BM25",4,"403933753c3031515db1a47980de97dcf987641010082af31ee11ace3c1faa33"],
-  ["RAGeATM",6,"6f16e08958c8bd541c69a24fa92564fc353aa8c5396e6c0a3d9df775a2c2dc63"],
-  ["Static embeddings",1,"c668f80143157b39867a49d533f45cf0c69263afede4ae1b7eb91cc1e85c379b"],
-  ["BM25 keyword",1,"47cced000f89944866711c99a9331ad9f0fdcfd86ae4d61707cdc2ce690f15ae"],
-  ["BM25 weak",2,"72ed616f9318954b1becb558c3b9ac9085d22f707b438f11e1e7f30380799c21"],
+  ["BM25",2,"440da89ab9e5fe3da72653315846865e8edea43f0f7c1ca4263110b471279685"],
+  ["RAGeATM BM25",3,"957260454bfbbe59d0de5c19b14fbe8c3b6ad1f8da67123a721e48abeb5cdeab"],
+  ["RAGeATM",4,"8df1b0224dbebf587b46e9c80183efeb5ee5fe74c55215b8707e10388e272662"],
+  ["Static embeddings",1,"7f69323d6d7b8b0e8cc97c8f7b28211cc36524277cde14abd4928c4ee87a65a1"],
+  ["BM25 keyword",1,"f1586054eb7b9a219a9079d1a91d503e919864fc385d3a930d54fcde3efb34d6"],
+  ["BM25 weak",1,"07974c6c00835b6b6125de33e7fae4406ed7d38e11fdc9d76a221e4d9efca211"],
   ["Time2Move",5,"32187ba37ad5969becb3e6c1f8a04d386ebc1dc20e1ffbc5c30b1cfba300105c"],
   ["property inquiry",1,"e7e822d9b3639aed62b3db76fa9b174e79706faa1d2863caac9f84f9331024c2"],
   ["work arrives unevenly",2,"838a2a186ddf11d069b795a3e58217b172fae0d517dffea6f1e1004ad3cbedc9"],
-  ["AI",36,"cfbd356f361c096299648df973671e2a355b1adafd3f6d428a06789bbb1df688"],
+  ["AI",34,"3affe02babf777506db250b615f4256931f6e76ce16fca2591a97392ac96c0bc"],
   ["ML",3,"11bd4b9108b2a67cbcc441f5d31373d9a8f125b6a4f70c16789b00bf7065db77"],
-  ["Next.js",12,"dda18898f4d41766580c708cd2b23f263966994a4bfc2463facd3ec35640a5f1"],
+  ["Next.js",12,"3525345bcebc41134fd987d86f7bf0029f6745ef2c24664b6416f8cf9daf4b32"],
   ["Urarina",1,"8bd51e9b2651570c1fe0c8926a4124211740fbe9a23d48219c952d41a854e866"],
-  ["VIFG",7,"2c58bb569d9c962ac5b3b27aa7c5dc038eb0077447ec7a47d8962ffec78d5792"],
-  ["research",19,"c36af019e9dcf714cfa61f39cf584fbde4676ec24a7bb83a99dc3c0972a68b0f"],
-  ["semantic retrieval",4,"6721883c4454c9a2f0547904fd43be2f675c23b2f2bc6c1c3bce81ab03960d77"],
-  ["automation workflow",15,"5107000eb74c2a7ac383313eabf03596922fa8aedfc5b4747371a1744df2bd19"],
-  ["data platform",11,"142b154467da73cc271e8ea53f9c4b49f7f3926abcd9408c7ad5a239b7306316"],
+  ["VIFG",7,"dde44002c6ba93fa217d14f314a24c19f73a6b95d65933ea078b4a09eb4e1c35"],
+  ["research",17,"1b8fd54ca2d33e7d620806f419a8db08b58c1b490297d64aa9d439ac45158640"],
+  ["semantic retrieval",2,"8fcaf82a1e9c9489d792d3982bdf10e7922b2b07de2b49877304f1bda68ab763"],
+  ["automation workflow",14,"42d6f004d09197bf016ab7c80a430f4ee51e8fea3060c53b0acbfbbd2d50fedb"],
+  ["data platform",10,"9c9c4de03b75afd0aeb28fea0ce171e11ae20d495d7c82182b9851c448842b6e"],
   ["north star",0,"4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"],
   ["zzzz-no-match",0,"4f53cda18c2baa0c0354bb5f9a3ecbe5ed12ab4d8e11ba873c2f11161202b945"],
 ] as const
 
 describe('published search compatibility with ba84b4d and reviewed editorial updates', () => {
   test('preserves all public records, destinations and project target metadata', () => {
-    expect(index.records).toHaveLength(599)
-    expect(digest(index)).toBe('e9bd73b2028eb00bd21350b71a9bec8cf7a3f8d4e626306b143470ad26bf46c3')
+    expect(index.records).toHaveLength(551)
+    expect(digest(index)).toBe('f9446f659c19ffd14a05d41cdb4871f7b302e55d1511eb6d5ad19e68a05d735c')
     const inventory = index.records.map(record => ({ id: record.id, href: record.href, destination: record.destination, cells: record.cells }))
-    expect(index.records.reduce((count, record) => count + Number(!!record.destination) + (record.cells?.length ?? 0), 0)).toBe(643)
-    expect(digest(inventory)).toBe('68ef650108540e7310ccfc3857c33d7d8629a77ecb3ab2d699863960d11c1664')
+    expect(index.records.reduce((count, record) => count + Number(!!record.destination) + (record.cells?.length ?? 0), 0)).toBe(513)
+    expect(digest(inventory)).toBe('c038b9bed6c9d9d70c0462d2e9be1d995c6c0ba33c4f6ff00f66a4a1be71dd1a')
     const projects = allSystems.map(system => ({ id: system.id, destinations: createProjectContent(system).destinations }))
-    expect(digest(projects)).toBe('5f1922c5ff2af9abe431400e491d96451df1babef7e0b26b1df5e2c3e398abc0')
+    expect(digest(projects)).toBe('4c41ead1b27ba12f16fd1419cf0b92f0ccd21e0464bb48652dec82c4b410aeb4')
   })
 
   test.each(queries)('preserves ordered results, scores, selected targets and snippets for %s', (query, count, expected) => {

@@ -9,6 +9,7 @@ export interface BlogPost {
   title: string
   description: string
   date: string
+  updated?: string
   author: string
   tags: string[]
   image?: string
@@ -21,6 +22,7 @@ export interface BlogPostMeta {
   title: string
   description: string
   date: string
+  updated?: string
   author: string
   tags: string[]
   image?: string
@@ -72,6 +74,7 @@ export function getAllPosts(): BlogPostMeta[] {
         title: data.title || 'Untitled',
         description: data.description || '',
         date: data.date || new Date().toISOString(),
+        updated: data.updated,
         author: data.author || 'David Braun',
         tags: data.tags || [],
         image: data.image,
@@ -97,6 +100,7 @@ export function getPostBySlug(slug: string): BlogPost | null {
       title: data.title || 'Untitled',
       description: data.description || '',
       date: data.date || new Date().toISOString(),
+      updated: data.updated,
       author: data.author || 'David Braun',
       tags: data.tags || [],
       image: data.image,

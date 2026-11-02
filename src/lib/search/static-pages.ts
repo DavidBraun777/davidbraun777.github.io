@@ -44,7 +44,7 @@ export const staticSearchPages: SearchRecord[] = [
   {
     id: 'page-services', title: 'Services', href: '/services', type: 'Page',
     description: 'AI systems and platform engineering consulting through architecture reviews, scoped builds, workflow automation, and ongoing platform stewardship.',
-    tags: ['Consulting'], headings: ['Ways to work together', 'Planning ranges', 'Engineering leverage', 'Good fit projects', 'How work usually starts', 'Technical capabilities inside an engagement'], body: '',
+    tags: ['Consulting'], headings: ['Ways to work together', 'Planning ranges', 'Delivery and accountability', 'Good fit projects', 'How work usually starts', 'Technical capabilities inside an engagement'], body: '',
   },
   {
     id: 'page-evidence', title: 'Engineering & Evidence Standards', href: '/approach/evidence', type: 'Page',

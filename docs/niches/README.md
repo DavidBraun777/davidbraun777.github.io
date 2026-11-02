@@ -1,6 +1,10 @@
 # Niche Work Playbooks
 
-This folder is your execution system for building niche projects that do two
+These are optional planning references, not claims about completed projects or
+a deployed business website. Follow the [current backlog](../../TODO.md) before
+starting a new niche. Numeric targets in the playbooks are goals.
+
+This folder outlines possible niche projects that do two
 things at the same time:
 
 1. Create completed assets you can sell from
@@ -20,9 +24,9 @@ These playbooks are grounded in your existing portfolio signals:
 
 1. Pick one niche from the playbooks
 2. Build one flagship project with measurable outcomes
-3. Publish proof assets on both domains:
+3. Publish approved proof assets where a corresponding site exists:
    - summary on `dbraun.io`
-   - full commercial case on business site
+   - a full commercial case on a future business site, once implemented
 4. Package the work into a paid offer
 5. Repeat with the next niche
 
@@ -51,8 +55,8 @@ Each project should ship with:
 2. Architecture diagram
 3. Technical write-up
 4. Business case study with measurable outcomes
-5. Offer page and CTA on business site
-6. Cross-domain link pair between portfolio and business site
+5. A relevant offer and contact path; a business-site page only when that site exists
+6. Cross-domain links only if both destinations are live and relevant
 
 ## Definition of "Done" for a Niche
 
