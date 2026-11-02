@@ -11,6 +11,23 @@ export interface ProofSection {
   links?: { label: string; href: string }[]
 }
 
+function availableProofSection(
+  id: ProofSection['id'],
+  title: string,
+  summary: string,
+  items: ProofSection['items'],
+  links?: ProofSection['links'],
+): ProofSection {
+  return {
+    id,
+    title,
+    status: 'available',
+    summary,
+    items,
+    ...(links ? { links } : {}),
+  }
+}
+
 export interface CaseStudyMetric {
   label: string
   value: string
@@ -239,65 +256,57 @@ export const systemThemes: SystemTheme[] = [
         outcome:
           'I led implementation of the code that curated 55,384 cleaned Minnesota storm-event records and 9,008,748 station-day observations into reusable Parquet layers and a Python Shiny + Plotly dashboard spanning all 87 Minnesota counties.',
         proofSections: [
-          {
-            id: 'walkthrough',
-            title: 'Dashboard Views',
-            status: 'available',
-            summary:
-              'The dashboard source and guide describe how the curated Minnesota data is explored.',
-            items: [
+          availableProofSection(
+            'walkthrough',
+            'Dashboard Views',
+            'The dashboard source and guide describe how the curated Minnesota data is explored.',
+            [
               'Overview, County Impacts, Weather Context, Time Progression, Statewide Trends, Methods/Pipeline, and Live Alerts views.',
               'Historical views read local Parquet files; Live Alerts uses the National Weather Service API.',
             ],
-            links: [
+            [
               { label: 'Read the dashboard guide', href: 'https://github.com/DavidBraun777/WeatherForge/blob/master/docs/dashboard-guide.md' },
               { label: 'Inspect the Shiny application', href: 'https://github.com/DavidBraun777/WeatherForge/blob/master/app.py' },
             ],
-          },
-          {
-            id: 'architecture',
-            title: 'Architecture / Pipeline',
-            status: 'available',
-            summary:
-              'The pipeline runs from raw public archives through filtering, cleaning, Parquet outputs, county joins, and an interactive Shiny/Plotly surface.',
-            items: [
+          ),
+          availableProofSection(
+            'architecture',
+            'Architecture / Pipeline',
+            'The pipeline runs from raw public archives through filtering, cleaning, Parquet outputs, county joins, and an interactive Shiny/Plotly surface.',
+            [
               'Raw NOAA files -> Minnesota filtering -> cleaning/unit conversion -> Parquet outputs.',
               'County joins and population normalization make county-level comparisons possible.',
               'Shiny and Plotly expose the curated analytics layers through dashboard views.',
             ],
-            links: [
+            [
               { label: 'Read the pipeline documentation', href: 'https://github.com/DavidBraun777/WeatherForge/blob/master/docs/data-pipeline.md' },
               { label: 'Inspect the data-preparation scripts', href: 'https://github.com/DavidBraun777/WeatherForge/tree/master/pipeline' },
             ],
-          },
-          {
-            id: 'operations',
-            title: 'Applied Decision-Support Surfaces',
-            status: 'available',
-            summary:
-              'The project demonstrates how public data can be productized into reporting surfaces without claiming forecasting or actuarial precision.',
-            items: [
+          ),
+          availableProofSection(
+            'operations',
+            'Applied Decision-Support Surfaces',
+            'The project demonstrates how public data can be productized into reporting surfaces without claiming forecasting or actuarial precision.',
+            [
               'County-level severe-weather comparisons.',
               'Historical trend and time-progression views.',
               'Methods view that explains the data pipeline and caveats.',
             ],
-          },
-          {
-            id: 'artifacts',
-            title: 'Artifacts & Evidence',
-            status: 'available',
-            summary:
-              'The public repository includes the curated data, data dictionary, and instructions for running the academic dashboard.',
-            items: [
+          ),
+          availableProofSection(
+            'artifacts',
+            'Artifacts & Evidence',
+            'The public repository includes the curated data, data dictionary, and instructions for running the academic dashboard.',
+            [
               '~35 GB raw NOAA source archive used in the working project.',
               '55,384 cleaned Minnesota storm-event records and 9,008,748 station-day observations.',
               'Public GitHub repository linked for code review.',
             ],
-            links: [
+            [
               { label: 'Review setup and reproducibility notes', href: 'https://github.com/DavidBraun777/WeatherForge/blob/master/README.md' },
               { label: 'Inspect the packaged data', href: 'https://github.com/DavidBraun777/WeatherForge/tree/master/data' },
             ],
-          },
+          ),
         ],
       },
       {
@@ -462,57 +471,49 @@ export const systemThemes: SystemTheme[] = [
         outcome:
           'Indexed 7 local source documents into 15 searchable chunks and produced 7/7 useful retrieval/refusal decisions on a small sanity benchmark using TF-IDF + cosine similarity with a default 0.12 threshold.',
         proofSections: [
-          {
-            id: 'walkthrough',
-            title: 'Demo Behavior',
-            status: 'available',
-            summary:
-              'The prototype demonstrates both grounded answers and explicit refusal when the local corpus does not support a question.',
-            items: [
+          availableProofSection(
+            'walkthrough',
+            'Demo Behavior',
+            'The prototype demonstrates both grounded answers and explicit refusal when the local corpus does not support a question.',
+            [
               'In-domain questions retrieve local context and answer from that evidence.',
               'An out-of-domain question such as "What is the capital of France?" refuses because the local corpus does not support the answer.',
             ],
-          },
-          {
-            id: 'architecture',
-            title: 'Architecture / Pipeline',
-            status: 'available',
-            summary:
-              'The flow is intentionally small and inspectable: local files become chunks, chunks become TF-IDF features, retrieval is thresholded, and generation depends on retrieved evidence.',
-            items: [
+          ),
+          availableProofSection(
+            'architecture',
+            'Architecture / Pipeline',
+            'The flow is intentionally small and inspectable: local files become chunks, chunks become TF-IDF features, retrieval is thresholded, and generation depends on retrieved evidence.',
+            [
               'data/raw text files -> ingestion -> chunking -> TF-IDF index.',
               'Cosine similarity returns top-k local evidence.',
               'Minimum relevance threshold decides whether to answer or refuse.',
             ],
-          },
-          {
-            id: 'operations',
-            title: 'Grounding Controls',
-            status: 'available',
-            summary:
-              'The main applied lesson is the refusal boundary, not broad RAG accuracy.',
-            items: [
+          ),
+          availableProofSection(
+            'operations',
+            'Grounding Controls',
+            'The main applied lesson is the refusal boundary, not broad RAG accuracy.',
+            [
               'Top-k retrieval with minimum relevance threshold.',
               'Offline retrieval-conditioned generation by default.',
               'Optional OpenAI mode only when configured.',
             ],
-          },
-          {
-            id: 'artifacts',
-            title: 'Artifacts & Evidence',
-            status: 'available',
-            summary:
-              'The evidence is intentionally modest and quantified as a sanity benchmark.',
-            items: [
+          ),
+          availableProofSection(
+            'artifacts',
+            'Artifacts & Evidence',
+            'The evidence is intentionally modest and quantified as a sanity benchmark.',
+            [
               '7 local source documents, 15 searchable chunks, and 15 × 772 TF-IDF feature matrix.',
               '7-question sanity benchmark with 7/7 useful retrieval/refusal decisions.',
               'Public GitHub repository linked for code review.',
             ],
-            links: [
+            [
               { label: 'Read the recorded evaluation', href: 'https://github.com/DavidBraun777/RAGeATM/blob/master/docs/evaluation_results.md' },
               { label: 'Inspect the evaluation runner', href: 'https://github.com/DavidBraun777/RAGeATM/blob/master/scripts/run_evaluation.py' },
             ],
-          },
+          ),
         ],
       },
       {
@@ -951,32 +952,28 @@ export const systemThemes: SystemTheme[] = [
           'The public screenshot shows the inventory feed. It does not independently demonstrate every lifecycle transition or queue failure mode.',
         ],
         proofSections: [
-          {
-            id: 'walkthrough',
-            title: 'Mobile inventory feed',
-            status: 'available',
-            summary:
-              'The captured mobile feed shows how newly published wholesale inventory appears to a buyer.',
-            items: [
+          availableProofSection(
+            'walkthrough',
+            'Mobile inventory feed',
+            'The captured mobile feed shows how newly published wholesale inventory appears to a buyer.',
+            [
               'The screenshot is an existing application capture.',
               'Buyer matching, seller inventory, and offers are the pilot workflows described in this case study.',
             ],
-            links: [
+            [
               { label: 'Open the mobile feed screenshot', href: '/images/projects/dealerflow-feed.png' },
             ],
-          },
-          {
-            id: 'operations',
-            title: 'Implementation scope',
-            status: 'available',
-            summary:
-              'I built the NestJS backend and Expo mobile client around inventory changes and the notifications they produce.',
-            items: [
+          ),
+          availableProofSection(
+            'operations',
+            'Implementation scope',
+            'I built the NestJS backend and Expo mobile client around inventory changes and the notifications they produce.',
+            [
               'PostgreSQL and Prisma store application state.',
               'BullMQ and Redis handle background notification work.',
               'Inventory and offer transitions are the central state-consistency constraint.',
             ],
-          },
+          ),
         ],
       },
     ],
@@ -1027,47 +1024,41 @@ export const systemThemes: SystemTheme[] = [
           'Serving the nonprofit since 2020 describes the engagement history, not a measured availability percentage.',
         ],
         proofSections: [
-          {
-            id: 'walkthrough',
-            title: 'Live nonprofit website',
-            status: 'available',
-            summary:
-              'The public website is the visitor-facing part of the platform I build and maintain for VIFG.',
-            items: [
+          availableProofSection(
+            'walkthrough',
+            'Live nonprofit website',
+            'The public website is the visitor-facing part of the platform I build and maintain for VIFG.',
+            [
               'The engagement spans application development, infrastructure, and releases.',
               'Screen-reader compatibility, keyboard navigation, and contrast are delivery requirements for the community it serves.',
             ],
-            links: [
+            [
               { label: 'Visit the VIFG website', href: 'https://www.vifg.org/home' },
             ],
-          },
-          {
-            id: 'architecture',
-            title: 'Deployment architecture',
-            status: 'available',
-            summary:
-              'The diagram shows the request path and how application changes reach the AWS host.',
-            items: [
+          ),
+          availableProofSection(
+            'architecture',
+            'Deployment architecture',
+            'The diagram shows the request path and how application changes reach the AWS host.',
+            [
               'Nginx terminates TLS and forwards traffic to the Dockerized frontend on Lightsail.',
               'GitHub Actions supports the image-publishing and deployment path.',
               'The diagram describes the architecture; it is not a monitoring report.',
             ],
-            links: [
+            [
               { label: 'Open the deployment diagram', href: '/images/projects/vifg-deployment.svg' },
             ],
-          },
-          {
-            id: 'operations',
-            title: 'Ongoing delivery responsibilities',
-            status: 'available',
-            summary:
-              'My role continues beyond the application code into the infrastructure and release process.',
-            items: [
+          ),
+          availableProofSection(
+            'operations',
+            'Ongoing delivery responsibilities',
+            'My role continues beyond the application code into the infrastructure and release process.',
+            [
               'Maintain host-level web serving and TLS configuration.',
               'Keep Docker packaging and the release workflow aligned with application changes.',
               'Review accessibility issues alongside feature work and maintenance.',
             ],
-          },
+          ),
         ],
       },
       ...liveClientWebsites,
