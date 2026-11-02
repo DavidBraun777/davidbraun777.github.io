@@ -1,9 +1,18 @@
+export interface CaseStudyFigure {
+  src: string
+  alt: string
+  width: number
+  height: number
+  caption: string
+}
+
 export interface CaseStudyStoryBlock {
   id: string
   title: string
   paragraphs: string[]
   items?: string[]
   closing?: string
+  figure?: CaseStudyFigure
 }
 
 export interface CaseStudySuccessorLink {

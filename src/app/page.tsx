@@ -1,8 +1,10 @@
 import type { Metadata } from 'next'
 import Link from 'next/link'
 import { ArrowRight, FileText } from 'lucide-react'
+import { ClientWorkCard } from '@/components/site/client-work-card'
 import { Badge } from '@/components/ui/badge'
 import { canonicalSeoDescription } from '@/data/career-story'
+import { mattLaur } from '@/data/matt-laur'
 import { profile } from '@/data/profile'
 import { resumeUrl } from '@/data/resumes'
 import { getSystemById, type FeaturedSystemCaseStudy } from '@/data/systems'
@@ -186,6 +188,9 @@ export default function Home() {
             {selectedSystems.map((system) => (
               <SelectedWorkCard key={system.id} system={system} />
             ))}
+          </div>
+          <div className="mt-5">
+            <ClientWorkCard label="More live client work" system={mattLaur} />
           </div>
         </div>
       </section>

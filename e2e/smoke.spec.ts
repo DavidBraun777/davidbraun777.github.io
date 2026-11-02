@@ -352,6 +352,15 @@ test.describe('Smoke tests', () => {
     await expect(page.getByRole('heading', { name: /weatherforge/i })).toBeVisible()
     await expect(page.getByRole('heading', { name: /rageatm/i })).toBeVisible()
 
+    const production = page.locator('section').filter({
+      has: page.getByRole('heading', { name: /featured public production proof/i }),
+    })
+    const cards = production.getByRole('article')
+    await expect(cards.nth(0).getByRole('heading')).toHaveText('VIFG Nonprofit Platform')
+    await expect(cards.nth(1).getByRole('heading')).toHaveText('Matt Laur — Athlete & Coaching Website')
+    await expect(cards.nth(1).getByRole('link')).toHaveText(['View live website', 'Read case study'])
+    await expect(cards.nth(1).getByRole('link', { name: 'Read case study' })).toHaveAttribute('href', '/case-studies/matt-laur')
+
     const mainText = await page.locator('main').innerText()
     expect(mainText.indexOf('VIFG Nonprofit Platform')).toBeLessThan(
       mainText.indexOf('WeatherForge')
