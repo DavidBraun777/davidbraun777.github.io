@@ -434,7 +434,8 @@ function InterpretationTable({
 }
 
 const curatedRelatedIds: Record<string, string[]> = {
-  'matt-laur': ['vifg-nonprofit-platform', 'time2move'],
+  'ark-landscaping': ['matt-laur', 'vifg-nonprofit-platform'],
+  'matt-laur': ['ark-landscaping', 'vifg-nonprofit-platform'],
   time2move: ['vifg-nonprofit-platform', 'dealerflow'],
   'vifg-nonprofit-platform': ['dealerflow', 'dgm'],
   dealerflow: ['vifg-nonprofit-platform', 'dgm'],

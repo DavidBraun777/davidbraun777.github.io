@@ -1,0 +1,129 @@
+[
+  {
+    "id": "ark-landscaping",
+    "name": "ARK Landscaping — Service Business Website",
+    "client": "ARK Landscaping",
+    "summary": "I built ARK Landscaping’s website so homeowners can explore services, browse project photos, check the service area, and request an estimate.",
+    "positioning": "ARK Landscaping serves homeowners in the lakes region around Detroit Lakes, Minnesota. I built its public website so someone planning a patio, a retaining wall, or work along a shoreline can see what ARK does and describe their own property to the crew.",
+    "externalUrl": "https://www.arklandscaping.net/",
+    "problem": "Give a homeowner enough detail about services, materials, and local coverage to decide whether to ask ARK for an estimate.",
+    "system": "A service catalog, photo gallery, service-area guide, and estimate-request form for a local landscaping company.",
+    "systemHighlights": [
+      "Individual service pages generated from a shared catalog.",
+      "Project photography with a larger preview and a way to reveal more photos.",
+      "Service-area information, direct contact links, and an estimate-request form."
+    ],
+    "stack": [
+      "Astro",
+      "TypeScript",
+      "Tailwind CSS"
+    ],
+    "myRole": "Website development, including the service catalog, photo gallery, and estimate-request interface.",
+    "coreConstraint": "Support visitors who know the service they need and those who want to look at examples first.",
+    "outcome": "Homeowners can review ARK’s work and local coverage, then call, email, or describe a project in the estimate form.",
+    "openingSection": {
+      "id": "services",
+      "title": "Starting with the property",
+      "paragraphs": [
+        "A homeowner with an eroding lake edge has a different starting point from someone comparing patio materials. The services menu groups shoreline and drainage work together and gives hardscaping its own section. Each service has a page of its own. For retaining walls, for example, a visitor can look at material options and read answers to questions about sloped sites.",
+        "I used a shared catalog to generate the individual pages as static HTML with Astro. The catalog also supplies the service names for the navigation and the estimate form. Someone who reads about drainage installation can find it under the same name when they ask about work on their property."
+      ],
+      "figure": {
+        "src": "/images/projects/ark-landscaping-home.webp",
+        "alt": "ARK Landscaping’s homepage shows a paver patio beside a log home, with links to request an estimate or view the company’s work.",
+        "width": 1440,
+        "height": 900,
+        "caption": "The homepage offers an estimate request and a path to the project gallery."
+      }
+    },
+    "sections": [
+      {
+        "id": "project-photos",
+        "title": "Browsing the work in photographs",
+        "paragraphs": [
+          "A visitor who has an idea in mind but doesn’t know what to call it can start with the project photos. The homepage and individual service pages both link to the gallery. Seeing materials in place gives a homeowner a reference for a conversation about the scale of a wall, the edge of a patio, or how planting fits around the stonework.",
+          "The gallery opens with a selection of photos. Visitors can reveal more as they browse, or open one in a larger view to inspect the details. The previous and next controls let them compare neighboring images, then close the preview and continue in the grid."
+        ],
+        "figure": {
+          "src": "/images/projects/ark-landscaping-projects.webp",
+          "alt": "ARK’s mobile project gallery shows a two-column grid of paved paths, stonework, and shoreline photos beneath the gallery filters.",
+          "width": 860,
+          "height": 1864,
+          "caption": "On a phone, homeowners can browse the photos in two columns and open a closer view of the work."
+        }
+      },
+      {
+        "id": "estimate",
+        "title": "Checking the area and asking for an estimate",
+        "paragraphs": [
+          "The service-area page identifies Detroit Lakes as ARK’s base and lists nearby communities, including Park Rapids and Perham. A homeowner can look up a location before writing out a request. If their town is missing, the page offers a phone link and a way to ask about it directly.",
+          "The contact page brings phone, email, and the estimate form together. The form asks for a name, email address, and a description of the work. A visitor can also specify a service, a phone number, and the city or location, details that matter when discussing a site visit. The form uses a separate server endpoint to check the required fields before preparing the request for email.",
+          "The finished site gives a prospective customer a public place to look at ARK’s work and choose how to start a conversation about their own project."
+        ]
+      }
+    ]
+  },
+  {
+    "id": "matt-laur",
+    "name": "Matt Laur — Athlete & Coaching Website",
+    "client": "Matt Laur",
+    "summary": "I built a public website for professional football player and coach Matt Laur that brings together his career history, game film, résumé, and recruiting and coaching contacts.",
+    "positioning": "I built this website for Matt Laur, a professional football player and coach. A team considering Matt as a player can look up a season and watch him on the field. A program considering him as a coach can review the positions he has held and reach out about a role.",
+    "externalUrl": "https://www.mattlaur.com/",
+    "problem": "Help prospective teams and coaching contacts find the parts of Matt’s career relevant to their inquiry.",
+    "system": "An athlete profile with playing and coaching timelines, a filterable Film Room, a PDF résumé, and separate contact options.",
+    "systemHighlights": [
+      "Playing and coaching experience organized by year.",
+      "Shareable film selections by year, team, and content type.",
+      "Résumé access and distinct recruiting and coaching contacts."
+    ],
+    "stack": [
+      "Next.js",
+      "React",
+      "TypeScript"
+    ],
+    "myRole": "Website development for Matt Laur",
+    "coreConstraint": "Keep playing and coaching experience distinct while giving both audiences access to film, the résumé, and contact details.",
+    "outcome": "Matt’s public website connects his playing and coaching record with the material a team can review before contacting him.",
+    "openingSection": {
+      "id": "career",
+      "title": "Two ways into Matt’s career",
+      "paragraphs": [
+        "The homepage introduces Matt as a wide receiver and defensive back. A scout who came to see him play can go straight to the film. Farther down the page, a snapshot of recent teams leads to his full playing history. A separate coaching snapshot leads to the roles he has held on the sideline.",
+        "Both timelines group entries by year, with recent seasons first. On the playing side, the team, league, and position give context to the season’s statistics. On the coaching side, the entries pair each program with Matt’s responsibilities, such as coaching receivers or calling plays. The overview and the detailed pages draw from the same profile data, so a season can appear in both places from a single entry."
+      ],
+      "figure": {
+        "src": "/images/projects/matt-laur-home.webp",
+        "alt": "Matt Laur’s homepage shows his playing positions over a football action photo, with links to film, his résumé, and contact.",
+        "width": 1440,
+        "height": 900,
+        "caption": "The homepage gives visitors immediate access to film and the résumé."
+      }
+    },
+    "sections": [
+      {
+        "id": "film",
+        "title": "Finding a particular piece of film",
+        "paragraphs": [
+          "The Film Room puts featured highlights first. Each entry identifies the team and season alongside its YouTube or Hudl footage. Someone looking for a particular skill can filter by content type, such as receiving or returns, and narrow the selection by team and year. For example, choosing the Munich Rangers and returns brings up the team’s season highlights.",
+          "The filter choices are part of the page address. A recruiter can send a colleague a link that opens with the same selection, without asking them to repeat the search. If the available highlights leave a question about a play or a game, the Film Room also provides a link to request more footage."
+        ],
+        "figure": {
+          "src": "/images/projects/matt-laur-film.webp",
+          "alt": "The Film Room on mobile with 2023 selected and the Tollense Sharks championship highlights as the single result.",
+          "width": 860,
+          "height": 1824,
+          "caption": "Selecting 2023 narrows the Film Room to Matt’s Tollense Sharks highlights."
+        }
+      },
+      {
+        "id": "recruiting-and-coaching",
+        "title": "From review to an inquiry",
+        "paragraphs": [
+          "The recruiting pack on the homepage places the PDF résumé beside the film and contact links. A reader can open the résumé in a new tab while reviewing a season or download the same file to share with others on staff. The PDF is also available from the film and coaching pages.",
+          "When a visitor is ready to get in touch, the contact page distinguishes a tryout or roster inquiry from a coaching position or training camp. Each has its own email link and an address the visitor can copy. A staff member can move from a specific season or piece of film to the relevant contact on the same public website."
+        ]
+      }
+    ]
+  }
+]

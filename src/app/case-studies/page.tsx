@@ -77,7 +77,7 @@ export default function CaseStudiesPage() {
         <PageIntro
           eyebrow="Case Studies"
           title="A portfolio of production, pilot, prototype, and R&D work."
-          description="VIFG is still the strongest public proof. The rest of the work stays visible so you can see what is live, what is in pilot, what is a prototype or academic build, and what is still under active development."
+          description="Visit the production sites or explore the engineering behind a pilot, an academic prototype, or an active research project. Past client work has its own section."
           actions={[{ label: 'Book a Call', href: '/contact' }]}
         />
 
@@ -91,8 +91,8 @@ export default function CaseStudiesPage() {
                 Featured public production proof
               </h2>
               <p className="mt-3 max-w-3xl text-base leading-8 text-text-secondary">
-                VIFG leads because it is the clearest public example of long-term delivery,
-                accessibility ownership, operational responsibility, and production stewardship.
+                VIFG leads with long-term accessibility and operational work. The two client websites
+                below it show what I built for a landscaping business and a professional athlete.
               </p>
             </div>
 
@@ -165,9 +165,11 @@ export default function CaseStudiesPage() {
                 </div>
               </div>
             </article>
-            {otherProduction.map((system) => (
-              <ClientWorkCard key={system.id} system={system} />
-            ))}
+            <div className="grid gap-5 md:grid-cols-2">
+              {otherProduction.map((system) => (
+                <ClientWorkCard key={system.id} system={system} showScreenshot />
+              ))}
+            </div>
           </section>
         ) : null}
 

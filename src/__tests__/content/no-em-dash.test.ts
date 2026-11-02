@@ -6,7 +6,11 @@ const sourceRoots = ['src/app', 'src/components', 'src/data', 'src/lib']
 const textFileExtensions = new Set(['.ts', '.tsx', '.mdx'])
 const disallowedCharacter = String.fromCharCode(0x2014)
 // These labels are explicitly required by the portfolio owner.
-const approvedLabels = ['Current business website — Hombuzz', 'Matt Laur — Athlete & Coaching Website']
+const approvedLabels = [
+  'Current business website — Hombuzz',
+  'ARK Landscaping — Service Business Website',
+  'Matt Laur — Athlete & Coaching Website',
+]
 
 function collectTextFiles(directory: string): string[] {
   return readdirSync(directory).flatMap((entry) => {
@@ -23,12 +27,11 @@ function collectTextFiles(directory: string): string[] {
 
 describe('visible content punctuation', () => {
   test('source copy uses em dashes only in explicitly approved labels', () => {
-    const filesWithEmDash = sourceRoots
-      .flatMap((root) => collectTextFiles(root))
-      .filter((filePath) => approvedLabels.reduce(
-        (content, label) => content.replaceAll(label, ''),
-        readFileSync(filePath, 'utf8')
-      ).includes(disallowedCharacter))
+    const copyFiles = [...sourceRoots.flatMap(collectTextFiles), 'src/data/live-client-websites.json']
+    const filesWithEmDash = copyFiles.filter((filePath) => approvedLabels.reduce(
+      (content, label) => content.replaceAll(label, ''),
+      readFileSync(filePath, 'utf8')
+    ).includes(disallowedCharacter))
 
     expect(filesWithEmDash).toEqual([])
   })
