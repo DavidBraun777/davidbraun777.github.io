@@ -1,5 +1,9 @@
 # Extreme / Elite Audit Baseline - 2026-03-17
 
+> **Historical report.** Findings, commands, verification counts and deployment
+> statements below describe the original review, not the current site. Use the
+> [documentation index](../README.md) for current setup, maintenance and architecture.
+
 ## Why this file exists
 
 This file preserves a dated comparison baseline for future reruns of:

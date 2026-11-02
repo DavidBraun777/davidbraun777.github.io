@@ -1,5 +1,9 @@
 # Coverage verification — 2026-10-28
 
+> **Historical report.** Findings, commands, verification counts and deployment
+> statements below describe the original review, not the current site. Use the
+> [documentation index](README.md) for current setup, maintenance and architecture.
+
 ## Revision and evidence
 
 The initial checkout was clean on `dev` at

@@ -19,10 +19,10 @@ import {
   type ArchitectureStep,
   type FeaturedSystemCaseStudy,
   type ProofSection,
-  type RetrievalCapabilityLadder,
+  type RetrievalComparison,
 } from '@/data/systems'
 import { absoluteUrl, createPageMetadata } from '@/lib/seo'
-import { createProjectContent, projectBlockKey, projectDefaults, projectProofLinkCopy, retrievalColumns, retrievalLevelKey, type ProjectContent } from '@/lib/search/project-destinations'
+import { createProjectContent, projectBlockKey, projectDefaults, projectProofLinkCopy, publishedProofSections, retrievalColumns, retrievalMethodKey, type ProjectContent } from '@/lib/search/project-destinations'
 import { destinationAttributes, type ContentDestination } from '@/lib/search/destinations'
 
 interface Props {
@@ -106,7 +106,7 @@ export default async function CaseStudyDetailPage({ params }: Readonly<Props>) {
           title={system.displayTitle ?? system.name}
           description={system.positioning ?? system.summary}
           actions={[
-            ...(system.story && system.externalUrl
+            ...(system.externalUrl
               ? [{ label: 'View live website', href: system.externalUrl, external: true, icon: ArrowUpRight }]
               : []),
             ...(system.githubUrl
@@ -163,12 +163,14 @@ function StandardCaseStudyContent({ system, content }: Readonly<{
   system: FeaturedSystemCaseStudy
   content: ProjectContent
 }>) {
+  const proofSections = publishedProofSections(system)
+
   return (
     <>
-      <section className="grid gap-8 xl:grid-cols-[1.02fr_0.98fr]">
+      <section className={system.image ? 'grid gap-8 xl:grid-cols-[1.02fr_0.98fr]' : ''}>
         <ProjectVisual system={system} />
 
-        <div className="grid gap-5">
+        <div className={system.image ? 'grid gap-5' : 'grid gap-5 md:grid-cols-2'}>
           <NarrativeCard title="Problem" body={system.problem} destination={content.get('problem')} />
           <NarrativeCard title="Core Constraint" body={system.coreConstraint} destination={content.get('constraint')} />
           <NarrativeCard
@@ -184,8 +186,8 @@ function StandardCaseStudyContent({ system, content }: Readonly<{
         <section {...content.attrs('metrics')}>
           <SectionHeader
             align="left"
-            title="Quantified Outcomes"
-            subtitle="These numbers describe project artifacts and sanity checks. They are not client ROI, deployment adoption, actuarial accuracy, or broad model-accuracy claims."
+            title="Project data and checks"
+            subtitle="Dataset sizes and recorded checks within this project’s stated scope."
           />
           <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {system.metrics.map((metric) => (
@@ -265,49 +267,40 @@ function StandardCaseStudyContent({ system, content }: Readonly<{
         </section>
       ) : null}
 
-      <section {...content.attrs('proof')}>
-        <SectionHeader
-          align="left"
-          title="Proof Surfaces"
-          subtitle="Available artifacts are labeled directly. Missing visuals stay as placeholders until real screenshots are added."
-        />
-        <div className="grid gap-6 lg:grid-cols-2">
-          {system.proofSections.map((section) => (
-            <ProofSectionCard key={section.id} section={section} content={content} />
-          ))}
-        </div>
-      </section>
-
-      <section className="grid gap-6 lg:grid-cols-[1fr_1fr]">
-        <article {...content.attrs('limitations')} className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm">
-          <h2 className="text-2xl font-semibold tracking-tight text-text-primary">
-            Limitations
-          </h2>
-          <DetailList
-            className="mt-5"
-            title="What this does not claim"
-            items={
-              system.limitations ?? projectDefaults.limitations
-            }
+      {proofSections.length ? (
+        <section {...content.attrs('proof')}>
+          <SectionHeader
+            align="left"
+            title="Implementation and evidence"
+            subtitle="Implementation details and the artifacts available for review."
           />
-        </article>
+          <div className="grid gap-6 lg:grid-cols-2">
+            {proofSections.map((section) => (
+              <ProofSectionCard key={section.id} section={section} content={content} />
+            ))}
+          </div>
+        </section>
+      ) : null}
 
-        <article {...content.attrs('improvements')} className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm">
-          <h2 className="text-2xl font-semibold tracking-tight text-text-primary">
-            Next Improvements
-          </h2>
-          <DetailList
-            className="mt-5"
-            title="Reasonable next steps"
-            items={
-              system.nextImprovements ?? projectDefaults.improvements
-            }
-          />
-        </article>
-      </section>
+      {system.limitations?.length || system.nextImprovements?.length ? (
+        <section className={`grid gap-6 ${system.limitations?.length && system.nextImprovements?.length ? 'lg:grid-cols-2' : ''}`}>
+          {system.limitations?.length ? (
+            <article {...content.attrs('limitations')} className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm">
+              <h2 className="text-2xl font-semibold tracking-tight text-text-primary">Scope and limitations</h2>
+              <DetailList className="mt-5" title="Interpreting this work" items={system.limitations} />
+            </article>
+          ) : null}
+          {system.nextImprovements?.length ? (
+            <article {...content.attrs('improvements')} className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm">
+              <h2 className="text-2xl font-semibold tracking-tight text-text-primary">Further technical work</h2>
+              <DetailList className="mt-5" title="Possible next steps" items={system.nextImprovements} />
+            </article>
+          ) : null}
+        </section>
+      ) : null}
 
-      {system.retrievalCapabilityLadder ? (
-        <RetrievalCapabilityLadderSection ladder={system.retrievalCapabilityLadder} content={content} />
+      {system.retrievalComparison ? (
+        <RetrievalComparisonSection comparison={system.retrievalComparison} content={content} />
       ) : null}
 
       {system.githubUrl || system.externalUrl ? <ProofLinkSection system={system} content={content} /> : null}
@@ -315,43 +308,20 @@ function StandardCaseStudyContent({ system, content }: Readonly<{
   )
 }
 
-function RetrievalCapabilityLadderSection({
-  ladder,
-  content,
-}: Readonly<{
-  ladder: RetrievalCapabilityLadder
+function RetrievalComparisonSection({ comparison, content }: Readonly<{
+  comparison: RetrievalComparison
   content: ProjectContent
 }>) {
   return (
     <section>
-      <DisclosurePanel {...content.attrs('retrieval-ladder')} title={ladder.title} summary={ladder.summary}>
-        <div className="space-y-6">
+      <DisclosurePanel {...content.attrs('retrieval-ladder')} title={comparison.title} summary={comparison.summary}>
+        <div {...content.attrs('retrieval')} className="space-y-6">
           <p {...content.attrs('retrieval', 'overview')} className="max-w-4xl text-sm leading-7 text-text-secondary">
-            {ladder.intro}
+            {comparison.intro}
           </p>
-
-          <div className="grid gap-4 lg:grid-cols-2">
-            <p {...content.attrs('retrieval', 'safe-claim')} className="rounded-[1.25rem] border border-border-subtle bg-background-subtle p-4 text-sm leading-7 text-text-secondary">
-              {ladder.safeClaim}
-            </p>
-            <p {...content.attrs('retrieval', 'guardrail')} className="rounded-[1.25rem] border border-border-subtle bg-background-subtle p-4 text-sm leading-7 text-text-secondary">
-              {ladder.guardrail}
-            </p>
-          </div>
-
-          <CapabilityLadderTable ladder={ladder} content={content} />
-
-          <p {...content.attrs('retrieval', 'heuristic-note')} className="rounded-[1.25rem] border border-border-subtle bg-background-subtle p-4 text-sm leading-7 text-text-secondary">
-            {ladder.heuristicNote}
-          </p>
-
-          <div {...content.attrs('retrieval-interpretations')}>
-            <h4 className="text-lg font-semibold text-text-primary">Clean interpretation</h4>
-            <InterpretationTable ladder={ladder} content={content} />
-          </div>
-
+          <RetrievalComparisonTable comparison={comparison} content={content} />
           <p {...content.attrs('retrieval', 'future-work')} className="max-w-4xl text-sm leading-7 text-text-secondary">
-            {ladder.futureWork}
+            {comparison.futureWork}
           </p>
         </div>
       </DisclosurePanel>
@@ -359,64 +329,35 @@ function RetrievalCapabilityLadderSection({
   )
 }
 
-function CapabilityLadderTable({
-  ladder,
-  content,
-}: Readonly<{ ladder: RetrievalCapabilityLadder; content: ProjectContent }>) {
+function RetrievalComparisonTable({ comparison, content }: Readonly<{
+  comparison: RetrievalComparison
+  content: ProjectContent
+}>) {
   return (
-    <div data-content-table className="overflow-x-auto rounded-[1.25rem] border border-border-subtle">
-      <table className="min-w-[1180px] divide-y divide-border-subtle text-left text-sm">
-        <caption className="sr-only">{ladder.title}</caption>
+    <div {...content.attrs('retrieval-level')} data-content-table className="overflow-x-auto rounded-[1.25rem] border border-border-subtle">
+      <table {...content.attrs('retrieval-interpretation')} className="min-w-[800px] divide-y divide-border-subtle text-left text-sm">
+        <caption {...content.attrs('retrieval-interpretations')} className="bg-background-subtle px-4 py-3 text-left font-medium text-text-primary">
+          {comparison.title}
+        </caption>
         <thead className="bg-background-subtle text-xs uppercase tracking-[0.16em] text-text-muted">
           <tr>
             {retrievalColumns.map(column => (
-              <th key={column.key} scope="col" className={`px-4 py-3 ${column.key === 'level' ? 'text-right' : ''}`}>{column.label}</th>
+              <th key={column.key} scope="col" className="px-4 py-3">{column.label}</th>
             ))}
           </tr>
         </thead>
         <tbody className="divide-y divide-border-subtle bg-background-elevated text-text-secondary">
-          {ladder.levels.map((level) => (
-            <tr key={retrievalLevelKey(level)}>
+          {comparison.methods.map(method => (
+            <tr key={retrievalMethodKey(method)}>
               {retrievalColumns.map(column => column.key === 'systemType' ? (
-                <th key={column.key} scope="row" {...content.attrs('retrieval-level', retrievalLevelKey(level))} className="px-4 py-3 font-medium text-text-primary">
-                  {level.systemType}
+                <th key={column.key} scope="row" {...content.attrs('retrieval-level', retrievalMethodKey(method))} className="px-4 py-3 font-medium text-text-primary">
+                  {method.systemType}
                 </th>
               ) : (
-                <td key={column.key} {...content.attrs('retrieval-level', retrievalLevelKey(level), column.key)} className={`px-4 py-3 ${column.key === 'level' ? 'text-right font-mono text-xs text-text-primary' : ''}`}>
-                  {level[column.key]}
+                <td key={column.key} {...content.attrs('retrieval-level', retrievalMethodKey(method), column.key)} className="px-4 py-3">
+                  {method[column.key]}
                 </td>
               ))}
-            </tr>
-          ))}
-        </tbody>
-      </table>
-    </div>
-  )
-}
-
-function InterpretationTable({
-  ladder,
-  content,
-}: Readonly<{ ladder: RetrievalCapabilityLadder; content: ProjectContent }>) {
-  return (
-    <div data-content-table className="mt-4 overflow-x-auto rounded-[1.25rem] border border-border-subtle">
-      <table className="min-w-[620px] divide-y divide-border-subtle text-left text-sm">
-        <caption className="sr-only">Clean interpretation of retrieval methods</caption>
-        <thead className="bg-background-subtle text-xs uppercase tracking-[0.16em] text-text-muted">
-          <tr>
-            <th scope="col" className="px-4 py-3">
-              Method
-            </th>
-            <th scope="col" className="px-4 py-3">
-              What it really knows
-            </th>
-          </tr>
-        </thead>
-        <tbody className="divide-y divide-border-subtle bg-background-elevated text-text-secondary">
-          {ladder.interpretations.map((item) => (
-            <tr key={projectBlockKey(item.method, item.meaning)}>
-              <th scope="row" {...content.attrs('retrieval-interpretation', projectBlockKey(item.method, item.meaning))} className="px-4 py-3 font-medium text-text-primary">{item.method}</th>
-              <td {...content.attrs('retrieval-interpretation', projectBlockKey(item.method, item.meaning), 'meaning')} className="px-4 py-3">&quot;{item.meaning}&quot;</td>
             </tr>
           ))}
         </tbody>
@@ -582,37 +523,7 @@ function ProjectVisual({ system }: Readonly<{ system: FeaturedSystemCaseStudy }>
     )
   }
 
-  return (
-    <div
-      role="img"
-      aria-label={`${system.name} screenshot placeholder`}
-      className="flex min-h-[420px] flex-col justify-between rounded-[2rem] border border-border-subtle bg-background-subtle p-8"
-    >
-      <div>
-        <p className="font-mono text-xs uppercase tracking-[0.22em] text-link-primary">
-          Screenshot placeholder
-        </p>
-        <h2 className="mt-4 text-3xl font-semibold tracking-tight text-text-primary">
-          {system.shortTitle ?? system.name}
-        </h2>
-        <p className="mt-4 max-w-2xl text-base leading-8 text-text-secondary">
-          Actual screenshots are not included in this repository yet. This placeholder
-          avoids inventing visuals while reserving space for dashboard, terminal, or demo
-          evidence.
-        </p>
-      </div>
-      <div className="mt-8 grid gap-3 sm:grid-cols-2">
-        {(system.metrics ?? []).slice(0, 4).map((metric) => (
-          <MetricCard
-            key={`${metric.value}-${metric.label}`}
-            metric={metric}
-            compact
-            className="bg-background-elevated"
-          />
-        ))}
-      </div>
-    </div>
-  )
+  return null
 }
 
 function NarrativeCard({
@@ -672,15 +583,12 @@ function FallbackArchitecture({
 }
 
 function ProofSectionCard({ section, content }: Readonly<{ section: ProofSection; content: ProjectContent }>) {
-  const title =
-    section.status === 'planned' ? `${section.title} (to be added)` : section.title
-
   return (
     <article {...content.attrs('proof', section.id)} className="rounded-[1.75rem] border border-border-subtle bg-background-elevated p-6 shadow-sm">
       <div className="flex flex-wrap items-center gap-3">
-        <h3 className="text-xl font-semibold text-text-primary">{title}</h3>
-        <Badge variant={section.status === 'available' ? 'secondary' : 'outline'}>
-          {section.status === 'available' ? 'Available now' : 'In progress'}
+        <h3 className="text-xl font-semibold text-text-primary">{section.title}</h3>
+        <Badge variant={section.links?.length ? 'secondary' : 'outline'}>
+          {section.links?.length ? 'Linked artifacts' : 'Implementation notes'}
         </Badge>
       </div>
       <p className="mt-4 text-sm leading-8 text-text-secondary">{section.summary}</p>
@@ -692,6 +600,13 @@ function ProofSectionCard({ section, content }: Readonly<{ section: ProofSection
           </li>
         ))}
       </ul>
+      {section.links?.length ? (
+        <div className="mt-5 flex flex-wrap gap-x-5 gap-y-3">
+          {section.links.map(link => (
+            <ExternalLinkAction key={link.href} href={link.href}>{link.label}</ExternalLinkAction>
+          ))}
+        </div>
+      ) : null}
     </article>
   )
 }

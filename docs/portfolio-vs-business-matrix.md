@@ -1,5 +1,10 @@
 # Portfolio vs Business Ownership Matrix
 
+> **Planning reference.** This describes optional future business-site work.
+> It is not a record of deployed features, current commitments or measured
+> outcomes. Follow the [current information architecture](ia-sitemap.md) and
+> [backlog](../TODO.md) for the implemented portfolio and remaining priorities.
+
 This matrix answers: "How much of each growth initiative belongs on
 `dbraun.io` (portfolio) vs the business website (People's Connection LLC)?"
 

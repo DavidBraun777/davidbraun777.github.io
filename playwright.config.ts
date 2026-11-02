@@ -8,7 +8,9 @@ export default defineConfig({
   workers: process.env.CI ? 1 : undefined,
   reporter: 'html',
   use: {
-    baseURL: 'http://localhost:3000',
+    baseURL: 'https://localhost:3000',
+    // Trust only the ephemeral self-signed certificate used by the local tests.
+    ignoreHTTPSErrors: true,
     trace: 'on-first-retry',
   },
   projects: [
@@ -19,10 +21,17 @@ export default defineConfig({
         ...(process.env.CI ? { channel: 'chrome' as const } : {}),
       },
     },
+    {
+      name: 'webkit-mobile',
+      grep: /@cross-browser/,
+      use: { ...devices['iPhone 13'] },
+    },
   ],
   webServer: {
-    command: process.env.CI ? 'npm run start' : 'npm run dev',
-    url: 'http://localhost:3000',
-    reuseExistingServer: !process.env.CI,
+    command: 'node e2e/https-server.mjs',
+    url: 'https://localhost:3000',
+    ignoreHTTPSErrors: true,
+    reuseExistingServer: false,
+    env: { NODE_ENV: 'production' },
   },
 })

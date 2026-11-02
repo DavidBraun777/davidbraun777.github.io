@@ -5,6 +5,7 @@ import { ArrowRight } from 'lucide-react'
 import { describe, expect, test } from 'vitest'
 import { ProjectCard } from '@/components/site/project-card'
 import { PageIntro } from '@/components/site/page-intro'
+import { MetricCard } from '@/components/site/metric-card'
 import { SignalGrid } from '@/components/site/signal-grid'
 import { CaseStudyStoryContent } from '@/components/site/case-study-story'
 import { PostCard } from '@/components/blog/post-card'
@@ -57,6 +58,15 @@ describe('public content components', () => {
     expect(render(<SignalGrid items={[signal]} />).querySelector('h3')?.textContent).toBe(signal.value)
   })
 
+  test('compact metrics retain their label and scope detail alongside the reported value', () => {
+    const metric = { value: '7/7', label: 'sanity-check questions', detail: 'A small educational evaluation, not broad accuracy.' }
+    const page = render(<MetricCard metric={metric} compact className="comparison-metric" />)
+    const card = page.querySelector('.comparison-metric')!
+    expect(card.classList.contains('p-3')).toBe(true)
+    expect(card.querySelector('p')?.classList.contains('text-xl')).toBe(true)
+    expect([...card.querySelectorAll('p')].map(element => element.textContent)).toEqual([metric.value, metric.label, metric.detail])
+  })
+
   test('historical story sections render paragraphs, semantic lists and closing copy without evidence UI', () => {
     const system = allSystems.find(system => system.id === 'time2move')!
     const story = system.story!
@@ -77,9 +87,14 @@ describe('public content components', () => {
     expect(plain.querySelector('article')?.style.animationDelay).toBe('0ms')
     expect(plain.querySelector('img')).toBeNull()
     expect(plain.textContent).not.toContain('Extra')
-    const illustrated = render(<PostCard post={{ ...post, image: '/images/example.png' }} index={2} />)
+    expect(plain.querySelectorAll('time')).toHaveLength(1)
+    expect(plain.querySelector('time[datetime="2026-01-01"]')?.textContent).toBe('Published January 1, 2026')
+    expect(plain.textContent).not.toContain('Updated')
+    const illustrated = render(<PostCard post={{ ...post, updated: '2026-11-02', image: '/images/example.png' }} index={2} />)
     expect(illustrated.querySelector('img')?.getAttribute('alt')).toBe(post.title)
     expect(illustrated.querySelector('article')?.style.animationDelay).toBe('160ms')
+    expect(illustrated.querySelector('time[datetime="2026-11-02"]')?.textContent).toBe('Updated November 2, 2026')
+    expect(illustrated.querySelector('time[datetime="2026-01-01"]')).not.toBeNull()
   })
 
   test('MDX presentation forwards anchors, uses safe link defaults, and renders semantic content', () => {

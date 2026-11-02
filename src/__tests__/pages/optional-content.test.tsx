@@ -56,6 +56,35 @@ describe('optional portfolio content', () => {
     await expect(detail.default({ params: Promise.resolve({ slug: 'absent' }) })).rejects.toThrow(/NEXT_HTTP_ERROR_FALLBACK;404/)
   })
 
+  test('a standard case study omits unavailable proof and can publish future work independently of limitations', async () => {
+    const system = {
+      ...base,
+      id: 'future-only',
+      proofSections: [{
+        id: 'artifacts' as const,
+        title: 'Unpublished artifact',
+        summary: 'unpublished-proof-sentinel',
+        items: ['unpublished-item-sentinel'],
+        status: 'planned' as const,
+      }],
+      limitations: undefined,
+      nextImprovements: ['Compare retrieval methods on the same documented queries.'],
+    }
+    vi.doMock('@/data/systems', () => ({ allSystems: [system], getSystemById: () => system }))
+    const { default: Page } = await import('@/app/case-studies/[slug]/page')
+    const { createProjectContent } = await import('@/lib/search/project-destinations')
+    const page = render(await Page({ params: Promise.resolve({ slug: system.id }) }))
+    const content = createProjectContent(system)
+
+    expect(page.querySelector('#content-proof')).toBeNull()
+    expect(page.querySelector('#content-limitations')).toBeNull()
+    expect(page.textContent).not.toContain('sentinel')
+    expect(page.querySelector('#content-improvements')?.textContent).toContain(system.nextImprovements[0])
+    expect(content.destinations.some(destination => destination.anchor === 'content-proof')).toBe(false)
+    expect(content.destinations.some(destination => destination.anchor === 'content-limitations')).toBe(false)
+    expect(content.records.find(record => record.destination?.anchor === 'content-improvements')?.body).toBe(system.nextImprovements[0])
+  })
+
   test('experience handles incomplete education dates, absent optional links and minimal roles honestly', async () => {
     const experiences: Experience[] = [{ id: 'role', company: 'Example', role: 'Engineer', department: 'Platform', location: 'Remote', startDate: '2020', endDate: null, description: 'A scoped role.', highlights: [] }]
     const education: Education[] = [

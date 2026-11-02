@@ -39,11 +39,11 @@ describe('case-study search destinations', () => {
     }
   })
 
-  test('distinguishes BM25 tables and provides semantic header/cell destinations', async () => {
+  test('provides semantic row and cell destinations for the qualitative comparison', async () => {
     const system = allSystems.find(item => item.id === 'rageatm')!
     const rows = projectContentRecords(system).filter(record => record.title === 'BM25')
-    expect(rows).toHaveLength(2)
-    expect(new Set(rows.map(record => record.href)).size).toBe(2)
+    expect(rows).toHaveLength(1)
+    expect(new Set(rows.map(record => record.href)).size).toBe(1)
     expect(rows.every(record => record.granularity === 'row')).toBe(true)
     expect(rows.every(record => record.context?.includes('RAGeATM'))).toBe(true)
     const page = document.createElement('div')
@@ -78,16 +78,16 @@ describe('case-study search destinations', () => {
     expect(JSON.stringify(after)).not.toMatch(/\/Users\/|docs\/audits|technical-audit\.md|case-study-brief\.md/)
   })
 
-  test('keeps ladder row and cell links stable when an earlier capability is inserted and levels renumbered', () => {
+  test('keeps method row and cell links stable when an earlier method is inserted', () => {
     const system = allSystems.find(item => item.id === 'rageatm')!
-    const ladder = system.retrievalCapabilityLadder!
+    const comparison = system.retrievalComparison!
     const extended = {
       ...system,
-      retrievalCapabilityLadder: {
-        ...ladder,
-        levels: [
-          { ...ladder.levels[0], level: 1, systemType: 'A separate capability' },
-          ...ladder.levels.map(level => ({ ...level, level: level.level + 1 })),
+      retrievalComparison: {
+        ...comparison,
+        methods: [
+          { ...comparison.methods[0], systemType: 'A separate method' },
+          ...comparison.methods,
         ],
       },
     }
@@ -100,13 +100,13 @@ describe('case-study search destinations', () => {
     }
   })
 
-  test('requires and accepts an explicit semantic key for repeated ladder labels', () => {
+  test('requires and accepts an explicit semantic key for repeated method labels', () => {
     const system = allSystems.find(item => item.id === 'rageatm')!
-    const ladder = system.retrievalCapabilityLadder!
-    const repeated = { ...ladder.levels[0], level: 13 }
-    const withLevels = (levels: typeof ladder.levels) => ({ ...system, retrievalCapabilityLadder: { ...ladder, levels } })
-    expect(() => createProjectContent(withLevels([...ladder.levels, repeated]))).toThrow(/Duplicate project anchor/)
-    const records = projectContentRecords(withLevels([...ladder.levels, { ...repeated, id: 'keyword-search-alternative' }]))
+    const comparison = system.retrievalComparison!
+    const repeated = { ...comparison.methods[0] }
+    const withMethods = (methods: typeof comparison.methods) => ({ ...system, retrievalComparison: { ...comparison, methods } })
+    expect(() => createProjectContent(withMethods([...comparison.methods, repeated]))).toThrow(/Duplicate project anchor/)
+    const records = projectContentRecords(withMethods([...comparison.methods, { ...repeated, id: 'keyword-search-alternative' }]))
     const rows = records.filter(record => record.title === repeated.systemType && record.granularity === 'row')
     expect(rows).toHaveLength(2)
     expect(rows[0].href).not.toBe(rows[1].href)

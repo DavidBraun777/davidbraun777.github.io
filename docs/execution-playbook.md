@@ -1,5 +1,10 @@
 # Execution Playbook: Build a Category-Level Presence
 
+> **Planning reference.** This describes optional future business-site work.
+> It is not a record of deployed features, current commitments or measured
+> outcomes. Follow the [current information architecture](ia-sitemap.md) and
+> [backlog](../TODO.md) for the implemented portfolio and remaining priorities.
+
 This playbook is written for immediate execution so you can start tomorrow.
 It combines positioning, build sequence, and operating cadence.
 

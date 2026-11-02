@@ -35,6 +35,7 @@ export async function generateMetadata({ params }: Props): Promise<Metadata> {
     imageAlt: post.title,
     type: 'article',
     publishedTime: post.date,
+    modifiedTime: post.updated,
     authors: [post.author],
     tags: post.tags,
   })
@@ -55,7 +56,16 @@ export default async function WritingPostPage({ params }: Readonly<Props>) {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
+    timeZone: 'UTC',
   })
+  const formattedUpdated = post.updated
+    ? new Date(post.updated).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        timeZone: 'UTC',
+      })
+    : undefined
   const breadcrumbStructuredData = {
     '@context': 'https://schema.org',
     '@type': 'BreadcrumbList',
@@ -80,6 +90,7 @@ export default async function WritingPostPage({ params }: Readonly<Props>) {
     headline: post.title,
     description: post.description,
     datePublished: post.date,
+    ...(post.updated ? { dateModified: post.updated } : {}),
     author: {
       '@type': 'Person',
       name: post.author,
@@ -134,9 +145,10 @@ export default async function WritingPostPage({ params }: Readonly<Props>) {
 
           <div className="mt-6 flex flex-wrap items-center gap-4 text-sm text-text-muted">
             <span className="inline-flex items-center gap-2">
-              <Calendar className="h-4 w-4" />
-              {formattedDate}
+              <Calendar aria-hidden="true" className="h-4 w-4" />
+              <time dateTime={post.date}>Published {formattedDate}</time>
             </span>
+            {post.updated ? <time dateTime={post.updated}>Updated {formattedUpdated}</time> : null}
             <span className="inline-flex items-center gap-2">
               <Clock className="h-4 w-4" />
               {post.readingTime}

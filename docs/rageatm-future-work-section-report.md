@@ -1,5 +1,9 @@
 # RAGeATM Future Work Section Report
 
+> **Historical report.** Findings, commands, verification counts and deployment
+> statements below describe the original review, not the current site. Use the
+> [documentation index](README.md) for current setup, maintenance and architecture.
+
 ## Summary
 Added an optional, collapsed “Future Work: Retrieval Capability Ladder” section to the RAGeATM case-study detail page. The content is stored on the RAGeATM system data object and rendered conditionally by the shared case-study detail template, so no other case study gets the ladder unless its data explicitly includes it.
 

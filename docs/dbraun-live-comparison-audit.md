@@ -1,5 +1,9 @@
 # dbraun.io Live vs Local Audit
 
+> **Historical report.** Findings, commands, verification counts and deployment
+> statements below describe the original review, not the current site. Use the
+> [documentation index](README.md) for current setup, maintenance and architecture.
+
 ## Executive Summary
 The local version is worse as a business website, with a few useful technical-proof improvements buried inside it. The live site wins because it is clearer about the buyer, the pain, the outcome, and the strongest public proof: VIFG. The local site pivots too hard into "Applied AI and Data Systems" and starts reading like a student/project portfolio or AI capability catalog instead of a consulting site for small and midsized businesses. The biggest regression is proof hierarchy: WeatherForge and RAGeATM are now promoted ahead of VIFG on the homepage and case-study index, even though VIFG is still the strongest public production proof. The second biggest regression is conversion clarity: "Book a Call" and "workflow you want to improve" became the broader and weaker "Work With Me" and "prototype" language. The local case-study detail template is directionally useful because it adds metrics, architecture, limitations, GitHub links, and honest prototype boundaries. Keep that proof discipline, but do not let it drive the whole brand. Build, lint, and unit tests pass, but local link checking found a real footer/resume bug. Recommended direction: selectively revert the weak public-facing sections, preserve the richer WeatherForge/RAGeATM detail work, and restore the live site's business strategy before iterating.
 

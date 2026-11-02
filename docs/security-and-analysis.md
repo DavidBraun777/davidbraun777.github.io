@@ -1,115 +1,116 @@
-# Security and Code Analysis
+# Security and code analysis
 
-This repo uses several separate checks. SonarCloud adds another analysis layer;
-it does not replace GitHub CodeQL, Dependabot, CI, or Vercel preview checks.
+This guide describes the repository's configured checks, reviewed November 2,
+2026. It does not assert current dashboard results, repository settings or live
+service behavior. Verify those against the exact revision and deployment.
 
-## Current Stack
+## Check stack
 
-- GitHub Actions CI runs on pull requests to `master` and pushes to `master`.
-  The CI workflow covers `npm ci --ignore-scripts`, lint, TypeScript, Vitest with
-  V8 coverage, LCOV validation, high-severity `npm audit`, an explicit
-  moderate-severity production dependency audit, production build,
-  bundle-size checks, Playwright e2e, SonarCloud, and CodeQL.
-- GitHub CodeQL runs JavaScript/TypeScript analysis and reports security alerts
-  through GitHub code scanning.
-- Dependabot manages dependency update pull requests from `.github/dependabot.yml`
-  and GitHub Dependabot alerts/security updates track known vulnerable packages.
-- Dependabot malware alerts are handled through GitHub's dependency security
-  tooling when GitHub flags a malicious package event.
-- Secret scanning and push protection should remain enabled in GitHub repository
-  settings where available. This is a repo setting, not application code.
-- SonarQube Cloud / SonarCloud runs additional code-quality and security analysis.
-- Vercel preview deployments remain useful deployment checks for pull requests,
-  but they are not a replacement for code analysis or dependency scanning.
+[`.github/workflows/ci.yml`](../.github/workflows/ci.yml) runs on pull requests to
+`master` and pushes to `master`. Action references are pinned to commit SHAs.
 
-See the [2026-10-26 hardening report](security-hardening-report.md) for the
-contact API's fail-closed behavior, runtime requirements, verified repository
-settings, and required production checks. As inspected for that report, `master`
-had neither branch protection nor repository rulesets; passing workflows alone
-did not prevent merges that bypass security checks.
+| Job / signal | Configured behavior |
+| --- | --- |
+| Primary CI | Node 24, locked install without lifecycle scripts, lint, TypeScript, unit/integration coverage, slug validation, audit gates, production build and bundle budget |
+| Dependency audits | `npm audit --audit-level=high` for the whole dependency tree; `npm audit --omit=dev --audit-level=moderate` for production dependencies |
+| Browser tests | Production build, runner Chrome Stable for the full Chromium suite, Playwright WebKit for tagged mobile journeys |
+| SonarQube Cloud / SonarCloud | Consumes the primary job's validated LCOV artifact and analyzes the same checkout revision |
+| CodeQL | JavaScript/TypeScript analysis in its own job |
+| Dependabot | Update configuration in `.github/dependabot.yml`; alerts and security updates also depend on GitHub settings |
+| Vercel | Preview/deployment signal outside the code-analysis jobs |
 
-## SonarCloud Setup Notes
+These signals answer different questions. A green build does not prove real
+email delivery, complete accessibility, absence of all vulnerabilities, or
+strong portfolio evidence. Vercel success is not a substitute for tests.
 
-- The SonarCloud workflow runs on pull requests and pushes to `master`.
-- Pull requests from forked repositories are skipped so `SONAR_TOKEN` is not
-  exposed to untrusted code.
-- The workflow uses `SonarSource/sonarqube-scan-action`.
-- `SONAR_TOKEN` must exist in GitHub Actions secrets.
-- `SONAR_TOKEN` must also exist in Dependabot secrets so Dependabot-originated
-  pull requests can run analysis.
-- `sonar-project.properties` defines the Sonar project metadata and analysis
-  scope. It keeps the repository root available for analysis, classifies
-  `src/__tests__` and `e2e` as tests without source/test overlap, and imports
-  `coverage/lcov.info`. Declarative tool/test configuration, declarative data,
-  and thin social-image wrappers remain analyzed but are excluded from coverage
-  calculations; executable scripts and production configuration remain
-  coverage-eligible.
-- Vitest and the LCOV guard share `scripts/coverage-scope.mjs`, which reads the
-  existing Sonar exclusions and enumerates tracked and untracked first-party
-  JavaScript/TypeScript files with Git. This includes `next.config.ts` and
-  executable scripts, plus files no test imports. Generated/ignored files follow
-  Git's ignore rules. The existing Sonar source and coverage exclusions are
-  unchanged.
-- `npm run test:coverage` enforces 100% lines, branches, statements and functions
-  per file, then runs `scripts/check-coverage.mjs`. The guard checks complete
-  inventory coverage, unique repository-relative paths, existing source files,
-  raw DA/BRDA hits and matching LF/LH/BRF/BRH counts. A rounded percentage, missing
-  file, zero-hit outcome or entirely empty denominator cannot pass. Type-only
-  files may have zero denominators but must still appear in LCOV.
-- The primary CI job generates and validates `coverage/lcov.info`, then uploads
-  it with its SHA-256 checksum and checked-out Git revision in the `vitest-lcov`
-  artifact. The Sonar job downloads that artifact from the same workflow run,
-  verifies checksum and revision against its fresh checkout, checks expected
-  application/configuration/script paths, and scans without installing
-  dependencies or running project code in the token-bearing job.
-- The Sonar job uses `actions/checkout` with `fetch-depth: 0` so SonarCloud
-  receives full Git history for branch and pull request analysis.
-- GitHub Actions references touched by the CI repair are pinned to full commit
-  SHAs for supply-chain hardening.
-- SonarCloud does not replace CodeQL or Dependabot; keep all three signals.
-- CPD and New Code configuration remain unchanged. The Quality Gate remains
-  advisory while the repaired measurement pipeline is verified.
+## Coverage and Sonar import
 
-The resulting measurement flow is:
+`npm run test:coverage` runs Vitest with V8 coverage and enforces 100% lines,
+branches, statements and functions per eligible file. The subsequent
+`scripts/check-coverage.mjs` validates raw LCOV hits, file completeness, unique
+repository-relative paths and matching counters. A rounded percentage, missing
+file, zero-hit outcome or empty overall denominator cannot pass.
 
-```text
-Primary CI
-  install -> lint -> typecheck -> Vitest/V8 coverage -> validate LCOV + scope
-          -> bind report to revision -> audit -> build -> size check
-          -> upload LCOV + checksum + revision
-                                                   |
-                                                   +-> Playwright e2e job
-                                                   `-> Sonar job: fresh checkout
-                                                                  -> download LCOV
-                                                                  -> verify checksum/revision + scan
-```
+`scripts/coverage-scope.mjs` derives tracked and untracked JS/TS files from the
+existing Sonar scope/exclusions. Runtime configuration and executable scripts
+are included; a new file does not escape coverage merely because no test imports
+it. Type-only files may have zero executable lines but remain in the inventory.
+Keep tests in `src/__tests__`; do not add exclusions or lower thresholds to make
+an implementation pass. Browser tests do not add to the V8 report.
 
-The legacy standalone Sonar workflow was removed after the integrated job
-proved that it downloads, validates, and imports the CI-generated LCOV report.
-The isolated job in `.github/workflows/ci.yml` is now the sole scanner entry
-point.
+The primary CI job uploads `coverage/lcov.info`, its SHA-256 checksum and the
+checked-out Git revision. The Sonar job downloads that same-run artifact,
+verifies checksum and revision, checks expected source paths and scans with full
+Git history. It does not install dependencies or execute project code in the
+scanner job that has the token. The integrated job is the sole scanner path.
 
-## Remote Verification
+`SONAR_TOKEN` is required in Actions secrets and Dependabot secrets for
+Dependabot-originated PRs. Fork PR scans are skipped to avoid exposing the token
+to untrusted code. Secret values never belong in docs or screenshots.
 
-After pushing the CI repair:
+Local V8 and Sonar executable-line/condition denominators can differ. A local
+100% report does not establish Sonar's overall or new-code percentage. Confirm
+the completed background task, analyzed revision and uncovered counts for each
+scope. Do not change the new-code definition, CPD exclusions or quality gate
+merely to hide a failing result.
 
-1. Confirm the integrated Sonar job explicitly logs LCOV import.
-2. Confirm Sonar no longer reports artificial 0% coverage.
-3. Confirm `src/__tests__` and `e2e` are classified as tests, not main source.
-4. Confirm new-code coverage reflects the imported report.
-5. Re-measure duplication before considering any CPD exclusion.
-6. Confirm each pull request update produces exactly one integrated Sonar scan.
-7. Keep SonarCloud out of required branch protection until normal and Dependabot
-   pull requests have produced several stable, trustworthy runs.
+## Browser coverage and its limits
 
-Local V8 and Sonar executable-line/condition denominators can differ; never
-substitute a local percentage for remote overall or new-code results. Verify
-the analyzed revision, completed background task and raw uncovered counts for
-both scopes. The local coverage report does not define Sonar's new-code period.
+The Chromium suite covers navigation, content, search/deep links, résumé assets,
+responsive layouts, console errors and automated accessibility scans. Tests
+tagged `@cross-browser` also run in mobile WebKit, including selected navigation,
+phone layout and mocked contact recovery. The project names are `chromium` and
+`webkit-mobile`; the latter uses Playwright's iPhone 13 device profile.
 
-## Later Options
+This is selected WebKit coverage, not the full suite on every browser. Device
+emulation is not a physical-device test. Axe checks for serious/critical issues
+supplement manual keyboard, focus, contrast, zoom and screen-reader review.
+Run `npm run build` before E2E. The test-only HTTPS entry point generates an
+ephemeral OpenSSL certificate and serves the production build on localhost.
+Playwright trusts that local certificate so WebKit can exercise the real
+`upgrade-insecure-requests` policy. Production CSP headers are not stripped or
+weakened, and the deployment server remains unchanged.
 
-- Revisit CPD exclusions and New Code configuration only after the corrected
-  coverage and test classification produce a trustworthy baseline.
-- Consider OSSF Scorecard or OSV Scanner later, but do not add them until the
-  current CI, Dependabot, CodeQL, SonarCloud, and Vercel signals are stable.
+## Contact deployment checks
+
+Use [.env.example](../.env.example) and the README environment table. The API
+retains server-side validation and size limits, HTML escaping, fixed recipient
+configuration, distributed production rate limiting and provider idempotency.
+Only Vercel's managed client-IP header is trusted when `VERCEL=1`.
+
+Production, including Vercel Preview, requires working Upstash REST credentials.
+Missing or unavailable rate-limit protection returns HTTP 503 before delivery;
+only development and tests use the memory fallback. Resend requires a valid API
+key, recipient and verified sender. Keep all credentials server-only.
+
+Before claiming a production contact flow is verified:
+
+1. Confirm the deployed revision and the environment configuration without
+   exposing values in logs, PRs or screenshots.
+2. Use an explicitly authorized controlled inquiry and confirm receipt at the
+   intended destination. Local mocked-provider tests do not establish this.
+3. Verify validation, rate-limit response and safe failure behavior in a controlled
+   environment. Check that errors retain the visitor's draft and `Retry-After`
+   guidance is usable; do not disable protection to make a test send succeed.
+4. Confirm the optional scheduling destination and any enabled analytics match
+   the actual deployment. If analytics is disabled, leave `NEXT_PUBLIC_GA_ID` unset.
+
+The [October 26 hardening report](security-hardening-report.md) preserves the
+original review and detailed deployment checklist. Its then-observed GitHub
+settings and verification results are historical, not live configuration facts.
+
+## Remote verification and repository settings
+
+For a PR, inspect the checks attached to its exact head/merge revision. Confirm
+one Sonar scan, successful LCOV import, proper source/test classification and
+current results; repeat after a material update. Do not equate an older green
+run with a newer commit's status.
+
+Branch protection/rulesets, required checks, secret scanning, push protection,
+and Dependabot settings are controlled in GitHub. Review their current state
+separately. Passing workflows alone do not establish merge enforcement. Choosing
+or changing required checks is a repository-policy decision, not an implicit
+side effect of a documentation update.
+
+Keep new security tooling targeted at a demonstrated gap. Preserve current
+protections and analysis scope; record any check that could not run and why.

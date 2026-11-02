@@ -151,4 +151,19 @@ test.describe('precise search destinations', () => {
     await expect(page.getByRole('heading', { level: 1 })).toBeVisible()
     expect(errors).toEqual([])
   })
+
+  test('old capability-score and interpretation links reach the qualitative comparison', async ({ page }) => {
+    for (const [fragment, target] of [
+      ['content-retrieval-level--bm25--meaningcaptured', 'content-retrieval-level--bm25'],
+      ['content-retrieval-level--human-level-social-contextual-understanding', 'content-retrieval-level'],
+      ['content-retrieval-interpretation--bm25-1ewasc8--meaning', 'content-retrieval-interpretation'],
+      ['content-retrieval--guardrail', 'content-retrieval'],
+    ]) {
+      await page.goto(`/case-studies/rageatm#${fragment}`)
+      await expect(page.locator('#content-retrieval-ladder')).toHaveAttribute('open', '')
+      await expect(page.locator(`[id="${target}"]`)).toBeFocused()
+      await expect(page.locator(`[id="${target}"]`)).toHaveAttribute('data-content-active', '')
+      await expect(page.locator('#content-retrieval-ladder')).toContainText('not implemented features or a universal ranking')
+    }
+  })
 })

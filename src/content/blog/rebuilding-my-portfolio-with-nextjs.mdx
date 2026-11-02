@@ -1,97 +1,84 @@
 ---
 title: "Rebuilding My Portfolio with Next.js"
-description: "A deep dive into modernizing my portfolio website using Next.js 16, TypeScript, Tailwind CSS, and Framer Motion."
+description: "How this portfolio uses shared project data, server-rendered pages, local MDX, and a validated contact route, with the tradeoffs behind those choices."
 date: "2025-01-09"
+updated: "2026-11-02"
 author: "David Braun"
 tags: ["Next.js", "React", "Web Development"]
 ---
 
-After years of using a traditional HTML/CSS/JavaScript portfolio, I decided it was time for a complete rebuild. Here's why I chose Next.js and what I learned along the way.
+**Revision note:** This November 2026 revision describes the current repository. Earlier versions of this article described Next.js 14; the Next.js 16 details below apply to this revision. The original recorded publication date is retained.
 
-## Why Rebuild?
+The useful part of this rebuild is how the content, navigation, and delivery paths fit together. A portfolio needs to let someone understand my role, inspect evidence, and make contact. This walkthrough explains the implementation choices that support those jobs.
 
-My previous portfolio was built with Bootstrap and vanilla JavaScript. While it served me well, it had several limitations:
+<h2 id="content-article--heading--root--why-rebuild--r92adi">Why Rebuild?</h2>
 
-- **Performance**: Multiple third-party libraries (AOS, Isotope, Typed.js) added unnecessary weight
-- **Maintainability**: HTML files became difficult to update as content grew
-- **Modern Stack**: I wanted to showcase my React and TypeScript skills
-- **Dark Mode**: Adding dark mode to the old site would have been a nightmare
+The site has several kinds of content: experience, consulting services, research, case studies, and writing. Repeating that information across page markup, navigation, and search makes updates harder to keep consistent.
 
-## Tech Stack Choices
+The current structure keeps project records in [`src/data/systems.ts`](https://github.com/DavidBraun777/davidbraun777.github.io/blob/master/src/data/systems.ts). The case-study pages and search index read that shared data. A project can describe its stage, my contribution, constraints, outcome, and available evidence without requiring a separate content model for every view.
 
-### Next.js 16 with App Router
+This does not make the content correct automatically. It gives me fewer places to correct it when a project's status or supporting evidence changes.
 
-Next.js was an obvious choice for several reasons:
+<h2 id="content-article--heading--root--tech-stack-choices--ztntfp">Tech Stack Choices</h2>
 
-- **React Server Components** for optimal performance
-- **Built-in API routes** for the contact form
-- **Image optimization** out of the box
-- **Static generation** for fast page loads
+<h3 id="content-article--heading--content-article-heading-root-tech-stack-choices-ztntfp--next-js-16-with-app-router--knrcgr">Next.js 16 with App Router</h3>
 
-### TypeScript
+The current application uses Next.js 16 and the App Router. The writing index and article routes are server components; browser interaction is kept in components such as the theme toggle, search dialog, and contact form.
 
-Type safety isn't just about catching bugs; it's about documentation. When I look at my code months later, TypeScript tells me exactly what each function expects and returns.
+That boundary matters because reading files and parsing article metadata do not require browser JavaScript. The article route uses `generateStaticParams` for published slugs and `generateMetadata` for each article's title, canonical URL, and social metadata.
 
-### Tailwind CSS
+The tradeoff is framework maintenance. I need to check changes against the installed Next.js version and verify the build when upgrading. Using a modern framework alone is not evidence of faster pages; that requires measurement.
 
-I was initially skeptical of utility-first CSS, but Tailwind has won me over:
+<h3 id="content-article--heading--content-article-heading-root-tech-stack-choices-ztntfp--typescript--1069dl3">TypeScript</h3>
 
-```css
-/* Before: Multiple CSS files */
-.button-primary {
-  background-color: #3b82f6;
-  color: white;
-  padding: 0.75rem 1.5rem;
-  border-radius: 0.5rem;
-}
+The project types make content requirements visible before a page is rendered. For example, a case study has separate fields for `myRole`, `coreConstraint`, and `outcome`. That encourages a useful distinction between what I built and what the whole project achieved.
 
-/* After: Inline with Tailwind */
-<button className="bg-blue-500 text-white px-6 py-3 rounded-lg">
-```
+TypeScript cannot validate an outcome claim or protect a public endpoint by itself. The contact route also validates incoming data at runtime.
 
-The dark mode support is fantastic: just prefix classes with `dark:` and you're done.
+<h3 id="content-article--heading--content-article-heading-root-tech-stack-choices-ztntfp--tailwind-css--1p1ju4i">Tailwind CSS</h3>
 
-### Framer Motion
+Shared components such as `PageIntro`, `SectionHeader`, and `PostCard` carry recurring layout patterns. Tailwind utilities handle responsive spacing and layout, while theme variables describe surfaces, borders, and text colors.
 
-Animations can make or break a portfolio. Framer Motion provides:
+The useful decision is to share the pattern without forcing every page into the same density. A wide desktop introduction and a readable article column serve different purposes. Mobile layouts need their own spacing and wrapping checks.
 
-- Declarative animations that are easy to understand
-- Scroll-triggered animations with `whileInView`
-- Exit animations for page transitions
-- Physics-based springs for natural movement
+<h3 id="content-article--heading--content-article-heading-root-tech-stack-choices-ztntfp--framer-motion--u4zyp2">Framer Motion</h3>
 
-## Key Features
+Framer Motion is used in interactive components, including the contact form and scroll-to-top control. The writing cards use CSS transitions instead of requiring a motion component for every card.
 
-### Dynamic Dark Mode
+Animation is a maintenance and accessibility consideration. The global stylesheet reduces CSS motion when a visitor requests it, and the scroll-to-top action checks that preference. JavaScript animations still need review; a CSS rule does not establish that every animated interaction respects reduced motion.
 
-Using `next-themes`, implementing dark mode was straightforward:
+<h2 id="content-article--heading--root--key-features--ztntfp">Key Features</h2>
 
-```typescript
-const { theme, setTheme } = useTheme()
-```
+<h3 id="content-article--heading--content-article-heading-root-key-features-ztntfp--dynamic-dark-mode--5oa0ox">Dynamic Dark Mode</h3>
 
-The theme persists across sessions and respects system preferences.
+Dark mode and the theme toggle are already implemented. The [`theme provider`](https://github.com/DavidBraun777/davidbraun777.github.io/blob/master/src/providers/theme-provider.tsx) uses `next-themes` with the class attribute, `defaultTheme="system"`, and system preference support. The toggle reads the resolved theme after mounting.
 
-### MDX Blog
+The remaining work is checking actual components in both themes, including focus states and text contrast when a shared token changes.
 
-I wanted a blog without the overhead of a CMS. MDX lets me write posts in Markdown while embedding React components when needed.
+<h3 id="content-article--heading--content-article-heading-root-key-features-ztntfp--mdx-blog--xtvx4f">MDX Blog</h3>
 
-### API-Powered Contact Form
+Posts live in `src/content/blog`. [`src/lib/mdx.ts`](https://github.com/DavidBraun777/davidbraun777.github.io/blob/master/src/lib/mdx.ts) reads frontmatter with `gray-matter`, calculates reading time, and excludes drafts or explicitly unpublished posts. The article route renders the source with `next-mdx-remote`.
 
-The contact form uses Next.js API routes with Resend for email delivery, with no external form services needed.
+Keeping content in the repository lets prose and rendering changes go through the same review. The cost is that publishing requires a repository change and deployment; this setup does not provide a CMS editing workflow.
 
-## Lessons Learned
+Search and article rendering share a content-destination transform so a search result can point to the section or passage it describes. When I rewrite a section, preserving its published anchor is part of the edit.
 
-1. **Start with the data**: Defining TypeScript interfaces for experiences, projects, and skills before building components saved time
-2. **Component composition**: Breaking the site into small, reusable pieces made styling consistent
-3. **Animation restraint**: It's tempting to animate everything, but subtle animations are more professional
+This revision also separates the original `date` from an optional `updated` date. Readers see both dates, and the article metadata and sitemap use the revision date where appropriate. That prevents a later framework upgrade from appearing to have happened at the original publication date.
 
-## What's Next?
+<h3 id="content-article--heading--content-article-heading-root-key-features-ztntfp--api-powered-contact-form--v6obd7">API-Powered Contact Form</h3>
 
-I'm planning to add:
+The form posts to a Next.js route at `/api/contact`; Resend is the external email delivery provider. The [`route handler`](https://github.com/DavidBraun777/davidbraun777.github.io/blob/master/src/app/api/contact/route.ts) checks the request origin, applies rate limits, bounds the request body, validates fields, and escapes user text before building email HTML.
 
-- More blog posts on cybersecurity and AI
-- Interactive project demos
-- A dark mode toggle with system preference detection
+The route reports success only after the email provider accepts the request. That response does not prove inbox delivery or that the message has been read. Configuration errors, provider failures, and duplicate submissions need explicit handling alongside the visible form.
 
-Feel free to explore the source code on [GitHub](https://github.com/DavidBraun777/davidbraun777.github.io).
+<h2 id="content-article--heading--root--lessons-learned--ztntfp">Lessons Learned</h2>
+
+1. **Share content deliberately.** A typed record can keep a case study, its listing, and search in agreement. Editorial judgment is still needed to decide what belongs on each surface.
+2. **Preserve the public contract.** A rewrite can break a section link even when the page URL remains unchanged. Navigation targets, publication dates, and form responses deserve review alongside visual changes.
+3. **Test the behavior that matters.** The repository includes unit and integration tests, browser tests, accessibility checks, and a bundle-size check. Passing those checks supports specific behaviors; it does not establish that every visitor will find the site clear or that every accessibility issue is covered.
+
+<h2 id="content-article--heading--root--what-s-next--8nqsak">What's Next?</h2>
+
+My maintenance priorities are to keep case-study evidence current, explain consequential engineering decisions in the writing, and check desktop and mobile reading paths after layout changes. Dark mode is an existing feature, not a future item.
+
+The [repository](https://github.com/DavidBraun777/davidbraun777.github.io) makes these implementation choices inspectable. It is also where the details should be checked as the site evolves beyond this revision.

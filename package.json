@@ -15,8 +15,10 @@
     "test:watch": "vitest",
     "test:coverage": "vitest run --coverage && npm run coverage:check",
     "coverage:check": "node scripts/check-coverage.mjs",
-    "e2e": "playwright test --project=chromium",
-    "e2e:install": "playwright install --with-deps chromium",
+    "e2e": "playwright test",
+    "e2e:chromium": "playwright test --project=chromium",
+    "e2e:webkit": "playwright test --project=webkit-mobile",
+    "e2e:install": "playwright install --with-deps chromium webkit",
     "size-check": "node scripts/check-bundle-size.mjs"
   },
   "dependencies": {

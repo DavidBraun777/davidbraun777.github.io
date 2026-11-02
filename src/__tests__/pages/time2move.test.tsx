@@ -107,6 +107,6 @@ describe('Time2Move historical case study', () => {
   test('retains the original live-proof behavior for existing production projects', async () => {
     const vifg = renderPage(await detailPage('vifg-nonprofit-platform'))
     expect(vifg.textContent).toContain('Live Proof')
-    expect(vifg.querySelector('a[href="https://www.vifg.org/home"]')?.textContent).toBe('Visit Live Site')
+    expect(vifg.querySelector('#content-proof-links a[href="https://www.vifg.org/home"]')?.textContent).toBe('Visit Live Site')
   })
 })

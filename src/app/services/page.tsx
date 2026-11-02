@@ -8,9 +8,9 @@ import { createPageMetadata } from '@/lib/seo'
 import { engagementOffers } from '@/data/services'
 
 const fitExamples = [
-  'An AI or data capability needs a production architecture around it.',
-  'A workflow crosses applications, APIs, files, queues, and human handoffs.',
-  'A useful system needs secure deployment, evaluation, and clear operating ownership.',
+  'A working AI or data prototype needs validation, access controls, deployment, and a review path before a team can use it.',
+  'People are moving information between forms, spreadsheets, APIs, and inboxes, and handoffs are getting missed.',
+  'An existing application needs maintenance, deployment improvements, or clearer ownership after launch.',
 ] as const
 
 const proofExamples = [
@@ -32,7 +32,7 @@ const proofExamples = [
 ] as const
 
 const pricingDisclaimer =
-  'Every engagement is scoped individually. These ranges are planning guides, not fixed quotes. Final pricing depends on scope, integrations, data quality, security requirements, urgency, and ongoing support. Fixed-price, milestone, hourly, and retainer arrangements may be used depending on the project.'
+  'Planning ranges are not fixed quotes. We agree on scope and terms case by case; price depends on integrations, data quality, security requirements, urgency, and support needs. Fixed-price, milestone, hourly, and retainer arrangements may be used depending on the project.'
 
 export const metadata: Metadata = createPageMetadata({
   title: 'Services',
@@ -116,34 +116,19 @@ export default function ServicesPage() {
           <div className="mt-6 rounded-[1.5rem] border border-border-subtle bg-background-subtle p-5 sm:p-6">
             <h2 className="text-lg font-semibold text-text-primary">Planning ranges</h2>
             <p className="mt-3 text-sm leading-7 text-text-secondary">{pricingDisclaimer}</p>
-            <p className="mt-3 text-sm leading-7 text-text-secondary">
-              Negotiation and case-by-case scoping are normal parts of defining the work.
-            </p>
           </div>
         </section>
 
         <section>
-          <SectionHeader align="left" title="Engineering leverage" />
+          <SectionHeader align="left" title="Delivery and accountability" />
           <div className="max-w-3xl space-y-4 text-sm leading-7 text-text-secondary">
             <p>
-              Modern engineering tools can substantially reduce the time required to produce a
-              solution, but delivery time is not the same as project value.
+              We define the deliverables, acceptance criteria, and handoff before implementation.
+              Project pricing reflects the agreed scope, complexity, risk, and delivered capability.
             </p>
             <p>
-              My work combines professional engineering experience, formal computer science and AI
-              education, accumulated technical knowledge, reusable engineering patterns, and
-              AI-assisted development workflows. Together, these allow me to move from requirements
-              to working systems more efficiently than a purely manual development process.
-            </p>
-            <p>
-              AI can accelerate implementation, research, testing, documentation, analysis, and
-              repetitive engineering work. I remain responsible for requirements, architecture,
-              technical decisions, validation, security, testing, deployment, and the finished system.
-            </p>
-            <p>
-              For that reason, projects are generally priced around scope, complexity, risk, and the
-              value of the delivered capability rather than simply the number of hours spent writing
-              code.
+              I use AI-assisted development where useful and remain responsible for requirements,
+              architecture, technical decisions, validation, security, testing, and deployment.
             </p>
           </div>
         </section>
@@ -153,7 +138,7 @@ export default function ServicesPage() {
             <SectionHeader
               align="left"
               title="Good fit projects"
-              subtitle="A review or build is usually useful when one of these boundaries is already causing friction."
+              subtitle="Examples of situations these engagements can address."
               className="mb-8"
             />
             <div className="space-y-3">
@@ -172,7 +157,7 @@ export default function ServicesPage() {
             <SectionHeader
               align="left"
               title="How work usually starts"
-              subtitle="The opening steps keep the work tied to a real workflow and a clear delivery boundary."
+              subtitle="Start with the current workflow, agree on the scope, and define how we will verify the result."
               className="mb-8"
             />
             <div className="space-y-5">
@@ -195,7 +180,7 @@ export default function ServicesPage() {
           <SectionHeader
             align="left"
             title="Technical capabilities inside an engagement"
-            subtitle="The commercial engagement stays outcome-focused while the implementation can cross several technical layers."
+            subtitle="A project may need several of these capabilities to deliver the agreed result."
           />
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {servicesOffered.map((service) => {

@@ -1,5 +1,9 @@
 # dbraun.io Selective Restoration Report
 
+> **Historical report.** Findings, commands, verification counts and deployment
+> statements below describe the original review, not the current site. Use the
+> [documentation index](README.md) for current setup, maintenance and architecture.
+
 ## Summary
 - Restored the site lead from applied AI/data portfolio language back to workflow automation, system integration, dependable systems, lead flow, handoffs, and operational reliability for small and midsized businesses.
 - Preserved the useful local case-study proof work: WeatherForge/RAGeATM metrics, architecture, limitations, GitHub links, tech tags, and richer detail pages.

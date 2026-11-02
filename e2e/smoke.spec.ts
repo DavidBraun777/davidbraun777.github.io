@@ -325,7 +325,7 @@ test.describe('Smoke tests', () => {
     )
   })
 
-  test('mobile navigation keeps the primary order and links through to research', async ({ page }) => {
+  test('mobile navigation keeps the primary order and links through to research', { tag: '@cross-browser' }, async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 })
     await page.goto('/')
 
@@ -350,7 +350,7 @@ test.describe('Smoke tests', () => {
     ).toHaveAttribute('href', googleScholarUrl)
   })
 
-  test('Work groups client deliveries, applications, and experiments', async ({ page }) => {
+  test('Work groups client deliveries, applications, and experiments', { tag: '@cross-browser' }, async ({ page }) => {
     await page.goto('/')
     await page.getByRole('main').getByRole('link', { name: 'View Work', exact: true }).click()
     await expect(page).toHaveURL(/\/case-studies$/)
@@ -420,7 +420,7 @@ test.describe('Smoke tests', () => {
     await expect(page).toHaveURL(/\/contact$/)
   })
 
-  test('contact supports typed inquiry preselection without duplicating the form', async ({ page }) => {
+  test('contact supports typed inquiry preselection without duplicating the form', { tag: '@cross-browser' }, async ({ page }) => {
     const expectedTypeLabels = [
       'Select one',
       'Employment / Engineering Role',
@@ -588,7 +588,7 @@ test.describe('Smoke tests', () => {
     await expect(page.getByText('$750–$3,000+/month', { exact: true })).toBeVisible()
     await expect(
       page.getByText(
-        'Every engagement is scoped individually. These ranges are planning guides, not fixed quotes. Final pricing depends on scope, integrations, data quality, security requirements, urgency, and ongoing support. Fixed-price, milestone, hourly, and retainer arrangements may be used depending on the project.',
+        'Planning ranges are not fixed quotes. We agree on scope and terms case by case; price depends on integrations, data quality, security requirements, urgency, and support needs. Fixed-price, milestone, hourly, and retainer arrangements may be used depending on the project.',
         { exact: true }
       )
     ).toBeVisible()
@@ -637,7 +637,7 @@ test.describe('Smoke tests', () => {
       const redirect = await request.get(legacyPath, { maxRedirects: 0 })
       expect(redirect.status()).toBe(308)
       expect(
-        new URL(redirect.headers().location, 'http://localhost:3000').pathname
+        new URL(redirect.headers().location, 'https://localhost:3000').pathname
       ).toBe(resumeUrl)
     }
   })
@@ -706,7 +706,7 @@ test.describe('Smoke tests', () => {
     expect(errors).toEqual([])
   })
 
-  test('key buyer pages render on a mobile viewport', async ({ page }) => {
+  test('key buyer pages render on a mobile viewport', { tag: '@cross-browser' }, async ({ page }) => {
     await page.setViewportSize({ width: 390, height: 844 })
 
     for (const route of keyBuyerRoutes) {
@@ -763,7 +763,7 @@ test.describe('Smoke tests', () => {
     }
   })
 
-  test('expanded navigation stays compact until the desktop layout has room', async ({ page }) => {
+  test('expanded navigation stays compact until the desktop layout has room', { tag: '@cross-browser' }, async ({ page }) => {
     await page.setViewportSize({ width: 1024, height: 768 })
     await page.goto('/')
 

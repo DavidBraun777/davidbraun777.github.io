@@ -1,491 +1,214 @@
 # dbraun.io
 
-Professional portfolio for David Braun, organized around a single systems-level
-identity while retaining consulting, delivery, enterprise, and research proof.
+David Braun's professional portfolio: **AI Systems & Platform Engineer**. The
+site connects employment, consulting, and research inquiries with work whose
+ownership, maturity, and limitations can be checked.
 
-**Live site:** [dbraun.io](https://dbraun.io)
+**Live site:** [dbraun.io](https://www.dbraun.io/) ·
+**Documentation:** [docs index](docs/README.md) ·
+**Remaining work:** [TODO.md](TODO.md)
 
-## Résumés and Research CV
+## Run locally
 
-`/resumes` is the document directory. `src/data/resumes.ts` defines the document
-descriptions, public URLs, and research-CV request fallback. The industry résumé
-remains the default on Home, Experience, and the Experience navigation menu.
-Résumé documents are not researcher identities and do not belong in JSON-LD `sameAs`.
-
-Approved PDFs belong in `public/resumes/`:
-
-- `David-J-Braun-Resume-Software-Platform-2026.pdf`
-- `David-J-Braun-CV-AI-Research-2026.pdf`
-
-Both `/resume.pdf` and `/David-J-Braun-Resume-2026.pdf` permanently redirect to the
-canonical industry PDF through the shared configuration, without duplicate PDF
-copies. `/resume` still permanently redirects to `/experience`.
-
-Before replacing a PDF, verify provenance, disclosure clearance, exactly two
-pages, readable extracted text, and rendered layout. Keep staging files and editable
-sources private. Leave `researchCv.href` null until a safe public release is approved;
-the directory and Research page then offer contact links. Refresh the approved-asset
-hashes in the résumé tests only after this review to protect the approved bytes
-and verified page count. Both current PDFs were reviewed and explicitly cleared
-by the owner on October 27, 2026; their contents are unchanged from the supplied files.
-
-## Professional North Star
-
-**Primary identity:** AI Systems & Platform Engineer
-
-**North-star statement:** A systems-level engineer who can take AI/data
-capabilities and turn them into secure, deployable, measurable operational
-systems.
-
-The identity synthesizes software, APIs, workflows, data, cloud infrastructure,
-security, evaluation, observability, and operational ownership. These are layers
-of one professional story, not competing titles. Workflow automation, system
-integration, operational software, and SMB consulting remain valid commercial
-applications of the broader identity.
-
-This is David's current professional positioning, not a retroactive employer
-title. Preserve historical job titles and describe role scope with evidence.
-Future website changes should strengthen the north star through deployed systems,
-bounded outcomes, architecture artifacts, and verifiable technical decisions.
-
-## Evidence Ladder
-
-Use this order when deciding what should receive the most emphasis:
-
-1. Production systems with real operational ownership
-2. Measured business, user, or reliability outcomes
-3. Architecture and platform artifacts
-4. Production AI/data systems with evaluation
-5. Enterprise engineering evidence
-6. Research and reproducibility
-7. Credentials and memberships
-8. Technology lists
-
-Higher-level evidence should dominate lower-level evidence. A real deployed
-system is more persuasive than ten technology badges, and a measured outcome is
-more persuasive than a vague claim.
-
-The current project evidence remains deliberately classified:
-
-- [VIFG nonprofit platform](https://www.vifg.org/home) is the strongest public
-  production proof.
-- David built the two live client websites featured beneath VIFG in the Work index.
-  `/case-studies/ark-landscaping` covers the service business website for
-  [ARK Landscaping](https://www.arklandscaping.net/). `/case-studies/matt-laur`
-  covers the athlete and coaching website for [Matt Laur](https://www.mattlaur.com/).
-- Time2Move is a past client engagement. Through People’s Connection LLC, David
-  developed the real estate application, customer tools, and shared inquiry backend.
-  The original deployment is inactive. The engagement ended before the wider roadmap
-  and planned validation were complete. The Work index links to the historical
-  case study at `/case-studies/time2move`.
-  Its inquiry-processing diagram traces six inquiry types into a shared backend.
-  The optional review-data pipeline covers ingestion, canonical records, migration,
-  and public-cache rebuilding. The illustrative AI lesson uses synthetic proposals
-  and local validation. Keep source archives, private audit reports, and internal
-  screenshots outside the public portfolio.
-- `DealerFlow`, where shown, should be treated cautiously as pilot/proof work
-  unless stronger artifacts and bounded pilot facts are added.
-- `WeatherForge` is a collaborative University of St. Thomas SEIS 745 project on
-  which David served as lead developer and primary implementer, writing more than
-  90% of the application code. Do not describe the academic project as exclusively
-  solo, but do not treat its collaborative status as evidence of equal implementation
-  contribution. State individual contributions where established, and do not describe
-  it as a production client system unless deployment evidence is added.
-- `RAGeATM` is secondary academic/technical proof for retrieval and augmentation
-  work. It should not be framed as production consulting delivery.
-- `DGM` and `StormIQ`, where present, represent active or planned system
-  direction rather than finished production products.
-
-## What Is Still Missing
-
-This is an evidence roadmap, not a list of claims. Check an item only after the
-artifact or outcome exists and can be represented truthfully.
-
-### Production AI Proof
-
-- [ ] One genuinely deployed AI/retrieval/data system used in a real workflow
-- [ ] Real evaluation dataset
-- [ ] Retrieval/model quality metrics
-- [ ] Acceptance, refusal, and error behavior
-- [ ] Latency measurements
-- [ ] Cost measurements where relevant
-- [ ] Production monitoring
-- [ ] Real operational or user outcome
-
-### Platform Architecture Proof
-
-- [ ] High-quality architecture diagram for at least one flagship system
-- [ ] Design/RFC-style explanation of major architecture choices
-- [ ] Alternatives considered
-- [ ] Tradeoff analysis
-- [ ] Infrastructure-as-code evidence where appropriate
-- [ ] Environment and deployment architecture
-- [ ] Failure-mode analysis
-- [ ] Capacity and performance considerations
-
-### Reliability & Operations Proof
-
-- [ ] Logs, metrics, or traces examples
-- [ ] Defined SLI/SLO where a real system warrants it
-- [ ] Incident or failure lesson documented
-- [ ] Recovery and degradation strategy
-- [ ] Load or performance evidence where meaningful
-- [ ] Cost/reliability tradeoff example
-
-### AI Evaluation Proof
-
-- [ ] Regression evaluation
-- [ ] Grounding or hallucination measurement
-- [ ] Retrieval benchmark
-- [ ] Failure taxonomy
-- [ ] Model/system comparison where relevant
-- [ ] Human-review boundary documented
-
-### Security Architecture Proof
-
-- [ ] Threat model for a real system
-- [ ] Authentication and authorization design
-- [ ] Data classification or sensitive-data handling
-- [ ] Security-boundary diagram
-- [ ] Concrete remediation or hardening case study
-
-### Business / Client Outcome Proof
-
-- [ ] Before/after workflow measurement
-- [ ] Manual effort reduced
-- [ ] Time saved
-- [ ] Reliability improved
-- [ ] Adoption or use evidence
-- [ ] Revenue or conversion evidence only when verified
-- [ ] Real testimonials only with permission
-
-### Technical Leadership Proof
-
-Add these only when they are real; do not manufacture leadership artifacts.
-
-- [ ] Architecture RFC
-- [ ] Design review
-- [ ] Mentoring evidence
-- [ ] Cross-team technical decision
-- [ ] Migration plan
-- [ ] Standards or process improvement
-- [ ] Technical leadership outcome
-
-### Research Proof
-
-- [ ] IEEE proceedings/Xplore link when available
-- [ ] DOI when available
-- [ ] arXiv/preprint if actually published
-- [ ] Reproducibility instructions
-- [ ] Public code/data where allowed
-- [ ] Evaluation artifacts
-- [ ] Citation/profile synchronization
-- [ ] Additional peer-reviewed work as it occurs
-
-### Professional Identity Hygiene
-
-- [x] Version the current resume as `David-J-Braun-Resume-2026.pdf` and align it
-  with the AI Systems & Platform Engineer positioning
-- [ ] Synchronize LinkedIn
-- [ ] Synchronize ORCID
-- [ ] Synchronize the GitHub profile
-- [ ] Review dead and live project links periodically
-- [ ] Label paused projects accurately
-- [ ] Update expired credentials
-- [ ] Update completed degrees immediately
-
-## Claim Upgrade Rules
-
-### Production AI
-
-Do not call a prototype "production AI" until it is genuinely deployed into a
-real operational workflow.
-
-### Architecture
-
-The AI Systems & Platform Engineer identity must increasingly be backed by
-architecture artifacts, cross-layer decisions, deployed systems,
-security/reliability evidence, and measurable outcomes. Architecture remains a
-legitimate capability; it is not a fabricated historical appointment.
-
-### Staff / Principal
-
-Do not self-assign Staff or Principal seniority. Let employment history, scope,
-and evidence justify future seniority.
-
-### Scale
-
-Do not claim scale without measured evidence.
-
-### Outcomes
-
-Do not replace evidence with adjectives. Prefer a verified, bounded measure such
-as "40% reduction in manual processing" over "highly efficient automation."
-
-### Technology Lists
-
-Do not promote a technology into a headline merely because it was used once.
-The site should increasingly explain what was designed, why it was designed that
-way, which tradeoff was made, and what happened.
-
-## Growth Priority
-
-1. Stronger production proof
-2. One production-quality AI system
-3. Measured outcomes
-4. Architecture and RFC artifacts
-5. Reliability and observability evidence
-6. Security architecture evidence
-7. Research reproducibility
-8. Technical leadership evidence
-9. New technologies or certifications
-10. Cosmetic website polish
-
-Do not spend significant time polishing the website when stronger real-world
-evidence can be created instead.
-
-## Career Filter
-
-Prefer opportunities that increase systems-level ownership across AI/data,
-software, infrastructure, security, reliability, and operations. Good future
-opportunities should ideally strengthen at least two or three of:
-
-- AI/data
-- software architecture
-- platform/cloud
-- security
-- reliability
-- operations
-- technical leadership
-- measurable outcomes
-
-This keeps future work compounding toward the professional north star.
-
-## Latest Audit Baseline
-
-- [Current State Reassessment](docs/dbraun-current-state-reassessment.md)
-- [Elite Audit - 2026-04-15](docs/audits/elite-audit-2026-04-15.md)
-- [Security and Code Analysis](docs/security-and-analysis.md)
-
-## Stack
-
-| Category | Technology |
-| --- | --- |
-| Framework | [Next.js 16](https://nextjs.org/) |
-| UI | [React 19](https://react.dev/) |
-| Language | [TypeScript](https://www.typescriptlang.org/) |
-| Styling | [Tailwind CSS v4](https://tailwindcss.com/) |
-| Motion | [Framer Motion](https://www.framer.com/motion/) |
-| Content | MDX via `next-mdx-remote` |
-| Email | [Resend](https://resend.com/) |
-| Rate limiting | [Upstash Redis](https://upstash.com/), required in production; memory fallback for development/tests |
-| Testing | [Vitest](https://vitest.dev/), [Playwright](https://playwright.dev/) |
-| Deployment | [Vercel](https://vercel.com/) |
-
-## Local Development
-
-### Site Search
-
-The header search uses a local, typed index at `/search-index.json`, generated
-statically by each normal `npm run build`. It is fetched on first opening search
-and reused for the browser session. No queries are sent to a search service or
-recorded by this feature. A new session revalidates the index after deployment.
-
-`src/lib/search/build-index.ts` explicitly selects public fields from the same
-collections used by the site. New case studies and published MDX articles enter
-search automatically. Articles marked `draft: true` or `published: false` are
-excluded from both public article routes and search. Readable MDX text and headings
-are extracted at build time; imports, expressions, comments, implementation code,
-hidden content, and unrelated frontmatter are omitted. Résumé records use approved
-metadata and destinations, without extracting PDF contents.
-
-Page records provide broad navigation. Granular records add a `destination` with
-the canonical `page`, semantic `anchor`, readable location `label`, ordered
-`disclosureIds`, and an optional `fallbackAnchor`. A table row can supply `cells`
-so a match in a distant column reveals that cell within its scroll container.
-Only public displayed text belongs in these fields. Parent `context` qualifies a
-local match without making every child match the project or article name.
-
-`src/lib/search/destinations.ts` owns ID construction and duplicate validation.
-`createProjectContent` in `project-destinations.ts` supplies both indexed records
-and rendered attributes for case-study sections, narrative blocks and table cells.
-Use semantic keys, scoped by section/table. An optional ladder-row `id` handles
-duplicate labels; displayed level numbers are not identities. Never use array
-positions or a separate renderer slug function. Duplicate destinations fail the
-build/tests rather than silently pointing visitors to the wrong occurrence.
-
-Published MDX uses the same `remarkContentDestinations` transform during indexing
-and rendering. It anchors headings, paragraphs, list items and table rows/cells.
-Text fingerprints keep blocks stable when unrelated content is inserted. Explicit
-IDs resolve otherwise ambiguous repeated content; native MDX disclosures require
-stable `id` attributes and render through the registered `ContentDetails` component.
-Hidden nodes, executable expressions, source code and unrelated metadata remain
-excluded. Changing a block's own wording can change a generated fingerprint;
-use an explicit ID when a long-lived editorial link must survive those rewrites.
-
-For a new static page, add its public overview to `static-pages.ts`. For precise
-targets, build metadata once with the shared helpers, apply `destinationAttributes`
-to the meaningful rendered element, and render a `ContentDestinationManifest`
-outside any disclosures that may unmount their children. Add its public records
-through an explicit adapter in the builder. Table targets use semantic row headers
-and `data-content-table` on the horizontal overflow wrapper. Validate every declared
-anchor against rendered output. Historical entries follow the same path and carry the project’s original scope and status.
-
-Time2Move's optional sections share semantic keys in `time2move-extras.ts` with the
-case-study registry. Its graph data supplies both diagrams and public search text.
-The lesson indexes its static teaching copy, not inactive example selections; its
-disclosure opens through the existing navigation controller. Keep supplied fixture
-expectations separate from the locally computed validation results.
-
-The existing scroll controller owns fragment navigation through
-`src/lib/content-navigation.ts`. Search records intent before closing the dialog;
-its close lifecycle releases navigation without restoring header focus. Disclosures
-register React state callbacks, then layout readiness reveals and focuses the exact
-target with sticky-header clearance and a temporary outline. Page-local manifests
-support copied URLs, refresh and history without loading the search index. Escape
-still restores the search trigger. Stale targets fall back to an available parent
-or page heading, and observers are bounded and canceled on superseding navigation.
-
-Ranking requires every query term and prioritizes exact titles, title phrases,
-title words/prefixes, tags/headings/descriptions, then body text. Case, accents, and
-whitespace are normalized while technology punctuation is retained. Short terms
-match whole words; longer terms can match prefixes. The small aliases are Blog
-and Articles for Writing, Projects for the Work index, and ML for Machine Learning.
-Precise matches outrank aggregate body mentions, and at most three granular hits
-per page keep the list compact. Destinations, including fragments, are deduplicated.
-There is no fuzzy matching or added search dependency. Run the search and destination
-unit tests plus `npm run e2e -- e2e/search.spec.ts e2e/search-destinations.spec.ts`
-when changing search behavior or destinations.
-
-`published-search-compatibility.test.ts` also preserves compact digests captured
-from published revision `ba84b4d` before the Sonar cleanup: the full index,
-destination inventory, project manifests, and representative ranked results.
-Algorithm-only refactors must pass these recorded expectations unchanged. When
-deliberately editing public content, review the actual old/new destination and
-ranking differences before updating the affected expectations; retain explicit
-compatibility for published links that need to survive. The fixture revision is
-provenance, not permission to regenerate expectations from a failing implementation.
-
-### Prerequisites
-
-- Node.js 24 LTS from `.nvmrc` (`package.json` requires `24.x`)
-- npm
-
-### Install and Run
+Use Node.js **24.x**, as specified by `.nvmrc` and `package.json`, and npm with
+the committed `package-lock.json`.
 
 ```bash
 nvm use
 npm ci --ignore-scripts
+cp .env.example .env.local
 npm run dev
 ```
 
-Open [http://localhost:3000](http://localhost:3000).
+Open [localhost:3000](http://localhost:3000). Browsing the site does not require
+email or Redis credentials. To exercise contact delivery, configure the server
+variables below; automated tests mock delivery and never send real inquiries.
+Do not commit `.env.local` or real credentials.
 
-## Environment Variables
+Development output uses `.next-dev`; production output uses `.next`. Read
+[AGENTS.md](AGENTS.md) and the installed Next.js documentation before changing
+framework behavior.
 
-Create `.env.local` in the repo root. Do not commit real values.
+## Stack and layout
 
-```env
-# Required in production for contact form delivery
-RESEND_API_KEY=re_xxxxxxxxxxxxx
+| Area | Implementation |
+| --- | --- |
+| Application | Next.js 16 App Router, React 19, TypeScript |
+| Styling and motion | Tailwind CSS 4, CSS theme variables, Framer Motion |
+| Writing | Local MDX, `gray-matter`, `next-mdx-remote` |
+| Search | Static local index, fetched when search is first opened |
+| Contact | Server validation, Resend, Upstash Redis rate limiting in production |
+| Verification | ESLint, TypeScript, Vitest/V8, Playwright, axe, bundle budget |
+| Delivery and analysis | Vercel, GitHub Actions, CodeQL, Dependabot, SonarQube Cloud |
 
-# Preferred contact-form recipient
-CONTACT_NOTIFICATION_EMAIL=you@example.com
+Exact dependency versions belong in the lockfile; the table describes the
+architecture, not an independently maintained package inventory.
 
-# Legacy recipient fallback supported by code if CONTACT_NOTIFICATION_EMAIL is unset
-# CONTACT_EMAIL=you@example.com
+| Source | Responsibility |
+| --- | --- |
+| `src/app/` | Pages, metadata, contact API, sitemap and search-index route |
+| `src/components/layout/` | Header navigation, search entry point, full footer |
+| `src/components/sections/contact.tsx` | Inquiry form, submission state and optional scheduling link |
+| `src/data/systems.ts` | Project registry, evidence, stage labels and case-study content |
+| `src/data/live-client-websites.json` | ARK Landscaping and Matt Laur client stories |
+| `src/data/past-client-work.ts` | Historical Time2Move scope and privacy-safe attribution |
+| `src/data/services.ts` | Consulting offers, deliverables and planning ranges |
+| `src/data/research.ts`, `src/data/urarina-research.ts` | Authored research, status and attribution |
+| `src/data/resumes.ts` | Approved document URLs and request fallbacks |
+| `src/content/blog/` | MDX articles; public routes use `/writing` |
+| `src/lib/search/`, `src/lib/content-navigation.ts` | Indexing, ranking and stable deep links |
+| `src/__tests__/`, `e2e/` | Unit/integration tests and real-browser checks |
+| `public/images/projects/`, `public/resumes/` | Cleared public evidence and approved PDFs |
 
-# Optional sender identity; CONTACT_FROM_EMAIL must be verified in Resend
-CONTACT_FROM_EMAIL=contact@dbraun.io
-CONTACT_FROM_NAME=dbraun.io Contact
+## Intended visitor experience
 
-# Optional scheduling link shown on the contact page
-CAL_LINK=https://calendly.com/your-handle/intro-call
+Primary navigation is **Work → Experience → Services → Research → Contact**;
+the David Braun brand links home. Research and Experience also expose contextual
+links. Writing and the résumé directory remain available in the full footer.
 
-# Required distributed rate limiting in production, including Vercel Preview
-UPSTASH_REDIS_REST_URL=https://your-instance.upstash.io
-UPSTASH_REDIS_REST_TOKEN=your-token
+The homepage deliberately keeps the wide desktop hero, contextual career and
+research highlights, three audience pathways, capabilities, contact invitation,
+and full footer. Phone layouts reflow those sections with compact spacing.
+**Project cards and the live-client showcase belong on `/case-studies`, not the
+homepage.** Preserve the footer's identity, faith statement, Explore, Connect,
+and Research Profiles sections.
 
-# Optional Google Analytics 4 measurement ID; leave unset to disable GA
-# NEXT_PUBLIC_GA_ID=G-XXXXXXXXXX
-```
+The [information architecture](docs/ia-sitemap.md) records canonical routes,
+redirects, audience paths, and responsive intent.
 
-Notes:
+## Evidence and privacy
 
-- `RESEND_API_KEY` is required for the contact API to send mail in production.
-- `CONTACT_NOTIFICATION_EMAIL` is the preferred recipient variable.
-- `CONTACT_EMAIL` remains supported as a fallback for older deployments.
-- `CONTACT_FROM_EMAIL` defaults to `contact@dbraun.io`; if changed, the address
-  or domain must be verified in Resend.
-- `CONTACT_FROM_NAME` defaults to `dbraun.io Contact`.
-- If `CAL_LINK` is set, the contact page shows a secondary optional call link.
-- Both Upstash variables are required when `NODE_ENV=production`, including
-  Vercel Preview deployments. Missing configuration, outages, and timeouts fail
-  closed with HTTP 503 before email delivery. Only development/tests use the
-  in-memory fallback. Failed initialization/checks retry after a 60-second cooldown.
-- Enable Vercel system environment variables. Only `VERCEL=1` deployments trust
-  Vercel's managed `x-vercel-forwarded-for` client IP; other hosts share an
-  `unknown` bucket until a trusted proxy integration is explicitly implemented.
-- Production contact setup is **not verified by a successful build**. Follow the
-  [deployment checklist](docs/security-hardening-report.md#deployment-prerequisites)
-  before deploying. Keep all Resend/Upstash credentials server-only.
-- Google Analytics loads only when `NEXT_PUBLIC_GA_ID` is set. Leaving it unset
-  disables GA without code changes.
+The professional identity connects applications, APIs, workflows, cloud,
+security, evaluation, and operations around AI and data. It is current
+positioning, not a retroactive employer title or a claim of Staff/Principal rank.
+
+| Work | Representation to preserve |
+| --- | --- |
+| VIFG | Public production nonprofit platform and deployment evidence |
+| ARK Landscaping and Matt Laur | Live client websites built by David; specific delivery stories |
+| Time2Move | Historical engagement through People's Connection LLC; original deployment inactive; wider roadmap and planned validation incomplete |
+| DealerFlow | Pilot with a real mobile screenshot; no unverified production or adoption claims |
+| WeatherForge | Collaborative SEIS 745 academic project; David's established lead implementation role remains explicit |
+| RAGeATM | Bounded retrieval prototype; the small sanity check is not general retrieval accuracy |
+| DGM, StormIQ and other work in progress | Planned or experimental scope, not finished production products |
+
+Prefer actual artifacts, architecture decisions, and bounded outcomes over
+technology lists. Do not invent metrics, client endorsements, screenshots,
+benchmarks, deployment status, or leadership history. Missing evidence belongs
+in the backlog; do not publish empty screenshot blocks or portfolio-editing notes.
+
+Keep personal client identifiers, successor-business narratives, private source
+archives, audit reports, and internal screenshots out of the historical Time2Move
+story. Public client brands do not authorize publishing private correspondence
+or data. Keep withheld research materials private and distinguish accepted work
+from published proceedings. See [research identity](docs/RESEARCH_IDENTITY.md)
+and the [maintenance guide](docs/maintenance.md).
+
+## Résumés and research CV
+
+`/resumes` is the document directory. Both current PDFs were explicitly cleared
+by the owner on October 27, 2026 and remain unchanged:
+
+- `/resumes/David-J-Braun-Resume-Software-Platform-2026.pdf`
+- `/resumes/David-J-Braun-CV-AI-Research-2026.pdf`
+
+The industry résumé is the default on Home, Experience, and the Experience menu.
+`/resume.pdf` and `/David-J-Braun-Resume-2026.pdf` permanently redirect to it;
+`/resume` redirects to `/experience`. Do not duplicate PDF bytes for aliases.
+
+Before replacing an approved PDF, verify its source, disclosure clearance,
+exactly two pages, extracted text, and rendered layout. Update the approved-asset
+test hashes only after that review. If a future research CV is not cleared, set
+`researchCv.href` to `null` to use the request fallback. Document URLs do not
+belong in Person JSON-LD `sameAs`.
+
+## Environment
+
+[`.env.example`](.env.example) is the complete configuration template. Email and
+Redis credentials stay server-only. The scheduling URL and optional analytics
+identifier are public by design; never put secrets in those values.
+
+| Variable | Purpose |
+| --- | --- |
+| `RESEND_API_KEY` | Required for real contact email delivery |
+| `CONTACT_NOTIFICATION_EMAIL` | Preferred recipient; `CONTACT_EMAIL` is the legacy fallback |
+| `CONTACT_FROM_EMAIL`, `CONTACT_FROM_NAME` | Verified Resend sender; defaults are in `src/lib/resend.ts` |
+| `CAL_LINK` | Optional HTTP(S) scheduling URL; no booking link is shown without a valid URL |
+| `UPSTASH_REDIS_REST_URL`, `UPSTASH_REDIS_REST_TOKEN` | Required rate-limit store when `NODE_ENV=production`, including Vercel Preview |
+| `NEXT_PUBLIC_GA_ID` | Optional GA4 measurement ID; unset disables the analytics component |
+
+Production contact requests fail closed with HTTP 503 when Redis protection is
+missing or unavailable; only development/tests use the memory fallback. Enable
+Vercel system environment variables: only `VERCEL=1` deployments trust the managed
+client-IP header. Do not set that flag manually on another host.
+
+A successful build does **not** prove email delivery, valid service credentials,
+or production rate limiting. Use the controlled deployment checks in
+[security and analysis](docs/security-and-analysis.md) before claiming those work.
 
 ## Verification
 
-Use Node 24 LTS and a clean install for verification:
-
 ```bash
-nvm use
-npm ci --ignore-scripts
 npm run lint
 npm run typecheck
 npm run test:coverage
-npm test
 npm run build
 npm run size-check
 npm run e2e:install
 npm run e2e
 ```
 
-Local E2E tests use Playwright-managed Chromium; run `npm run e2e:install`
-when that browser needs installing or updating. With `CI` set, the same
-`chromium` project uses preinstalled Google Chrome Stable on GitHub's
-`ubuntu-24.04` runner. CI logs the Chrome version and browser launch path.
-The runner updates Chrome independently of the installed Playwright version.
+`test:coverage` already runs the full unit/integration suite; a second `npm test`
+is unnecessary for that verification pass. Use `npm test -- path/to/test` for
+targeted work and `npm run test:watch` during implementation.
 
-`npm run test:coverage` generates fresh V8/LCOV coverage, enforces 100% per-file
-lines, branches, statements and functions, then validates raw LCOV counts and
-source-file completeness. `scripts/coverage-scope.mjs` derives the eligible
-tracked and untracked JavaScript/TypeScript inventory from the existing Sonar
-scope and exclusions, including production configuration and executable scripts.
-New runtime files receive coverage even before a test imports them. Keep new tests
-under `src/__tests__`; do not add exclusions to bypass uncovered behavior.
-Use `npm run coverage:check` to revalidate an existing report. Browser tests
-verify real navigation but do not contribute to the imported V8 report.
+| Check | What it establishes |
+| --- | --- |
+| `lint`, `typecheck` | Static code checks and TypeScript contracts |
+| `test:coverage` | Behavior tests plus 100% per-file lines, branches, statements and functions in the existing eligible scope |
+| `coverage:check` | Revalidates an existing LCOV report's file inventory and raw hit counts |
+| `build` | Production compilation and static route generation |
+| `size-check` | Aggregate emitted JavaScript budget of 1,500 KB; not a page-speed or Core Web Vitals score |
+| `e2e` | Chromium suite plus selected mobile WebKit journeys, including mocked contact recovery |
+| `e2e:chromium`, `e2e:webkit` | Run one configured browser project |
 
-## Security and Analysis
+Local browser tests use Playwright-managed browsers. GitHub CI uses the runner's
+Chrome Stable for Chromium and installs WebKit. **Build before running E2E.**
+The test-only `e2e/https-server.mjs` serves that production build at
+`https://localhost:3000`, using an ephemeral certificate generated by OpenSSL.
+Use OpenSSL 1.1.1 or newer with `req -addext` support; the CI runner includes it. Avoid
+running another server on port 3000 during the tests.
 
-The repo uses GitHub CI, CodeQL, Dependabot alerts/security updates,
-Dependabot malware alerting, SonarQube Cloud / SonarCloud analysis, and Vercel
-preview deployment checks as separate signals. SonarCloud runs on pull requests
-and pushes to `master`; CI supplies its validated `coverage/lcov.info` artifact.
-It requires `SONAR_TOKEN` in both Actions secrets and Dependabot secrets for
-Dependabot-originated pull requests.
+HTTPS allows WebKit to load assets under the real `upgrade-insecure-requests`
+policy. Playwright trusts the temporary local certificate; no production security
+header is stripped or weakened. `npm run dev`, `npm run start`, and Vercel's
+deployment entry point remain unchanged.
 
-See [Security and Code Analysis](docs/security-and-analysis.md) for setup notes
-and the remote SonarCloud verification checklist.
+Coverage scope comes from `scripts/coverage-scope.mjs` and the existing Sonar
+exclusions, including unimported runtime files, configuration and executable
+scripts. Do not weaken gates or add exclusions to hide uncovered behavior.
+Browser tests do not contribute to V8 coverage. Automated axe checks and device
+emulation supplement manual review; they do not certify WCAG compliance or
+replace testing on physical phones.
 
-## Proof and Honesty Rules
+CI also runs `npm audit --audit-level=high` and
+`npm audit --omit=dev --audit-level=moderate`, binds LCOV to the tested revision,
+and supplies it to SonarCloud. See [security and analysis](docs/security-and-analysis.md).
 
-This repo intentionally separates:
+## Keep the repository current
 
-- real public production proof
-- public delivery examples
-- pilot/prototype work
-- academic or technical proof
-- planned system direction
+Update documentation in the same change that alters behavior, routes, content
+contracts, scripts, or environment requirements. Start with:
 
-Do not add invented outcomes, testimonials, screenshots, metrics, or artifacts.
-If a project needs stronger proof, add the real artifact or leave a TODO.
+- [Maintenance guide](docs/maintenance.md): sources of truth, change checklist,
+  publication dates, privacy, evidence and review cadence.
+- [Search guide](docs/search.md): content indexing, semantic destinations and
+  compatibility expectations when wording changes.
+- [Architecture inventory](docs/architecture/README.md): actual diagram paths and
+  safe publication rules.
+- [Documentation index](docs/README.md): active guides, optional plans and dated
+  historical reports.
+
+Historical audit results remain snapshots of their recorded revisions. They
+must not override the current implementation, Node version, homepage decision,
+or newer verification results.

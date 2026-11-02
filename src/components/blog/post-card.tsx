@@ -14,7 +14,16 @@ export function PostCard({ post, index = 0 }: PostCardProps) {
     year: 'numeric',
     month: 'long',
     day: 'numeric',
+    timeZone: 'UTC',
   })
+  const formattedUpdated = post.updated
+    ? new Date(post.updated).toLocaleDateString('en-US', {
+        year: 'numeric',
+        month: 'long',
+        day: 'numeric',
+        timeZone: 'UTC',
+      })
+    : undefined
 
   return (
     <article
@@ -52,21 +61,24 @@ export function PostCard({ post, index = 0 }: PostCardProps) {
               {post.description}
             </p>
 
-            <div className="flex items-center justify-between text-sm text-text-muted">
-              <div className="flex items-center gap-4">
+            <div className="space-y-3 text-sm text-text-muted">
+              <div className="flex flex-wrap items-center gap-x-4 gap-y-2">
                 <span className="flex items-center gap-1">
-                  <Calendar className="w-4 h-4" />
-                  {formattedDate}
+                  <Calendar aria-hidden="true" className="w-4 h-4 shrink-0" />
+                  <time dateTime={post.date}>Published {formattedDate}</time>
                 </span>
+                {post.updated ? <time dateTime={post.updated}>Updated {formattedUpdated}</time> : null}
+              </div>
+              <div className="flex flex-wrap items-center justify-between gap-3">
                 <span className="flex items-center gap-1">
-                  <Clock className="w-4 h-4" />
+                  <Clock aria-hidden="true" className="w-4 h-4" />
                   {post.readingTime}
                 </span>
+                <span className="flex items-center gap-1 text-link-primary group-hover:gap-2 transition-all">
+                  Read more
+                  <ArrowRight aria-hidden="true" className="w-4 h-4" />
+                </span>
               </div>
-              <span className="flex items-center gap-1 text-link-primary group-hover:gap-2 transition-all">
-                Read more
-                <ArrowRight className="w-4 h-4" />
-              </span>
             </div>
           </div>
         </div>

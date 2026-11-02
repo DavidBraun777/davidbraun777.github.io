@@ -1,5 +1,9 @@
 # dbraun.io Current State Reassessment
 
+> **Historical report.** Findings, commands, verification counts and deployment
+> statements below describe the original review, not the current site. Use the
+> [documentation index](README.md) for current setup, maintenance and architecture.
+
 ## Executive Verdict
 
 The site is launch-worthy as a consulting/portfolio site. It is not "finished," but the remaining work is mostly proof density, production verification, and cleanup, not core positioning or code quality. Local and live are effectively aligned: `dev` is clean, `HEAD` is already an ancestor of `origin/master`, `HEAD..origin/master` has no file diff, and live `www.dbraun.io` now shows the restored VIFG-first, workflow-first version. The biggest remaining risk is not the UI, the stack, or the homepage headline; it is that several projects still rely on described proof instead of embedded proof artifacts. The second risk is operational: analytics collection is currently blocked by CSP evidence in tracked Playwright logs, and production contact delivery still needs a controlled live-send check if you are going to rely on the form for real leads. Stop obsessing over hero copy, extra UI polish, and the dual-site/niche roadmap before the current proof layer is stronger. Fix immediately: verify the live contact form end to end, decide whether GA should actually collect, and add one real proof pack to DealerFlow or VIFG. WeatherForge and RAGeATM are now framed honestly as secondary technical proof; do not promote them like production systems until the screenshots and usage proof exist.

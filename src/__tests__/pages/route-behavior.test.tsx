@@ -82,10 +82,33 @@ describe('writing pages with published and absent content', () => {
     const article = JSON.parse(page.querySelectorAll('script[type="application/ld+json"]')[1].textContent!)
     expect(article.image).toBe('https://dbraun.io/images/example.png')
     expect(article.keywords).toBe('Engineering')
+    expect(article).not.toHaveProperty('dateModified')
+    expect(page.querySelectorAll('time')).toHaveLength(1)
     const index = await import('@/app/writing/page')
     expect(render(<index.default />).textContent).toContain('Published posts')
     const { default: sitemap } = await import('@/app/sitemap')
     expect(sitemap().find(item => item.url === 'https://dbraun.io/writing')?.lastModified).toEqual(new Date(post.date))
+  })
+
+  test('revisions retain publication dates while updating visible dates, article metadata, and sitemap freshness', async () => {
+    const revisedPost = { ...post, slug: 'revised-article', date: '2025-01-09', updated: '2026-11-02' }
+    vi.doMock('@/lib/mdx', () => ({ getAllPosts: () => [post, revisedPost], getPostBySlug: () => revisedPost }))
+    const detail = await import('@/app/writing/[slug]/page')
+    const params = Promise.resolve({ slug: revisedPost.slug })
+    const metadata = await detail.generateMetadata({ params })
+    expect(metadata.openGraph).toMatchObject({ publishedTime: revisedPost.date, modifiedTime: revisedPost.updated })
+
+    const page = render(await detail.default({ params }))
+    expect(page.querySelector('time[datetime="2025-01-09"]')?.textContent).toBe('Published January 9, 2025')
+    expect(page.querySelector('time[datetime="2026-11-02"]')?.textContent).toBe('Updated November 2, 2026')
+    const article = JSON.parse(page.querySelectorAll('script[type="application/ld+json"]')[1].textContent!)
+    expect(article).toMatchObject({ datePublished: revisedPost.date, dateModified: revisedPost.updated })
+
+    const { default: sitemap } = await import('@/app/sitemap')
+    const routes = sitemap()
+    expect(routes.find(item => item.url === 'https://dbraun.io/writing')?.lastModified).toEqual(new Date(revisedPost.updated))
+    expect(routes.find(item => item.url === 'https://dbraun.io/writing/revised-article')?.lastModified).toEqual(new Date(revisedPost.updated))
+    expect(routes.find(item => item.url === `https://dbraun.io/writing/${post.slug}`)?.lastModified).toEqual(new Date(post.date))
   })
 
   test('an unillustrated, untagged post omits absent structured-data fields', async () => {

@@ -1,13 +1,21 @@
-# RAGeATM GitHub Follow-Up
+# RAGeATM repository follow-up
 
-The dbraun.io RAGeATM case study now includes a “Future Work: Retrieval Capability Ladder” section. Mirror the same ladder into the RAGeATM GitHub repository README or project documentation later so the portfolio site and project repo stay consistent.
+The portfolio now uses a qualitative comparison of retrieval methods. The older
+12-level capability ladder and percentages were unsupported and are retired.
+Do not copy them into a project README or treat them as evaluation results.
 
-Suggested README section:
+If separately updating the public RAGeATM repository:
 
-## Future Work: Retrieval Capability Ladder
+- Keep its actual TF-IDF pipeline and recorded evaluation reproducible.
+- State the corpus and test-set scope beside results. Seven questions returning
+  expected snippets is a sanity check, not general accuracy.
+- Compare lexical, dense, hybrid, reranking and generation approaches through
+  their mechanisms, use cases and limitations, without a universal ordering or
+  percentages of intent/human understanding.
+- Distinguish implemented behavior from future experiments. Cite primary sources
+  for technical claims and record measurement conditions for new results.
+- Keep the portfolio's links to the real README, runner and evaluation artifacts
+  valid if the repository reorganizes them.
 
-Include:
-- The safe claim about TF-IDF/BM25 vs embedding-based and LLM-assisted retrieval.
-- The 12-level capability ladder.
-- The clean interpretation table.
-- The overclaim guardrail explaining that LLMs approximate deeper intent through semantic context, history, and inferred goals, but do not truly understand human intent.
+This is a follow-up for a separate repository, not a claim that it was changed by
+this portfolio update. The current portfolio source is `src/data/systems.ts`.
