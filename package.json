@@ -64,6 +64,9 @@
     "vitest": "^4.1.12"
   },
   "overrides": {
-    "postcss": "$postcss"
+    "postcss": "$postcss",
+    "@typescript-eslint/typescript-estree@8.72.1": {
+      "minimatch": "11.0.4"
+    }
   }
 }
