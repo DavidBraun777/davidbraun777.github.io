@@ -47,10 +47,10 @@ describe('Time2Move historical case study', () => {
     expect(metadata.openGraph?.description).toBe(metadata.description)
     expect(metadata.twitter?.description).toBe(metadata.description)
     expect(generateStaticParams()).toContainEqual({ slug: 'time2move' })
-    expect(sitemap().filter(item => item.url === `https://dbraun.io${path}`)).toHaveLength(1)
+    expect(sitemap().filter(item => item.url === `https://www.dbraun.io${path}`)).toHaveLength(1)
     const page = renderPage(await detailPage())
     const breadcrumb = JSON.parse(page.querySelector('script[type="application/ld+json"]')?.textContent ?? '{}')
-    expect(breadcrumb.itemListElement.at(-1)).toMatchObject({ name: title, item: `https://dbraun.io${path}` })
+    expect(breadcrumb.itemListElement.at(-1)).toMatchObject({ name: title, item: `https://www.dbraun.io${path}` })
   })
 
   test('presents the concise concluded engagement without public audit or failure artifacts', async () => {
