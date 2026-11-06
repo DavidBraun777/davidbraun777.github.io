@@ -13,7 +13,7 @@ test('directory offers requests for unpublished documents and downloads only pub
   await page.goto('/resumes')
   await expect(page.getByRole('heading', { level: 1, name: 'Résumés & CV', exact: true })).toBeVisible()
   await expect(page).toHaveTitle(/Résumés & CV/)
-  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', 'https://dbraun.io/resumes')
+  await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', 'https://www.dbraun.io/resumes')
   await expect(page.locator('main article')).toHaveCount(2)
 
   for (const entry of resumeDocuments) {
