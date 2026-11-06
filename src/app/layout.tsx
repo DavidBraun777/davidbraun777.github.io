@@ -58,7 +58,7 @@ export const metadata: Metadata = {
   openGraph: {
     type: 'website',
     locale: 'en_US',
-    url: 'https://dbraun.io',
+    url: siteUrl,
     title: `David Braun | ${northStarIdentity}`,
     description: canonicalSeoDescription,
     siteName: 'dbraun.io',
