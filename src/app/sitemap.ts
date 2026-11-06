@@ -2,9 +2,10 @@ import { MetadataRoute } from 'next'
 import { getAllPosts } from '@/lib/mdx'
 import { allSystems } from '@/data/systems'
 import { urarinaResearch } from '@/data/urarina-research'
+import { siteUrl } from '@/lib/seo'
 
 export default function sitemap(): MetadataRoute.Sitemap {
-  const baseUrl = 'https://dbraun.io'
+  const baseUrl = siteUrl
   const posts = getAllPosts()
   const latestPostDate =
     posts.length > 0
