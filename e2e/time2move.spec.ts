@@ -22,7 +22,7 @@ test.describe('Time2Move historical case study', () => {
     await page.keyboard.press('Enter')
     await expect(page).toHaveURL(new RegExp(`${path}$`))
     await expect(page.getByRole('heading', { level: 1 })).toHaveText(title)
-    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', `https://dbraun.io${path}`)
+    await expect(page.locator('link[rel="canonical"]')).toHaveAttribute('href', `https://www.dbraun.io${path}`)
     await expect(page.locator('main')).toContainText('Past engagement · Original deployment inactive')
     await expect(page.getByRole('heading', { name: 'Live Proof', exact: true })).toHaveCount(0)
     await expect(page.getByRole('heading', { name: 'Quantified Outcomes', exact: true })).toHaveCount(0)
