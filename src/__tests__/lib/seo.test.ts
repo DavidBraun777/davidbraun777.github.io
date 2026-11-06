@@ -5,8 +5,8 @@ it('builds canonical article metadata with separate publication and revision dat
   const metadata = createPageMetadata({ title: 'Article', description: 'Description', path: '/writing/article', type: 'article', publishedTime: '2026-10-28', modifiedTime: '2026-11-02', authors: ['David'], tags: ['Systems'], image: '/image.png', imageAlt: 'Diagram' })
   expect(metadata.openGraph).toMatchObject({ type: 'article', publishedTime: '2026-10-28', modifiedTime: '2026-11-02', authors: ['David'], tags: ['Systems'], images: [{ url: '/image.png', alt: 'Diagram' }] })
   expect(metadata.twitter).toMatchObject({ images: ['/image.png'] })
-  expect(absoluteUrl()).toBe('https://dbraun.io/')
-  expect(absoluteUrl('/writing/article')).toBe('https://dbraun.io/writing/article')
+  expect(absoluteUrl()).toBe('https://www.dbraun.io/')
+  expect(absoluteUrl('/writing/article')).toBe('https://www.dbraun.io/writing/article')
 })
 
 it('keeps ordinary pages on default social images without article-only fields', () => {
