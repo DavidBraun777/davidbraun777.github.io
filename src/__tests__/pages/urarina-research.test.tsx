@@ -153,6 +153,6 @@ describe('Urarina research disclosure boundary', () => {
     expect(projectLink).not.toBeNull()
     expect(projectCard?.querySelector('h3')?.textContent?.trim()).toBe(publicTitle)
     expect(page.textContent).not.toMatch(priorManuscriptTitle)
-    expect(sitemap().filter(({ url }) => url === `https://dbraun.io${researchPath}`)).toHaveLength(1)
+    expect(sitemap().filter(({ url }) => url === `https://www.dbraun.io${researchPath}`)).toHaveLength(1)
   })
 })
