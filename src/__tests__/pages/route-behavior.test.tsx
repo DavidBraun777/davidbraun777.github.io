@@ -42,7 +42,7 @@ describe('canonical routes and response contracts', () => {
 
   test('robots and the real generated search endpoint expose the canonical public contract', async () => {
     const { default: robots } = await import('@/app/robots')
-    expect(robots()).toEqual({ rules: { userAgent: '*', allow: '/', disallow: ['/api/'] }, host: 'https://dbraun.io', sitemap: 'https://dbraun.io/sitemap.xml' })
+    expect(robots()).toEqual({ rules: { userAgent: '*', allow: '/', disallow: ['/api/'] }, host: 'https://www.dbraun.io', sitemap: 'https://www.dbraun.io/sitemap.xml' })
     const { GET, dynamic } = await import('@/app/search-index.json/route')
     const response = await GET()
     expect(dynamic).toBe('force-static')
@@ -80,14 +80,14 @@ describe('writing pages with published and absent content', () => {
     expect(page.querySelector('h1')?.textContent).toBe(post.title)
     expect(page.querySelector('[data-mdx-source]')?.textContent).toContain('A readable implementation account.')
     const article = JSON.parse(page.querySelectorAll('script[type="application/ld+json"]')[1].textContent!)
-    expect(article.image).toBe('https://dbraun.io/images/example.png')
+    expect(article.image).toBe('https://www.dbraun.io/images/example.png')
     expect(article.keywords).toBe('Engineering')
     expect(article).not.toHaveProperty('dateModified')
     expect(page.querySelectorAll('time')).toHaveLength(1)
     const index = await import('@/app/writing/page')
     expect(render(<index.default />).textContent).toContain('Published posts')
     const { default: sitemap } = await import('@/app/sitemap')
-    expect(sitemap().find(item => item.url === 'https://dbraun.io/writing')?.lastModified).toEqual(new Date(post.date))
+    expect(sitemap().find(item => item.url === 'https://www.dbraun.io/writing')?.lastModified).toEqual(new Date(post.date))
   })
 
   test('revisions retain publication dates while updating visible dates, article metadata, and sitemap freshness', async () => {
@@ -106,9 +106,9 @@ describe('writing pages with published and absent content', () => {
 
     const { default: sitemap } = await import('@/app/sitemap')
     const routes = sitemap()
-    expect(routes.find(item => item.url === 'https://dbraun.io/writing')?.lastModified).toEqual(new Date(revisedPost.updated))
-    expect(routes.find(item => item.url === 'https://dbraun.io/writing/revised-article')?.lastModified).toEqual(new Date(revisedPost.updated))
-    expect(routes.find(item => item.url === `https://dbraun.io/writing/${post.slug}`)?.lastModified).toEqual(new Date(post.date))
+    expect(routes.find(item => item.url === 'https://www.dbraun.io/writing')?.lastModified).toEqual(new Date(revisedPost.updated))
+    expect(routes.find(item => item.url === 'https://www.dbraun.io/writing/revised-article')?.lastModified).toEqual(new Date(revisedPost.updated))
+    expect(routes.find(item => item.url === `https://www.dbraun.io/writing/${post.slug}`)?.lastModified).toEqual(new Date(post.date))
   })
 
   test('an unillustrated, untagged post omits absent structured-data fields', async () => {
@@ -131,6 +131,6 @@ describe('writing pages with published and absent content', () => {
     expect(empty.textContent).toContain('Writing is in progress.')
     expect(empty.querySelector('article')).toBeNull()
     const { default: sitemap } = await import('@/app/sitemap')
-    expect(sitemap().find(item => item.url === 'https://dbraun.io/writing')?.lastModified).toEqual(new Date('2026-03-24'))
+    expect(sitemap().find(item => item.url === 'https://www.dbraun.io/writing')?.lastModified).toEqual(new Date('2026-03-24'))
   })
 })

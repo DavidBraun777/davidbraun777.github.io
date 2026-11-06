@@ -470,7 +470,7 @@ test.describe('Smoke tests', () => {
     await expect(resumeLink).toHaveAttribute('target', '_blank')
     await expect(page.locator('link[rel="canonical"]')).toHaveAttribute(
       'href',
-      'https://dbraun.io/experience'
+      'https://www.dbraun.io/experience'
     )
 
     const rel = await resumeLink.getAttribute('rel')
@@ -616,12 +616,12 @@ test.describe('Smoke tests', () => {
 
     expect(response.status()).toBe(200)
     const body = await response.text()
-    expect(body).toContain('<loc>https://dbraun.io/research</loc>')
-    expect(body).toContain('<loc>https://dbraun.io/experience</loc>')
-    expect(body).toContain('<loc>https://dbraun.io/resumes</loc>')
-    expect(body).toContain('<loc>https://dbraun.io/experience/career-story</loc>')
-    expect(body).toContain('<loc>https://dbraun.io/approach/evidence</loc>')
-    expect(body).not.toContain('<loc>https://dbraun.io/why-work-with-me</loc>')
+    expect(body).toContain('<loc>https://www.dbraun.io/research</loc>')
+    expect(body).toContain('<loc>https://www.dbraun.io/experience</loc>')
+    expect(body).toContain('<loc>https://www.dbraun.io/resumes</loc>')
+    expect(body).toContain('<loc>https://www.dbraun.io/experience/career-story</loc>')
+    expect(body).toContain('<loc>https://www.dbraun.io/approach/evidence</loc>')
+    expect(body).not.toContain('<loc>https://www.dbraun.io/why-work-with-me</loc>')
   })
 
   test('default resume is served and legacy PDF URLs redirect directly to it', async ({
@@ -750,7 +750,7 @@ test.describe('Smoke tests', () => {
         }
 
         if (href.startsWith('/')) {
-          const url = new URL(href, 'https://dbraun.io')
+          const url = new URL(href, 'https://www.dbraun.io')
           expect(obsoleteInternalPaths.has(url.pathname)).toBe(false)
           internalLinks.add(`${url.pathname}${url.search}`)
         }
