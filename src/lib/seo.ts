@@ -1,6 +1,6 @@
 import type { Metadata } from 'next'
 
-export const siteUrl = 'https://dbraun.io'
+export const siteUrl = 'https://www.dbraun.io'
 export const siteName = 'dbraun.io'
 export const defaultOpenGraphImage = '/opengraph-image'
 export const defaultTwitterImage = '/twitter-image'
