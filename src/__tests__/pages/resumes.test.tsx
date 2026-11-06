@@ -130,8 +130,8 @@ describe('résumé and CV directory', () => {
     expect(metadata.alternates?.canonical).toBe('/resumes')
     expect(metadata.openGraph).toMatchObject({ url: '/resumes', type: 'website' })
     const urls = sitemap().map(({ url }) => url)
-    expect(urls.filter((url) => url === 'https://dbraun.io/resumes')).toHaveLength(1)
-    expect(urls).not.toContain('https://dbraun.io/resume')
+    expect(urls.filter((url) => url === 'https://www.dbraun.io/resumes')).toHaveLength(1)
+    expect(urls).not.toContain('https://www.dbraun.io/resume')
     expect(urls.some((url) => url.endsWith('.pdf'))).toBe(false)
   })
 
