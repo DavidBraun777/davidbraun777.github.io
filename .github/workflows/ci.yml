@@ -107,7 +107,7 @@ jobs:
           grep -q '^SF:scripts/check-bundle-size.mjs$' coverage/lcov.info
 
       - name: SonarQube Cloud Scan
-        uses: SonarSource/sonarqube-scan-action@4d1dc0c91ee400dcf8a6dddf2f705ac36542e304 # v8.4.0
+        uses: SonarSource/sonarqube-scan-action@59202af334b4ba7b5db01b701b8e79f8b3bef0f4 # v8.5.0
         with:
           skipSignatureVerification: false
         env:
